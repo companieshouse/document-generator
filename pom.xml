@@ -127,4 +127,15 @@
     <modules>
         <!-- As Modules are added this will be updated -->
     </modules>
+    
+    <repositories>
+        <repository>
+            <id>ch-artifactory-release</id>
+            <url>${MAVEN_REPOSITORY_URL}/${artifactoryResolveReleaseRepo}</url>
+        </repository>
+        <repository>
+            <id>ch-artifactory-snapshot</id>
+            <url>${MAVEN_REPOSITORY_URL}/${artifactoryResolveSnapshotRepo}</url>
+        </repository>
+    </repositories>
 </project>
