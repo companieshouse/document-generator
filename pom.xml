@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>uk.gov.companieshouse</groupId>
+    <artifactId>document-generator</artifactId>
+    <version>unversioned</version>
+    <packaging>pom</packaging>
+    <name>document-generator</name>
+    <description>Main Repo holding the sub modules for the generation of documents</description>
+
+    <url>http://maven.apache.org</url>
+
+    <properties>
+      <!-- Encoding -->
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+      <!-- JDK Version -->
+        <jdk.version>1.8</jdk.version>
+    </properties>
+
+    <dependencies>
+      <!-- As document-generator is progressed depedencies will be added -->
+    </dependencies>
+
+    <modules>
+        <!-- As Modules are added this will be updated -->
+    </modules>
+</project>
