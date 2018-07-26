@@ -5,7 +5,7 @@
 
     <groupId>uk.gov.companieshouse</groupId>
     <artifactId>document-generator</artifactId>
-    <version>ec284b9</version>
+    <version>unversioned</version>
     <packaging>pom</packaging>
     <name>document-generator</name>
     <description>Main Repo holding the sub modules for the generation of documents</description>
