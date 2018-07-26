@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    
+    <modelVersion>4.0.0</modelVersion>
+  
+    <parent>
+        <groupId>uk.gov.companieshouse</groupId>
+        <artifactId>document-generator</artifactId>
+        <version>ec284b9</version>
+    </parent>
+  
+    <groupId>uk.gov.companieshouse</groupId>
+    <artifactId>document-generator-interfaces</artifactId>
+    <version>ec284b9</version>
+    <name>document-generator-interfaces</name>
+    <description>Maven sub module holding document-generator interfaces and document info model</description>
+  
+    <url>http://maven.apache.org</url>
+  
+    <properties>
+        <!-- Encoding -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- JDK Version -->
+        <jdk.version>1.8</jdk.version>
+    </properties>
+</project>
