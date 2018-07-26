@@ -123,8 +123,8 @@
     </profiles>
 
     <modules>
-    <!-- As Modules are added this will be updated -->
-    <module>document-generator-interfaces</module>
+        <!-- As Modules are added this will be updated -->
+        <module>document-generator-interfaces</module>
     </modules>
     
     <repositories>
