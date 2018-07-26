@@ -19,6 +19,12 @@
 
       <!-- JDK Version -->
       <jdk.version>1.8</jdk.version>
+      
+      <!-- Maven and Surefire plugins -->
+      <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
+      <maven-surefire-plugin.version>2.21.0</maven-surefire-plugin.version>
+      <maven-jar-plugin.version>2.4</maven-jar-plugin.version>
+      <junit-platform-surefire-provider.version>1.2.0</junit-platform-surefire-provider.version>
         
       <!-- Repositories -->
       <artifactoryResolveSnapshotRepo>libs-snapshot-local</artifactoryResolveSnapshotRepo>
