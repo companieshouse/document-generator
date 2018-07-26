@@ -16,8 +16,6 @@ else
     ENVIRONMENT="$3"
     APP_NAME="$4"
 
-    source /etc/profile
-
     echo "Downloading environment from: ${CONFIG_URL}/${ENVIRONMENT}/${APP_NAME}"
     wget -O "${APP_DIR}/private_env" "${CONFIG_URL}/${ENVIRONMENT}/private_env"
     wget -O "${APP_DIR}/global_env" "${CONFIG_URL}/${ENVIRONMENT}/global_env"
