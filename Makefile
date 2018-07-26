@@ -29,10 +29,6 @@ package:
 .PHONY: dist
 dist: clean package
 
-.PHONY: publish
-publish:
-    mvn jar:jar deploy:deploy -DpublishRepo=$(artifactory_publish)
-
 .PHONY: sonar
 sonar:
     mvn sonar:sonar
