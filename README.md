@@ -1,9 +1,9 @@
-# document-generator
+document-generator
 ====================
 
 The Companies house Document Generator for generating documents for accounts
 
-# Requirements
+Requirements
 --------------
 
 In order to build document-generator locally you will need the following:
@@ -11,7 +11,7 @@ In order to build document-generator locally you will need the following:
 - [Maven](https://maven.apache.org/download.cgi)
 - [Git](https://git-scm.com/downloads)
 
-# Getting started
+Getting started
 -----------------
 
 1. Run make
