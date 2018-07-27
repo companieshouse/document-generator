@@ -1,7 +1,7 @@
 document-generator
 ====================
 
-The Companies house Document Generator for generating documents for accounts
+The Companies house Document Generator for generating documents
 
 Requirements
 --------------
@@ -25,5 +25,5 @@ to be added
 document-generator-interface
 ===================================
 The document-generator-interface is a sub module within document-generator, it holds the interface
-DocumentInforService that contains the methods to getDocumentInfo in order to return the DocumentInfo model
-which will contain String data, String assetId, String templateId
+DocumentInfoService that contains the methods to getDocumentInfo in order to return the DocumentInfo model
+which will contain String data, String assetId, String templateId.
