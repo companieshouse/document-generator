@@ -12,7 +12,7 @@
   
     <groupId>uk.gov.companieshouse</groupId>
     <artifactId>document-generator-interfaces</artifactId>
-    <version>ec284b9</version>
+    <version>unversioned</version>
     <name>document-generator-interfaces</name>
     <description>Maven sub module holding document-generator interfaces and document info model</description>
   
