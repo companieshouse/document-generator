@@ -124,6 +124,7 @@
 
     <modules>
         <module>document-generator-interfaces</module>
+        <module>document-generator-accounts</module>
     </modules>
     
     <repositories>
