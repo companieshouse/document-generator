@@ -17,7 +17,9 @@ public class DocumentGeneratorProducer {
      * Create a producer
      */
     public DocumentGeneratorProducer() {
+        
         ProducerConfig config = new ProducerConfig();
+        
         ProducerConfigHelper.assignBrokerAddresses(config);
         config.setRoundRobinPartitioner(true);
         config.setAcks(Acks.WAIT_FOR_ALL);
@@ -33,7 +35,9 @@ public class DocumentGeneratorProducer {
      * @param topic
      */
     public void sendDocumentGenerationMessage(byte[] data, String topic) throws ExecutionException, InterruptedException {
+        
         Message message = new Message();
+        
         message.setValue(data);
         message.setTopic(topic);
         message.setTimestamp(new Date().getTime());
