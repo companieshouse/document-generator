@@ -1,0 +1,45 @@
+{
+  "type": "record",
+  "namespace": "uk.gov.companieshouse.document.generator.core.document.models",
+  "name": "DocumentGenerationFailed",
+  "fields": [
+   {
+     "name": "requester_id",
+     "type": "string"
+   },
+   {
+     "name": "description",
+     "type": [
+       "string",
+       "null"
+     ]
+   },
+   {
+     "name": "description_identifier",
+     "type": [
+       "string",
+       "null"
+     ]
+   },
+   {
+     "name": "id",
+     "type": "string"
+   },
+   {
+     "name": "description_values",
+     "type": [
+       "null",
+       {
+         "name": "DescriptionValues",
+         "type": "record",
+         "fields": [
+           {
+             "name": "date",
+             "type": "string"
+           }
+         ]
+     }]
+   }
+  ]
+}
+
