@@ -8,18 +8,18 @@ import java.util.List;
 public interface KafkaConfigHelper {
 
     /**
-     * Configure the kafka consumer
+     * Generate the config for the  kafka consumer
      *
      * @param consumerTopics
      * @param groupName
      * @return consumerConfig
      */
-    public ConsumerConfig configureKafkaConsumer(List<String> consumerTopics, String groupName);
+    ConsumerConfig configureKafkaConsumer(List<String> consumerTopics, String groupName);
 
     /**
-     * Configure the kafka producer
+     * Generate the config for the kafka producer
      *
      * @return producerConfig
      */
-    public ProducerConfig configureKafkaProducer();
+    ProducerConfig configureKafkaProducer();
 }

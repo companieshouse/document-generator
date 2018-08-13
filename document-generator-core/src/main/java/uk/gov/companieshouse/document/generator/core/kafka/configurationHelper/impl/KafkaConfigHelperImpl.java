@@ -2,7 +2,7 @@ package uk.gov.companieshouse.document.generator.core.kafka.configurationHelper.
 
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.companieshouse.document.generator.core.kafka.configurationHelper.KafkaConfigHelper;
-import uk.gov.companieshouse.document.generator.core.kafka.configurationHelper.KafkaConsumerProducerConfigHelper;
+import uk.gov.companieshouse.document.generator.core.kafka.configurationHelper.KafkaBrokerConfigHelper;
 import uk.gov.companieshouse.kafka.consumer.ConsumerConfig;
 import uk.gov.companieshouse.kafka.producer.Acks;
 import uk.gov.companieshouse.kafka.producer.ProducerConfig;
@@ -12,7 +12,7 @@ import java.util.List;
 public class KafkaConfigHelperImpl implements KafkaConfigHelper {
 
     @Autowired
-    private KafkaConsumerProducerConfigHelper consumerProducerConfigHelperHelper;
+    private KafkaBrokerConfigHelper kafkaBrokerConfigHelper;
 
     /**
      * Configure the kafka consumer
@@ -30,7 +30,7 @@ public class KafkaConfigHelperImpl implements KafkaConfigHelper {
         consumerConfig.setGroupName(groupName);
         consumerConfig.setResetOffset(false);
 
-        consumerProducerConfigHelperHelper.configureConsumerBrokerAddress(consumerConfig);
+        kafkaBrokerConfigHelper.configureConsumerBrokerAddress(consumerConfig);
 
         return consumerConfig;
     }
@@ -49,7 +49,7 @@ public class KafkaConfigHelperImpl implements KafkaConfigHelper {
         producerConfig.setAcks(Acks.WAIT_FOR_ALL);
         producerConfig.setRetries(10);
 
-        consumerProducerConfigHelperHelper.configureProducerBrokerAddress(producerConfig);
+        kafkaBrokerConfigHelper.configureProducerBrokerAddress(producerConfig);
 
         return producerConfig;
     }

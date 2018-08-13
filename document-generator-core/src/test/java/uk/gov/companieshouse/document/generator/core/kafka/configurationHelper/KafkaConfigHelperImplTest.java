@@ -25,7 +25,7 @@ import static org.mockito.Mockito.doNothing;
 public class KafkaConfigHelperImplTest {
 
     @Mock
-    private KafkaConsumerProducerConfigHelper kafkaConsumerProducerConfigHelper;
+    private KafkaBrokerConfigHelper kafkaBrokerConfigHelper;
 
     @InjectMocks
     private KafkaConfigHelperImpl kafkaConfigHelperImpl;
@@ -43,7 +43,7 @@ public class KafkaConfigHelperImplTest {
         List<String> consumerTopics = new ArrayList<>();
         consumerTopics.add(TOPIC);
 
-        doNothing().when(kafkaConsumerProducerConfigHelper).configureConsumerBrokerAddress(any(ConsumerConfig.class));
+        doNothing().when(kafkaBrokerConfigHelper).configureConsumerBrokerAddress(any(ConsumerConfig.class));
         ConsumerConfig consumerConfig = kafkaConfigHelperImpl.configureKafkaConsumer(consumerTopics, GROUP_NAME);
         assertNotNull(consumerConfig);
     }
@@ -53,7 +53,7 @@ public class KafkaConfigHelperImplTest {
     public void getProducerConfig() {
 
         MockitoAnnotations.initMocks(this);
-        doNothing().when(kafkaConsumerProducerConfigHelper).configureProducerBrokerAddress(any(ProducerConfig.class));
+        doNothing().when(kafkaBrokerConfigHelper).configureProducerBrokerAddress(any(ProducerConfig.class));
         ProducerConfig producerConfig = kafkaConfigHelperImpl.configureKafkaProducer();
         assertNotNull(producerConfig);
     }

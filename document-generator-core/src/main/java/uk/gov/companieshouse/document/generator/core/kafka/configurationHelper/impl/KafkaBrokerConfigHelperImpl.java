@@ -1,14 +1,14 @@
 package uk.gov.companieshouse.document.generator.core.kafka.configurationHelper.impl;
 
 import org.springframework.stereotype.Component;
-import uk.gov.companieshouse.document.generator.core.kafka.configurationHelper.KafkaConsumerProducerConfigHelper;
+import uk.gov.companieshouse.document.generator.core.kafka.configurationHelper.KafkaBrokerConfigHelper;
 import uk.gov.companieshouse.kafka.consumer.ConsumerConfig;
 import uk.gov.companieshouse.kafka.consumer.ConsumerConfigHelper;
 import uk.gov.companieshouse.kafka.producer.ProducerConfig;
 import uk.gov.companieshouse.kafka.producer.ProducerConfigHelper;
 
 @Component
-public class KafkaConsumerProducerConfigHelperImpl implements KafkaConsumerProducerConfigHelper {
+public class KafkaBrokerConfigHelperImpl implements KafkaBrokerConfigHelper {
 
     /**
      * Assign broker address to the ConsumerConfigHelper
