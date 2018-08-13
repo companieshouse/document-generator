@@ -1,7 +1,7 @@
-package uk.gov.companieshouse.document.generator.core.kafka.configurationHelper.impl;
+package uk.gov.companieshouse.document.generator.core.kafka.configurationhelper.impl;
 
 import org.springframework.stereotype.Component;
-import uk.gov.companieshouse.document.generator.core.kafka.configurationHelper.KafkaBrokerConfigHelper;
+import uk.gov.companieshouse.document.generator.core.kafka.configurationhelper.KafkaBrokerConfigHelper;
 import uk.gov.companieshouse.kafka.consumer.ConsumerConfig;
 import uk.gov.companieshouse.kafka.consumer.ConsumerConfigHelper;
 import uk.gov.companieshouse.kafka.producer.ProducerConfig;

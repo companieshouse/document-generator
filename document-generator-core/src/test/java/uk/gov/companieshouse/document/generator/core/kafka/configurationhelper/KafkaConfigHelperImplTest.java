@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.document.generator.core.kafka.configurationHelper;
+package uk.gov.companieshouse.document.generator.core.kafka.configurationhelper;
 
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -9,7 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.companieshouse.document.generator.core.kafka.configurationHelper.impl.KafkaConfigHelperImpl;
+import uk.gov.companieshouse.document.generator.core.kafka.configurationhelper.impl.KafkaConfigHelperImpl;
 import uk.gov.companieshouse.kafka.consumer.ConsumerConfig;
 import uk.gov.companieshouse.kafka.producer.ProducerConfig;
 

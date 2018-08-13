@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.document.generator.core.kafka.configurationHelper;
+package uk.gov.companieshouse.document.generator.core.kafka.configurationhelper;
 
 import uk.gov.companieshouse.kafka.consumer.ConsumerConfig;
 import uk.gov.companieshouse.kafka.producer.ProducerConfig;
