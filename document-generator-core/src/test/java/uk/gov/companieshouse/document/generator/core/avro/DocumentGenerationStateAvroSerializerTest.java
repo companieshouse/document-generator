@@ -1,6 +1,10 @@
 package uk.gov.companieshouse.document.generator.core.avro;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.document.generator.core.document.models.DescriptionValues;
 import uk.gov.companieshouse.document.generator.core.document.models.DocumentGenerationCompleted;
 import uk.gov.companieshouse.document.generator.core.document.models.DocumentGenerationFailed;
@@ -10,6 +14,8 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@ExtendWith(MockitoExtension.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DocumentGenerationStateAvroSerializerTest {
 
     private static final String STARTED_ENCODED_AVRO_STRING = "\f123456test guid";
@@ -17,6 +23,7 @@ public class DocumentGenerationStateAvroSerializerTest {
     private static final String FAILED_ENCODED_AVRO_STRING = "\f123456 test description,description identifier\nan-id01/01/1980";
 
     @Test
+    @DisplayName("Serialize data for document generation started")
     public void testSerializeDocumentGenerationStarted() throws IOException {
         DocumentGenerationStarted document = new DocumentGenerationStarted();
         document.setId("test guid");
@@ -28,6 +35,7 @@ public class DocumentGenerationStateAvroSerializerTest {
     }
 
     @Test
+    @DisplayName("Serialize data for document generation completed")
     public void testSerializeDocumentGenerationCompleted() throws IOException{
         DocumentGenerationCompleted document = new DocumentGenerationCompleted();
         document.setLocation("test-location");
@@ -48,6 +56,7 @@ public class DocumentGenerationStateAvroSerializerTest {
     }
 
     @Test
+    @DisplayName("Serialize data for document generation failed")
     public void testSerializeDocumentGenerationFailed() throws IOException {
         DocumentGenerationFailed document = new DocumentGenerationFailed();
         document.setDescription("test description");

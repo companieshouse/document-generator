@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.document.generator.core.avro;
 
 import org.apache.avro.AvroRuntimeException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,9 +11,7 @@ import uk.gov.companieshouse.kafka.message.Message;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -25,6 +24,7 @@ public class AvroDeserializerTest {
     private static final String REQUESTER_ID = "requester-id";
 
     @Test
+    @DisplayName("Check that data is deserialized")
     public void testDeserialize() throws IOException {
         Message message = new Message();
         message.setValue(ENCODED_AVRO_STRING.getBytes());
@@ -37,6 +37,7 @@ public class AvroDeserializerTest {
     }
 
     @Test
+    @DisplayName("Check that error returned when invalid data is entered")
     public void testDeserializeInvalidData() {
         Message message = new Message();
         message.setValue("invalid".getBytes());
