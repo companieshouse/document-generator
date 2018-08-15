@@ -1,0 +1,32 @@
+{
+  "type": "record",
+  "namespace": "uk.gov.companieshouse.document.generator.core.document.models",
+  "name": "RenderSubmittedDataDocument",
+  "fields": [
+    {
+      "name": "id",
+      "type": "string"
+    },
+    {
+      "name": "resource",
+      "type": "string"
+    },
+    {
+      "name": "resource_id",
+      "type": "string"
+    },
+    {
+      "name": "content_type",
+      "type": "string"
+    },
+    {
+      "name": "document_type",
+      "type": "string"
+    },
+    {
+      "name": "user_id",
+      "type": "string"
+    }
+  ]
+}
+

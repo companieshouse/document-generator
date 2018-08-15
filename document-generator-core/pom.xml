@@ -9,7 +9,7 @@
         <artifactId>document-generator</artifactId>
         <version>unversioned</version>
     </parent>
-    
+
     <groupId>uk.gov.companieshouse</groupId>
     <artifactId>document-generator-core</artifactId>
     <version>unversioned</version>
@@ -33,7 +33,7 @@
         <ch-kafka.version>1.0.3-rc4</ch-kafka.version>
         
         <commons-io.version>2.4</commons-io.version>
-        
+
     </properties>
   
     <dependencies>
@@ -70,8 +70,16 @@
             <artifactId>commons-io</artifactId>
             <version>${commons-io.version}</version>
         </dependency>
+
     </dependencies>
-    
+
     <build>
+        <finalName>${project.artifactId}-${project.version}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.avro</groupId>
+                <artifactId>avro-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
     </build>
 </project>
