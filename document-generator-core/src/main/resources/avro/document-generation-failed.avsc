@@ -9,11 +9,17 @@
    },
    {
      "name": "description",
-     "type": "string"
+     "type": [
+        "string",
+        "null"
+      ]
    },
    {
      "name": "description_identifier",
-     "type": "string"
+     "type": [
+        "string",
+        "null"
+      ]
    },
    {
      "name": "id",
