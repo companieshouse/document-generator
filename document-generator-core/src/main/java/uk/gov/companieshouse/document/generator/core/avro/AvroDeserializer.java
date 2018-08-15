@@ -22,6 +22,7 @@ public class AvroDeserializer<T extends SpecificRecordBase> {
      * Deserializes a message in binary format into T.
      *
      * @param message
+     * @param schema
      * @return T
      * @throws IOException
      */

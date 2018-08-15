@@ -46,11 +46,6 @@ public class DocumentGenerationStateAvroSerializer {
     /**
      * Serialize the message for the document generation failure.
      *
-     * The description values schema is a union with a null schema to
-     * allow the description values to be optional for cases where
-     * document generation has failed before the data for the document
-     * description period end on parameter has been retrieved.
-     *
      * @param failed
      * @return bytes
      * @throws IOException
