@@ -11,14 +11,11 @@
         <version>unversioned</version>
     </parent>
 
-
     <artifactId>document-generator-accounts</artifactId>
     <version>unversioned</version>
 
     <name>document-generator-accounts</name>
-    <description>Maven sub module holding document-generator-accounts implementation for retrieving
-        accounts data
-    </description>
+    <description>Module for retrieving accounts data for document generation</description>
 
     <properties>
         <!-- Encoding -->
