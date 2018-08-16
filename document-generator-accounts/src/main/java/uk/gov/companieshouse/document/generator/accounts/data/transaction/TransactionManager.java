@@ -9,6 +9,11 @@ import org.springframework.web.client.RestTemplate;
 import uk.gov.companieshouse.api.model.transaction.Transaction;
 import uk.gov.companieshouse.environment.impl.EnvironmentReaderImpl;
 
+/**
+ * TransactionManager is the current temporary internal project solution for communicating with
+ * microservices internally. This will be replaced by the private-sdk and its use shall be replaced
+ * in the service layer also.
+ */
 public class TransactionManager {
 
     /** represents the Authorization header name in the request */
