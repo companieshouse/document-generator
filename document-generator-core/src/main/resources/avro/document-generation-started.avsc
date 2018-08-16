@@ -1,0 +1,15 @@
+{
+  "type": "record",
+  "namespace": "uk.gov.companieshouse.document.generator.core.document.models",
+  "name": "DocumentGenerationStarted",
+  "fields": [
+    {
+      "name": "requester_id",
+      "type": "string"
+    },
+    {
+      "name": "id",
+      "type": "string"
+    }
+  ]
+}
