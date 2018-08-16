@@ -27,11 +27,12 @@
         <!--Dependencies-->
         <spring-boot-start-web.version>2.0.4.RELEASE</spring-boot-start-web.version>
         <api-sdk-java.version>2.0.0-rc1</api-sdk-java.version>
-        <environment-reader-library.version>1.0.0-rc1</environment-reader-library.version>
-        <structured-logging.version>1.2.0-rc1</structured-logging.version>
+        <environment-reader-library.version>1.2.0-rc1</environment-reader-library.version>
+        <structured-logging.version>1.3.0-rc1</structured-logging.version>
 
         <!-- JUnit Testing -->
         <junit-jupiter-engine.version>5.2.0</junit-jupiter-engine.version>
+        <mockito-junit-jupiter.version>2.18.0</mockito-junit-jupiter.version>
     </properties>
 
     <dependencies>
@@ -56,15 +57,23 @@
             <version>unversioned</version>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>${spring-boot-start-web.version}</version>
+        </dependency>
+
+        <!-- Testing -->
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
             <version>${junit-jupiter-engine.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <version>${spring-boot-start-web.version}</version>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>${mockito-junit-jupiter.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

@@ -30,7 +30,7 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
             return null;
         }
 
-        return null;
+        return new DocumentInfo();
 
     }
 }
