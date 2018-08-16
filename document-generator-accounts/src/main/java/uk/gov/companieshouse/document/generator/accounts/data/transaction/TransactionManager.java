@@ -22,6 +22,10 @@ public class TransactionManager {
     /** represents the Spring rest template that is created for cross microservice contact */
     private static final RestTemplate restTemplate = createRestTemplate();
 
+    private TransactionManager() {
+        // private constructor inserted to hide implicit public one
+    }
+
     /**
      * Get transaction if exists
      *
@@ -82,6 +86,6 @@ public class TransactionManager {
      * @return Returns the private endpoint transaction url with the transaction id
      */
     private static String getBaseUrl(String id) {
-        return "/private/transactions/" + id;
+        return new StringBuilder("/private/transactions/").append(id).toString();
     }
 }
