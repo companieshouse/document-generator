@@ -178,6 +178,7 @@
 
     <modules>
         <module>document-generator-interfaces</module>
+        <module>document-generator-accounts</module>
         <module>document-generator-core</module>
     </modules>
 
