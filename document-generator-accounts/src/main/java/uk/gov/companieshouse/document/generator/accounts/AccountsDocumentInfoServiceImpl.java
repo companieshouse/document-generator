@@ -1,7 +1,7 @@
 package uk.gov.companieshouse.document.generator.accounts;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.api.model.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.service.TransactionService;
 import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
@@ -9,7 +9,7 @@ import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfo;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
-@Component
+@Service
 public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
 
     @Autowired
