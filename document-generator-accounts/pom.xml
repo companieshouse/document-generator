@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>document-generator</artifactId>
+        <groupId>uk.gov.companieshouse</groupId>
+        <version>unversioned</version>
+    </parent>
+
+    <artifactId>document-generator-accounts</artifactId>
+    <version>unversioned</version>
+
+    <name>document-generator-accounts</name>
+    <description>Module for retrieving accounts data for document generation</description>
+
+    <properties>
+        <!-- Encoding -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- JUnit Testing -->
+        <junit-jupiter-engine.version>5.2.0</junit-jupiter-engine.version>
+
+        <!-- JDK Version -->
+        <jdk.version>1.8</jdk.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>uk.gov.companieshouse</groupId>
+            <artifactId>document-generator-interfaces</artifactId>
+            <version>unversioned</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit-jupiter-engine.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>

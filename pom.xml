@@ -121,6 +121,22 @@
                 <pluginManagement>
                     <plugins>
                         <plugin>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-maven-plugin</artifactId>
+                            <configuration>
+                                <mainClass>uk.gov.companieshouse.document.generator.core.DocumentGeneratorApplication
+                                </mainClass>
+                                <layout>ZIP</layout>
+                            </configuration>
+                            <executions>
+                                <execution>
+                                    <goals>
+                                        <goal>repackage</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+                        <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-compiler-plugin</artifactId>
                             <version>${maven-compiler-plugin.version}</version>
@@ -178,6 +194,7 @@
 
     <modules>
         <module>document-generator-interfaces</module>
+        <module>document-generator-accounts</module>
         <module>document-generator-core</module>
     </modules>
 
