@@ -39,7 +39,6 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
         DocumentGenerationCompleted generatedDocument = null;
         RenderDocumentResponse reponse = new RenderDocumentResponse();
 
-
         HttpURLConnection connection = renderDocumentOpenHttpConnection.openConnection(url);
 
         try {
