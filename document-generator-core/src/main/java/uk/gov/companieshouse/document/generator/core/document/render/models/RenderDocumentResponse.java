@@ -1,16 +1,16 @@
-package uk.gov.companieshouse.document.generator.core.document.render;
+package uk.gov.companieshouse.document.generator.core.document.render.models;
 
 import uk.gov.companieshouse.document.generator.core.document.models.DocumentGenerationCompleted;
 
-public class RenderDocumentReponse {
+public class RenderDocumentResponse {
 
     private DocumentGenerationCompleted generatedDocument;
 
     private int status;
 
-    public RenderDocumentReponse(){}
+    public RenderDocumentResponse(){}
 
-    public RenderDocumentReponse(DocumentGenerationCompleted generatedDocument, int status) {
+    public RenderDocumentResponse(DocumentGenerationCompleted generatedDocument, int status) {
         this.generatedDocument = generatedDocument;
         this.status = status;
     }
