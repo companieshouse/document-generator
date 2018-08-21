@@ -1,7 +1,7 @@
 package uk.gov.companieshouse.document.generator.core.document.render.impl;
 
 import org.springframework.stereotype.Service;
-import uk.gov.companieshouse.document.generator.core.document.render.RenderDocumentOpenHttpConnection;
+import uk.gov.companieshouse.document.generator.core.document.render.httpConnectionHandler;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -9,7 +9,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 @Service
-public class RenderDocumentOpenHttpConnectionImpl implements RenderDocumentOpenHttpConnection {
+public class httpConnectionHandlerImpl implements httpConnectionHandler {
 
     /**
      * Open a HttpUrlConnection for the request

@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class RenderDcoumentRequestHandlerTest {
+public class RenderDocumentRequestHandlerTest {
 
     private static final String PDF_LOCATION = "pdf-location";
 
@@ -46,7 +46,7 @@ public class RenderDcoumentRequestHandlerTest {
     private RenderedDocumentJsonHandler renderedDocumentJsonHandler;
 
     @Mock
-    private RenderDocumentOpenHttpConnection mockRenderDocumentOpenHttpConnection;
+    private httpConnectionHandler mockHttpConnectionHandler;
 
     private RenderDocumentRequest renderDocumentRequest;
 
@@ -60,7 +60,7 @@ public class RenderDcoumentRequestHandlerTest {
         renderDocumentRequest.setDocumentType("application/pdf");
         renderDocumentRequest.setTemplateName("template1");
 
-        when(mockRenderDocumentOpenHttpConnection.openConnection(any(String.class))).thenReturn(mockHttpURLConnection);
+        when(mockHttpConnectionHandler.openConnection(any(String.class))).thenReturn(mockHttpURLConnection);
 
     }
 

@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import uk.gov.companieshouse.document.generator.core.document.models.DocumentGenerationCompleted;
-import uk.gov.companieshouse.document.generator.core.document.render.RenderDocumentOpenHttpConnection;
+import uk.gov.companieshouse.document.generator.core.document.render.httpConnectionHandler;
 import uk.gov.companieshouse.document.generator.core.document.render.RenderDocumentRequestHandler;
 import uk.gov.companieshouse.document.generator.core.document.render.RenderedDocumentJsonHandler;
 import uk.gov.companieshouse.document.generator.core.document.render.models.RenderDocumentRequest;
@@ -24,7 +24,7 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
     private RenderedDocumentJsonHandler renderedDocumentJsonHandler;
 
     @Autowired
-    private RenderDocumentOpenHttpConnection renderDocumentOpenHttpConnection;
+    private httpConnectionHandler httpConnectionHandler;
 
     /**
      * Call the document render service and convert the data into a document
@@ -37,17 +37,17 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
     public RenderDocumentResponse sendDataToDocumentRenderService(String url, RenderDocumentRequest request) throws IOException {
 
         DocumentGenerationCompleted generatedDocument = null;
-        RenderDocumentResponse reponse = new RenderDocumentResponse();
+        RenderDocumentResponse response = new RenderDocumentResponse();
 
-        HttpURLConnection connection = renderDocumentOpenHttpConnection.openConnection(url);
+        HttpURLConnection connection = httpConnectionHandler.openConnection(url);
 
         try {
             prepareConnection(connection, request);
             sendRequest(connection, request);
-            reponse.setStatus(connection.getResponseCode());
+            response.setStatus(connection.getResponseCode());
 
             if (connection.getResponseCode() == HttpURLConnection.HTTP_CREATED) {
-                generatedDocument = handleReponse(connection);
+                generatedDocument = handleResponse(connection);
             }
 
         } finally {
@@ -56,9 +56,9 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
             }
         }
 
-        reponse.setGeneratedDocument(generatedDocument);
+        response.setGeneratedDocument(generatedDocument);
 
-        return reponse;
+        return response;
     }
 
     /**
@@ -68,7 +68,7 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
      * @return
      * @throws IOException
      */
-    private DocumentGenerationCompleted handleReponse(HttpURLConnection connection) throws IOException {
+    private DocumentGenerationCompleted handleResponse(HttpURLConnection connection) throws IOException {
 
         DocumentGenerationCompleted generatedDocument = null;
         String generatedDocumentJson;
@@ -79,9 +79,8 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
 
         generatedDocument = renderedDocumentJsonHandler.convert(generatedDocumentJson);
 
-        if (connection.getResponseCode() == HttpURLConnection.HTTP_CREATED) {
-            generatedDocument.setLocation(connection.getHeaderField("Location"));
-        }
+        generatedDocument.setLocation(connection.getHeaderField("Location"));
+
 
         return generatedDocument;
     }
