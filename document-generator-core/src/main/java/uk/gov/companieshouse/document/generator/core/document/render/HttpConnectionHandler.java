@@ -3,7 +3,7 @@ package uk.gov.companieshouse.document.generator.core.document.render;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 
-public interface httpConnectionHandler {
+public interface HttpConnectionHandler {
 
     /**
      * Open a HttpUrlConnection for the request

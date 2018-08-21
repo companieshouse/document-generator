@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import uk.gov.companieshouse.document.generator.core.document.models.DocumentGenerationCompleted;
-import uk.gov.companieshouse.document.generator.core.document.render.httpConnectionHandler;
+import uk.gov.companieshouse.document.generator.core.document.render.HttpConnectionHandler;
 import uk.gov.companieshouse.document.generator.core.document.render.RenderDocumentRequestHandler;
 import uk.gov.companieshouse.document.generator.core.document.render.RenderedDocumentJsonHandler;
 import uk.gov.companieshouse.document.generator.core.document.render.models.RenderDocumentRequest;
@@ -24,7 +24,7 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
     private RenderedDocumentJsonHandler renderedDocumentJsonHandler;
 
     @Autowired
-    private httpConnectionHandler httpConnectionHandler;
+    private HttpConnectionHandler httpConnectionHandler;
 
     /**
      * Call the document render service and convert the data into a document

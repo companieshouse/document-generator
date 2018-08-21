@@ -46,7 +46,7 @@ public class RenderDocumentRequestHandlerTest {
     private RenderedDocumentJsonHandler renderedDocumentJsonHandler;
 
     @Mock
-    private httpConnectionHandler mockHttpConnectionHandler;
+    private HttpConnectionHandler mockHttpConnectionHandler;
 
     private RenderDocumentRequest renderDocumentRequest;
 
