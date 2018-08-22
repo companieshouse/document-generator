@@ -47,7 +47,7 @@ public class DocumentGenerator implements Runnable {
     public void run() {
 
         try {
-            pollAndGenerate(documentGeneratorConsumerGroup);
+            pollAndGenerate();
         } catch (Exception e) {
 
         }
@@ -55,10 +55,8 @@ public class DocumentGenerator implements Runnable {
 
     /**
      * Poll kafka messages and obtain documentInfo data
-     *
-     * @param documentGeneratorConsumerGroup
      */
-    private void pollAndGenerate(CHKafkaConsumerGroup documentGeneratorConsumerGroup) {
+    private void pollAndGenerate() {
 
         for (Message message : documentGeneratorConsumerGroup.consume()) {
 
