@@ -11,12 +11,11 @@ import uk.gov.companieshouse.kafka.consumer.CHKafkaConsumerGroup;
 import uk.gov.companieshouse.kafka.message.Message;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class DocumentGenerator implements Runnable {
 
-    private static final String[] CONSUMER_TOPICS = new String[]{
-            "render-submitted-data-document"
-    };
+    private static final List<String> CONSUMER_TOPICS = Arrays.asList( "render-submitted-data-document");
 
     private static final String GROUP_NAME = "document-generator";
     
@@ -41,7 +40,7 @@ public class DocumentGenerator implements Runnable {
         this.avroDeserializer = avroDeserializer;
 
         documentGeneratorConsumerGroup =
-                consumerGroupHandler.getConsumerGroup(Arrays.asList(CONSUMER_TOPICS), GROUP_NAME);
+                consumerGroupHandler.getConsumerGroup(CONSUMER_TOPICS, GROUP_NAME);
     }
 
     @Override
