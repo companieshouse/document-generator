@@ -10,7 +10,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.document.generator.core.avro.AvroDeserializer;
 import uk.gov.companieshouse.document.generator.core.document.models.RenderSubmittedDataDocument;
 import uk.gov.companieshouse.document.generator.core.kafka.ConsumerGroupHandler;
-import uk.gov.companieshouse.document.generator.core.kafka.configurationhelper.KafkaConfigHelper;
 import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfo;
 import uk.gov.companieshouse.kafka.consumer.CHKafkaConsumerGroup;
@@ -44,9 +43,6 @@ public class DocumentGeneratorTest {
     private DocumentGenerator documentGenerator;
 
     @Mock
-    private KafkaConfigHelper mockKafkaConfigHelper;
-
-    @Mock
     private CHKafkaConsumerGroup mockConsumerGroup;
 
     @Mock
@@ -76,7 +72,7 @@ public class DocumentGeneratorTest {
         when(mockConsumerGroup.consume()).thenReturn(messages);
         when(mockDocumentInfoService.getDocumentInfo()).thenReturn(populatedDocumentInfo());
 
-        documentGenerator = new DocumentGenerator(mockKafkaConfigHelper, mockDocumentInfoService,
+        documentGenerator = new DocumentGenerator(mockDocumentInfoService,
                 mockConsumerGroupHandler, mockAvroDeserializer);
 
         documentGenerator.run();

@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.companieshouse.document.generator.core.avro.AvroDeserializer;
 import uk.gov.companieshouse.document.generator.core.document.models.RenderSubmittedDataDocument;
 import uk.gov.companieshouse.document.generator.core.kafka.ConsumerGroupHandler;
-import uk.gov.companieshouse.document.generator.core.kafka.configurationhelper.KafkaConfigHelper;
 import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfo;
 import uk.gov.companieshouse.kafka.consumer.CHKafkaConsumerGroup;
@@ -21,22 +20,15 @@ public class DocumentGenerator implements Runnable {
     
     private CHKafkaConsumerGroup documentGeneratorConsumerGroup;
 
-    private KafkaConfigHelper kafkaConfigHelper;
-
     private DocumentInfoService documentInfoService;
-
-    private ConsumerGroupHandler consumerGroupHandler;
 
     private AvroDeserializer<RenderSubmittedDataDocument> avroDeserializer;
 
     @Autowired
-    public DocumentGenerator(KafkaConfigHelper kafkaConfigHelper, DocumentInfoService documentInfoService,
-                             ConsumerGroupHandler consumerGroupHandler,
+    public DocumentGenerator(DocumentInfoService documentInfoService, ConsumerGroupHandler consumerGroupHandler,
                              AvroDeserializer<RenderSubmittedDataDocument> avroDeserializer) {
 
-        this.kafkaConfigHelper = kafkaConfigHelper;
         this.documentInfoService = documentInfoService;
-        this.consumerGroupHandler = consumerGroupHandler;
         this.avroDeserializer = avroDeserializer;
 
         documentGeneratorConsumerGroup =
