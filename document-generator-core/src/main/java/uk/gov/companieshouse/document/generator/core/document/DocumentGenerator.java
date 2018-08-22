@@ -15,7 +15,7 @@ import java.util.List;
 
 public class DocumentGenerator implements Runnable {
 
-    private static final List<String> CONSUMER_TOPICS = Arrays.asList( "render-submitted-data-document");
+    private static final List<String> CONSUMER_TOPICS = Arrays.asList("render-submitted-data-document");
 
     private static final String GROUP_NAME = "document-generator";
     
