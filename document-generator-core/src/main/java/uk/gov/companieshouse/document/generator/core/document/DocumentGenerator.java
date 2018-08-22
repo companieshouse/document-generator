@@ -19,8 +19,7 @@ public class DocumentGenerator implements Runnable {
     };
 
     private static final String GROUP_NAME = "document-generator";
-
-
+    
     private CHKafkaConsumerGroup documentGeneratorConsumerGroup;
 
     private KafkaConfigHelper kafkaConfigHelper;
