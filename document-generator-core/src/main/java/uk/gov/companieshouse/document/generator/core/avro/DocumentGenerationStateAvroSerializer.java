@@ -1,12 +1,14 @@
 package uk.gov.companieshouse.document.generator.core.avro;
 
 
+import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.document.generator.core.document.models.DocumentGenerationCompleted;
 import uk.gov.companieshouse.document.generator.core.document.models.DocumentGenerationFailed;
 import uk.gov.companieshouse.document.generator.core.document.models.DocumentGenerationStarted;
 
 import java.io.IOException;
 
+@Component
 public class DocumentGenerationStateAvroSerializer {
 
     /**

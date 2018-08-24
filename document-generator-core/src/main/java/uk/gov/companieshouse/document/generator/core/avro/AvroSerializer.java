@@ -6,6 +6,7 @@ import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.specific.SpecificDatumWriter;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
@@ -14,6 +15,7 @@ import java.io.IOException;
  *
  * @param <T> Type of object to be serialized
  */
+@Component
 public class AvroSerializer<T extends SpecificRecordBase> {
 
     /**

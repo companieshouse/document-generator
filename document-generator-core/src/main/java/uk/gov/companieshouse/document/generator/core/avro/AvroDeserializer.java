@@ -6,6 +6,7 @@ import org.apache.avro.io.Decoder;
 import org.apache.avro.io.DecoderFactory;
 import org.apache.avro.specific.SpecificDatumReader;
 import org.apache.avro.specific.SpecificRecordBase;
+import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.kafka.message.Message;
 
 import java.io.ByteArrayInputStream;
@@ -16,6 +17,7 @@ import java.io.IOException;
  *
  * @param <T> Type of object to be deserialized
  */
+@Component
 public class AvroDeserializer<T extends SpecificRecordBase> {
 
     /**
