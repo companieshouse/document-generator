@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.document.generator.core.kafka.configurationhelper.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.document.generator.core.kafka.configurationhelper.KafkaConfigHelper;
 import uk.gov.companieshouse.document.generator.core.kafka.configurationhelper.KafkaBrokerConfigHelper;
 import uk.gov.companieshouse.kafka.consumer.ConsumerConfig;
@@ -9,6 +10,7 @@ import uk.gov.companieshouse.kafka.producer.ProducerConfig;
 
 import java.util.List;
 
+@Component
 public class KafkaConfigHelperImpl implements KafkaConfigHelper {
 
     @Autowired
