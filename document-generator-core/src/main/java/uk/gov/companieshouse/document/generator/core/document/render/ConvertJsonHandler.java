@@ -2,7 +2,7 @@ package uk.gov.companieshouse.document.generator.core.document.render;
 
 import uk.gov.companieshouse.document.generator.core.document.models.DocumentGenerationCompleted;
 
-public interface RenderedDocumentJsonHandler {
+public interface ConvertJsonHandler {
 
     /**
      * Convert to Json Object

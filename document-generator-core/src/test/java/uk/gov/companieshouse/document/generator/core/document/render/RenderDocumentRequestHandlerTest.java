@@ -43,7 +43,7 @@ public class RenderDocumentRequestHandlerTest {
     private RenderDocumentRequestHandlerImpl renderDocumentRequestHandler;
 
     @Mock
-    private RenderedDocumentJsonHandler renderedDocumentJsonHandler;
+    private ConvertJsonHandler convertJsonHandler;
 
     @Mock
     private HttpConnectionHandler mockHttpConnectionHandler;
@@ -68,7 +68,7 @@ public class RenderDocumentRequestHandlerTest {
     @DisplayName("Send the data to the render service successfully")
     public void testSendDataToRenderServiceSuccess() throws IOException {
 
-        when(renderedDocumentJsonHandler.convert(any(String.class))).thenReturn(documentGeneratorCompletedData());
+        when(convertJsonHandler.convert(any(String.class))).thenReturn(documentGeneratorCompletedData());
 
         setMockHttpConnectionForSuccess(201);
 

@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import uk.gov.companieshouse.document.generator.core.document.models.DocumentGenerationCompleted;
+import uk.gov.companieshouse.document.generator.core.document.render.ConvertJsonHandler;
 import uk.gov.companieshouse.document.generator.core.document.render.HttpConnectionHandler;
 import uk.gov.companieshouse.document.generator.core.document.render.RenderDocumentRequestHandler;
-import uk.gov.companieshouse.document.generator.core.document.render.RenderedDocumentJsonHandler;
 import uk.gov.companieshouse.document.generator.core.document.render.models.RenderDocumentRequest;
 import uk.gov.companieshouse.document.generator.core.document.render.models.RenderDocumentResponse;
 
@@ -21,7 +21,7 @@ import java.nio.charset.StandardCharsets;
 public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHandler {
 
     @Autowired
-    private RenderedDocumentJsonHandler renderedDocumentJsonHandler;
+    private ConvertJsonHandler convertJsonHandler;
 
     @Autowired
     private HttpConnectionHandler httpConnectionHandler;
@@ -77,7 +77,7 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
             generatedDocumentJson = new String(IOUtils.toByteArray(response));
         }
 
-        generatedDocument = renderedDocumentJsonHandler.convert(generatedDocumentJson);
+        generatedDocument = convertJsonHandler.convert(generatedDocumentJson);
 
         generatedDocument.setLocation(connection.getHeaderField("Location"));
 
