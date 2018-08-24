@@ -6,21 +6,21 @@ import uk.gov.companieshouse.document.generator.core.document.models.RenderSubmi
 import uk.gov.companieshouse.document.generator.core.kafka.ConsumerGroupHandler;
 import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfo;
+import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.kafka.consumer.CHKafkaConsumerGroup;
 import uk.gov.companieshouse.kafka.message.Message;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
 import java.util.Arrays;
-import java.util.List;
 
 public class DocumentGenerator implements Runnable {
 
     private static final Logger LOG = LoggerFactory.getLogger("document-generator");
 
-    private static final List<String> CONSUMER_TOPICS = Arrays.asList("render-submitted-data-document");
+    private static final String CONSUMER_TOPIC_VAR = "CONSUMER_TOPIC";
 
-    private static final String GROUP_NAME = "document-generator";
+    private static final String GROUP_NAME_VAR = "GROUP_NAME";
     
     private CHKafkaConsumerGroup documentGeneratorConsumerGroup;
 
@@ -28,15 +28,21 @@ public class DocumentGenerator implements Runnable {
 
     private AvroDeserializer<RenderSubmittedDataDocument> avroDeserializer;
 
+    private EnvironmentReader environmentReader;
+
     @Autowired
     public DocumentGenerator(DocumentInfoService documentInfoService, ConsumerGroupHandler consumerGroupHandler,
-                             AvroDeserializer<RenderSubmittedDataDocument> avroDeserializer) {
+                             AvroDeserializer<RenderSubmittedDataDocument> avroDeserializer,
+                             EnvironmentReader environmentReader) {
 
         this.documentInfoService = documentInfoService;
         this.avroDeserializer = avroDeserializer;
+        this.environmentReader = environmentReader;
 
         documentGeneratorConsumerGroup =
-                consumerGroupHandler.getConsumerGroup(CONSUMER_TOPICS, GROUP_NAME);
+                consumerGroupHandler.getConsumerGroup(Arrays.asList(
+                        environmentReader.getMandatoryString(CONSUMER_TOPIC_VAR)),
+                        environmentReader.getMandatoryString(GROUP_NAME_VAR));
     }
 
     @Override

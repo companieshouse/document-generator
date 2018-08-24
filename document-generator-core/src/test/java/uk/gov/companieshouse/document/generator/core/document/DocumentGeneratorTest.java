@@ -1,6 +1,9 @@
 package uk.gov.companieshouse.document.generator.core.document;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -9,6 +12,7 @@ import uk.gov.companieshouse.document.generator.core.document.models.RenderSubmi
 import uk.gov.companieshouse.document.generator.core.kafka.ConsumerGroupHandler;
 import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfo;
+import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.kafka.consumer.CHKafkaConsumerGroup;
 import uk.gov.companieshouse.kafka.message.Message;
 
@@ -49,6 +53,9 @@ public class DocumentGeneratorTest {
     private ConsumerGroupHandler mockConsumerGroupHandler;
 
     @Mock
+    private EnvironmentReader mockEnvironmentReader;
+
+    @Mock
     private AvroDeserializer<RenderSubmittedDataDocument> mockAvroDeserializer;
 
     @BeforeEach
@@ -62,13 +69,14 @@ public class DocumentGeneratorTest {
     @DisplayName("test the polling of Kafka and the consumer group commit")
     public void testPollAndConsumerGroupCommit() throws IOException {
 
+        mockEnvironmentReader();
         mockConsumerGroupWithMessages();
         when(mockAvroDeserializer.deserialize(message, renderSubmittedDataDocument.getSchema())).
                 thenReturn(renderSubmittedDataDocument);
         when(mockDocumentInfoService.getDocumentInfo()).thenReturn(populatedDocumentInfo());
 
         documentGenerator = new DocumentGenerator(mockDocumentInfoService,
-                mockConsumerGroupHandler, mockAvroDeserializer);
+                mockConsumerGroupHandler, mockAvroDeserializer, mockEnvironmentReader);
 
         documentGenerator.run();
 
@@ -79,12 +87,13 @@ public class DocumentGeneratorTest {
     @DisplayName("test the polling to kafka and consumer group commit when exception caught")
     public void testPollAndConsumerGroupCommitWhenExceptionCaught() throws IOException {
 
+        mockEnvironmentReader();
         mockConsumerGroupWithMessages();
         when(mockAvroDeserializer.deserialize(message, renderSubmittedDataDocument.getSchema())).
                thenThrow(new IOException());
 
         documentGenerator = new DocumentGenerator(mockDocumentInfoService,
-                mockConsumerGroupHandler, mockAvroDeserializer);
+                mockConsumerGroupHandler, mockAvroDeserializer, mockEnvironmentReader);
 
         documentGenerator.run();
 
@@ -92,9 +101,20 @@ public class DocumentGeneratorTest {
     }
 
     /**
+     * mock the environment reader return
+     */
+    private void mockEnvironmentReader() {
+
+        when(mockEnvironmentReader.getMandatoryString(any(String.class)))
+                .thenReturn("render-submitted-data-document")
+                .thenReturn("document-generator");
+    }
+
+    /**
      * mock the consumer group with test message data
      */
     private void mockConsumerGroupWithMessages() {
+
         when(mockConsumerGroupHandler.getConsumerGroup(anyList(), any(String.class))).
                 thenReturn(mockConsumerGroup);
         when(mockConsumerGroup.consume()).thenReturn(messages);
