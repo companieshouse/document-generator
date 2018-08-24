@@ -1,13 +1,13 @@
 package uk.gov.companieshouse.document.generator.core.kafka.configurationhelper.impl;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.document.generator.core.kafka.configurationhelper.KafkaBrokerConfigHelper;
 import uk.gov.companieshouse.kafka.consumer.ConsumerConfig;
 import uk.gov.companieshouse.kafka.consumer.ConsumerConfigHelper;
 import uk.gov.companieshouse.kafka.producer.ProducerConfig;
 import uk.gov.companieshouse.kafka.producer.ProducerConfigHelper;
 
-@Component
+@Service
 public class KafkaBrokerConfigHelperImpl implements KafkaBrokerConfigHelper {
 
     /**

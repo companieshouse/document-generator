@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.document.generator.core.document.render;
+package uk.gov.companieshouse.document.generator.core.document.render.models;
 
 public class RenderDocumentRequest {
 
