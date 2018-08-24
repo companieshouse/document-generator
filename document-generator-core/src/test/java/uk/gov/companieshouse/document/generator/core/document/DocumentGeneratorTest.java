@@ -1,9 +1,6 @@
 package uk.gov.companieshouse.document.generator.core.document;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -65,11 +62,9 @@ public class DocumentGeneratorTest {
     @DisplayName("test the polling of Kafka and the consumer group commit")
     public void testPollAndConsumerGroupCommit() throws IOException {
 
+        mockConsumerGroupWithMessages();
         when(mockAvroDeserializer.deserialize(message, renderSubmittedDataDocument.getSchema())).
                 thenReturn(renderSubmittedDataDocument);
-        when(mockConsumerGroupHandler.getConsumerGroup(anyList(), any(String.class))).
-                thenReturn(mockConsumerGroup);
-        when(mockConsumerGroup.consume()).thenReturn(messages);
         when(mockDocumentInfoService.getDocumentInfo()).thenReturn(populatedDocumentInfo());
 
         documentGenerator = new DocumentGenerator(mockDocumentInfoService,
@@ -78,6 +73,31 @@ public class DocumentGeneratorTest {
         documentGenerator.run();
 
         verifyConsumerGroupCommit();
+    }
+
+    @Test
+    @DisplayName("test the polling to kafka and consumer group commit when exception caught")
+    public void testPollAndConsumerGroupCommitWhenExceptionCaught() throws IOException {
+
+        mockConsumerGroupWithMessages();
+        when(mockAvroDeserializer.deserialize(message, renderSubmittedDataDocument.getSchema())).
+               thenThrow(new IOException());
+
+        documentGenerator = new DocumentGenerator(mockDocumentInfoService,
+                mockConsumerGroupHandler, mockAvroDeserializer);
+
+        documentGenerator.run();
+
+        verifyConsumerGroupCommit();
+    }
+
+    /**
+     * mock the consumer group with test message data
+     */
+    private void mockConsumerGroupWithMessages() {
+        when(mockConsumerGroupHandler.getConsumerGroup(anyList(), any(String.class))).
+                thenReturn(mockConsumerGroup);
+        when(mockConsumerGroup.consume()).thenReturn(messages);
     }
 
     /**

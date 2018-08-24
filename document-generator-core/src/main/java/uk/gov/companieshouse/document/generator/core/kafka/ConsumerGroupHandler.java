@@ -8,9 +8,9 @@ public interface ConsumerGroupHandler {
     /**
      * get the consumerGroup
      *
-     * @param cosumerTopics
+     * @param consumerTopics
      * @param groupName
      * @return
      */
-    CHKafkaConsumerGroup getConsumerGroup(List<String> cosumerTopics, String groupName);
+    CHKafkaConsumerGroup getConsumerGroup(List<String> consumerTopics, String groupName);
 }

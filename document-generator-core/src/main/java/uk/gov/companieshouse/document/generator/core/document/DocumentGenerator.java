@@ -8,11 +8,15 @@ import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfo;
 import uk.gov.companieshouse.kafka.consumer.CHKafkaConsumerGroup;
 import uk.gov.companieshouse.kafka.message.Message;
+import uk.gov.companieshouse.logging.Logger;
+import uk.gov.companieshouse.logging.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class DocumentGenerator implements Runnable {
+
+    private static final Logger LOG = LoggerFactory.getLogger("document-generator");
 
     private static final List<String> CONSUMER_TOPICS = Arrays.asList("render-submitted-data-document");
 
@@ -41,7 +45,7 @@ public class DocumentGenerator implements Runnable {
         try {
             pollAndGenerate();
         } catch (Exception e) {
-
+            LOG.error(e);
         }
     }
 
@@ -55,6 +59,7 @@ public class DocumentGenerator implements Runnable {
             RenderSubmittedDataDocument renderSubmittedDataDocument;
 
             try {
+                //TODO to be used when sending to render service in SFA - 585 sub task
                 renderSubmittedDataDocument = avroDeserializer
                         .deserialize(message, RenderSubmittedDataDocument.getClassSchema());
 
@@ -63,6 +68,7 @@ public class DocumentGenerator implements Runnable {
                 documentGeneratorConsumerGroup.commit();
             } catch (Exception e) {
                 documentGeneratorConsumerGroup.commit();
+                LOG.error(e);
             }
         }
     }

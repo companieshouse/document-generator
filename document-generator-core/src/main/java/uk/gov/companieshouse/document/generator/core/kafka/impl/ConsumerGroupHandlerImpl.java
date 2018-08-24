@@ -17,13 +17,13 @@ public class ConsumerGroupHandlerImpl implements ConsumerGroupHandler {
     /**
      * get the consumer group
      *
-     * @param cosumerTopics
+     * @param consumerTopics
      * @param groupName
      * @return
      */
     @Override
-    public CHKafkaConsumerGroup getConsumerGroup(List<String> cosumerTopics, String groupName) {
+    public CHKafkaConsumerGroup getConsumerGroup(List<String> consumerTopics, String groupName) {
         return new CHKafkaConsumerGroup(kafkaConfigHelper
-                .configureKafkaConsumer(cosumerTopics, groupName));
+                .configureKafkaConsumer(consumerTopics, groupName));
     }
 }
