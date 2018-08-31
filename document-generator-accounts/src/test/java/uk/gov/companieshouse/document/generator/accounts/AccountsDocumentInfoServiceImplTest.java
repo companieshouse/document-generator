@@ -36,7 +36,7 @@ public class AccountsDocumentInfoServiceImplTest {
         Map<String, Resource> resources = new HashMap<>();
         resources.put("error", createResource());
 
-        Transaction transaction = new Transaction().;
+        Transaction transaction = new Transaction();
         transaction.setResources(resources);
         when(transactionService.getTransaction(anyString())).thenReturn(transaction);
 
