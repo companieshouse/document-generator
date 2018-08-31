@@ -33,9 +33,6 @@
         <!-- Structured logging -->
         <structured-logging.version>1.2.0-rc1</structured-logging.version>
         
-        <!-- Kafka -->
-        <ch-kafka.version>1.0.3-rc4</ch-kafka.version>
-        
         <commons-io.version>2.4</commons-io.version>
 
     </properties>
@@ -46,8 +43,6 @@
             <artifactId>environment-reader-library</artifactId>
             <version>${environment-reader-library.version}</version>
         </dependency>
-
-        <!-- JUnit Testing -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
@@ -60,21 +55,11 @@
             <version>${mockito-junit-jupiter.version}</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- Structured logging -->
         <dependency>
             <groupId>uk.gov.companieshouse</groupId>
             <artifactId>structured-logging</artifactId>
             <version>${structured-logging.version}</version>
         </dependency>
-        
-        <!-- Kafka -->
-         <dependency>
-            <groupId>uk.gov.companieshouse</groupId>
-            <artifactId>ch-kafka</artifactId>
-            <version>${ch-kafka.version}</version>
-        </dependency>
-        
          <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
@@ -85,6 +70,11 @@
             <artifactId>document-generator-interfaces</artifactId>
             <version>unversioned</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.2</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -93,10 +83,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.avro</groupId>
-                <artifactId>avro-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

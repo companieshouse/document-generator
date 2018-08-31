@@ -8,7 +8,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.companieshouse.document.generator.core.document.models.DocumentGenerationCompleted;
 import uk.gov.companieshouse.document.generator.core.document.render.impl.RenderDocumentRequestHandlerImpl;
 import uk.gov.companieshouse.document.generator.core.document.render.models.RenderDocumentRequest;
 import uk.gov.companieshouse.document.generator.core.document.render.models.RenderDocumentResponse;
@@ -61,21 +60,19 @@ public class RenderDocumentRequestHandlerTest {
         renderDocumentRequest.setTemplateName("template1");
 
         when(mockHttpConnectionHandler.openConnection(any(String.class))).thenReturn(mockHttpURLConnection);
-
     }
 
     @Test
     @DisplayName("Send the data to the render service successfully")
     public void testSendDataToRenderServiceSuccess() throws IOException {
 
-        when(convertJsonHandler.convert(any(String.class))).thenReturn(documentGeneratorCompletedData());
+        when(convertJsonHandler.convert(any(String.class))).thenReturn("long data");
 
         setMockHttpConnectionForSuccess(201);
 
         RenderDocumentResponse response = renderDocumentRequestHandler.sendDataToDocumentRenderService("http://www.test.com", renderDocumentRequest);
-        DocumentGenerationCompleted generatedDocument = response.getGeneratedDocument();
 
-        assertEquals(PDF_LOCATION, generatedDocument.getLocation());
+        assertEquals(PDF_LOCATION, response.getLocation());
         assertEquals(201, response.getStatus());
 
         verifyHttpConnectionMock(true);
@@ -87,25 +84,12 @@ public class RenderDocumentRequestHandlerTest {
 
         setMockHttpConnectionForError(500);
         RenderDocumentResponse response = renderDocumentRequestHandler.sendDataToDocumentRenderService("http://www.test.com", renderDocumentRequest);
-        DocumentGenerationCompleted generatedDocument = response.getGeneratedDocument();
 
-        assertNull(generatedDocument);
+        assertNull(response.getDocumentSize());
+        assertNull(response.getLocation());
         assertEquals(500, response.getStatus());
 
         verifyHttpConnectionMock(false);
-    }
-
-    /**
-     * Set document size data when mocking renderedDocumentJsonHandler
-     *
-     * @return generatedDocument
-     */
-    private DocumentGenerationCompleted documentGeneratorCompletedData() {
-        DocumentGenerationCompleted generatedDocument = new DocumentGenerationCompleted();
-
-        generatedDocument.setDocumentSize("long data");
-
-        return generatedDocument;
     }
 
     /**

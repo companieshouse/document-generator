@@ -1,14 +1,12 @@
 package uk.gov.companieshouse.document.generator.core.document.render;
 
-import uk.gov.companieshouse.document.generator.core.document.models.DocumentGenerationCompleted;
-
 public interface ConvertJsonHandler {
 
     /**
      * Convert to Json Object
      *
      * @param jsonString
-     * @return converted generatedDocument
+     * @return converted String for documentSize
      */
-    DocumentGenerationCompleted convert(String jsonString);
+    String convert(String jsonString);
 }
