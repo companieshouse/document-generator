@@ -37,10 +37,6 @@
         <artifactoryResolveSnapshotRepo>libs-snapshot-local</artifactoryResolveSnapshotRepo>
         <artifactoryResolveReleaseRepo>libs-release-local</artifactoryResolveReleaseRepo>
 
-        <!-- Avro -->
-        <avro-maven-plugin.version>1.8.1</avro-maven-plugin.version>
-        <avro.version>1.8.1</avro.version>
-
         <!-- Sonar -->
         <sonar-maven-plugin.version>3.4.0.905</sonar-maven-plugin.version>
         <sonar.host.url>${CODE_ANALYSIS_HOST_URL}</sonar.host.url>
@@ -50,11 +46,6 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.apache.avro</groupId>
-            <artifactId>avro</artifactId>
-            <version>${avro.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-hateoas</artifactId>
@@ -165,26 +156,6 @@
                                     <version>${junit-platform-surefire-provider.version}</version>
                                 </dependency>
                             </dependencies>
-                        </plugin>
-
-                        <!-- Avro Auto Generate classes from schema Plugin -->
-                        <plugin>
-                            <groupId>org.apache.avro</groupId>
-                            <artifactId>avro-maven-plugin</artifactId>
-                            <version>${avro-maven-plugin.version}</version>
-                            <executions>
-                                <execution>
-                                    <phase>generate-sources</phase>
-                                    <goals>
-                                        <goal>schema</goal>
-                                    </goals>
-                                    <configuration>
-                                        <stringType>String</stringType>
-                                        <sourceDirectory>${project.basedir}/src/main/resources/avro/</sourceDirectory>
-                                        <outputDirectory>${project.basedir}/src/main/java/</outputDirectory>
-                                    </configuration>
-                                </execution>
-                            </executions>
                         </plugin>
                     </plugins>
                 </pluginManagement>

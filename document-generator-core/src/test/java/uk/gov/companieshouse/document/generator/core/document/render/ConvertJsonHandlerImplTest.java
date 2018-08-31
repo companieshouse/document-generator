@@ -6,10 +6,11 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.companieshouse.document.generator.core.document.models.DocumentGenerationCompleted;
 import uk.gov.companieshouse.document.generator.core.document.render.impl.ConvertJsonHandlerImpl;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -24,22 +25,22 @@ public class ConvertJsonHandlerImplTest {
     @DisplayName("test valid convert Json")
     public void testConvert() {
 
-        DocumentGenerationCompleted generatedDocument = convertJsonHandler.convert(JSON);
-        assertNotNull(generatedDocument);
-        assertEquals("12345", generatedDocument.getDocumentSize());
+        String covertedData = convertJsonHandler.convert(JSON);
+        assertNotNull(covertedData);
+        assertEquals("12345", covertedData);
     }
 
     @Test
     @DisplayName("test convert null Json")
     public void testConvertNullJson() {
-        DocumentGenerationCompleted generatedDocument = convertJsonHandler.convert(null);
-        assertNull(generatedDocument);
+        String covertedData = convertJsonHandler.convert(null);
+        assertNull(covertedData);
     }
 
     @Test
     @DisplayName("test covert empty Json")
     public void testConvertEmptyJson() {
-        DocumentGenerationCompleted generatedDocument = convertJsonHandler.convert("");
-        assertNull(generatedDocument);
+        String covertedData = convertJsonHandler.convert("");
+        assertNull(covertedData);
     }
 }
