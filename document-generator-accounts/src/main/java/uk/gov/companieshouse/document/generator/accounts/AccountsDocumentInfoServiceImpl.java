@@ -27,6 +27,7 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
 
         Transaction transaction = transactionService.getTransaction(resource);
         if (transaction == null) {
+            LOG.error("transaction not found");
             return null;
         }
 
