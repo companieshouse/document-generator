@@ -1,7 +1,9 @@
 package uk.gov.companieshouse.document.generator.accounts;
 
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.gov.companieshouse.api.model.transaction.Resource;
 import uk.gov.companieshouse.api.model.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.service.TransactionService;
 import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
@@ -24,6 +26,7 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
         LOG.info("Started getting document");
 
         String resource = "";
+        String resourceId = "";
 
         Transaction transaction = transactionService.getTransaction(resource);
         if (transaction == null) {
@@ -31,7 +34,34 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
             return null;
         }
 
-        return new DocumentInfo();
+        String accountLink = Optional.of(transaction)
+                .map(Transaction::getResources)
+                .map(e -> e.get(resourceId))
+                .map(Resource::getLinks)
+                .map(e -> e.get("resource"))
+                .orElseGet(() -> {
+                    LOG.error("Unable to find account resource link in transaction under:" + resourceId);
+                    return Optional.empty().toString();
+                });
 
+        // when abridged has been migrated to use the company-accounts api, the code for the
+        // company accounts should work for abridged, resulting in this abridged specific code
+        // qualifying for removal
+        if (isAbridged(accountLink)) {
+            return new DocumentInfo();
+        }
+
+        return null;
+
+    }
+
+    /**
+     * determines whether it is an abridged link as /accounts/ only exists within the abridged
+     * implementation
+     * @param accountLink - account link
+     * @return true if abridged, false if not
+     */
+    private boolean isAbridged(String accountLink) {
+        return accountLink.contains("/accounts/");
     }
 }
