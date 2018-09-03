@@ -36,9 +36,9 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
 
         String accountLink = Optional.of(transaction)
                 .map(Transaction::getResources)
-                .map(e -> e.get(resourceId))
+                .map(resources -> resources.get(resourceId))
                 .map(Resource::getLinks)
-                .map(e -> e.get("resource"))
+                .map(links -> links.get("resource"))
                 .orElseGet(() -> {
                     LOG.error("Unable to find account resource link in transaction under:" + resourceId);
                     return Optional.empty().toString();
