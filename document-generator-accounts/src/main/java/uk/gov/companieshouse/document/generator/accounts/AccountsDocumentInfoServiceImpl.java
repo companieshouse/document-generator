@@ -49,12 +49,12 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
     }
 
     /**
-     * determines whether it is an abridged link as /accounts/ only exists within the abridged
-     * implementation
+     * determines whether it is an abridged link as "/transactions/{transactionId}/accounts/{accountsId}"
+     * only exists within the abridged implementation
      * @param accountLink - account link
      * @return true if abridged, false if not
      */
     private boolean isAbridged(String accountLink) {
-        return accountLink.contains("/accounts/");
+        return accountLink.matches("/transactions/\\d+(\\-\\d+)+/accounts/\\w+?=");
     }
 }
