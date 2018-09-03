@@ -57,8 +57,4 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
     private boolean isAbridged(String accountLink) {
         return accountLink.contains("/accounts/");
     }
-
-    private DocumentInfo smallFull(String accountLink) {
-        return new DocumentInfo();
-    }
 }
