@@ -34,24 +34,17 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
             return null;
         }
 
-        String accountLink = Optional.of(transaction)
+        return Optional.of(transaction)
                 .map(Transaction::getResources)
                 .map(resources -> resources.get(resourceId))
                 .map(Resource::getLinks)
                 .map(links -> links.get("resource"))
-                .orElseGet(() -> {
-                    LOG.error("Unable to find account resource link in transaction under:" + resourceId);
-                    return Optional.empty().toString();
-                });
-
-        // when abridged has been migrated to use the company-accounts api, the code for the
-        // company accounts should work for abridged, resulting in this abridged specific code
-        // qualifying for removal
-        if (isAbridged(accountLink)) {
-            return new DocumentInfo();
-        }
-
-        return null;
+                // when abridged has been migrated to use the company-accounts api, the code for the
+                // company accounts should work for abridged, resulting in this abridged specific code
+                // qualifying for removal
+                .filter(this::isAbridged)
+                .map(accountsLinks -> new DocumentInfo())
+                .orElse(null);
 
     }
 
@@ -63,5 +56,9 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
      */
     private boolean isAbridged(String accountLink) {
         return accountLink.contains("/accounts/");
+    }
+
+    private DocumentInfo smallFull(String accountLink) {
+        return new DocumentInfo();
     }
 }
