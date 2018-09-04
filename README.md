@@ -19,12 +19,10 @@ to be added
 The following are the modules that exist within document generator.
 
 ### document-generator-interface
-===================================
 The document-generator-interface module is a sub module within document-generator, it holds the interface
 DocumentInfoService that contains the methods to getDocumentInfo in order to return the DocumentInfo model
 which will contain String data, String assetId, String templateId.
 
 ### document-generator-accounts
-===================================
 The document-generator-accounts module is a sub module within document-generator, it holds the accounts specific implementation of the DocumentInfoService that contains the method getDocumentInfo that returns the DocumentInfo model
 which will contain String data, String assetId, String templateId.
