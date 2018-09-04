@@ -15,8 +15,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.companieshouse.api.model.accounts.Accounts;
 import uk.gov.companieshouse.api.model.transaction.Resource;
 import uk.gov.companieshouse.api.model.transaction.Transaction;
+import uk.gov.companieshouse.document.generator.accounts.service.AccountsService;
 import uk.gov.companieshouse.document.generator.accounts.service.TransactionService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfo;
 
@@ -30,16 +32,13 @@ public class AccountsDocumentInfoServiceImplTest {
     @Mock
     private TransactionService transactionService;
 
+    @Mock
+    private AccountsService accountsService;
+
     @Test
     @DisplayName("Tests the unsuccessful retrieval of an accounts document data due to no accounts resource in transaction")
     void testUnsuccessfulGetDocumentInfoNoAccountsResourceInTransaction() {
-        Map<String, Resource> resources = new HashMap<>();
-        resources.put("error", createResource());
-
-        Transaction transaction = new Transaction();
-        transaction.setResources(resources);
-        when(transactionService.getTransaction(anyString())).thenReturn(transaction);
-
+        when(transactionService.getTransaction(anyString())).thenReturn(createTransaction());
         assertNull(accountsDocumentInfoService.getDocumentInfo());
     }
 
@@ -51,16 +50,48 @@ public class AccountsDocumentInfoServiceImplTest {
     }
 
     @Test
+    @DisplayName("Tests the unsuccessful retrieval of an accounts document data due to null accounts data from service")
+    void testUnSuccessfulGetDocumentInfoNullAccountRetrieval() {
+        when(transactionService.getTransaction(anyString())).thenReturn(createTransaction());
+        when(accountsService.getAccounts(anyString())).thenReturn(null);
+        assertNull(accountsDocumentInfoService.getDocumentInfo());
+    }
+
+    @Test
+    @DisplayName("Tests the unsuccessful retrieval of accounts document data due to no valid account type in the accounts links data")
+    void testUnSuccessfulGetDocumentInfoNoAccountTypeInAccountsDataLinks() {
+        when(transactionService.getTransaction(anyString())).thenReturn(createTransaction());
+
+        Accounts accounts = createAccounts();
+        accounts.getLinks().remove("abridged_accounts");
+        when(accountsService.getAccounts(anyString())).thenReturn(accounts);
+
+        assertNull(accountsDocumentInfoService.getDocumentInfo());
+    }
+
+    @Test
     @DisplayName("Tests the successful retrieval of an abridged accounts document data")
     void testSuccessfulGetDocumentInfo() {
+        when(transactionService.getTransaction(anyString())).thenReturn(createTransaction());
+        when(accountsService.getAccounts(anyString())).thenReturn(createAccounts());
+        assertEquals(DocumentInfo.class, accountsDocumentInfoService.getDocumentInfo().getClass());
+    }
+
+    private Accounts createAccounts() {
+        Accounts accounts =  new Accounts();
+        Map<String, String> linksMap = new HashMap<>();
+        linksMap.put("abridged_accounts", "/transactions/175725-236115-324362/accounts/wQSM2bWmQR3zrIw3x7apJOBjzWY=/abridged/0NbSemRX4YHphNj3tRq1gjyn6rg=");
+        accounts.setLinks(linksMap);
+        return accounts;
+    }
+
+    private Transaction createTransaction() {
         Map<String, Resource> resources = new HashMap<>();
         resources.put("", createResource());
 
         Transaction transaction = new Transaction();
         transaction.setResources(resources);
-        when(transactionService.getTransaction(anyString())).thenReturn(transaction);
-
-        assertEquals(DocumentInfo.class, accountsDocumentInfoService.getDocumentInfo().getClass());
+        return transaction;
     }
 
     private Resource createResource() {
