@@ -1,0 +1,76 @@
+{
+  "definitions": {
+    "documentGeneratorRequest": {
+      "title": "DocumentGeneratorRequest",
+      "required": [
+        "id",
+        "resource",
+        "resource_id",
+        "content_type",
+        "document_type",
+        "user_id"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "id for the document request"
+        },
+        "resource": {
+          "type": "string",
+          "description": "link to the resource"
+        },
+        "resource_id": {
+          "type": "string",
+          "description": "id of the resource"
+        },
+        "content_type": {
+          "type": "string",
+          "description": "the content type of the template to be converted"
+        },
+        "document_type": {
+          "type": "string",
+          "description": "type of document to be rendered"
+        },
+        "user_id": {
+          "type": "string",
+          "description": "id of the user requesting the document"
+        }
+      }
+    },
+    "documentGeneratorResponse": {
+      "title": "DocumentGeneratorResponse",
+      "required": [
+        "location",
+        "size",
+        "description",
+        "description_identifier",
+      ],
+      "properties": {
+        "location": {
+          "type": "string",
+          "description": "location that the document has been stored"
+        },
+        "size": {
+          "type": "string",
+          "description": "size of the document stored"
+        },
+        "description": {
+          "type": "string",
+          "description": "description of the document produced"
+        },
+        "description_identifier": {
+          "type": "string",
+          "description": "Identifier for the document description"
+        },
+        "description_values": {
+          "type": "object",
+          "description": "List of resources contained within this transaction.",
+          "additionalProperties":{
+            "type": "string",
+            "description": "Map of resource 'identifier' to resource object"
+          }
+        }
+      }
+    }
+  }
+}
