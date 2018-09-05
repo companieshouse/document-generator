@@ -17,10 +17,10 @@ public class AccountsManager {
     private static final RestTemplate restTemplate = createRestTemplate();
 
     /**
-     * Try get transaction if exists
+     * Try get accounts resource if exists
      *
      * @param link - self link for the accounts object
-     * @return transaction object along with the status or not found status.
+     * @return accounts object along with the status or not found status.
      */
     public static ResponseEntity<Accounts> getAccounts(String link) {
         HttpHeaders requestHeaders = new HttpHeaders();
@@ -43,7 +43,7 @@ public class AccountsManager {
 
 
     /**
-     * GET the transaction resource
+     * GET the accounts resource
      *
      * @param url - url to send the get request
      * @param requestEntity - the request entity object
