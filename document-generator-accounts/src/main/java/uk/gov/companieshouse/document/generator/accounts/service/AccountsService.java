@@ -9,10 +9,10 @@ public interface AccountsService {
      *
      * __NOTE:__: It is important to note, currently it will call an internal accounts manager
      * within this project that calls the abridged api through ERIC as the private sdk hasn't
-     * been built yet. When the private SDK has been built, we should be able to simply delete the
+     * been built yet. When the private SDK has been built (SFA-518, SFA-670), we should be able to simply delete the
      * accounts package and use the SDK in the implementation of this method.
      *
-     * @return transaction
+     * @return accounts
      */
     Accounts getAccounts(String resource);
 
