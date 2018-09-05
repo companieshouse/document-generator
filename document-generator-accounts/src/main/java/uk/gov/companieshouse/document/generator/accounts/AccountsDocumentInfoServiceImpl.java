@@ -86,7 +86,7 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
                 .map(AccountType::getAccountType)
                 .findFirst()
                 .orElseGet(() -> {
-                    LOG.error("Unable to find account type in account data: " + accountsData.getId());
+                    LOG.info("Unable to find account type in account data: " + accountsData.getId());
                     return null;
                 });
     }
