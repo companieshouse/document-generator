@@ -27,7 +27,7 @@ public class AccountsServiceImpl implements AccountsService {
             LOG.error("Failed to retrieve data from API: " + resource);
             return null;
         }
-        LOG.trace("Accounts data retrieved successfully");
+        LOG.trace("Accounts data retrieved successfully: " + resource);
         return accounts.getBody();
     }
 }
