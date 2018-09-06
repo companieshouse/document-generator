@@ -47,6 +47,7 @@ public class DocumentGeneratorController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+        // TODO response returns NULL so will only hit the below code once service to get response is implemented
         if(response.getLocation() != null) {
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } else {
