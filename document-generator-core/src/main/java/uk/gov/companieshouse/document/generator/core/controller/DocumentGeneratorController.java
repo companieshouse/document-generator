@@ -1,10 +1,12 @@
 package uk.gov.companieshouse.document.generator.core.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.companieshouse.document.generator.core.models.DocumentGeneratorRequest;
@@ -17,11 +19,12 @@ import javax.validation.Valid;
 import static uk.gov.companieshouse.document.generator.core.DocumentGeneratorApplication.APPLICATION_NAME_SPACE;
 
 @RestController
+@RequestMapping(value = "/document-generate", produces = MediaType.APPLICATION_JSON_VALUE)
 public class DocumentGeneratorController {
 
     private static final Logger LOG = LoggerFactory.getLogger(APPLICATION_NAME_SPACE);
 
-    @PostMapping("/document-generate")
+    @PostMapping
     @ResponseBody
     public ResponseEntity generateDocument(@Valid @RequestBody DocumentGeneratorRequest documentGeneratorRequest,
                                            BindingResult result) {
