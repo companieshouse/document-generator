@@ -60,4 +60,11 @@ public class DocumentGeneratorResponse {
     public void setSize(String size) {
         this.size = size;
     }
+
+    @Override
+    public String toString() {
+        return "DocumentGeneratorReponse [description=" + description +
+                ", descriptionIndentifier=" + descriptionIdentifier + ", descriptionValues=" + descriptionValues +
+                ", location=" + location + ", size=" + size + "]";
+    }
 }

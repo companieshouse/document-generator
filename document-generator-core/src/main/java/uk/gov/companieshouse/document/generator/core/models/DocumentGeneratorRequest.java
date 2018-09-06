@@ -77,4 +77,10 @@ public class DocumentGeneratorRequest {
     public void setUserId(String userId) {
         this.userId = userId;
     }
+
+    @Override
+    public String toString() {
+        return "DocumentGeneratorRequest [contentType=" + contentType + ", documentType=" + documentType + ", " +
+                "id=" + id + ", resource=" + resource + ", resourceId=" + resourceId + ", userId=" + userId + "]";
+    }
 }
