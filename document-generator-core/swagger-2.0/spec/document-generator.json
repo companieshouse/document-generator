@@ -47,8 +47,8 @@
           "400": {
             "description": "Unable to handle given request"
           },
-          "404": {
-            "description": "Resource has not been found"
+          "401": {
+            "description": "Not authorized to add the resource "
           }
         }
       }
