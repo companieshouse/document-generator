@@ -44,7 +44,7 @@ public class DocumentGeneratorControllerTest {
     }
 
     @Test
-    @DisplayName("Tests if Internal Server Error return as document generator response is null 11")
+    @DisplayName("Tests if Bad Request error return when binding error found")
     public void errorReturnAsIncompleteRequest() {
 
         DocumentGeneratorRequest request = new DocumentGeneratorRequest();
