@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.companieshouse.document.generator.core.models.DocumentGeneratorRequest;
 import uk.gov.companieshouse.document.generator.core.models.DocumentGeneratorResponse;
+import uk.gov.companieshouse.document.generator.core.service.DocumentGeneratorService;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
@@ -24,12 +25,14 @@ public class DocumentGeneratorController {
 
     private static final Logger LOG = LoggerFactory.getLogger(APPLICATION_NAME_SPACE);
 
+    private DocumentGeneratorService documentGeneratorService;
+
     @PostMapping
     @ResponseBody
     public ResponseEntity generateDocument(@Valid @RequestBody DocumentGeneratorRequest documentGeneratorRequest,
                                            BindingResult result) {
 
-        DocumentGeneratorResponse response = new DocumentGeneratorResponse();
+        DocumentGeneratorResponse response;
 
         if (result.hasErrors()) {
             LOG.error("error in request body");
@@ -37,9 +40,10 @@ public class DocumentGeneratorController {
         }
 
         try {
-            response = null;
+            response = documentGeneratorService.generate(documentGeneratorRequest);
         } catch (Exception e) {
             LOG.error(e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         if(response == null) {
@@ -47,7 +51,6 @@ public class DocumentGeneratorController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        // TODO response returns NULL so will only hit the below code once service to get response is implemented
         if(response.getLocation() != null) {
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } else {

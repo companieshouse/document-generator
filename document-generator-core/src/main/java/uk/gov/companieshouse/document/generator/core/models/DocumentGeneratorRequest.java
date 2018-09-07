@@ -1,6 +1,8 @@
 package uk.gov.companieshouse.document.generator.core.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.validation.constraints.NotNull;
 
@@ -80,7 +82,11 @@ public class DocumentGeneratorRequest {
 
     @Override
     public String toString() {
-        return "DocumentGeneratorRequest [contentType=" + contentType + ", documentType=" + documentType + ", " +
-                "id=" + id + ", resource=" + resource + ", resourceId=" + resourceId + ", userId=" + userId + "]";
+        try {
+            return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
