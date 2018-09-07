@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.companieshouse.api.model.transaction.Transaction;
+import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.environment.impl.EnvironmentReaderImpl;
 
 /**
@@ -18,6 +19,10 @@ public class TransactionManager {
 
     /** represents the Authorization header name in the request */
     private static final String AUTHORIZATION_HEADER = "Authorization";
+
+    private static final EnvironmentReader READER = new EnvironmentReaderImpl();
+    private static String API_URL = READER.getMandatoryString("API_URL");
+    private static String CHS_API_KEY = READER.getMandatoryString("CHS_API_KEY");
 
     /** represents the Spring rest template that is created for cross microservice contact */
     private static final RestTemplate restTemplate = createRestTemplate();
@@ -63,21 +68,21 @@ public class TransactionManager {
     }
 
     /**
-     * Get the API_URL environment variable
+     * Get the root uri from the properties file
      *
-     * @return Get the API_URL if set, otherwise throw an exception
+     * @return Get the root uri if set, otherwise throw an exception
      */
     private static String getRootUri() {
-        return new EnvironmentReaderImpl().getMandatoryString("API_URL");
+        return API_URL;
     }
 
     /**
      * Gets the api key environment variable
      *
-     * @return Returns the api key if set, otherwise throw an exception
+     * @return Returns the api key if set
      */
     private static String getApiKey() {
-        return new EnvironmentReaderImpl().getMandatoryString("CHS_API_KEY");
+        return CHS_API_KEY;
     }
 
     /**
