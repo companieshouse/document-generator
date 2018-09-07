@@ -1,5 +1,7 @@
 package uk.gov.companieshouse.document.generator.core.document.render.models;
 
+import com.google.gson.Gson;
+
 public class RenderDocumentRequest {
 
     private String templateName;
@@ -71,5 +73,10 @@ public class RenderDocumentRequest {
 
     public void setData(String data) {
         this.data = data;
+    }
+
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
     }
 }

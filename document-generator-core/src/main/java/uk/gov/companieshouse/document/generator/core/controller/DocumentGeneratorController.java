@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.companieshouse.document.generator.core.models.DocumentGeneratorRequest;
-import uk.gov.companieshouse.document.generator.core.models.DocumentGeneratorResponse;
+import uk.gov.companieshouse.document.generator.core.models.DocumentRequest;
+import uk.gov.companieshouse.document.generator.core.models.DocumentResponse;
 import uk.gov.companieshouse.document.generator.core.service.DocumentGeneratorService;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
@@ -29,10 +29,10 @@ public class DocumentGeneratorController {
 
     @PostMapping
     @ResponseBody
-    public ResponseEntity generateDocument(@Valid @RequestBody DocumentGeneratorRequest documentGeneratorRequest,
+    public ResponseEntity generateDocument(@Valid @RequestBody DocumentRequest documentRequest,
                                            BindingResult result) {
 
-        DocumentGeneratorResponse response;
+        DocumentResponse response;
 
         if (result.hasErrors()) {
             LOG.error("error in request body");
@@ -40,7 +40,7 @@ public class DocumentGeneratorController {
         }
 
         try {
-            response = documentGeneratorService.generate(documentGeneratorRequest);
+            response = documentGeneratorService.generate(documentRequest);
         } catch (Exception e) {
             LOG.error(e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

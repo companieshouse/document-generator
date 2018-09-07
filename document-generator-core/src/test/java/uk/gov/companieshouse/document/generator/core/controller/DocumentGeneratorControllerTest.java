@@ -11,8 +11,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import uk.gov.companieshouse.document.generator.core.models.DocumentGeneratorRequest;
-import uk.gov.companieshouse.document.generator.core.models.DocumentGeneratorResponse;
+import uk.gov.companieshouse.document.generator.core.models.DocumentRequest;
+import uk.gov.companieshouse.document.generator.core.models.DocumentResponse;
 import uk.gov.companieshouse.document.generator.core.service.DocumentGeneratorService;
 
 import java.util.HashMap;
@@ -40,7 +40,7 @@ public class DocumentGeneratorControllerTest {
     @DisplayName("Tests if Bad Request error return when binding error found")
     public void errorReturnAsIncompleteRequest() {
 
-        DocumentGeneratorRequest request = new DocumentGeneratorRequest();
+        DocumentRequest request = new DocumentRequest();
 
         when(mockBindingResult.hasErrors()).thenReturn(true);
 
@@ -53,9 +53,9 @@ public class DocumentGeneratorControllerTest {
     @DisplayName("Test if Created returned if response not null and location present")
     public void createdReturned() {
 
-        DocumentGeneratorRequest request = setDocumentgeneratorRequest();
+        DocumentRequest request = setDocumentgeneratorRequest();
 
-        DocumentGeneratorResponse response = new DocumentGeneratorResponse();
+        DocumentResponse response = new DocumentResponse();
         response.setDescription("description");
         response.setDescriptionIdentifier("desctiptionIdentifier");
         response.setSize("size");
@@ -77,7 +77,7 @@ public class DocumentGeneratorControllerTest {
     @DisplayName("Tests if Internal Server Error return as document generator response is null")
     public void errorReturnedAsNullResponse() {
 
-        DocumentGeneratorRequest request = setDocumentgeneratorRequest();
+        DocumentRequest request = setDocumentgeneratorRequest();
 
         when(mockBindingResult.hasErrors()).thenReturn(false);
         when(mockDocumentGeneratorService.generate(request)).thenReturn(null);
@@ -91,9 +91,9 @@ public class DocumentGeneratorControllerTest {
     @DisplayName("Tests if Internal Server error return when location missing from response")
     public void errorReturnAsLocationMissingFromResponse() {
 
-        DocumentGeneratorRequest request = setDocumentgeneratorRequest();
+        DocumentRequest request = setDocumentgeneratorRequest();
 
-        DocumentGeneratorResponse response = new DocumentGeneratorResponse();
+        DocumentResponse response = new DocumentResponse();
         response.setDescription("description");
         response.setDescriptionIdentifier("desctiptionIdentifier");
         response.setSize("size");
@@ -114,7 +114,7 @@ public class DocumentGeneratorControllerTest {
     @DisplayName("Tests if Internal Server error returned when exception thrown")
     public void errorReturnedAsExceptionThrown() {
 
-        DocumentGeneratorRequest request = setDocumentgeneratorRequest();
+        DocumentRequest request = setDocumentgeneratorRequest();
 
         when(mockDocumentGeneratorService.generate(request)).thenThrow(RuntimeException.class);
 
@@ -127,9 +127,9 @@ public class DocumentGeneratorControllerTest {
      *
      * @return
      */
-    private DocumentGeneratorRequest setDocumentgeneratorRequest() {
+    private DocumentRequest setDocumentgeneratorRequest() {
 
-        DocumentGeneratorRequest request = new DocumentGeneratorRequest();
+        DocumentRequest request = new DocumentRequest();
         request.setContentType("content_type");
         request.setDocumentType("document_type");
         request.setId("Id");

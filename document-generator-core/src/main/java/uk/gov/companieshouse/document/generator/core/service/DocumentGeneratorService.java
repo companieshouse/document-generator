@@ -1,7 +1,7 @@
 package uk.gov.companieshouse.document.generator.core.service;
 
-import uk.gov.companieshouse.document.generator.core.models.DocumentGeneratorRequest;
-import uk.gov.companieshouse.document.generator.core.models.DocumentGeneratorResponse;
+import uk.gov.companieshouse.document.generator.core.models.DocumentRequest;
+import uk.gov.companieshouse.document.generator.core.models.DocumentResponse;
 
 public interface DocumentGeneratorService {
 
@@ -9,8 +9,8 @@ public interface DocumentGeneratorService {
     /**
      * generate the document
      *
-     * @param documentGeneratorRequest
+     * @param documentRequest
      * @return
      */
-    DocumentGeneratorResponse generate(DocumentGeneratorRequest documentGeneratorRequest);
+    DocumentResponse generate(DocumentRequest documentRequest);
 }
