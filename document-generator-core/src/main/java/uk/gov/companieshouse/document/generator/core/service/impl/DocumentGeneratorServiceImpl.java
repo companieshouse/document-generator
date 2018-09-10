@@ -42,10 +42,13 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
     public DocumentResponse generate(DocumentRequest documentRequest) {
 
         DocumentInfo documentInfo = null;
-        RenderDocumentResponse renderResponse = null;
-        DocumentResponse response;
+        RenderDocumentResponse renderResponse;
+        DocumentResponse response = null;
+
+        //TODO addition of get doc gen type from URL to be added in SFA 580
 
         try {
+            //TODO currently no impl present, being completed in SFA 567
             documentInfo = documentInfoService.getDocumentInfo();
         } catch (Exception e){
             LOG.error(e);
@@ -53,9 +56,8 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
 
         if (documentInfo != null) {
             renderResponse = renderSubmittedDocumentData(documentRequest, documentInfo);
+            response = setDocumentResponse(renderResponse, documentInfo);
         }
-
-        response = setDocumentResponse(renderResponse, documentInfo);
 
         if (response != null) {
             return response;
@@ -103,16 +105,14 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
      */
     private DocumentResponse setDocumentResponse(RenderDocumentResponse renderResponse, DocumentInfo documentInfo) {
 
-        DocumentResponse response = null;
+        DocumentResponse response;
 
-        if (renderResponse != null || documentInfo != null) {
-            response = new DocumentResponse();
-            response.setLocation(renderResponse != null ? renderResponse.getLocation() : null);
-            response.setSize(renderResponse != null ? renderResponse.getDocumentSize() : null);
-            response.setDescriptionValues(documentInfo != null ? documentInfo.getDescriptionValues() : null);
-            response.setDescription(documentInfo != null ? documentInfo.getDescription() : null);
-            response.setDescriptionIdentifier(documentInfo != null ? documentInfo.getDescriptionIdentifier() : null);
-        }
+        response = new DocumentResponse();
+        response.setLocation(renderResponse != null ? renderResponse.getLocation() : null);
+        response.setSize(renderResponse != null ? renderResponse.getDocumentSize() : null);
+        response.setDescriptionValues(documentInfo.getDescriptionValues());
+        response.setDescription(documentInfo.getDescription());
+        response.setDescriptionIdentifier(documentInfo.getDescriptionIdentifier());
 
         return response;
     }
