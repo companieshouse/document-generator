@@ -47,8 +47,6 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
                 response = handleResponse(connection);
             }
 
-            response.setStatus(connection.getResponseCode());
-
         } finally {
             if (connection != null) {
                 connection.disconnect();

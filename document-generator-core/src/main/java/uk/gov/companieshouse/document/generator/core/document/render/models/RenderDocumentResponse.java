@@ -6,14 +6,11 @@ public class RenderDocumentResponse {
 
     private String documentSize;
 
-    private int status;
-
     public RenderDocumentResponse(){}
 
-    public RenderDocumentResponse(String location, String documentSize, int status) {
+    public RenderDocumentResponse(String location, String documentSize) {
         this.location = location;
         this.documentSize = documentSize;
-        this.status = status;
     }
 
     public String getLocation() {
@@ -30,13 +27,5 @@ public class RenderDocumentResponse {
 
     public void setDocumentSize(String documentSize) {
         this.documentSize = documentSize;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
     }
 }

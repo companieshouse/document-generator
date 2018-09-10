@@ -73,7 +73,6 @@ public class RenderDocumentRequestHandlerTest {
         RenderDocumentResponse response = renderDocumentRequestHandler.sendDataToDocumentRenderService("http://www.test.com", renderDocumentRequest);
 
         assertEquals(PDF_LOCATION, response.getLocation());
-        assertEquals(201, response.getStatus());
 
         verifyHttpConnectionMock(true);
     }
@@ -87,7 +86,6 @@ public class RenderDocumentRequestHandlerTest {
 
         assertNull(response.getDocumentSize());
         assertNull(response.getLocation());
-        assertEquals(500, response.getStatus());
 
         verifyHttpConnectionMock(false);
     }
