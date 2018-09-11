@@ -15,11 +15,11 @@
     }
   ],
   "paths": {
-    "/document-generate": {
+    "/private/documents/generate": {
       "post": {
         "x-operationName": "generate",
         "summary": "Generation of documents",
-        "description": "Generate a document using the request to obtain the document data and send to render service",
+        "description": "Takes a URI of a resource and synchronously generates a document of the requested mime type",
         "tags": [
           "document-generator"
         ],
@@ -30,7 +30,7 @@
           {
             "name": "data",
             "in": "body",
-            "description": "required parameters to generate a document",
+            "description": "A DocumentRequest resource",
             "required": true,
             "schema": {
               "$ref": "http://localhost:3123/swagger-2.0/models/document-generator.json#/definitions/documentGeneratorRequest"
@@ -45,10 +45,10 @@
             }
           },
           "400": {
-            "description": "Unable to handle given request"
+            "description": "Error within the request body, missing or mismatched parameters detected"
           },
           "401": {
-            "description": "Not authorized to add the resource "
+            "description": "not authorised to process request"
           }
         }
       }
