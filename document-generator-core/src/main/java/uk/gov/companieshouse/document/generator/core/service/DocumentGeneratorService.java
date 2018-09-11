@@ -5,7 +5,6 @@ import uk.gov.companieshouse.document.generator.core.service.models.DocumentResp
 
 public interface DocumentGeneratorService {
 
-    //TODO service interface created impl to be done as part of SFA 664
     /**
      * generate the document
      *

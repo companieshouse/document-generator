@@ -66,10 +66,10 @@ public class DocumentGeneratorServiceTest {
     }
 
     @Test
-    @DisplayName("Tests when an error thrown from documentInfoService")
+    @DisplayName("Tests when null returned from documentInfoService")
     public void testsWhenErrorThrownFromDocumentInfoService() {
 
-        when(mockDocumentInfoService.getDocumentInfo()).thenThrow(RuntimeException.class);
+        when(mockDocumentInfoService.getDocumentInfo()).thenReturn(null);
 
         DocumentResponse response = documentGeneratorService.generate(setValidRequest());
 
@@ -82,7 +82,7 @@ public class DocumentGeneratorServiceTest {
 
         when(mockDocumentInfoService.getDocumentInfo()).thenReturn(setSuccessfulDocumentInfo());
 
-        when(mockRequestHandler.sendDataToDocumentRenderService(any(String.class), any(RenderDocumentRequest.class))).thenThrow(RuntimeException.class);
+        when(mockRequestHandler.sendDataToDocumentRenderService(any(String.class), any(RenderDocumentRequest.class))).thenThrow(IOException.class);
 
         DocumentResponse response = documentGeneratorService.generate(setValidRequest());
 

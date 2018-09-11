@@ -42,28 +42,24 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
     public DocumentResponse generate(DocumentRequest documentRequest) {
 
         DocumentInfo documentInfo = null;
-        RenderDocumentResponse renderResponse;
         DocumentResponse response = null;
+        RenderDocumentResponse renderResponse;
 
         //TODO addition of get doc gen type from URL to be added in SFA 580
 
-        try {
-            //TODO currently no impl present, being completed in SFA 567
-            documentInfo = documentInfoService.getDocumentInfo();
-        } catch (Exception e){
-            LOG.error(e);
-        }
+        //TODO currently no impl present, being completed in SFA 567
+        documentInfo = documentInfoService.getDocumentInfo();
 
         if (documentInfo != null) {
             renderResponse = renderSubmittedDocumentData(documentRequest, documentInfo);
             response = setDocumentResponse(renderResponse, documentInfo);
+        } else {
+            //TODO currently no impl present so errors not confirmed, being completed in SFA 567
+           Exception e  = new Exception("No data returned from documentInfoService");
+           LOG.error(e);
         }
 
-        if (response != null) {
-            return response;
-        }
-
-        return null;
+        return response;
     }
 
     /**
@@ -105,11 +101,13 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
      */
     private DocumentResponse setDocumentResponse(RenderDocumentResponse renderResponse, DocumentInfo documentInfo) {
 
-        DocumentResponse response;
+        DocumentResponse response = new DocumentResponse();
 
-        response = new DocumentResponse();
-        response.setLocation(renderResponse != null ? renderResponse.getLocation() : null);
-        response.setSize(renderResponse != null ? renderResponse.getDocumentSize() : null);
+        if (renderResponse != null) {
+            response.setLocation(renderResponse.getLocation());
+            response.setSize(renderResponse.getDocumentSize());
+        }
+
         response.setDescriptionValues(documentInfo.getDescriptionValues());
         response.setDescription(documentInfo.getDescription());
         response.setDescriptionIdentifier(documentInfo.getDescriptionIdentifier());
