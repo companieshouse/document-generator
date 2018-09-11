@@ -51,7 +51,7 @@ public class DocumentGeneratorController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        if(response.getLocation() != null) {
+        if(response.getLinks() != null) {
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } else {
             LOG.error("Failed to generate the document");

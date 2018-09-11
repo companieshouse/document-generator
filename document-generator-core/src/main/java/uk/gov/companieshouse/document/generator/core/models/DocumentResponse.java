@@ -16,8 +16,8 @@ public class DocumentResponse {
     @JsonProperty("description_values")
     private Map<String, String> descriptionValues;
 
-    @JsonProperty("location")
-    private String location;
+    @JsonProperty("links")
+    private String links;
 
     @JsonProperty("size")
     private String size;
@@ -46,12 +46,12 @@ public class DocumentResponse {
         this.descriptionValues = descriptionValues;
     }
 
-    public String getLocation() {
-        return location;
+    public String getLinks() {
+        return links;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setLinks(String links) {
+        this.links = links;
     }
 
     public String getSize() {

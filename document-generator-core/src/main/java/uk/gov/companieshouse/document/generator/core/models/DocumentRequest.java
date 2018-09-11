@@ -8,59 +8,26 @@ import javax.validation.constraints.NotNull;
 public class DocumentRequest {
 
     @NotNull
-    @JsonProperty("content_type")
-    private String contentType;
-
-    @NotNull
-    @JsonProperty("document_type")
-    private String documentType;
-
-    @NotNull
-    @JsonProperty("id")
-    private String id;
-
-    @NotNull
-    @JsonProperty("resource")
-    private String resource;
+    @JsonProperty("resource_url")
+    private String resourceUrl;
 
     @NotNull
     @JsonProperty("resource_id")
     private String resourceId;
 
     @NotNull
-    @JsonProperty("user_id")
-    private String userId;
+    @JsonProperty("mime_type")
+    private String mimeType;
 
-    public String getContentType() {
-        return contentType;
+    @JsonProperty("document_type")
+    private String documentType;
+
+    public String getResourceUrl() {
+        return resourceUrl;
     }
 
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
-    }
-
-    public String getDocumentType() {
-        return documentType;
-    }
-
-    public void setDocumentType(String documentType) {
-        this.documentType = documentType;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getResource() {
-        return resource;
-    }
-
-    public void setResource(String resource) {
-        this.resource = resource;
+    public void setResourceUrl(String resourceUrl) {
+        this.resourceUrl = resourceUrl;
     }
 
     public String getResourceId() {
@@ -71,12 +38,20 @@ public class DocumentRequest {
         this.resourceId = resourceId;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getMimeType() {
+        return mimeType;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+    }
+
+    public String getDocumentType() {
+        return documentType;
+    }
+
+    public void setDocumentType(String documentType) {
+        this.documentType = documentType;
     }
 
     @Override
