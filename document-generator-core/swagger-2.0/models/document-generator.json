@@ -3,56 +3,49 @@
     "documentRequest": {
       "title": "DocumentRequest",
       "required": [
-        "id",
-        "resource",
+        "resource_uri",
         "resource_id",
-        "content_type",
-        "document_type",
-        "user_id"
+        "mime_type"
       ],
       "properties": {
-        "id": {
+        "resource_uri": {
           "type": "string",
-          "description": "id for the document request"
-        },
-        "resource": {
-          "type": "string",
-          "description": "link to the resource"
+          "description": "link to the resource (currently it is the link to the parent transaction)"
         },
         "resource_id": {
           "type": "string",
-          "description": "id of the resource"
+          "description": "id of the resource (currently denotes which resource within the transaction)"
         },
-        "content_type": {
+        "mime_type": {
           "type": "string",
-          "description": "the content type of the template to be converted"
+          "description": "mime type that the document should be rendered as"
         },
         "document_type": {
           "type": "string",
-          "description": "type of document to be rendered"
-        },
-        "user_id": {
-          "type": "string",
-          "description": "id of the user requesting the document"
+          "description": "indicates the document or report type to be generated from the resource data. Currently not implemented"
         }
+
       }
     },
     "documentResponse": {
       "title": "DocumentResponse",
       "required": [
-        "location",
+        "links",
         "size",
         "description",
         "description_identifier",
       ],
       "properties": {
-        "location": {
-          "type": "string",
-          "description": "location that the document has been stored"
+        "links": {
+          "type": "object",
+          "description": "links to related resources",
+          "items": {
+            "$ref": "http://localhost:3123/swagger-2.0/models/document-generator.json#/definitions/documentLinks"
+          }
         },
         "size": {
           "type": "string",
-          "description": "Long value to denote the size of the document stored"
+          "description": "value to denote the size of the document stored in bytes"
         },
         "description": {
           "type": "string",
@@ -68,6 +61,18 @@
           "additionalProperties":{
             "type": "string"
           }
+        }
+      }
+    },
+    "documentLinks": {
+      "title": "DocumentLinks",
+      "required": [
+        "location"
+      ],
+      "properties": {
+        "location": {
+          "type": "string",
+          "description": "location that the document has been stored"
         }
       }
     }
