@@ -9,7 +9,7 @@ public interface DocumentGeneratorService {
      * generate the document
      *
      * @param documentRequest
-     * @return
+     * @return A DocumentReponse
      */
     DocumentResponse generate(DocumentRequest documentRequest);
 }
