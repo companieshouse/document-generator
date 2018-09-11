@@ -1,6 +1,6 @@
 package uk.gov.companieshouse.document.generator.accounts;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.transaction.Resource;
 import uk.gov.companieshouse.api.model.transaction.Transaction;
+import uk.gov.companieshouse.document.generator.accounts.handler.accounts.AccountsHandler;
 import uk.gov.companieshouse.document.generator.accounts.service.TransactionService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfo;
 
@@ -28,39 +29,46 @@ public class AccountsDocumentInfoServiceImplTest {
     private AccountsDocumentInfoServiceImpl accountsDocumentInfoService;
 
     @Mock
+    private AccountsHandler accountsHandlerMock;
+
+    @Mock
     private TransactionService transactionService;
 
     @Test
-    @DisplayName("Tests the unsuccessful retrieval of an accounts document data due to no accounts resource in transaction")
-    void testUnsuccessfulGetDocumentInfoNoAccountsResourceInTransaction() {
-        Map<String, Resource> resources = new HashMap<>();
-        resources.put("error", createResource());
-
-        Transaction transaction = new Transaction();
-        transaction.setResources(resources);
-        when(transactionService.getTransaction(anyString())).thenReturn(transaction);
-
-        assertNull(accountsDocumentInfoService.getDocumentInfo());
-    }
-
-    @Test
-    @DisplayName("Tests the unsuccessful retrieval of an accounts document data due to error in transaction retrieval")
+    @DisplayName("Tests the unsuccessful retrieval of an document data due to an error in transaction retrieval")
     void testUnsuccessfulGetDocumentInfoFailedTransactionRetrieval() {
         when(transactionService.getTransaction(anyString())).thenReturn(null);
         assertNull(accountsDocumentInfoService.getDocumentInfo());
     }
 
     @Test
-    @DisplayName("Tests the successful retrieval of an abridged accounts document data")
+    @DisplayName("Tests the unsuccessful retrieval of an accounts document data due to no accounts resource in transaction")
+    void testUnsuccessfulGetDocumentInfoNoAccountsResourceInTransaction() {
+        Transaction transaction = createTransaction();
+        transaction.getResources().remove("");
+        transaction.getResources().put("error", createResource());
+        when(transactionService.getTransaction(anyString())).thenReturn(transaction);
+
+        assertNull(accountsDocumentInfoService.getDocumentInfo());
+    }
+
+    @Test
+    @DisplayName("Tests the successful retrieval of document data")
     void testSuccessfulGetDocumentInfo() {
+        when(transactionService.getTransaction(anyString())).thenReturn(createTransaction());
+
+        when(accountsHandlerMock.getAccountsData(anyString())).thenReturn(new DocumentInfo());
+
+        assertNotNull(accountsDocumentInfoService.getDocumentInfo());
+    }
+
+    private Transaction createTransaction() {
         Map<String, Resource> resources = new HashMap<>();
         resources.put("", createResource());
 
         Transaction transaction = new Transaction();
         transaction.setResources(resources);
-        when(transactionService.getTransaction(anyString())).thenReturn(transaction);
-
-        assertEquals(DocumentInfo.class, accountsDocumentInfoService.getDocumentInfo().getClass());
+        return transaction;
     }
 
     private Resource createResource() {
