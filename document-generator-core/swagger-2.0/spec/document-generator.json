@@ -33,7 +33,7 @@
             "description": "A DocumentRequest resource",
             "required": true,
             "schema": {
-              "$ref": "http://localhost:3123/swagger-2.0/models/document-generator.json#/definitions/documentGeneratorRequest"
+              "$ref": "http://localhost:3123/swagger-2.0/models/document-generator.json#/definitions/documentRequest"
             }
           }
         ],
@@ -41,7 +41,7 @@
           "201": {
             "description": "The document has been created",
             "schema": {
-              "$ref": "http://localhost:3123/swagger-2.0/models/document-generator.json#/definitions/documentGeneratorResponse"
+              "$ref": "http://localhost:3123/swagger-2.0/models/document-generator.json#/definitions/documentResponse"
             }
           },
           "400": {

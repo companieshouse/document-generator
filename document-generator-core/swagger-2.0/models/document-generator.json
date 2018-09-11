@@ -52,7 +52,7 @@
         },
         "size": {
           "type": "string",
-          "description": "size of the document stored"
+          "description": "Long value to denote the size of the document stored"
         },
         "description": {
           "type": "string",
@@ -64,10 +64,9 @@
         },
         "description_values": {
           "type": "object",
-          "description": "List of resources contained within this transaction.",
+          "description": "a map of key/value pairs used to complete the looked up description identifier enum to turn it into a full description",
           "additionalProperties":{
-            "type": "string",
-            "description": "Map of resource 'identifier' to resource object"
+            "type": "string"
           }
         }
       }
