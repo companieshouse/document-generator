@@ -67,7 +67,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
      *
      * @param documentRequest
      * @param documentInfo
-     * @return
+     * @return A populated RenderDocumentResponse model or Null
      */
     private RenderDocumentResponse renderSubmittedDocumentData(DocumentRequest documentRequest,
                                                                DocumentInfo documentInfo) {
@@ -97,7 +97,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
      *
      * @param renderResponse
      * @param documentInfo
-     * @return
+     * @return a Document Response
      */
     private DocumentResponse setDocumentResponse(RenderDocumentResponse renderResponse, DocumentInfo documentInfo) {
 
