@@ -36,6 +36,14 @@ public class DocumentGeneratorControllerTest {
     @InjectMocks
     private DocumentGeneratorController documentGeneratorController;
 
+    private static final String DESCRIPTION = "description";
+
+    private static final String DESCRIPTION_IDENTIFIER = "descriptionIdentifier";
+
+    private static final String SIZE = "size";
+
+    private static final String LOCATION = "location";
+
     @Test
     @DisplayName("Tests if Bad Request error return when binding error found")
     public void errorReturnAsIncompleteRequest() {
@@ -56,10 +64,10 @@ public class DocumentGeneratorControllerTest {
         DocumentRequest request = setDocumentgeneratorRequest();
 
         DocumentResponse response = new DocumentResponse();
-        response.setDescription("description");
-        response.setDescriptionIdentifier("desctiptionIdentifier");
-        response.setSize("size");
-        response.setLocation("location");
+        response.setDescription(DESCRIPTION);
+        response.setDescriptionIdentifier(DESCRIPTION_IDENTIFIER);
+        response.setSize(SIZE);
+        response.setLinks(LOCATION);
 
         response.setDescriptionValues(setDescriptionValue());
 
@@ -70,7 +78,7 @@ public class DocumentGeneratorControllerTest {
 
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
         assertNotNull(response);
-        assertNotNull(response.getLocation());
+        assertNotNull(response.getLinks());
     }
 
     @Test
@@ -94,9 +102,9 @@ public class DocumentGeneratorControllerTest {
         DocumentRequest request = setDocumentgeneratorRequest();
 
         DocumentResponse response = new DocumentResponse();
-        response.setDescription("description");
-        response.setDescriptionIdentifier("desctiptionIdentifier");
-        response.setSize("size");
+        response.setDescription(DESCRIPTION);
+        response.setDescriptionIdentifier(DESCRIPTION_IDENTIFIER);
+        response.setSize(SIZE);
 
         response.setDescriptionValues(setDescriptionValue());
 
@@ -107,7 +115,7 @@ public class DocumentGeneratorControllerTest {
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
         assertNotNull(response);
-        assertNull(response.getLocation());
+        assertNull(response.getLinks());
     }
 
     @Test
@@ -125,17 +133,15 @@ public class DocumentGeneratorControllerTest {
     /**
      * Set the data for the document generator request
      *
-     * @return
+     * @return DocumentRequest
      */
     private DocumentRequest setDocumentgeneratorRequest() {
 
         DocumentRequest request = new DocumentRequest();
-        request.setContentType("content_type");
-        request.setDocumentType("document_type");
-        request.setId("Id");
-        request.setResource("resource");
-        request.setResourceId("resources/1/resource/1");
-        request.setUserId("user_id");
+        request.setDocumentType("documentType");
+        request.setMimeType("mimeType");
+        request.setResourceId("resourceId");
+        request.setResourceUrl("resourceUrl");
 
         return request;
     }
@@ -143,7 +149,7 @@ public class DocumentGeneratorControllerTest {
     /**
      * Set the description value
      *
-     * @return
+     * @return Map String/Pair for descriptionValues
      */
     private Map<String,String> setDescriptionValue() {
 
