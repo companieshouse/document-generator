@@ -75,6 +75,7 @@ public class RenderDocumentRequestHandlerTest {
         assertEquals(PDF_LOCATION, response.getLocation());
 
         verifyHttpConnectionMock(true);
+        assertEquals(201, response.getStatus());
     }
 
     @Test
@@ -88,6 +89,7 @@ public class RenderDocumentRequestHandlerTest {
         assertNull(response.getLocation());
 
         verifyHttpConnectionMock(false);
+        assertEquals(500, response.getStatus());
     }
 
     /**

@@ -8,11 +8,14 @@ public class RenderDocumentResponse {
 
     private String documentSize;
 
+    private int status;
+
     public RenderDocumentResponse(){}
 
-    public RenderDocumentResponse(String location, String documentSize) {
+    public RenderDocumentResponse(String location, String documentSize, int status) {
         this.location = location;
         this.documentSize = documentSize;
+        this.status = status;
     }
 
     public String getLocation() {
@@ -31,8 +34,17 @@ public class RenderDocumentResponse {
         this.documentSize = documentSize;
     }
 
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return new Gson().toJson(this);
     }
 }
+
