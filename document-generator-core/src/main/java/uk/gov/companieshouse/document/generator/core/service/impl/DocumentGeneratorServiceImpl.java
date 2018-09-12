@@ -8,7 +8,8 @@ import uk.gov.companieshouse.document.generator.core.service.DocumentGeneratorSe
 import uk.gov.companieshouse.document.generator.core.service.models.DocumentRequest;
 import uk.gov.companieshouse.document.generator.core.service.models.DocumentResponse;
 import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
-import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfo;
+import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
+import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
@@ -41,18 +42,19 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
     @Override
     public DocumentResponse generate(DocumentRequest documentRequest) {
 
-        DocumentInfo documentInfo = null;
+        DocumentInfoResponse documentInfoResponse;
         DocumentResponse response = null;
         RenderDocumentResponse renderResponse;
 
         //TODO addition of get doc gen type from URL to be added in SFA 580
 
         //TODO currently no impl present, being completed in SFA 567
-        documentInfo = documentInfoService.getDocumentInfo();
+        DocumentInfoRequest documentInfoRequest = new DocumentInfoRequest();
+        documentInfoResponse = documentInfoService.getDocumentInfo(documentInfoRequest);
 
-        if (documentInfo != null) {
-            renderResponse = renderSubmittedDocumentData(documentRequest, documentInfo);
-            response = setDocumentResponse(renderResponse, documentInfo);
+        if (documentInfoResponse != null) {
+            renderResponse = renderSubmittedDocumentData(documentRequest, documentInfoResponse);
+            response = setDocumentResponse(renderResponse, documentInfoResponse);
         } else {
             //TODO currently no impl present so errors not confirmed, being completed in SFA 567
            Exception e  = new Exception("No data returned from documentInfoService");
@@ -66,22 +68,22 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
      * Send data to Render Service and generate document
      *
      * @param documentRequest
-     * @param documentInfo
+     * @param documentInfoResponse
      * @return A populated RenderDocumentResponse model or Null
      */
     private RenderDocumentResponse renderSubmittedDocumentData(DocumentRequest documentRequest,
-                                                               DocumentInfo documentInfo) {
+                                                               DocumentInfoResponse documentInfoResponse) {
 
         String host = environmentReader.getMandatoryString(DOCUMENT_RENDER_SERVICE_HOST_ENV_VAR);
         String url = host + CONTEXT_PATH;
 
         RenderDocumentRequest requestData = new RenderDocumentRequest();
-        requestData.setAssetId(documentInfo.getAssetId());
+        requestData.setAssetId(documentInfoResponse.getAssetId());
         requestData.setContentType(documentRequest.getContentType());
-        requestData.setData(documentInfo.getData());
+        requestData.setData(documentInfoResponse.getData());
         requestData.setDocumentType(documentRequest.getDocumentType());
-        requestData.setTemplateName(documentInfo.getTemplateName());
-        requestData.setLocation(documentInfo.getLocation());
+        requestData.setTemplateName(documentInfoResponse.getTemplateName());
+        requestData.setLocation(documentInfoResponse.getLocation());
 
         try {
             return requestHandler.sendDataToDocumentRenderService(url, requestData);
@@ -96,10 +98,11 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
      * Set documentResponse for Api
      *
      * @param renderResponse
-     * @param documentInfo
+     * @param documentInfoResponse
      * @return a Document Response
      */
-    private DocumentResponse setDocumentResponse(RenderDocumentResponse renderResponse, DocumentInfo documentInfo) {
+    private DocumentResponse setDocumentResponse(RenderDocumentResponse renderResponse,
+                                                 DocumentInfoResponse documentInfoResponse) {
 
         DocumentResponse response = new DocumentResponse();
 
@@ -108,9 +111,9 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
             response.setSize(renderResponse.getDocumentSize());
         }
 
-        response.setDescriptionValues(documentInfo.getDescriptionValues());
-        response.setDescription(documentInfo.getDescription());
-        response.setDescriptionIdentifier(documentInfo.getDescriptionIdentifier());
+        response.setDescriptionValues(documentInfoResponse.getDescriptionValues());
+        response.setDescription(documentInfoResponse.getDescription());
+        response.setDescriptionIdentifier(documentInfoResponse.getDescriptionIdentifier());
 
         return response;
     }
