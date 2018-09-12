@@ -14,7 +14,6 @@ public class DocumentInfoResponse {
     String descriptionIdentifier;
     Map<String, String> descriptionValues;
 
-
     public String getData() {
         return data;
     }
@@ -91,7 +90,6 @@ public class DocumentInfoResponse {
 
     @Override
     public int hashCode() {
-
         return Objects
                 .hash(data, templateName, assetId, location, description, descriptionIdentifier,
                         descriptionValues);
