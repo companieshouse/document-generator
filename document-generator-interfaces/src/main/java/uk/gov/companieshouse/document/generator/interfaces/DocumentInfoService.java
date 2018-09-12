@@ -4,11 +4,13 @@ import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoReq
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 
 /**
- * A service to get {@Link DocumentInfo} for GenerateDocument
+ * A service to get {@Link DocumentInfoResponse} for GenerateDocument
  */
 public interface DocumentInfoService {
+
     /**
      * Get the given {@link DocumentInfoResponse}
+     * @param documentInfoRequest - document info request
      * @return DocumentInfo
      */
     DocumentInfoResponse getDocumentInfo(DocumentInfoRequest documentInfoRequest);

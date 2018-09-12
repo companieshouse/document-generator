@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.api.model.transaction.Resource;
 import uk.gov.companieshouse.api.model.transaction.Transaction;
+import uk.gov.companieshouse.document.generator.accounts.handler.accounts.AccountsHandler;
 import uk.gov.companieshouse.document.generator.accounts.service.TransactionService;
 import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
@@ -17,6 +18,9 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
 
     @Autowired
     private TransactionService transactionService;
+
+    @Autowired
+    private AccountsHandler accountsHandler;
 
     public static final String MODULE_NAME_SPACE = "document-generator-accounts";
 
@@ -35,27 +39,32 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
             return null;
         }
 
-        return Optional.of(transaction)
+        String resourceLink =  Optional.of(transaction)
                 .map(Transaction::getResources)
-                .map(resources -> resources.get(resourceUri))
+                .map(resources -> resources.get(resourceId))
                 .map(Resource::getLinks)
-                .map(links -> links.get("resource"))
-                // when abridged has been migrated to use the company-accounts api, the code for the
-                // company accounts should work for abridged, resulting in this abridged specific code
-                // qualifying for removal
-                .filter(this::isAbridged)
-                .map(accountsLinks -> new DocumentInfoResponse())
-                .orElse(null);
+                .map(links -> links.get(LinkType.RESOURCE.getLink()))
+                .orElseGet(() -> {
+                    LOG.info("Unable to find resource: " + resourceId + " in transaction: " + resourceUri);
+                    return "";
+                });
 
+
+        // when the Accounts migration has been completed to Company Accounts, this code can be removed
+        if (isAccounts(resourceLink)) {
+            return accountsHandler.getAccountsData(resourceLink);
+         }
+
+        return null;
     }
 
     /**
-     * determines whether it is an abridged link as "/transactions/{transactionId}/accounts/{accountsId}"
-     * only exists within the abridged implementation
-     * @param accountLink - account link
-     * @return true if abridged, false if not
+     * Determines if is an accounts specific link as "/transactions/{transactionId}/accounts/{accountsId}"
+     * only exists within the accounts (abridged) implementation
+     * @param resourceLink - resource link
+     * @return true if accounts, false if not
      */
-    private boolean isAbridged(String accountLink) {
-        return accountLink.matches("/transactions\\/[0-9-]+/accounts\\/.*");
+    private boolean isAccounts(String resourceLink) {
+        return resourceLink.matches("/transactions\\/[0-9-]+/accounts\\/.*");
     }
 }
