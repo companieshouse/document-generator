@@ -41,11 +41,11 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
 
         String resourceLink =  Optional.of(transaction)
                 .map(Transaction::getResources)
-                .map(resources -> resources.get(resourceUri))
+                .map(resources -> resources.get(resourceId))
                 .map(Resource::getLinks)
                 .map(links -> links.get(LinkType.RESOURCE.getLink()))
                 .orElseGet(() -> {
-                    LOG.info("Unable to find resource: " + resourceUri + " in transaction: " + resourceId);
+                    LOG.info("Unable to find resource: " + resourceId + " in transaction: " + resourceUri);
                     return "";
                 });
 

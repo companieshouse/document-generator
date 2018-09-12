@@ -35,8 +35,8 @@ public class AccountsDocumentInfoServiceImplTest {
     @Mock
     private TransactionService transactionService;
 
-    private static final String RESOURCE_ID = "091174-913515-326060";
-    private static final String RESOURCE_URI = "/transactions/091174-913515-326060/accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
+    private static final String RESOURCE_URI = "/transactions/091174-913515-326060";
+    private static final String RESOURCE_ID = "/transactions/091174-913515-326060/accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
 
     @Test
     @DisplayName("Tests the unsuccessful retrieval of an document data due to an error in transaction retrieval")
@@ -50,7 +50,7 @@ public class AccountsDocumentInfoServiceImplTest {
     @DisplayName("Tests the unsuccessful retrieval of an accounts document data due to no accounts resource in transaction")
     void testUnsuccessfulGetDocumentInfoNoAccountsResourceInTransaction() {
         Transaction transaction = createTransaction();
-        transaction.getResources().remove(RESOURCE_URI);
+        transaction.getResources().remove(RESOURCE_ID);
         transaction.getResources().put("error", createResource());
         when(transactionService.getTransaction(anyString())).thenReturn(transaction);
 
@@ -75,7 +75,7 @@ public class AccountsDocumentInfoServiceImplTest {
 
     private Transaction createTransaction() {
         Map<String, Resource> resources = new HashMap<>();
-        resources.put(RESOURCE_URI, createResource());
+        resources.put(RESOURCE_ID, createResource());
 
         Transaction transaction = new Transaction();
         transaction.setResources(resources);
@@ -87,7 +87,7 @@ public class AccountsDocumentInfoServiceImplTest {
         Resource resource = new Resource();
         resource.setKind("kind");
         Map<String, String> links = new HashMap<>();
-        links.put("resource", RESOURCE_URI);
+        links.put("resource", RESOURCE_ID);
         resource.setLinks(links);
         return resource;
     }
