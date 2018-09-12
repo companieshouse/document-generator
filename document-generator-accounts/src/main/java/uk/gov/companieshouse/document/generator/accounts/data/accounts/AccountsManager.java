@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.document.generator.accounts.data.transaction;
+package uk.gov.companieshouse.document.generator.accounts.data.accounts;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -6,49 +6,38 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
-import uk.gov.companieshouse.api.model.transaction.Transaction;
+import uk.gov.companieshouse.api.model.accounts.Accounts;
 import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.environment.impl.EnvironmentReaderImpl;
 
-/**
- * TransactionManager is the current temporary internal project solution for communicating with
- * microservices internally. This will be replaced by the private-sdk and its use shall be replaced
- * in the service layer also.
- */
-public class TransactionManager {
+public class AccountsManager {
 
     /** represents the Authorization header name in the request */
     private static final String AUTHORIZATION_HEADER = "Authorization";
 
     private static final EnvironmentReader READER = new EnvironmentReaderImpl();
+
     private static String API_URL = READER.getMandatoryString("API_URL");
     private static String CHS_API_KEY = READER.getMandatoryString("CHS_API_KEY");
 
-    /** represents the Spring rest template that is created for cross microservice contact */
     private static final RestTemplate restTemplate = createRestTemplate();
 
-    private TransactionManager() {
-        // private constructor inserted to hide implicit public one
-    }
-
     /**
-     * Get transaction if exists
+     * Try get accounts resource if exists
      *
-     * @param id - transaction id
-     * @return transaction object along with the status or not found status.
+     * @param link - self link for the accounts object
+     * @return accounts object along with the status or not found status.
      */
-    public static ResponseEntity<Transaction> getTransaction(String id) {
+    public static ResponseEntity<Accounts> getAccounts(String link) {
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.set(AUTHORIZATION_HEADER, getApiKey());
 
         HttpEntity requestEntity = new HttpEntity(requestHeaders);
-        String url = getBaseUrl(id);
-
-        return getTransaction(url, requestEntity);
+        return getAccounts(link, requestEntity);
     }
 
     /**
-     * Creates the rest template when class is initialised
+     * Creates the rest template when class first loads
      *
      * @return Returns a statically created rest template
      */
@@ -57,14 +46,16 @@ public class TransactionManager {
         return new RestTemplate(requestFactory);
     }
 
+
+
     /**
-     * GET the transaction resource
+     * GET the accounts resource
      *
      * @param url - url to send the get request
      * @param requestEntity - the request entity object
      */
-    private static ResponseEntity<Transaction> getTransaction(String url, HttpEntity requestEntity) {
-        return restTemplate.exchange(getRootUri() + url, HttpMethod.GET, requestEntity, Transaction.class);
+    private static ResponseEntity<Accounts> getAccounts(String url, HttpEntity requestEntity) {
+        return restTemplate.exchange(getRootUri() + url, HttpMethod.GET, requestEntity, Accounts.class);
     }
 
     /**
@@ -83,14 +74,5 @@ public class TransactionManager {
      */
     private static String getApiKey() {
         return CHS_API_KEY;
-    }
-
-    /**
-     * Builds the private transaction link with the transaction id
-     *
-     * @return Returns the private endpoint transaction url with the transaction id
-     */
-    private static String getBaseUrl(String id) {
-        return new StringBuilder("/private/transactions/").append(id).toString();
     }
 }

@@ -26,7 +26,7 @@ public class TransactionServiceImpl implements TransactionService {
         ResponseEntity<Transaction> transaction = TransactionManager.getTransaction(id);
 
         if (transaction.getStatusCode() != HttpStatus.OK) {
-            LOG.error(String.format("Failed to retrieve data from API: %s", id));
+            LOG.error(String.format("Failed to retrieve data from AP with status code %s: %s", transaction.getStatusCode().toString(), id));
             return null;
         }
         LOG.trace("Transaction data retrieved successfully");
