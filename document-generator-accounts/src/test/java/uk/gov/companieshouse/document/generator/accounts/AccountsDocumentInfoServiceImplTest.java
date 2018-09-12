@@ -19,7 +19,8 @@ import uk.gov.companieshouse.api.model.transaction.Resource;
 import uk.gov.companieshouse.api.model.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.handler.accounts.AccountsHandler;
 import uk.gov.companieshouse.document.generator.accounts.service.TransactionService;
-import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfo;
+import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
+import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(Lifecycle.PER_CLASS)
@@ -34,37 +35,47 @@ public class AccountsDocumentInfoServiceImplTest {
     @Mock
     private TransactionService transactionService;
 
+    private static final String RESOURCE_ID = "091174-913515-326060";
+    private static final String RESOURCE_URI = "/transactions/091174-913515-326060/accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
+
     @Test
     @DisplayName("Tests the unsuccessful retrieval of an document data due to an error in transaction retrieval")
     void testUnsuccessfulGetDocumentInfoFailedTransactionRetrieval() {
         when(transactionService.getTransaction(anyString())).thenReturn(null);
-        assertNull(accountsDocumentInfoService.getDocumentInfo());
+
+        assertNull(accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest()));
     }
 
     @Test
     @DisplayName("Tests the unsuccessful retrieval of an accounts document data due to no accounts resource in transaction")
     void testUnsuccessfulGetDocumentInfoNoAccountsResourceInTransaction() {
         Transaction transaction = createTransaction();
-        transaction.getResources().remove("");
+        transaction.getResources().remove(RESOURCE_URI);
         transaction.getResources().put("error", createResource());
         when(transactionService.getTransaction(anyString())).thenReturn(transaction);
 
-        assertNull(accountsDocumentInfoService.getDocumentInfo());
+        assertNull(accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest()));
     }
 
     @Test
     @DisplayName("Tests the successful retrieval of document data")
     void testSuccessfulGetDocumentInfo() {
         when(transactionService.getTransaction(anyString())).thenReturn(createTransaction());
+        when(accountsHandlerMock.getAccountsData(anyString())).thenReturn(new DocumentInfoResponse());
 
-        when(accountsHandlerMock.getAccountsData(anyString())).thenReturn(new DocumentInfo());
+        assertNotNull(accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest()));
+    }
 
-        assertNotNull(accountsDocumentInfoService.getDocumentInfo());
+    private DocumentInfoRequest createDocumentInfoRequest() {
+        DocumentInfoRequest documentInfoRequest = new DocumentInfoRequest();
+        documentInfoRequest.setResourceId(RESOURCE_ID);
+        documentInfoRequest.setResourceUri(RESOURCE_URI);
+        return documentInfoRequest;
     }
 
     private Transaction createTransaction() {
         Map<String, Resource> resources = new HashMap<>();
-        resources.put("", createResource());
+        resources.put(RESOURCE_URI, createResource());
 
         Transaction transaction = new Transaction();
         transaction.setResources(resources);
@@ -75,9 +86,8 @@ public class AccountsDocumentInfoServiceImplTest {
         Resource resource = new Resource();
         resource.setKind("kind");
         Map<String, String> links = new HashMap<>();
-        links.put("resource", "/transactions/175725-236115-324362/accounts/wQSM2bWmQR3zrIw3x7apJOBjzWY=");
+        links.put(LinkType.RESOURCE.getLink(), "/transactions/175725-236115-324362/accounts/wQSM2bWmQR3zrIw3x7apJOBjzWY=");
         resource.setLinks(links);
         return resource;
     }
-
 }
