@@ -1,0 +1,80 @@
+{
+  "definitions": {
+    "documentRequest": {
+      "title": "DocumentRequest",
+      "required": [
+        "resource_uri",
+        "resource_id",
+        "mime_type"
+      ],
+      "properties": {
+        "resource_uri": {
+          "type": "string",
+          "description": "link to the resource (currently it is the link to the parent transaction)"
+        },
+        "resource_id": {
+          "type": "string",
+          "description": "id of the resource (currently denotes which resource within the transaction)"
+        },
+        "mime_type": {
+          "type": "string",
+          "description": "mime type that the document should be rendered as"
+        },
+        "document_type": {
+          "type": "string",
+          "description": "indicates the document or report type to be generated from the resource data. Currently not implemented"
+        }
+
+      }
+    },
+    "documentResponse": {
+      "title": "DocumentResponse",
+      "required": [
+        "links",
+        "size",
+        "description",
+        "description_identifier",
+      ],
+      "properties": {
+        "links": {
+          "type": "object",
+          "description": "links to related resources",
+          "items": {
+            "$ref": "http://localhost:3123/swagger-2.0/models/document-generator.json#/definitions/documentLinks"
+          }
+        },
+        "size": {
+          "type": "string",
+          "description": "value to denote the size of the document stored in bytes"
+        },
+        "description": {
+          "type": "string",
+          "description": "description of the document produced"
+        },
+        "description_identifier": {
+          "type": "string",
+          "description": "Identifier for the document description"
+        },
+        "description_values": {
+          "type": "object",
+          "description": "a map of key/value pairs used to complete the looked up description identifier enum to turn it into a full description",
+          "additionalProperties":{
+            "type": "string"
+          }
+        }
+      }
+    },
+    "documentLinks": {
+      "title": "DocumentLinks",
+      "required": [
+        "location"
+      ],
+      "properties": {
+        "location": {
+          "type": "string",
+          "description": "location that the document has been stored"
+        }
+      }
+    }
+  }
+}
