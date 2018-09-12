@@ -1,6 +1,6 @@
 package uk.gov.companieshouse.document.generator.accounts.handler.accounts;
 
-import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfo;
+import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 
 /**
  * AccountsHandler handles all 'Accounts' resources. When used under doc-gen-accounts, Accounts refers
@@ -15,5 +15,5 @@ public interface AccountsHandler {
      * @param resourceLink - resource link
      * @return - document info
      */
-    DocumentInfo getAccountsData(String resourceLink);
+    DocumentInfoResponse getAccountsData(String resourceLink);
 }

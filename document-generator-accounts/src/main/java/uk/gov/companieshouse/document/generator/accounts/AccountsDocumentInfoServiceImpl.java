@@ -8,7 +8,8 @@ import uk.gov.companieshouse.api.model.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.handler.accounts.AccountsHandler;
 import uk.gov.companieshouse.document.generator.accounts.service.TransactionService;
 import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
-import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfo;
+import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
+import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
@@ -26,13 +27,13 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
     @Override
-    public DocumentInfo getDocumentInfo() {
+    public DocumentInfoResponse getDocumentInfo(DocumentInfoRequest documentInfoRequest) {
         LOG.info("Started getting document");
 
-        String resource = "";
-        String resourceId = "";
+        String resourceId = documentInfoRequest.getResourceId();
+        String resourceUri = documentInfoRequest.getResourceUri();
 
-        Transaction transaction = transactionService.getTransaction(resource);
+        Transaction transaction = transactionService.getTransaction(resourceId);
         if (transaction == null) {
             LOG.error("transaction not found");
             return null;
@@ -40,11 +41,11 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
 
         String resourceLink =  Optional.of(transaction)
                 .map(Transaction::getResources)
-                .map(resources -> resources.get(resourceId))
+                .map(resources -> resources.get(resourceUri))
                 .map(Resource::getLinks)
-                .map(links -> links.get("resource"))
+                .map(links -> links.get(LinkType.RESOURCE.getLink()))
                 .orElseGet(() -> {
-                    LOG.info("Unable to find resource: " + resourceId + " in transaction: " + resource);
+                    LOG.info("Unable to find resource: " + resourceUri + " in transaction: " + resourceId);
                     return "";
                 });
 
@@ -64,6 +65,6 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
      * @return true if accounts, false if not
      */
     private boolean isAccounts(String resourceLink) {
-        return resourceLink.matches("/transactions/\\d+(\\-\\d+)+/accounts/\\w+?=");
+        return resourceLink.matches("/transactions\\/[0-9\\-]+\\/accounts\\/.*");
     }
 }
