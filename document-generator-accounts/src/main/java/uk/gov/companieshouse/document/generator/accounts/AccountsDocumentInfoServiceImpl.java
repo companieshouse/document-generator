@@ -44,7 +44,7 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
                 .map(Resource::getLinks)
                 .map(links -> links.get("resource"))
                 .orElseGet(() -> {
-                    LOG.info("Unable to find resource in transaction: " + resourceId);
+                    LOG.info("Unable to find resource: " + resourceId + " in transaction: " + resource);
                     return "";
                 });
 
