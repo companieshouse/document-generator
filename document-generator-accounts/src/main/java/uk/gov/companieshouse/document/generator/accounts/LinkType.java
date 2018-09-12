@@ -13,5 +13,4 @@ public enum LinkType {
     public String getLink() {
         return link;
     }
-
 }
