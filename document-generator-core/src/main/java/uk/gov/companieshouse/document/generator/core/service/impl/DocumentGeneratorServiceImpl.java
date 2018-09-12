@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.companieshouse.document.generator.core.document.render.RenderDocumentRequestHandler;
 import uk.gov.companieshouse.document.generator.core.document.render.models.RenderDocumentRequest;
 import uk.gov.companieshouse.document.generator.core.document.render.models.RenderDocumentResponse;
+import uk.gov.companieshouse.document.generator.core.models.DocumentRequest;
+import uk.gov.companieshouse.document.generator.core.models.DocumentResponse;
 import uk.gov.companieshouse.document.generator.core.service.DocumentGeneratorService;
-import uk.gov.companieshouse.document.generator.core.service.models.DocumentRequest;
-import uk.gov.companieshouse.document.generator.core.service.models.DocumentResponse;
 import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
@@ -79,9 +79,9 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
 
         RenderDocumentRequest requestData = new RenderDocumentRequest();
         requestData.setAssetId(documentInfoResponse.getAssetId());
-        requestData.setContentType(documentRequest.getContentType());
+        requestData.setContentType(documentInfoResponse.getContentType());
         requestData.setData(documentInfoResponse.getData());
-        requestData.setDocumentType(documentRequest.getDocumentType());
+        requestData.setDocumentType(documentRequest.getMimeType());
         requestData.setTemplateName(documentInfoResponse.getTemplateName());
         requestData.setLocation(documentInfoResponse.getLocation());
 
@@ -107,7 +107,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
         DocumentResponse response = new DocumentResponse();
 
         if (renderResponse != null) {
-            response.setLocation(renderResponse.getLocation());
+            response.setLinks(renderResponse.getLocation());
             response.setSize(renderResponse.getDocumentSize());
         }
 

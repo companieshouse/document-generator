@@ -1,5 +1,7 @@
 package uk.gov.companieshouse.document.generator.core.document.render.models;
 
+import com.google.gson.Gson;
+
 public class RenderDocumentResponse {
 
     private String location;
@@ -27,5 +29,10 @@ public class RenderDocumentResponse {
 
     public void setDocumentSize(String documentSize) {
         this.documentSize = documentSize;
+    }
+
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
     }
 }

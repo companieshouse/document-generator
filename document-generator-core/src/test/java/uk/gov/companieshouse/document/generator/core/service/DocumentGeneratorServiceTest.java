@@ -10,9 +10,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.document.generator.core.document.render.RenderDocumentRequestHandler;
 import uk.gov.companieshouse.document.generator.core.document.render.models.RenderDocumentRequest;
 import uk.gov.companieshouse.document.generator.core.document.render.models.RenderDocumentResponse;
+import uk.gov.companieshouse.document.generator.core.models.DocumentRequest;
+import uk.gov.companieshouse.document.generator.core.models.DocumentResponse;
 import uk.gov.companieshouse.document.generator.core.service.impl.DocumentGeneratorServiceImpl;
-import uk.gov.companieshouse.document.generator.core.service.models.DocumentRequest;
-import uk.gov.companieshouse.document.generator.core.service.models.DocumentResponse;
 import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
@@ -62,7 +62,7 @@ public class DocumentGeneratorServiceTest {
         assertNotNull(response.getDescription());
         assertNotNull(response.getDescriptionIdentifier());
         assertNotNull(response.getDescriptionValues());
-        assertNotNull(response.getLocation());
+        assertNotNull(response.getLinks());
         assertNotNull(response.getSize());
     }
 
@@ -91,7 +91,7 @@ public class DocumentGeneratorServiceTest {
         assertNotNull(response.getDescription());
         assertNotNull(response.getDescriptionIdentifier());
         assertNotNull(response.getDescriptionValues());
-        assertNull(response.getLocation());
+        assertNull(response.getLinks());
         assertNull(response.getSize());
     }
 
@@ -103,12 +103,10 @@ public class DocumentGeneratorServiceTest {
     private DocumentRequest setValidRequest() {
 
         DocumentRequest request = new DocumentRequest();
-        request.setContentType("contentType");
-        request.setDocumentType("documentType");
-        request.setId("id");
-        request.setResource("resource");
+        request.setResourceUrl("resourceUri");
         request.setResourceId("resourceId");
-        request.setUserId("userId");
+        request.setMimeType("mimeType");
+        request.setDocumentType("documentType");
 
         return request;
     }

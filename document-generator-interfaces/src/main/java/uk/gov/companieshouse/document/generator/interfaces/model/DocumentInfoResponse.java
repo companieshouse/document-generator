@@ -12,6 +12,7 @@ public class DocumentInfoResponse {
     String location;
     String description;
     String descriptionIdentifier;
+    String contentType;
     Map<String, String> descriptionValues;
 
     public String getData() {
@@ -60,6 +61,14 @@ public class DocumentInfoResponse {
 
     public void setDescriptionIdentifier(String descriptionIdentifier) {
         this.descriptionIdentifier = descriptionIdentifier;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 
     public Map<String, String> getDescriptionValues() {
