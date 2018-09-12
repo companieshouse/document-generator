@@ -56,6 +56,6 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
      * @return true if abridged, false if not
      */
     private boolean isAbridged(String accountLink) {
-        return accountLink.matches("/transactions\\/[0-9\\-]+\\/accounts\\/.*");
+        return accountLink.matches("/transactions\\/[0-9-]+/accounts\\/.*");
     }
 }
