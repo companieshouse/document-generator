@@ -11,9 +11,9 @@ import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.environment.impl.EnvironmentReaderImpl;
 
 /**
- * Temporary solution until private-sdk has been completed. When completed, this file will get removed
- * alongside the data package and all references to this file will be replaced with calls to the
- * private-sdk.
+ * Temporary solution until private-sdk has been completed (SFA-518, SFA-670). When completed, this
+ * file will get removed alongside the data package and all references to this file will be replaced
+ * with calls to the private-sdk.
  */
 public class AccountsManager {
 
@@ -50,7 +50,7 @@ public class AccountsManager {
         HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
         return new RestTemplate(requestFactory);
     }
-    
+
     private static String getRootUri() {
         return API_URL;
     }
