@@ -79,6 +79,7 @@ public class AccountsDocumentInfoServiceImplTest {
 
         Transaction transaction = new Transaction();
         transaction.setResources(resources);
+
         return transaction;
     }
 
@@ -86,7 +87,7 @@ public class AccountsDocumentInfoServiceImplTest {
         Resource resource = new Resource();
         resource.setKind("kind");
         Map<String, String> links = new HashMap<>();
-        links.put(LinkType.RESOURCE.getLink(), "/transactions/175725-236115-324362/accounts/wQSM2bWmQR3zrIw3x7apJOBjzWY=");
+        links.put("resource", RESOURCE_URI);
         resource.setLinks(links);
         return resource;
     }

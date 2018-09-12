@@ -1,5 +1,7 @@
 package uk.gov.companieshouse.document.generator.core.document.render.models;
 
+import com.google.gson.Gson;
+
 public class RenderDocumentResponse {
 
     private String location;
@@ -38,5 +40,10 @@ public class RenderDocumentResponse {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
     }
 }

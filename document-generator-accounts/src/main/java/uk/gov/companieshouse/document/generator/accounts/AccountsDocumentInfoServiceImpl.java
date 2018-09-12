@@ -65,6 +65,6 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
      * @return true if accounts, false if not
      */
     private boolean isAccounts(String resourceLink) {
-        return resourceLink.matches("/transactions\\/[0-9\\-]+\\/accounts\\/.*");
+        return resourceLink.matches("/transactions\\/[0-9-]+/accounts\\/.*");
     }
 }
