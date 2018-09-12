@@ -1,14 +1,17 @@
 package uk.gov.companieshouse.document.generator.interfaces;
 
-import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfo;
+import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
+import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 
 /**
- * A service to get {@Link DocumentInfo} for GenerateDocument
+ * A service to get {@Link DocumentInfoResponse} for GenerateDocument
  */
 public interface DocumentInfoService {
+
     /**
-     * Get the given {@link DocumentInfo}
+     * Get the given {@link DocumentInfoResponse}
+     * @param documentInfoRequest - document info request
      * @return DocumentInfo
      */
-    DocumentInfo getDocumentInfo();
+    DocumentInfoResponse getDocumentInfo(DocumentInfoRequest documentInfoRequest);
 }
