@@ -1,18 +1,25 @@
 package uk.gov.companieshouse.document.generator.core.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import uk.gov.companieshouse.document.generator.core.Exception.DocumentGeneratorServiceException;
 import uk.gov.companieshouse.document.generator.core.document.render.RenderDocumentRequestHandler;
 import uk.gov.companieshouse.document.generator.core.document.render.models.RenderDocumentRequest;
 import uk.gov.companieshouse.document.generator.core.document.render.models.RenderDocumentResponse;
 import uk.gov.companieshouse.document.generator.core.models.DocumentRequest;
 import uk.gov.companieshouse.document.generator.core.models.DocumentResponse;
 import uk.gov.companieshouse.document.generator.core.service.DocumentGeneratorService;
+import uk.gov.companieshouse.document.generator.core.service.response.ResponseObject;
+import uk.gov.companieshouse.document.generator.core.service.response.ResponseStatus;
 import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static uk.gov.companieshouse.document.generator.core.DocumentGeneratorApplication.APPLICATION_NAME_SPACE;
 
@@ -40,28 +47,46 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
     }
 
     @Override
-    public DocumentResponse generate(DocumentRequest documentRequest) {
+    public ResponseObject generate(DocumentRequest documentRequest, String requestId) {
 
-        DocumentInfoResponse documentInfoResponse;
-        DocumentResponse response = null;
-        RenderDocumentResponse renderResponse;
+        DocumentResponse response;
+
+        final Map < String, Object > debugMap = new HashMap < > ();
+        debugMap.put("resource_uri", documentRequest.getResourceUrl());
+        debugMap.put("resource_id", documentRequest.getResourceId());
 
         //TODO addition of get doc gen type from URL to be added in SFA 580
 
         //TODO currently no impl present, being completed in SFA 567
         DocumentInfoRequest documentInfoRequest = new DocumentInfoRequest();
-        documentInfoResponse = documentInfoService.getDocumentInfo(documentInfoRequest);
+        DocumentInfoResponse documentInfoResponse = documentInfoService.getDocumentInfo(documentInfoRequest);
 
         if (documentInfoResponse != null) {
-            renderResponse = renderSubmittedDocumentData(documentRequest, documentInfoResponse);
+            RenderDocumentResponse renderResponse = null;
+            try {
+                renderResponse = renderSubmittedDocumentData(documentRequest, documentInfoResponse);
+            } catch (IOException ioe) {
+                DocumentGeneratorServiceException documentGeneratorServiceException =
+                        new DocumentGeneratorServiceException("failed to render the document for " +
+                                documentInfoRequest.getResourceUri(), ioe);
+                LOG.errorContext(requestId, documentGeneratorServiceException, debugMap);
+
+                response = setDocumentResponse(renderResponse, documentInfoResponse);
+                return new ResponseObject(ResponseStatus.DOCUMENT_NOT_RENDERED, response);
+            }
+
             response = setDocumentResponse(renderResponse, documentInfoResponse);
+
         } else {
-            //TODO currently no impl present so errors not confirmed, being completed in SFA 567
-           Exception e  = new Exception("No data returned from documentInfoService");
-           LOG.error(e);
+            DocumentGeneratorServiceException documentGeneratorServiceException =
+                    new DocumentGeneratorServiceException("No data was returned from documentInfoService" +
+                            documentInfoRequest.getResourceUri());
+            LOG.errorContext(requestId, documentGeneratorServiceException, debugMap);
+
+            return new ResponseObject(ResponseStatus.NO_DATA_RETRIEVED, null);
         }
 
-        return response;
+        return new ResponseObject(ResponseStatus.CREATED, response);
     }
 
     /**
@@ -72,7 +97,8 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
      * @return A populated RenderDocumentResponse model or Null
      */
     private RenderDocumentResponse renderSubmittedDocumentData(DocumentRequest documentRequest,
-                                                               DocumentInfoResponse documentInfoResponse) {
+                                                               DocumentInfoResponse documentInfoResponse)
+            throws IOException {
 
         String host = environmentReader.getMandatoryString(DOCUMENT_RENDER_SERVICE_HOST_ENV_VAR);
         String url = host + CONTEXT_PATH;
@@ -85,13 +111,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
         requestData.setTemplateName(documentInfoResponse.getTemplateName());
         requestData.setLocation(documentInfoResponse.getLocation());
 
-        try {
-            return requestHandler.sendDataToDocumentRenderService(url, requestData);
-        } catch (Exception e) {
-            LOG.error(e);
-        }
-
-        return null;
+        return requestHandler.sendDataToDocumentRenderService(url, requestData);
     }
 
     /**

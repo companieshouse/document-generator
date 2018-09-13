@@ -11,8 +11,9 @@ import uk.gov.companieshouse.document.generator.core.document.render.RenderDocum
 import uk.gov.companieshouse.document.generator.core.document.render.models.RenderDocumentRequest;
 import uk.gov.companieshouse.document.generator.core.document.render.models.RenderDocumentResponse;
 import uk.gov.companieshouse.document.generator.core.models.DocumentRequest;
-import uk.gov.companieshouse.document.generator.core.models.DocumentResponse;
 import uk.gov.companieshouse.document.generator.core.service.impl.DocumentGeneratorServiceImpl;
+import uk.gov.companieshouse.document.generator.core.service.response.ResponseObject;
+import uk.gov.companieshouse.document.generator.core.service.response.ResponseStatus;
 import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -42,6 +44,20 @@ public class DocumentGeneratorServiceTest {
 
     private DocumentGeneratorService documentGeneratorService;
 
+    private String REQUEST_ID = "requestId";
+
+    private String DESCRIPTION = "description";
+
+    private String DESCRIPTION_IDENTIFIER = "descriptionIdentifier";
+
+    private String SIZE = "size";
+
+    private String LOCATION = "location.file";
+
+    private String DATE = "date";
+
+    private String DATE_VALUE = "01/01/1980";
+
     @BeforeEach
     public void setUp() {
         documentGeneratorService = new DocumentGeneratorServiceImpl(mockDocumentInfoService,
@@ -53,17 +69,19 @@ public class DocumentGeneratorServiceTest {
     public void testsSuccessfulGenerateCompleted() throws IOException {
 
         when(mockDocumentInfoService.getDocumentInfo(any(DocumentInfoRequest.class))).thenReturn(setSuccessfulDocumentInfo());
-
         when(mockRequestHandler.sendDataToDocumentRenderService(any(String.class), any(RenderDocumentRequest.class))).thenReturn(setSuccessfulRenderResponse());
 
-        DocumentResponse response = documentGeneratorService.generate(setValidRequest());
+        ResponseObject response = documentGeneratorService.generate(setValidRequest(), REQUEST_ID);
 
         assertNotNull(response);
-        assertNotNull(response.getDescription());
-        assertNotNull(response.getDescriptionIdentifier());
-        assertNotNull(response.getDescriptionValues());
-        assertNotNull(response.getLinks());
-        assertNotNull(response.getSize());
+        assertNotNull(response.getData());
+        assertEquals(response.getData().getDescriptionValues(), setDescriptionValue());
+        assertEquals(response.getData().getDescription(), DESCRIPTION);
+        assertEquals(response.getData().getDescriptionIdentifier(), DESCRIPTION_IDENTIFIER);
+        assertEquals(response.getData().getSize(), SIZE);
+        assertEquals(response.getData().getLinks(), LOCATION);
+
+        assertEquals(response.getStatus(), ResponseStatus.CREATED);
     }
 
     @Test
@@ -72,9 +90,10 @@ public class DocumentGeneratorServiceTest {
 
         when(mockDocumentInfoService.getDocumentInfo(any(DocumentInfoRequest.class))).thenReturn(null);
 
-        DocumentResponse response = documentGeneratorService.generate(setValidRequest());
+        ResponseObject response = documentGeneratorService.generate(setValidRequest(), REQUEST_ID);
 
-        assertNull(response);
+        assertNull(response.getData());
+        assertEquals(response.getStatus(), ResponseStatus.NO_DATA_RETRIEVED);
     }
 
     @Test
@@ -82,17 +101,19 @@ public class DocumentGeneratorServiceTest {
     public void testsWhenErrorThrownFromRequestHandler() throws IOException {
 
         when(mockDocumentInfoService.getDocumentInfo(any(DocumentInfoRequest.class))).thenReturn(setSuccessfulDocumentInfo());
-
         when(mockRequestHandler.sendDataToDocumentRenderService(any(String.class), any(RenderDocumentRequest.class))).thenThrow(IOException.class);
 
-        DocumentResponse response = documentGeneratorService.generate(setValidRequest());
+        ResponseObject response = documentGeneratorService.generate(setValidRequest(), REQUEST_ID);
 
         assertNotNull(response);
-        assertNotNull(response.getDescription());
-        assertNotNull(response.getDescriptionIdentifier());
-        assertNotNull(response.getDescriptionValues());
-        assertNull(response.getLinks());
-        assertNull(response.getSize());
+        assertNotNull(response.getData());
+        assertNull(response.getData().getLinks());
+        assertNull(response.getData().getSize());
+        assertEquals(response.getData().getDescriptionValues(), setDescriptionValue());
+        assertEquals(response.getData().getDescription(), DESCRIPTION);
+        assertEquals(response.getData().getDescriptionIdentifier(), DESCRIPTION_IDENTIFIER);
+
+        assertEquals(response.getStatus(), ResponseStatus.DOCUMENT_NOT_RENDERED);
     }
 
     /**
@@ -119,8 +140,8 @@ public class DocumentGeneratorServiceTest {
     private RenderDocumentResponse setSuccessfulRenderResponse() {
 
         RenderDocumentResponse renderDocumentResponse = new RenderDocumentResponse();
-        renderDocumentResponse.setDocumentSize("size");
-        renderDocumentResponse.setLocation("location.file");
+        renderDocumentResponse.setDocumentSize(SIZE);
+        renderDocumentResponse.setLocation(LOCATION);
 
         return renderDocumentResponse;
     }
@@ -133,18 +154,27 @@ public class DocumentGeneratorServiceTest {
     private DocumentInfoResponse setSuccessfulDocumentInfo() {
 
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
-        documentInfoResponse.setLocation("location");
+        documentInfoResponse.setLocation(LOCATION);
         documentInfoResponse.setTemplateName("templateName");
         documentInfoResponse.setData("data");
         documentInfoResponse.setAssetId("assetId");
-        documentInfoResponse.setDescription("description");
-        documentInfoResponse.setDescriptionIdentifier("descriptionIdentifier");
-
-        Map<String, String> descriptionValues = new HashMap<>();
-        descriptionValues.put("date", "01/01/1980");
-
-        documentInfoResponse.setDescriptionValues(descriptionValues);
+        documentInfoResponse.setDescription(DESCRIPTION);
+        documentInfoResponse.setDescriptionIdentifier(DESCRIPTION_IDENTIFIER);
+        documentInfoResponse.setDescriptionValues(setDescriptionValue());
 
         return documentInfoResponse;
+    }
+
+    /**
+     * Set the description values for tests
+     *
+     * @return Map String pair
+     */
+    private Map<String,String> setDescriptionValue() {
+
+        Map<String, String> descriptionValues = new HashMap<>();
+        descriptionValues.put(DATE, DATE_VALUE);
+
+        return descriptionValues;
     }
 }
