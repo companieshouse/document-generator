@@ -119,7 +119,7 @@ public class DocumentGeneratorServiceTest {
     /**
      * Set data for valid DocumentRequest
      *
-     * @return
+     * @return Document Request
      */
     private DocumentRequest setValidRequest() {
 
@@ -135,7 +135,7 @@ public class DocumentGeneratorServiceTest {
     /**
      * Set Data for successful RenderResponse
      *
-     * @return
+     * @return RenderDocumentResponse
      */
     private RenderDocumentResponse setSuccessfulRenderResponse() {
 
@@ -149,7 +149,7 @@ public class DocumentGeneratorServiceTest {
     /**
      * Set data from successful DocumentInfoService call
      *
-     * @return
+     * @return DocumentInfoResponse
      */
     private DocumentInfoResponse setSuccessfulDocumentInfo() {
 
