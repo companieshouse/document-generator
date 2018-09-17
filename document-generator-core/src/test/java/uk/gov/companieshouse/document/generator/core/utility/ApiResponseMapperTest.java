@@ -57,7 +57,7 @@ public class ApiResponseMapperTest {
 
         assertNotNull(responseEntity);
         assertNotNull(responseEntity.getBody());
-        assertEquals(responseEntity.getStatusCode(), HttpStatus.CREATED);
+        assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
     }
 
     @Test
@@ -70,7 +70,7 @@ public class ApiResponseMapperTest {
 
         assertNotNull(responseEntity);
         assertNull(responseEntity.getBody());
-        assertEquals(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST);
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 
     }
 
@@ -90,7 +90,7 @@ public class ApiResponseMapperTest {
 
         assertNotNull(responseEntity);
         assertNotNull(responseEntity.getBody());
-        assertEquals(responseEntity.getStatusCode(), HttpStatus.INTERNAL_SERVER_ERROR);
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
 
     }
 

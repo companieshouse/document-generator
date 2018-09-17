@@ -75,13 +75,13 @@ public class DocumentGeneratorServiceTest {
 
         assertNotNull(response);
         assertNotNull(response.getData());
-        assertEquals(response.getData().getDescriptionValues(), setDescriptionValue());
-        assertEquals(response.getData().getDescription(), DESCRIPTION);
-        assertEquals(response.getData().getDescriptionIdentifier(), DESCRIPTION_IDENTIFIER);
-        assertEquals(response.getData().getSize(), SIZE);
-        assertEquals(response.getData().getLinks(), LOCATION);
+        assertEquals(setDescriptionValue(), response.getData().getDescriptionValues());
+        assertEquals(DESCRIPTION, response.getData().getDescription());
+        assertEquals(DESCRIPTION_IDENTIFIER, response.getData().getDescriptionIdentifier());
+        assertEquals(SIZE, response.getData().getSize());
+        assertEquals(LOCATION, response.getData().getLinks());
 
-        assertEquals(response.getStatus(), ResponseStatus.CREATED);
+        assertEquals(ResponseStatus.CREATED, response.getStatus());
     }
 
     @Test
@@ -93,7 +93,7 @@ public class DocumentGeneratorServiceTest {
         ResponseObject response = documentGeneratorService.generate(setValidRequest(), REQUEST_ID);
 
         assertNull(response.getData());
-        assertEquals(response.getStatus(), ResponseStatus.NO_DATA_RETRIEVED);
+        assertEquals(ResponseStatus.NO_DATA_RETRIEVED, response.getStatus());
     }
 
     @Test
@@ -109,11 +109,11 @@ public class DocumentGeneratorServiceTest {
         assertNotNull(response.getData());
         assertNull(response.getData().getLinks());
         assertNull(response.getData().getSize());
-        assertEquals(response.getData().getDescriptionValues(), setDescriptionValue());
-        assertEquals(response.getData().getDescription(), DESCRIPTION);
-        assertEquals(response.getData().getDescriptionIdentifier(), DESCRIPTION_IDENTIFIER);
+        assertEquals(setDescriptionValue(), response.getData().getDescriptionValues());
+        assertEquals(DESCRIPTION, response.getData().getDescription());
+        assertEquals(DESCRIPTION_IDENTIFIER, response.getData().getDescriptionIdentifier());
 
-        assertEquals(response.getStatus(), ResponseStatus.DOCUMENT_NOT_RENDERED);
+        assertEquals(ResponseStatus.DOCUMENT_NOT_RENDERED, response.getStatus());
     }
 
     /**
