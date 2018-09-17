@@ -1,16 +1,16 @@
 package uk.gov.companieshouse.document.generator.core.service;
 
+
 import uk.gov.companieshouse.document.generator.core.models.DocumentRequest;
-import uk.gov.companieshouse.document.generator.core.models.DocumentResponse;
+import uk.gov.companieshouse.document.generator.core.service.response.ResponseObject;
 
 public interface DocumentGeneratorService {
 
-    //TODO service interface created impl to be done as part of SFA 664
     /**
      * generate the document
      *
      * @param documentRequest
-     * @return
+     * @return A DocumentReponse
      */
-    DocumentResponse generate(DocumentRequest documentRequest);
+    ResponseObject generate(DocumentRequest documentRequest, String requestId);
 }

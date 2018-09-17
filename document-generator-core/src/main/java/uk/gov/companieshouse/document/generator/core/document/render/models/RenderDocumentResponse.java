@@ -47,3 +47,4 @@ public class RenderDocumentResponse {
         return new Gson().toJson(this);
     }
 }
+

@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.document.generator.core.controller;
 
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -14,13 +15,17 @@ import org.springframework.validation.BindingResult;
 import uk.gov.companieshouse.document.generator.core.models.DocumentRequest;
 import uk.gov.companieshouse.document.generator.core.models.DocumentResponse;
 import uk.gov.companieshouse.document.generator.core.service.DocumentGeneratorService;
+import uk.gov.companieshouse.document.generator.core.service.response.ResponseObject;
+import uk.gov.companieshouse.document.generator.core.service.response.ResponseStatus;
+import uk.gov.companieshouse.document.generator.core.utility.ApiResponseMapper;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,6 +38,12 @@ public class DocumentGeneratorControllerTest {
     @Mock
     private DocumentGeneratorService mockDocumentGeneratorService;
 
+    @Mock
+    private HttpServletRequest mockHttpServletRequest;
+
+    @Mock
+    private ApiResponseMapper mockApiResponseMapper;
+
     @InjectMocks
     private DocumentGeneratorController documentGeneratorController;
 
@@ -44,22 +55,30 @@ public class DocumentGeneratorControllerTest {
 
     private static final String LOCATION = "location";
 
+    private static final String REQUEST_ID = "requestId";
+
+    @BeforeEach
+    public void setUp() {
+        when(mockHttpServletRequest.getHeader(any(String.class))).thenReturn(REQUEST_ID);
+    }
+
+
     @Test
-    @DisplayName("Tests if Bad Request error return when binding error found")
-    public void errorReturnAsIncompleteRequest() {
+    @DisplayName("Tests bad request")
+    public void testsBadRequestErrorReturned() {
 
         DocumentRequest request = new DocumentRequest();
 
         when(mockBindingResult.hasErrors()).thenReturn(true);
 
-        ResponseEntity responseEntity = documentGeneratorController.generateDocument(request, mockBindingResult);
+        ResponseEntity responseEntity = documentGeneratorController.generateDocument(request, mockBindingResult, mockHttpServletRequest);
 
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
     @Test
-    @DisplayName("Test if Created returned if response not null and location present")
-    public void createdReturned() {
+    @DisplayName("Test successful Creation")
+    public void testsSuccessfullCreation() {
 
         DocumentRequest request = setDocumentgeneratorRequest();
 
@@ -68,66 +87,59 @@ public class DocumentGeneratorControllerTest {
         response.setDescriptionIdentifier(DESCRIPTION_IDENTIFIER);
         response.setSize(SIZE);
         response.setLinks(LOCATION);
-
         response.setDescriptionValues(setDescriptionValue());
 
+        ResponseObject responseObject = new ResponseObject(ResponseStatus.CREATED, response);
+
         when(mockBindingResult.hasErrors()).thenReturn(false);
-        when(mockDocumentGeneratorService.generate(request)).thenReturn(response);
+        when(mockDocumentGeneratorService.generate(any(DocumentRequest.class), any(String.class))).thenReturn(responseObject);
+        when(mockApiResponseMapper.map(any(ResponseObject.class))).thenReturn(ResponseEntity.status(HttpStatus.CREATED).body(responseObject.getData()));
 
-        ResponseEntity responseEntity = documentGeneratorController.generateDocument(request, mockBindingResult);
+        ResponseEntity responseEntity = documentGeneratorController.generateDocument(request, mockBindingResult, mockHttpServletRequest);
 
+        assertNotNull(responseEntity);
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
-        assertNotNull(response);
-        assertNotNull(response.getLinks());
     }
 
     @Test
-    @DisplayName("Tests if Internal Server Error return as document generator response is null")
-    public void errorReturnedAsNullResponse() {
-
-        DocumentRequest request = setDocumentgeneratorRequest();
-
-        when(mockBindingResult.hasErrors()).thenReturn(false);
-        when(mockDocumentGeneratorService.generate(request)).thenReturn(null);
-
-        ResponseEntity responseEntity = documentGeneratorController.generateDocument(request, mockBindingResult);
-
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
-    }
-
-    @Test
-    @DisplayName("Tests if Internal Server error return when location missing from response")
-    public void errorReturnAsLocationMissingFromResponse() {
+    @DisplayName("Tests fails to render")
+    public void testsFailedToRenderDocument() {
 
         DocumentRequest request = setDocumentgeneratorRequest();
 
         DocumentResponse response = new DocumentResponse();
         response.setDescription(DESCRIPTION);
         response.setDescriptionIdentifier(DESCRIPTION_IDENTIFIER);
-        response.setSize(SIZE);
-
         response.setDescriptionValues(setDescriptionValue());
 
+        ResponseObject responseObject = new ResponseObject(ResponseStatus.DOCUMENT_NOT_RENDERED, response);
+
         when(mockBindingResult.hasErrors()).thenReturn(false);
-        when(mockDocumentGeneratorService.generate(request)).thenReturn(response);
+        when(mockDocumentGeneratorService.generate(any(DocumentRequest.class), any(String.class))).thenReturn(responseObject);
+        when(mockApiResponseMapper.map(any(ResponseObject.class))).thenReturn(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseObject.getData()));
 
-        ResponseEntity responseEntity = documentGeneratorController.generateDocument(request, mockBindingResult);
+        ResponseEntity responseEntity = documentGeneratorController.generateDocument(request, mockBindingResult, mockHttpServletRequest);
 
+        assertNotNull(responseEntity);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
-        assertNotNull(response);
-        assertNull(response.getLinks());
     }
 
     @Test
-    @DisplayName("Tests if Internal Server error returned when exception thrown")
-    public void errorReturnedAsExceptionThrown() {
+    @DisplayName("Tests fails to obtain data and render")
+    public void testsFailedToObtainDataAndRender() {
 
         DocumentRequest request = setDocumentgeneratorRequest();
 
-        when(mockDocumentGeneratorService.generate(request)).thenThrow(RuntimeException.class);
+        ResponseObject responseObject = new ResponseObject(ResponseStatus.NO_DATA_RETRIEVED);
 
-        ResponseEntity responseEntity = documentGeneratorController.generateDocument(request, mockBindingResult);
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+        when(mockBindingResult.hasErrors()).thenReturn(false);
+        when(mockDocumentGeneratorService.generate(any(DocumentRequest.class), any(String.class))).thenReturn(responseObject);
+        when(mockApiResponseMapper.map(any(ResponseObject.class))).thenReturn(ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
+
+        ResponseEntity responseEntity = documentGeneratorController.generateDocument(request, mockBindingResult, mockHttpServletRequest);
+
+        assertNotNull(responseEntity);
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
     /**
