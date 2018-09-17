@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.document.generator.accounts.service;
 
 import uk.gov.companieshouse.api.model.accounts.Accounts;
+import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
 
 public interface AccountsService {
 
@@ -12,6 +13,7 @@ public interface AccountsService {
      * (SFA-518, SFA-670), we can replace the internal sdk solution with private-sdk calls.
      *
      * @return accounts - base accounts resource
+     * @throws ServiceException - throws a service exception
      */
-    Accounts getAccounts(String resource);
+    Accounts getAccounts(String resource) throws ServiceException;
 }
