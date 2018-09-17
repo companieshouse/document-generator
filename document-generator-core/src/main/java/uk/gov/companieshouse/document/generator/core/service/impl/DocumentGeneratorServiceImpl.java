@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.document.generator.core.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.document.generator.core.Exception.DocumentGeneratorServiceException;
 import uk.gov.companieshouse.document.generator.core.document.render.RenderDocumentRequestHandler;
 import uk.gov.companieshouse.document.generator.core.document.render.models.RenderDocumentRequest;
@@ -23,6 +24,7 @@ import java.util.Map;
 
 import static uk.gov.companieshouse.document.generator.core.DocumentGeneratorApplication.APPLICATION_NAME_SPACE;
 
+@Service
 public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
 
     private DocumentInfoService documentInfoService;
@@ -40,7 +42,6 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
     @Autowired
     public DocumentGeneratorServiceImpl(DocumentInfoService documentInfoService, EnvironmentReader environmentReader,
                                         RenderDocumentRequestHandler requestHandler) {
-
         this.documentInfoService = documentInfoService;
         this.environmentReader = environmentReader;
         this.requestHandler = requestHandler;
