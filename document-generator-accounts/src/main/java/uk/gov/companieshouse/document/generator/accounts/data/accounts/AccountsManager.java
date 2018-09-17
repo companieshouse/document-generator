@@ -1,20 +1,30 @@
 package uk.gov.companieshouse.document.generator.accounts.data.accounts;
 
+import static uk.gov.companieshouse.document.generator.accounts.AccountsDocumentInfoServiceImpl.MODULE_NAME_SPACE;
+
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.model.accounts.Accounts;
 import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.environment.impl.EnvironmentReaderImpl;
+import uk.gov.companieshouse.logging.Logger;
+import uk.gov.companieshouse.logging.LoggerFactory;
 
 /**
  * Temporary solution until private-sdk has been completed (SFA-518, SFA-670). When completed, this
  * file will get removed alongside the data package and all references to this file will be replaced
  * with calls to the private-sdk.
  */
+@Component
 public class AccountsManager {
 
     /** represents the Authorization header name in the request */
@@ -22,10 +32,12 @@ public class AccountsManager {
 
     private static final EnvironmentReader READER = new EnvironmentReaderImpl();
 
-    private static String API_URL = READER.getMandatoryString("API_URL");
-    private static String CHS_API_KEY = READER.getMandatoryString("CHS_API_KEY");
+    private final String API_URL = READER.getMandatoryString("API_URL");
+    private final String CHS_API_KEY = READER.getMandatoryString("CHS_API_KEY");
 
     private static final RestTemplate restTemplate = createRestTemplate();
+
+    private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
     /**
      * Get accounts resource if exists
@@ -33,12 +45,26 @@ public class AccountsManager {
      * @param link - self link for the accounts object
      * @return accounts object along with the status or not found status.
      */
-    public static ResponseEntity<Accounts> getAccounts(String link) {
+    public Accounts getAccounts(String link) throws Exception {
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.set(AUTHORIZATION_HEADER, getApiKey());
 
         HttpEntity requestEntity = new HttpEntity(requestHeaders);
-        return restTemplate.exchange(getRootUri() + link, HttpMethod.GET, requestEntity, Accounts.class);
+
+        ResponseEntity<Accounts> accountsResponseEntity = restTemplate.exchange(getRootUri() + link, HttpMethod.GET, requestEntity, Accounts.class);
+
+        if (accountsResponseEntity.getStatusCode() != HttpStatus.OK) {
+            Map<String, Object> logMap = new HashMap<>();
+            logMap.put("resource", link);
+            logMap.put("data.status", accountsResponseEntity.getStatusCode());
+            LOG.error("Failed to retrieve data from API", logMap);
+
+            // we are throwing a generic exception to mimic the private sdk throwing an exception.
+            // We're not to create a custom exception as it will have to be removed when the private sdk
+            // gets implemented - additionally the generic exception is sufficient
+            throw new Exception("Failed to retrieve data from API");
+        }
+        return accountsResponseEntity.getBody();
     }
 
     /**
@@ -51,11 +77,11 @@ public class AccountsManager {
         return new RestTemplate(requestFactory);
     }
 
-    private static String getRootUri() {
+    private String getRootUri() {
         return API_URL;
     }
 
-    private static String getApiKey() {
+    private String getApiKey() {
         return CHS_API_KEY;
     }
 }
