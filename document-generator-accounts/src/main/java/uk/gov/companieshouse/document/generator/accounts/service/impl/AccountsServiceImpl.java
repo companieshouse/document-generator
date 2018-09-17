@@ -21,7 +21,7 @@ public class AccountsServiceImpl implements AccountsService {
      */
     @Override
     public Accounts getAccounts(String resource) {
-        LOG.info("Getting accounts data");
+        LOG.info("Getting accounts data: " + resource);
 
         ResponseEntity<Accounts> accounts = AccountsManager.getAccounts(resource);
 
