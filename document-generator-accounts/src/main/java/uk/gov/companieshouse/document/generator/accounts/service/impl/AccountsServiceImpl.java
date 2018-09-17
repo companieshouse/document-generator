@@ -24,17 +24,12 @@ public class AccountsServiceImpl implements AccountsService {
      */
     @Override
     public Accounts getAccounts(String resource) throws ServiceException {
-        LOG.info("Getting accounts data: " + resource);
-
-        Accounts accounts;
         try {
-            accounts = accountsManager.getAccounts(resource);
+            LOG.info("Getting accounts data: " + resource);
+            return accountsManager.getAccounts(resource);
         } catch (Exception e) {
             LOG.error(e);
             throw new ServiceException(e.getMessage(), e.getCause());
         }
-
-        LOG.trace("Accounts data retrieved successfully: " + resource);
-        return accounts;
     }
 }
