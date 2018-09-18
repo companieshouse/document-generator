@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.api.model.accounts.Accounts;
 import uk.gov.companieshouse.document.generator.accounts.AccountType;
+import uk.gov.companieshouse.document.generator.accounts.LinkType;
 import uk.gov.companieshouse.document.generator.accounts.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.accounts.service.AccountsService;
@@ -47,7 +48,7 @@ public class AccountsHandlerImpl implements AccountsHandler  {
     private AccountType getAccountType(Accounts accountsData) throws HandlerException {
         return accountsData.getLinks().keySet()
                 .stream()
-                .filter(e -> !e.equalsIgnoreCase("self"))
+                .filter(e -> !e.equalsIgnoreCase(LinkType.SELF.getLink()))
                 .map(AccountType::getAccountType)
                 .findFirst()
                 .orElseThrow(() -> new HandlerException("Unable to find account type in account data" + accountsData.getId()));
