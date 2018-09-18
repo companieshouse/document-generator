@@ -59,7 +59,7 @@ public class AccountsManager {
         if (accountsResponseEntity.getStatusCode() != HttpStatus.OK) {
             Map<String, Object> logMap = new HashMap<>();
             logMap.put("resource", link);
-            logMap.put("data.status", accountsResponseEntity.getStatusCode());
+            logMap.put("status", accountsResponseEntity.getStatusCode());
             LOG.error("Failed to retrieve data from API", logMap);
 
             throw new Exception("Failed to retrieve data from API");
