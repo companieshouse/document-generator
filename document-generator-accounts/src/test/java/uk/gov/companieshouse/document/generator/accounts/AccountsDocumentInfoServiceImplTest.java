@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.transaction.Resource;
 import uk.gov.companieshouse.api.model.transaction.Transaction;
+import uk.gov.companieshouse.document.generator.accounts.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.accounts.handler.accounts.AccountsHandler;
 import uk.gov.companieshouse.document.generator.accounts.service.TransactionService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
@@ -59,7 +60,7 @@ public class AccountsDocumentInfoServiceImplTest {
 
     @Test
     @DisplayName("Tests the successful retrieval of document data")
-    void testSuccessfulGetDocumentInfo() {
+    void testSuccessfulGetDocumentInfo() throws HandlerException {
         when(transactionService.getTransaction(anyString())).thenReturn(createTransaction());
         when(accountsHandlerMock.getAccountsData(anyString())).thenReturn(new DocumentInfoResponse());
 

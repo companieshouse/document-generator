@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.document.generator.accounts.handler.accounts;
 
+import uk.gov.companieshouse.document.generator.accounts.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 
 /**
@@ -15,5 +16,5 @@ public interface AccountsHandler {
      * @param resourceLink - resource link
      * @return - document info
      */
-    DocumentInfoResponse getAccountsData(String resourceLink);
+    DocumentInfoResponse getAccountsData(String resourceLink) throws HandlerException;
 }
