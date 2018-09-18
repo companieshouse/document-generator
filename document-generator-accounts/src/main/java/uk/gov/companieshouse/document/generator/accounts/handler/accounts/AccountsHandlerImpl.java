@@ -29,7 +29,6 @@ public class AccountsHandlerImpl implements AccountsHandler  {
         try {
             accounts = accountsService.getAccounts(resourceLink);
         } catch (ServiceException e) {
-            LOG.error(e);
             throw new HandlerException(e.getMessage(), e.getCause());
         }
 
