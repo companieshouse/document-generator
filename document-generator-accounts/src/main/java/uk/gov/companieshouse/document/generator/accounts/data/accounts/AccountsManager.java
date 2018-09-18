@@ -13,6 +13,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.companieshouse.api.model.accounts.Accounts;
+import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
 import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.environment.impl.EnvironmentReaderImpl;
 import uk.gov.companieshouse.logging.Logger;
@@ -41,7 +42,7 @@ public class AccountsManager {
     /**
      * Get accounts resource if exists
      *
-     * @param link - self link for the accounts object
+     * @param link - self link for the accounts resource
      * @return accounts object along with the status or not found status.
      * @throws Exception - throws a generic exception to mimic the private sdk throwing an exception.
      *                     We're not to create a custom exception as it will have to be removed when
@@ -65,6 +66,35 @@ public class AccountsManager {
             throw new Exception("Failed to retrieve data from API");
         }
         return accountsResponseEntity.getBody();
+    }
+
+    /**
+     * Get abridged accounts resource if exists
+     *
+     * @param link - self link for the abridged accounts resource
+     * @return AbridgedAccountsApi object
+     * @throws Exception - throws a generic exception to mimic the private sdk throwing an exception.
+     *                     We're not to create a custom exception as it will have to be removed when
+     *                     the private sdk  gets implemented - additionally the generic exception is
+     *                     sufficient
+     */
+    public AbridgedAccountsApi getAbridgedAccounts(String link) throws Exception {
+        HttpHeaders requestHeaders = new HttpHeaders();
+        requestHeaders.set(AUTHORIZATION_HEADER, getApiKey());
+
+        HttpEntity requestEntity = new HttpEntity(requestHeaders);
+
+        ResponseEntity<AbridgedAccountsApi> abridgedAccountsResponseEntity = restTemplate.exchange(getRootUri() + link, HttpMethod.GET, requestEntity, AbridgedAccountsApi.class);
+
+        if (abridgedAccountsResponseEntity.getStatusCode() != HttpStatus.OK) {
+            Map<String, Object> logMap = new HashMap<>();
+            logMap.put("resource", link);
+            logMap.put("status", abridgedAccountsResponseEntity.getStatusCode());
+            LOG.error("Failed to retrieve data from API", logMap);
+
+            throw new Exception("Failed to retrieve data from API");
+        }
+        return abridgedAccountsResponseEntity.getBody();
     }
 
     /**
