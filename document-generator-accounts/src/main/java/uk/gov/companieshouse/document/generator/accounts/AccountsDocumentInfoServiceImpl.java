@@ -54,7 +54,7 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
         // when the Accounts migration has been completed to Company Accounts, this code can be removed
         if (isAccounts(resourceLink)) {
             try {
-                return accountsHandler.getAccountsData(resourceLink);
+                return accountsHandler.getAbridgedAccountsData(resourceLink);
             } catch (HandlerException e) {
                 LOG.error(e);
             }

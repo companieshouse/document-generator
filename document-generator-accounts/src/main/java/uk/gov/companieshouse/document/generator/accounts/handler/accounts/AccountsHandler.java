@@ -12,9 +12,9 @@ import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRes
 public interface AccountsHandler {
 
     /**
-     * Get an Accounts resource data based from the resource link
-     * @param resourceLink - resource link
-     * @return - document info
+     * Get an Abridged accounts resource from the given resource link
+     * @param resourceLink the resource link of the abridged accounts
+     * @return a populated {@link DocumentInfoResponse} object
      */
-    DocumentInfoResponse getAccountsData(String resourceLink) throws HandlerException;
+    DocumentInfoResponse getAbridgedAccountsData(String resourceLink) throws HandlerException;
 }

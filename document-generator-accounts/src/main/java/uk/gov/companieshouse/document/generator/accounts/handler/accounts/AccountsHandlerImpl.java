@@ -5,6 +5,7 @@ import static uk.gov.companieshouse.document.generator.accounts.AccountsDocument
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.api.model.accounts.Accounts;
+import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
 import uk.gov.companieshouse.document.generator.accounts.AccountType;
 import uk.gov.companieshouse.document.generator.accounts.LinkType;
 import uk.gov.companieshouse.document.generator.accounts.exception.HandlerException;
@@ -22,8 +23,11 @@ public class AccountsHandlerImpl implements AccountsHandler  {
     @Autowired
     AccountsService accountsService;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public DocumentInfoResponse getAccountsData(String resourceLink) throws HandlerException {
+    public DocumentInfoResponse getAbridgedAccountsData(String resourceLink) throws HandlerException {
         Accounts accounts;
 
         try {
@@ -32,17 +36,27 @@ public class AccountsHandlerImpl implements AccountsHandler  {
             throw new HandlerException(e.getMessage(), e.getCause());
         }
 
-        // TODO: The accountsType variable shall be used in the implementation of abridged logic
         AccountType accountsType = getAccountType(accounts);
+
+        String abridgedAccountLink = getAccountLink(accounts, accountsType);
+        try {
+            // TODO: abridgedAccountData will be used as part of the implementation of converting
+            // TODO: the data object to a json string
+            AbridgedAccountsApi abridgedAccountData = accountsService.getAbridgedAccounts(abridgedAccountLink);
+        } catch (ServiceException e) {
+            throw new HandlerException(e.getMessage(), e.getCause());
+        }
 
         return new DocumentInfoResponse();
     }
 
 
     /**
-     * Get the account type from the account link within links
+     * Get the account type from the links resource within the given accounts data object
      *
-     * @return accountsData - accounts data
+     * @param accountsData accounts resource data
+     * @return the {@link AccountType} that exist in the given accounts data
+     * @throws {@link HandlerException} if unable to find account type in accounts data
      */
     private AccountType getAccountType(Accounts accountsData) throws HandlerException {
         return accountsData.getLinks().keySet()
@@ -51,5 +65,16 @@ public class AccountsHandlerImpl implements AccountsHandler  {
                 .map(AccountType::getAccountType)
                 .findFirst()
                 .orElseThrow(() -> new HandlerException("Unable to find account type in account data" + accountsData.getId()));
+    }
+
+    /**
+     * Gets the link in the given accounts data for the given account type
+     *
+     * @param accounts accounts resource data
+     * @param accountsType {@link AccountType}
+     * @return link of given accounts type in given accounts object
+     */
+    private String getAccountLink(Accounts accounts, AccountType accountsType) {
+        return accounts.getLinks().get(accountsType.getResourceKey());
     }
 }

@@ -2,6 +2,7 @@ package uk.gov.companieshouse.document.generator.accounts;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -48,7 +49,7 @@ public class AccountsDocumentInfoServiceImplTest {
     }
 
     @Test
-    @DisplayName("Tests the unsuccessful retrieval of an accounts document data due to no accounts resource in transaction")
+    @DisplayName("Tests the unsuccessful retrieval of document data due to no accounts resource in transaction")
     void testUnsuccessfulGetDocumentInfoNoAccountsResourceInTransaction() {
         Transaction transaction = createTransaction();
         transaction.getResources().remove(RESOURCE_ID);
@@ -59,10 +60,21 @@ public class AccountsDocumentInfoServiceImplTest {
     }
 
     @Test
+    @DisplayName("Tests the unsuccessful retrieval of document data due to error in Accounts handler")
+    void testUnsuccessfulGetDocumentInfoExceptionFromAccountsHandler() throws HandlerException {
+        when(transactionService.getTransaction(anyString())).thenReturn(createTransaction());
+        when(accountsHandlerMock.getAbridgedAccountsData(anyString())).thenThrow(new HandlerException("error"));
+
+        assertThrows(HandlerException.class, () -> accountsHandlerMock.getAbridgedAccountsData(anyString()));
+
+        assertNull(accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest()));
+    }
+
+    @Test
     @DisplayName("Tests the successful retrieval of document data")
     void testSuccessfulGetDocumentInfo() throws HandlerException {
         when(transactionService.getTransaction(anyString())).thenReturn(createTransaction());
-        when(accountsHandlerMock.getAccountsData(anyString())).thenReturn(new DocumentInfoResponse());
+        when(accountsHandlerMock.getAbridgedAccountsData(anyString())).thenReturn(new DocumentInfoResponse());
 
         assertNotNull(accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest()));
     }
