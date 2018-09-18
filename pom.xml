@@ -118,7 +118,7 @@
                             <groupId>org.springframework.boot</groupId>
                             <artifactId>spring-boot-maven-plugin</artifactId>
                             <configuration>
-                                <mainClass>uk.gov.companieshouse.document.generator.core.DocumentGeneratorApplication
+                                <mainClass>uk.gov.companieshouse.document.generator.api.DocumentGeneratorApplication
                                 </mainClass>
                                 <layout>ZIP</layout>
                             </configuration>
@@ -169,7 +169,7 @@
     <modules>
         <module>document-generator-interfaces</module>
         <module>document-generator-accounts</module>
-        <module>document-generator-core</module>
+        <module>document-generator-api</module>
     </modules>
 
     <repositories>
