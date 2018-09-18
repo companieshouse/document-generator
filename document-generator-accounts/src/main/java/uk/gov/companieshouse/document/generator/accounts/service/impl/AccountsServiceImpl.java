@@ -5,6 +5,7 @@ import static uk.gov.companieshouse.document.generator.accounts.AccountsDocument
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.api.model.accounts.Accounts;
+import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
 import uk.gov.companieshouse.document.generator.accounts.data.accounts.AccountsManager;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.accounts.service.AccountsService;
@@ -27,6 +28,17 @@ public class AccountsServiceImpl implements AccountsService {
         try {
             LOG.info("Getting accounts data: " + resource);
             return accountsManager.getAccounts(resource);
+        } catch (Exception e) {
+            LOG.error(e);
+            throw new ServiceException(e.getMessage(), e.getCause());
+        }
+    }
+
+    @Override
+    public AbridgedAccountsApi getAbridgedAccounts(String resource) throws ServiceException {
+        try {
+            LOG.info("Getting abridged accounts data: " + resource);
+            return accountsManager.getAbridgedAccounts(resource);
         } catch (Exception e) {
             LOG.error(e);
             throw new ServiceException(e.getMessage(), e.getCause());
