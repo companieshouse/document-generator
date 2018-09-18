@@ -11,7 +11,6 @@ all: build
 .PHONY: clean
 clean:
 	mvn clean
-	rm -f ./$(artifact_core-name)/$(artifact_core-name).jar
 	rm -f ./$(artifact_name).jar
 	rm -f ./$(artifact_name)-*.zip
 	rm -rf ./build-*
