@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.api.model.transaction.Resource;
 import uk.gov.companieshouse.api.model.transaction.Transaction;
+import uk.gov.companieshouse.document.generator.accounts.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.accounts.handler.accounts.AccountsHandler;
 import uk.gov.companieshouse.document.generator.accounts.service.TransactionService;
 import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
@@ -52,8 +53,12 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
 
         // when the Accounts migration has been completed to Company Accounts, this code can be removed
         if (isAccounts(resourceLink)) {
-            return accountsHandler.getAccountsData(resourceLink);
-         }
+            try {
+                return accountsHandler.getAccountsData(resourceLink);
+            } catch (HandlerException e) {
+                LOG.error(e);
+            }
+        }
 
         return null;
     }
