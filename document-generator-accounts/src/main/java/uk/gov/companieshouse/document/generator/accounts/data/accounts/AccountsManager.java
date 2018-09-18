@@ -31,8 +31,8 @@ public class AccountsManager {
 
     private static final EnvironmentReader READER = new EnvironmentReaderImpl();
 
-    private final String API_URL = READER.getMandatoryString("API_URL");
-    private final String CHS_API_KEY = READER.getMandatoryString("CHS_API_KEY");
+    private final String apiUrl = READER.getMandatoryString("API_URL");
+    private final String chsApiKey = READER.getMandatoryString("CHS_API_KEY");
 
     private static final RestTemplate restTemplate = createRestTemplate();
 
@@ -61,7 +61,7 @@ public class AccountsManager {
             logMap.put("resource", link);
             logMap.put("data.status", accountsResponseEntity.getStatusCode());
             LOG.error("Failed to retrieve data from API", logMap);
-            
+
             throw new Exception("Failed to retrieve data from API");
         }
         return accountsResponseEntity.getBody();
@@ -78,10 +78,10 @@ public class AccountsManager {
     }
 
     private String getRootUri() {
-        return API_URL;
+        return apiUrl;
     }
 
     private String getApiKey() {
-        return CHS_API_KEY;
+        return chsApiKey;
     }
 }
