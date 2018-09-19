@@ -12,7 +12,8 @@ public interface TransactionService {
      * been built yet. When the private SDK has been built, we should be able to simply delete the
      * transaction package and use the SDK in the implementation of this method.
      *
-     * @return transaction
+     * @param id id of transaction
+     * @return {@link Transaction}
      */
     Transaction getTransaction(String id);
 }

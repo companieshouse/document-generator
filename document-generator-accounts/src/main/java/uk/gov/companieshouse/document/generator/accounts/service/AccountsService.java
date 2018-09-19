@@ -13,8 +13,9 @@ public interface AccountsService {
      * that makes a rest call to get the data requested. When the private SDK has been built
      * (SFA-518, SFA-670), we can replace the internal sdk solution with private-sdk calls.
      *
-     * @return accounts - base accounts resource
-     * @throws ServiceException - throws a service exception
+     * @param resource resource link
+     * @return base {@link Accounts} resource
+     * @throws ServiceException throws a service exception
      */
     Accounts getAccounts(String resource) throws ServiceException;
 
@@ -25,8 +26,9 @@ public interface AccountsService {
      * that makes a rest call to get the data requested. When the private SDK has been built
      * (SFA-518, SFA-670), we can replace the internal sdk solution with private-sdk calls.
      *
-     * @return AbridgedAccountsApi - abridged accounts resource
-     * @throws ServiceException - throws a service exception
+     * @param resource resource link
+     * @return {@link AbridgedAccountsApi} resource
+     * @throws ServiceException throws a service exception
      */
     AbridgedAccountsApi getAbridgedAccounts(String resource) throws ServiceException;
 }

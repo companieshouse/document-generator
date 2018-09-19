@@ -17,6 +17,7 @@ public interface AccountsHandler {
      * @param transaction the transaction data
      * @param resourceLink the resource link of the abridged accounts
      * @return a populated {@link DocumentInfoResponse} object
+     * @throws HandlerException throws a custom handler exception
      */
     DocumentInfoResponse getAbridgedAccountsData(Transaction transaction, String resourceLink) throws HandlerException;
 }

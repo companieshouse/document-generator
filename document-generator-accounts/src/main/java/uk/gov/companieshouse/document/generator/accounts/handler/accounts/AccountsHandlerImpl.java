@@ -67,7 +67,7 @@ public class AccountsHandlerImpl implements AccountsHandler  {
      *
      * @param accountsData accounts resource data
      * @return the {@link AccountType} that exist in the given accounts data
-     * @throws {@link HandlerException} if unable to find account type in accounts data
+     * @throws HandlerException if unable to find account type in accounts data
      */
     private AccountType getAccountType(Accounts accountsData) throws HandlerException {
         return accountsData.getLinks().keySet()
