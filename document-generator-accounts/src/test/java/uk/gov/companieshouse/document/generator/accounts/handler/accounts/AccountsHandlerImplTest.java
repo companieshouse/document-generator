@@ -16,6 +16,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.accounts.Accounts;
+import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
+import uk.gov.companieshouse.api.model.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.accounts.service.AccountsService;
@@ -30,6 +32,9 @@ public class AccountsHandlerImplTest {
     @Mock
     private AccountsService accountsService;
 
+    @Mock
+    private Transaction transaction;
+
     private static final String ACCOUNTS_RESOURCE_LINK = "/transactions/091174-913515-326060";
     private static final String ABRIDGED_ACCOUNTS_RESOURCE_LINK = "/transactions/091174-913515-326060/accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
 
@@ -39,27 +44,28 @@ public class AccountsHandlerImplTest {
         when(accountsService.getAccounts(anyString())).thenThrow(new ServiceException("Failure in service layer"));
 
         assertThrows(ServiceException.class, () -> accountsService.getAccounts(anyString()));
-        assertThrows(HandlerException.class, () -> accountsHandlerImpl.getAbridgedAccountsData(ACCOUNTS_RESOURCE_LINK));
+        assertThrows(HandlerException.class, () -> accountsHandlerImpl.getAbridgedAccountsData(transaction, ACCOUNTS_RESOURCE_LINK));
     }
 
     @Test
     @DisplayName("Tests the unsuccessful return of Abridged accounts data due to failure in service layer")
     void testGetAbridgedAccountsDataFailureFromServiceLayer() throws ServiceException {
-        when(accountsService.getAccounts(anyString())).thenReturn(createAbridgedAccountsObject());
+        when(accountsService.getAccounts(anyString())).thenReturn(createAccountsObject());
         when(accountsService.getAbridgedAccounts(anyString())).thenThrow(new ServiceException("Failure in service layer"));
 
         assertThrows(ServiceException.class, () -> accountsService.getAbridgedAccounts(anyString()));
-        assertThrows(HandlerException.class, () -> accountsHandlerImpl.getAbridgedAccountsData(ACCOUNTS_RESOURCE_LINK));
+        assertThrows(HandlerException.class, () -> accountsHandlerImpl.getAbridgedAccountsData(transaction, ACCOUNTS_RESOURCE_LINK));
     }
 
     @Test
     @DisplayName("Tests the successful return of Abridged accounts data")
     void testGetAbridgedAccountsData() throws ServiceException, HandlerException {
-        when(accountsService.getAccounts(anyString())).thenReturn(createAbridgedAccountsObject());
-        assertNotNull(accountsHandlerImpl.getAbridgedAccountsData(ACCOUNTS_RESOURCE_LINK));
+        when(accountsService.getAccounts(anyString())).thenReturn(createAccountsObject());
+        when(accountsService.getAbridgedAccounts(anyString())).thenReturn(createAbridgedAccountsObject());
+        assertNotNull(accountsHandlerImpl.getAbridgedAccountsData(transaction, ACCOUNTS_RESOURCE_LINK));
     }
 
-    private Accounts createAbridgedAccountsObject() {
+    private Accounts createAccountsObject() {
         Accounts accounts = new Accounts();
 
         Map<String, String> links = new HashMap<>();
@@ -67,5 +73,15 @@ public class AccountsHandlerImplTest {
         accounts.setLinks(links);
 
         return accounts;
+    }
+
+    private AbridgedAccountsApi createAbridgedAccountsObject() {
+        AbridgedAccountsApi abridgedAccountsApi = new AbridgedAccountsApi();
+
+        Map<String, String> links = new HashMap<>();
+        links.put("abridged_accounts", ABRIDGED_ACCOUNTS_RESOURCE_LINK);
+        abridgedAccountsApi.setLinks(links);
+
+        return abridgedAccountsApi;
     }
 }
