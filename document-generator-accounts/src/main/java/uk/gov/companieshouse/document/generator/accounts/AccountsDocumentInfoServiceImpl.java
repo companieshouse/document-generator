@@ -35,7 +35,7 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
         String resourceId = documentInfoRequest.getResourceId();
         String resourceUri = documentInfoRequest.getResourceUri();
 
-        Transaction transaction = null;
+        Transaction transaction;
         try {
             transaction = transactionService.getTransaction(resourceId);
         } catch (ServiceException e) {
