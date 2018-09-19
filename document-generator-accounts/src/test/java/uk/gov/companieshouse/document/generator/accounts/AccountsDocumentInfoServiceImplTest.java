@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
@@ -66,9 +67,9 @@ public class AccountsDocumentInfoServiceImplTest {
     @DisplayName("Tests the unsuccessful retrieval of document data due to error in Accounts handler")
     void testUnsuccessfulGetDocumentInfoExceptionFromAccountsHandler() throws HandlerException {
         when(transactionService.getTransaction(anyString())).thenReturn(createTransaction());
-        when(accountsHandlerMock.getAbridgedAccountsData(transaction,  anyString())).thenThrow(new HandlerException("error"));
+        when(accountsHandlerMock.getAbridgedAccountsData(any(Transaction.class),  anyString())).thenThrow(new HandlerException("error"));
 
-        assertThrows(HandlerException.class, () -> accountsHandlerMock.getAbridgedAccountsData(transaction, anyString()));
+        assertThrows(HandlerException.class, () -> accountsHandlerMock.getAbridgedAccountsData(transaction, ""));
 
         assertNull(accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest()));
     }
@@ -77,14 +78,9 @@ public class AccountsDocumentInfoServiceImplTest {
     @DisplayName("Tests the successful retrieval of document data")
     void testSuccessfulGetDocumentInfo() throws HandlerException {
         when(transactionService.getTransaction(anyString())).thenReturn(createTransaction());
-        when(accountsHandlerMock.getAbridgedAccountsData(transaction, anyString())).thenReturn(new DocumentInfoResponse());
+        when(accountsHandlerMock.getAbridgedAccountsData(any(Transaction.class), anyString())).thenReturn(new DocumentInfoResponse());
 
-        DocumentInfoResponse documentInfoResponse = accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest());
-        assertNotNull(documentInfoResponse);
-        assertNotNull(documentInfoResponse.getData());
-        assertNotNull(documentInfoResponse.getAssetId());
-        assertNotNull(documentInfoResponse.getLocation());
-        assertNotNull(documentInfoResponse.getTemplateName());
+        assertNotNull(accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest()));
     }
 
     private DocumentInfoRequest createDocumentInfoRequest() {
