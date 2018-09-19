@@ -13,7 +13,7 @@
     <groupId>uk.gov.companieshouse</groupId>
     <artifactId>document-generator-api</artifactId>
     <version>unversioned</version>
-    <name>document-generator-core</name>
+    <name>document-generator-api</name>
     <url>http://maven.apache.org</url>
     
     <properties>
