@@ -1,7 +1,6 @@
 package uk.gov.companieshouse.document.generator.accounts.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -37,15 +36,7 @@ public class TransactionServiceImplTest {
     }
 
     @Test
-    @DisplayName("Tests unsuccessful retrieval of accounts that returns null")
-    void testGetTransactionReturningNull() throws Exception {
-        when(transactionManager.getTransaction(anyString())).thenReturn(null);
-
-        assertNull(transactionServiceImpl.getTransaction("10000"));
-    }
-
-    @Test
-    @DisplayName("Tests successful retrieval of accounts")
+    @DisplayName("Tests successful retrieval of a transaction")
     void testGetTransactionSuccess() throws Exception {
         when(transactionManager.getTransaction(anyString())).thenReturn(new Transaction());
 
