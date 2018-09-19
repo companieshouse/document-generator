@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.document.generator.accounts.service;
+package uk.gov.companieshouse.document.generator.accounts.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -18,7 +18,6 @@ import uk.gov.companieshouse.api.model.accounts.Accounts;
 import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
 import uk.gov.companieshouse.document.generator.accounts.data.accounts.AccountsManager;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
-import uk.gov.companieshouse.document.generator.accounts.service.impl.AccountsServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(Lifecycle.PER_CLASS)

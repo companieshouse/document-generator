@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.api.model.transaction.Resource;
 import uk.gov.companieshouse.api.model.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.HandlerException;
+import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.accounts.handler.accounts.AccountsHandler;
 import uk.gov.companieshouse.document.generator.accounts.service.TransactionService;
 import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
@@ -34,7 +35,13 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
         String resourceId = documentInfoRequest.getResourceId();
         String resourceUri = documentInfoRequest.getResourceUri();
 
-        Transaction transaction = transactionService.getTransaction(resourceId);
+        Transaction transaction = null;
+        try {
+            transaction = transactionService.getTransaction(resourceId);
+        } catch (ServiceException e) {
+            LOG.error(e);
+            return null;
+        }
         if (transaction == null) {
             LOG.error("transaction not found");
             return null;
