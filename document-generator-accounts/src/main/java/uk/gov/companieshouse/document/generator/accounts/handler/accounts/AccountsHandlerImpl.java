@@ -2,6 +2,8 @@ package uk.gov.companieshouse.document.generator.accounts.handler.accounts;
 
 import static uk.gov.companieshouse.document.generator.accounts.AccountsDocumentInfoServiceImpl.MODULE_NAME_SPACE;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.api.model.accounts.Accounts;
@@ -44,6 +46,10 @@ public class AccountsHandlerImpl implements AccountsHandler  {
             // TODO: the data object to a json string
             AbridgedAccountsApi abridgedAccountData = accountsService.getAbridgedAccounts(abridgedAccountLink);
         } catch (ServiceException e) {
+            Map<String, Object> logMap = new HashMap<>();
+            logMap.put("resource", abridgedAccountLink);
+            logMap.put("accountType", accountsType);
+            LOG.error("Error in service layer", logMap);
             throw new HandlerException(e.getMessage(), e.getCause());
         }
 
@@ -76,5 +82,12 @@ public class AccountsHandlerImpl implements AccountsHandler  {
      */
     private String getAccountLink(Accounts accounts, AccountType accountsType) {
         return accounts.getLinks().get(accountsType.getResourceKey());
+    }
+
+    private void logOutput(Object... args) {
+
+
+
+        Map<String, Object>
     }
 }
