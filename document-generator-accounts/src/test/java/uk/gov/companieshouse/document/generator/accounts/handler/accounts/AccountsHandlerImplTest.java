@@ -61,7 +61,7 @@ public class AccountsHandlerImplTest {
     @DisplayName("Tests the successful return of Abridged accounts data")
     void testGetAbridgedAccountsData() throws ServiceException, HandlerException {
         when(accountsService.getAccounts(anyString())).thenReturn(createAccountsObject());
-        when(accountsService.getAbridgedAccounts(anyString())).thenReturn(createAbridgedAccountsObject());
+        when(accountsService.getAbridgedAccounts(anyString())).thenReturn(new AbridgedAccountsApi());
         assertNotNull(accountsHandlerImpl.getAbridgedAccountsData(transaction, ACCOUNTS_RESOURCE_LINK));
     }
 
@@ -73,15 +73,5 @@ public class AccountsHandlerImplTest {
         accounts.setLinks(links);
 
         return accounts;
-    }
-
-    private AbridgedAccountsApi createAbridgedAccountsObject() {
-        AbridgedAccountsApi abridgedAccountsApi = new AbridgedAccountsApi();
-
-        Map<String, String> links = new HashMap<>();
-        links.put("abridged_accounts", ABRIDGED_ACCOUNTS_RESOURCE_LINK);
-        abridgedAccountsApi.setLinks(links);
-
-        return abridgedAccountsApi;
     }
 }
