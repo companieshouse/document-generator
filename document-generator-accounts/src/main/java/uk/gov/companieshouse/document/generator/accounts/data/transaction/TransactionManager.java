@@ -44,6 +44,10 @@ public class TransactionManager {
      *
      * @param id - transaction id
      * @return transaction object along with the status or not found status.
+     * @throws Exception - throws a generic exception to mimic the private sdk throwing an exception.
+     *                     We're not to create a custom exception as it will have to be removed when
+     *                     the private sdk  gets implemented - additionally the generic exception is
+     *                     sufficient
      */
     public Transaction getTransaction(String id) throws Exception {
         HttpHeaders requestHeaders = new HttpHeaders();
