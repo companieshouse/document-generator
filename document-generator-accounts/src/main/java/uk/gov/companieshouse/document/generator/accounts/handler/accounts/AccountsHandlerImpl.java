@@ -83,11 +83,5 @@ public class AccountsHandlerImpl implements AccountsHandler  {
     private String getAccountLink(Accounts accounts, AccountType accountsType) {
         return accounts.getLinks().get(accountsType.getResourceKey());
     }
-
-    private void logOutput(Object... args) {
-
-
-
-        Map<String, Object>
-    }
+    
 }
