@@ -2,7 +2,6 @@ package uk.gov.companieshouse.document.generator.accounts.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.DisplayName;
@@ -27,20 +26,22 @@ public class TransactionServiceImplTest {
     @Mock
     private TransactionManager transactionManager;
 
+    private static final String TRANSACTION_ID = "091174-913515-326060";
+
     @Test
     @DisplayName("Tests unsuccessful retrieval of transaction that throws exception")
     void testGetTransactionThrownException() throws Exception {
-        when(transactionManager.getTransaction(anyString())).thenThrow(new Exception());
+        when(transactionManager.getTransaction(TRANSACTION_ID)).thenThrow(new Exception());
 
-        assertThrows(ServiceException.class, () -> transactionServiceImpl.getTransaction("10000"));
+        assertThrows(ServiceException.class, () -> transactionServiceImpl.getTransaction(TRANSACTION_ID));
     }
 
     @Test
     @DisplayName("Tests successful retrieval of a transaction")
     void testGetTransactionSuccess() throws Exception {
-        when(transactionManager.getTransaction(anyString())).thenReturn(new Transaction());
+        when(transactionManager.getTransaction(TRANSACTION_ID)).thenReturn(new Transaction());
 
-        assertNotNull(transactionServiceImpl.getTransaction("10000"));
+        assertNotNull(transactionServiceImpl.getTransaction(TRANSACTION_ID));
     }
 
 }

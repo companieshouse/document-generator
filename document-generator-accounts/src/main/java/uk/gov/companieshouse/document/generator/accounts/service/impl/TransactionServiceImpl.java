@@ -28,7 +28,6 @@ public class TransactionServiceImpl implements TransactionService {
             LOG.info("Getting transaction data: " + id);
             return transactionManager.getTransaction(id);
         } catch (Exception e) {
-            LOG.error(e);
             throw new ServiceException(e.getMessage(), e.getCause());
         }
     }
