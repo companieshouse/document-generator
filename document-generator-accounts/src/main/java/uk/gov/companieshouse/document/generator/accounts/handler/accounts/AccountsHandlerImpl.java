@@ -127,5 +127,4 @@ public class AccountsHandlerImpl implements AccountsHandler  {
     private String getBucketName() {
         return bucketName;
     }
-    
 }
