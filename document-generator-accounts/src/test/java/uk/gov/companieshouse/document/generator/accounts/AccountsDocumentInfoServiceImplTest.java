@@ -44,8 +44,9 @@ public class AccountsDocumentInfoServiceImplTest {
     @Test
     @DisplayName("Tests the unsuccessful retrieval of an document data due to an error in transaction retrieval")
     void testUnsuccessfulGetDocumentInfoFailedTransactionRetrieval() throws ServiceException {
-        when(transactionService.getTransaction(anyString())).thenReturn(null);
+        when(transactionService.getTransaction(anyString())).thenThrow(new ServiceException("error"));
 
+        assertThrows(ServiceException.class, () -> transactionService.getTransaction(""));
         assertNull(accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest()));
     }
 

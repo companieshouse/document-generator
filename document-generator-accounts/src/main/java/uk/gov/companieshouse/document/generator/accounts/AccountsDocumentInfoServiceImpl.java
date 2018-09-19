@@ -42,10 +42,6 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
             LOG.error(e);
             return null;
         }
-        if (transaction == null) {
-            LOG.error("transaction not found");
-            return null;
-        }
 
         String resourceLink =  Optional.of(transaction)
                 .map(Transaction::getResources)
