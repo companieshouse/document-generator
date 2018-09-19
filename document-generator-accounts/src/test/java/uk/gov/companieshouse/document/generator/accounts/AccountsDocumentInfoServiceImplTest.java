@@ -79,7 +79,12 @@ public class AccountsDocumentInfoServiceImplTest {
         when(transactionService.getTransaction(anyString())).thenReturn(createTransaction());
         when(accountsHandlerMock.getAbridgedAccountsData(transaction, anyString())).thenReturn(new DocumentInfoResponse());
 
-        assertNotNull(accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest()));
+        DocumentInfoResponse documentInfoResponse = accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest());
+        assertNotNull(documentInfoResponse);
+        assertNotNull(documentInfoResponse.getData());
+        assertNotNull(documentInfoResponse.getAssetId());
+        assertNotNull(documentInfoResponse.getLocation());
+        assertNotNull(documentInfoResponse.getTemplateName());
     }
 
     private DocumentInfoRequest createDocumentInfoRequest() {
