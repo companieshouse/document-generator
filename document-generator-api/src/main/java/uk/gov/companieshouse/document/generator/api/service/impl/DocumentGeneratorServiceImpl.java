@@ -35,7 +35,6 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
 
     private RenderDocumentRequestHandler requestHandler;
 
-    @Autowired
     private DocumentTypeService documentTypeService;
 
     private static final String DOCUMENT_RENDER_SERVICE_HOST_ENV_VAR = "DOCUMENT_RENDER_SERVICE_HOST";
