@@ -4,5 +4,6 @@ public enum ResponseStatus {
 
     CREATED,
     NO_DATA_RETRIEVED,
-    DOCUMENT_NOT_RENDERED
+    DOCUMENT_NOT_RENDERED,
+    NO_DOCUMENT_TYPE_FOUND
 }

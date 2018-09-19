@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.document.generator.api.service.impl;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.document.generator.api.Exception.DocumentGeneratorServiceException;
@@ -9,6 +10,7 @@ import uk.gov.companieshouse.document.generator.api.document.render.models.Rende
 import uk.gov.companieshouse.document.generator.api.models.DocumentRequest;
 import uk.gov.companieshouse.document.generator.api.models.DocumentResponse;
 import uk.gov.companieshouse.document.generator.api.service.DocumentGeneratorService;
+import uk.gov.companieshouse.document.generator.api.service.DocumentTypeService;
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseObject;
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseStatus;
 import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
@@ -33,6 +35,9 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
 
     private RenderDocumentRequestHandler requestHandler;
 
+    @Autowired
+    private DocumentTypeService documentTypeService;
+
     private static final String DOCUMENT_RENDER_SERVICE_HOST_ENV_VAR = "DOCUMENT_RENDER_SERVICE_HOST";
 
     private static final String CONTEXT_PATH = "/document-render/store?is_public=true";
@@ -41,10 +46,11 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
 
     @Autowired
     public DocumentGeneratorServiceImpl(DocumentInfoService documentInfoService, EnvironmentReader environmentReader,
-                                        RenderDocumentRequestHandler requestHandler) {
+                                        RenderDocumentRequestHandler requestHandler, DocumentTypeService documentTypeService) {
         this.documentInfoService = documentInfoService;
         this.environmentReader = environmentReader;
         this.requestHandler = requestHandler;
+        this.documentTypeService = documentTypeService;
     }
 
     @Override
@@ -53,13 +59,21 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
         DocumentResponse response;
 
         final Map < String, Object > debugMap = new HashMap < > ();
-        debugMap.put("resource_uri", documentRequest.getResourceUrl());
+        debugMap.put("resource_uri", documentRequest.getResourceUri());
         debugMap.put("resource_id", documentRequest.getResourceId());
 
-        //TODO addition of get doc gen type from URL to be added in SFA 580
+        try {
+            //TODO implement the use of DocumentType SFA 719
+            String DocumentType = documentTypeService.getDocumentType(documentRequest.getResourceUri());
+        } catch (DocumentGeneratorServiceException dgse){
+            LOG.errorContext(requestId, dgse, debugMap);
+            return new ResponseObject(ResponseStatus.NO_DOCUMENT_TYPE_FOUND, null);
+        }
 
         //TODO currently no impl present, being completed in SFA 567
         DocumentInfoRequest documentInfoRequest = new DocumentInfoRequest();
+        BeanUtils.copyProperties(documentInfoRequest, documentRequest);
+
         DocumentInfoResponse documentInfoResponse = documentInfoService.getDocumentInfo(documentInfoRequest);
 
         if (documentInfoResponse != null) {

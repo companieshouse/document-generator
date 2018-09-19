@@ -142,6 +142,24 @@ public class DocumentGeneratorControllerTest {
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
+    @Test
+    @DisplayName("Tests fails to obtain documentType")
+    public void testsFailedToObtainDocumentType() {
+
+        DocumentRequest request = setDocumentgeneratorRequest();
+
+        ResponseObject responseObject = new ResponseObject(ResponseStatus.NO_DOCUMENT_TYPE_FOUND);
+
+        when(mockBindingResult.hasErrors()).thenReturn(false);
+        when(mockDocumentGeneratorService.generate(any(DocumentRequest.class), any(String.class))).thenReturn(responseObject);
+        when(mockApiResponseMapper.map(any(ResponseObject.class))).thenReturn(ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
+
+        ResponseEntity responseEntity = documentGeneratorController.generateDocument(request, mockBindingResult, mockHttpServletRequest);
+
+        assertNotNull(responseEntity);
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+    }
+
     /**
      * Set the data for the document generator request
      *
@@ -153,7 +171,7 @@ public class DocumentGeneratorControllerTest {
         request.setDocumentType("documentType");
         request.setMimeType("mimeType");
         request.setResourceId("resourceId");
-        request.setResourceUrl("resourceUrl");
+        request.setResourceUri("resourceUri");
 
         return request;
     }
