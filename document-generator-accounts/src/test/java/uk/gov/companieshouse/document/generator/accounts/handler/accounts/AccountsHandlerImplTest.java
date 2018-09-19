@@ -39,17 +39,27 @@ public class AccountsHandlerImplTest {
         when(accountsService.getAccounts(anyString())).thenThrow(new ServiceException("Failure in service layer"));
 
         assertThrows(ServiceException.class, () -> accountsService.getAccounts(anyString()));
-        assertThrows(HandlerException.class, () -> accountsHandlerImpl.getAccountsData(ACCOUNTS_RESOURCE_LINK));
+        assertThrows(HandlerException.class, () -> accountsHandlerImpl.getAbridgedAccountsData(ACCOUNTS_RESOURCE_LINK));
     }
 
     @Test
-    @DisplayName("Tests the successful return of accounts data")
-    void testGetAccountsData() throws ServiceException, HandlerException {
-        when(accountsService.getAccounts(anyString())).thenReturn(createAccountsObject());
-        assertNotNull(accountsHandlerImpl.getAccountsData(ACCOUNTS_RESOURCE_LINK));
+    @DisplayName("Tests the unsuccessful return of Abridged accounts data due to failure in service layer")
+    void testGetAbridgedAccountsDataFailureFromServiceLayer() throws ServiceException {
+        when(accountsService.getAccounts(anyString())).thenReturn(createAbridgedAccountsObject());
+        when(accountsService.getAbridgedAccounts(anyString())).thenThrow(new ServiceException("Failure in service layer"));
+
+        assertThrows(ServiceException.class, () -> accountsService.getAbridgedAccounts(anyString()));
+        assertThrows(HandlerException.class, () -> accountsHandlerImpl.getAbridgedAccountsData(ACCOUNTS_RESOURCE_LINK));
     }
 
-    private Accounts createAccountsObject() {
+    @Test
+    @DisplayName("Tests the successful return of Abridged accounts data")
+    void testGetAbridgedAccountsData() throws ServiceException, HandlerException {
+        when(accountsService.getAccounts(anyString())).thenReturn(createAbridgedAccountsObject());
+        assertNotNull(accountsHandlerImpl.getAbridgedAccountsData(ACCOUNTS_RESOURCE_LINK));
+    }
+
+    private Accounts createAbridgedAccountsObject() {
         Accounts accounts = new Accounts();
 
         Map<String, String> links = new HashMap<>();
