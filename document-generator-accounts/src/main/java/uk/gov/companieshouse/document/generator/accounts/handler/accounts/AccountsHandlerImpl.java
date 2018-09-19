@@ -121,7 +121,7 @@ public class AccountsHandlerImpl implements AccountsHandler  {
     }
 
     private String createLocationString(AccountType accountType) {
-        return String.format("%s%s/%s", getBucketName(), accountType.getAssetId(), accountType.getUniqueFileName());
+        return String.format("%s/%s/%s", getBucketName(), accountType.getAssetId(), accountType.getUniqueFileName());
     }
 
     private String getBucketName() {
