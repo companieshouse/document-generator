@@ -34,6 +34,9 @@ public class AccountsServiceImpl implements AccountsService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public AbridgedAccountsApi getAbridgedAccounts(String resource) throws ServiceException {
         try {
