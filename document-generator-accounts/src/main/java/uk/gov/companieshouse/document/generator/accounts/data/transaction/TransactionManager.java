@@ -59,7 +59,8 @@ public class TransactionManager {
         ResponseEntity<Transaction> transactionResponseEntity = restTemplate.exchange(getRootUri() + url, HttpMethod.GET, requestEntity, Transaction.class);
         if (transactionResponseEntity.getStatusCode() != HttpStatus.OK) {
             Map<String, Object> logMap = new HashMap<>();
-            logMap.put("id", id);
+            logMap.put("transaction_id", id);
+            logMap.put("uri_path", url);
             logMap.put("status", transactionResponseEntity.getStatusCode());
             LOG.error("Failed to retrieve data from API", logMap);
 
