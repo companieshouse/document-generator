@@ -20,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.transaction.Resource;
 import uk.gov.companieshouse.api.model.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.HandlerException;
+import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.accounts.handler.accounts.AccountsHandler;
 import uk.gov.companieshouse.document.generator.accounts.service.TransactionService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
@@ -46,15 +47,16 @@ public class AccountsDocumentInfoServiceImplTest {
 
     @Test
     @DisplayName("Tests the unsuccessful retrieval of an document data due to an error in transaction retrieval")
-    void testUnsuccessfulGetDocumentInfoFailedTransactionRetrieval() {
-        when(transactionService.getTransaction(anyString())).thenReturn(null);
+    void testUnsuccessfulGetDocumentInfoFailedTransactionRetrieval() throws ServiceException {
+        when(transactionService.getTransaction(anyString())).thenThrow(new ServiceException("error"));
 
+        assertThrows(ServiceException.class, () -> transactionService.getTransaction(""));
         assertNull(accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest()));
     }
 
     @Test
     @DisplayName("Tests the unsuccessful retrieval of document data due to no accounts resource in transaction")
-    void testUnsuccessfulGetDocumentInfoNoAccountsResourceInTransaction() {
+    void testUnsuccessfulGetDocumentInfoNoAccountsResourceInTransaction() throws ServiceException {
         Transaction transaction = createTransaction();
         transaction.getResources().remove(RESOURCE_ID);
         transaction.getResources().put("error", createResource());
@@ -65,7 +67,8 @@ public class AccountsDocumentInfoServiceImplTest {
 
     @Test
     @DisplayName("Tests the unsuccessful retrieval of document data due to error in Accounts handler")
-    void testUnsuccessfulGetDocumentInfoExceptionFromAccountsHandler() throws HandlerException {
+    void testUnsuccessfulGetDocumentInfoExceptionFromAccountsHandler()
+            throws HandlerException, ServiceException {
         when(transactionService.getTransaction(anyString())).thenReturn(createTransaction());
         when(accountsHandlerMock.getAbridgedAccountsData(any(Transaction.class),  anyString())).thenThrow(new HandlerException("error"));
 
@@ -76,7 +79,7 @@ public class AccountsDocumentInfoServiceImplTest {
 
     @Test
     @DisplayName("Tests the successful retrieval of document data")
-    void testSuccessfulGetDocumentInfo() throws HandlerException {
+    void testSuccessfulGetDocumentInfo() throws HandlerException, ServiceException {
         when(transactionService.getTransaction(anyString())).thenReturn(createTransaction());
         when(accountsHandlerMock.getAbridgedAccountsData(any(Transaction.class), anyString())).thenReturn(new DocumentInfoResponse());
 
