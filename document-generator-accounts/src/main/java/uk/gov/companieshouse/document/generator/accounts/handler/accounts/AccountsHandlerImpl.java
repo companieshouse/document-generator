@@ -16,7 +16,6 @@ import uk.gov.companieshouse.document.generator.accounts.exception.HandlerExcept
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.accounts.service.AccountsService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
-import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
@@ -27,9 +26,6 @@ public class AccountsHandlerImpl implements AccountsHandler  {
 
     @Autowired
     private AccountsService accountsService;
-
-    @Autowired
-    private EnvironmentReader reader;
 
     private static final String DOC_GEN_ACC_BUCKET_NAME_ENV_VAR = "DOC_GEN_ACC_BUCKET_NAME";
 
@@ -117,19 +113,11 @@ public class AccountsHandlerImpl implements AccountsHandler  {
         documentInfoResponse.setData(createDocumentInfoResponseData(transaction, abridgedAccountData));
         documentInfoResponse.setAssetId(accountType.getAssetId());
         documentInfoResponse.setTemplateName(accountType.getTemplateName());
-        documentInfoResponse.setLocation(createLocationString(accountType));
+        documentInfoResponse.setPath(createPathString(accountType));
         return documentInfoResponse;
     }
 
-    private String createLocationString(AccountType accountType) {
-        return String.format("%s/%s/%s", getBucketName(), accountType.getAssetId(), accountType.getUniqueFileName());
-    }
-
-    public String getBucketName() {
-        return reader.getMandatoryString(DOC_GEN_ACC_BUCKET_NAME_ENV_VAR);
-    }
-
-    public static String getDocGenAccBucketNameEnvVar() {
-        return DOC_GEN_ACC_BUCKET_NAME_ENV_VAR;
+    private String createPathString(AccountType accountType) {
+        return String.format("/%s/%s", accountType.getAssetId(), accountType.getUniqueFileName());
     }
 }
