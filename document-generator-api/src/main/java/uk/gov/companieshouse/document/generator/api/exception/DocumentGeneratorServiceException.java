@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.document.generator.api.Exception;
+package uk.gov.companieshouse.document.generator.api.exception;
 
 /**
  * DocumentGeneratorServiceException is a wrapper exception that hides

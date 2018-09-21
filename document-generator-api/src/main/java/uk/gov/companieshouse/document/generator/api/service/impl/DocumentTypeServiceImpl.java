@@ -1,7 +1,7 @@
 package uk.gov.companieshouse.document.generator.api.service.impl;
 
 import org.springframework.stereotype.Service;
-import uk.gov.companieshouse.document.generator.api.Exception.DocumentGeneratorServiceException;
+import uk.gov.companieshouse.document.generator.api.exception.DocumentGeneratorServiceException;
 import uk.gov.companieshouse.document.generator.api.service.DocumentTypeService;
 import uk.gov.companieshouse.document.generator.api.utility.DocumentType;
 
