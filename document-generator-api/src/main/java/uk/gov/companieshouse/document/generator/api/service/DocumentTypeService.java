@@ -9,7 +9,7 @@ public interface DocumentTypeService {
      * get Document type
      *
      * @param resourceUri
-     * @return String value of document type
+     * @return DocumentType 
      */
     DocumentType getDocumentType(String resourceUri) throws DocumentGeneratorServiceException;
 }
