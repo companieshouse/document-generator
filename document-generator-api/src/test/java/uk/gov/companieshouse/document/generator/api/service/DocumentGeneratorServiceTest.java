@@ -1,5 +1,14 @@
 package uk.gov.companieshouse.document.generator.api.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,16 +29,6 @@ import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.environment.EnvironmentReader;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -174,7 +173,7 @@ public class DocumentGeneratorServiceTest {
     private DocumentInfoResponse setSuccessfulDocumentInfo() {
 
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
-        documentInfoResponse.setLocation(LOCATION);
+        documentInfoResponse.setPath(LOCATION);
         documentInfoResponse.setTemplateName("templateName");
         documentInfoResponse.setData("data");
         documentInfoResponse.setAssetId("assetId");

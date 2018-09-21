@@ -4,10 +4,12 @@ import static uk.gov.companieshouse.document.generator.accounts.AccountsDocument
 
 import java.util.HashMap;
 import java.util.Map;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.api.model.accounts.Accounts;
 import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
+import uk.gov.companieshouse.api.model.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.AccountType;
 import uk.gov.companieshouse.document.generator.accounts.LinkType;
 import uk.gov.companieshouse.document.generator.accounts.exception.HandlerException;
@@ -23,13 +25,15 @@ public class AccountsHandlerImpl implements AccountsHandler  {
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
     @Autowired
-    AccountsService accountsService;
+    private AccountsService accountsService;
+
+    private static final String DOC_GEN_ACC_BUCKET_NAME_ENV_VAR = "DOC_GEN_ACC_BUCKET_NAME";
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public DocumentInfoResponse getAbridgedAccountsData(String resourceLink) throws HandlerException {
+    public DocumentInfoResponse getAbridgedAccountsData(Transaction transaction, String resourceLink) throws HandlerException {
         Accounts accounts;
 
         try {
@@ -38,22 +42,20 @@ public class AccountsHandlerImpl implements AccountsHandler  {
             throw new HandlerException(e.getMessage(), e.getCause());
         }
 
-        AccountType accountsType = getAccountType(accounts);
+        AccountType accountType = getAccountType(accounts);
 
-        String abridgedAccountLink = getAccountLink(accounts, accountsType);
+        String abridgedAccountLink = getAccountLink(accounts, accountType);
         try {
-            // TODO: abridgedAccountData will be used as part of the implementation of converting
-            // TODO: the data object to a json string
             AbridgedAccountsApi abridgedAccountData = accountsService.getAbridgedAccounts(abridgedAccountLink);
+
+            return createResponse(transaction, accountType, abridgedAccountData);
         } catch (ServiceException e) {
             Map<String, Object> logMap = new HashMap<>();
             logMap.put("resource", abridgedAccountLink);
-            logMap.put("accountType", accountsType);
+            logMap.put("accountType", accountType);
             LOG.error("Error in service layer", logMap);
             throw new HandlerException(e.getMessage(), e.getCause());
         }
-
-        return new DocumentInfoResponse();
     }
 
 
@@ -62,7 +64,7 @@ public class AccountsHandlerImpl implements AccountsHandler  {
      *
      * @param accountsData accounts resource data
      * @return the {@link AccountType} that exist in the given accounts data
-     * @throws {@link HandlerException} if unable to find account type in accounts data
+     * @throws HandlerException if unable to find account type in accounts data
      */
     private AccountType getAccountType(Accounts accountsData) throws HandlerException {
         return accountsData.getLinks().keySet()
@@ -83,5 +85,39 @@ public class AccountsHandlerImpl implements AccountsHandler  {
     private String getAccountLink(Accounts accounts, AccountType accountsType) {
         return accounts.getLinks().get(accountsType.getResourceKey());
     }
-    
+
+    /**
+     * Creates the 'data' string in {@link DocumentInfoResponse}.
+     * @param transaction the transaction data
+     * @param abridgedAccountData the abridged accounts data
+     * @return data string in {@link DocumentInfoResponse}
+     */
+    private String createDocumentInfoResponseData(Transaction transaction, AbridgedAccountsApi abridgedAccountData) {
+        JSONObject abridgedAccountJSON = new JSONObject(abridgedAccountData);
+        JSONObject abridgedAccount = new JSONObject();
+        abridgedAccount.put("abridged_account", abridgedAccountJSON);
+        abridgedAccount.put("company_name", transaction.getCompanyName());
+        abridgedAccount.put("company_number", transaction.getCompanyNumber());
+        return abridgedAccount.toString();
+    }
+
+    /**
+     * Creates the {@link DocumentInfoResponse} object
+     * @param transaction transaction data
+     * @param accountType account type
+     * @param abridgedAccountData abridged account data
+     * @return {@link DocumentInfoResponse} object
+     */
+    private DocumentInfoResponse createResponse(Transaction transaction, AccountType accountType, AbridgedAccountsApi abridgedAccountData) {
+        DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
+        documentInfoResponse.setData(createDocumentInfoResponseData(transaction, abridgedAccountData));
+        documentInfoResponse.setAssetId(accountType.getAssetId());
+        documentInfoResponse.setTemplateName(accountType.getTemplateName());
+        documentInfoResponse.setPath(createPathString(accountType));
+        return documentInfoResponse;
+    }
+
+    private String createPathString(AccountType accountType) {
+        return String.format("/%s/%s", accountType.getAssetId(), accountType.getUniqueFileName());
+    }
 }

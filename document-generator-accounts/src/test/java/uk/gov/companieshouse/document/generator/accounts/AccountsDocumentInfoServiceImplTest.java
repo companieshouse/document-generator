@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
@@ -38,6 +39,9 @@ public class AccountsDocumentInfoServiceImplTest {
     @Mock
     private TransactionService transactionService;
 
+    @Mock
+    private Transaction transaction;
+
     private static final String RESOURCE_URI = "/transactions/091174-913515-326060";
     private static final String RESOURCE_ID = "/transactions/091174-913515-326060/accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
 
@@ -66,9 +70,9 @@ public class AccountsDocumentInfoServiceImplTest {
     void testUnsuccessfulGetDocumentInfoExceptionFromAccountsHandler()
             throws HandlerException, ServiceException {
         when(transactionService.getTransaction(anyString())).thenReturn(createTransaction());
-        when(accountsHandlerMock.getAbridgedAccountsData(anyString())).thenThrow(new HandlerException("error"));
+        when(accountsHandlerMock.getAbridgedAccountsData(any(Transaction.class),  anyString())).thenThrow(new HandlerException("error"));
 
-        assertThrows(HandlerException.class, () -> accountsHandlerMock.getAbridgedAccountsData(anyString()));
+        assertThrows(HandlerException.class, () -> accountsHandlerMock.getAbridgedAccountsData(transaction, ""));
 
         assertNull(accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest()));
     }
@@ -77,7 +81,7 @@ public class AccountsDocumentInfoServiceImplTest {
     @DisplayName("Tests the successful retrieval of document data")
     void testSuccessfulGetDocumentInfo() throws HandlerException, ServiceException {
         when(transactionService.getTransaction(anyString())).thenReturn(createTransaction());
-        when(accountsHandlerMock.getAbridgedAccountsData(anyString())).thenReturn(new DocumentInfoResponse());
+        when(accountsHandlerMock.getAbridgedAccountsData(any(Transaction.class), anyString())).thenReturn(new DocumentInfoResponse());
 
         assertNotNull(accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest()));
     }

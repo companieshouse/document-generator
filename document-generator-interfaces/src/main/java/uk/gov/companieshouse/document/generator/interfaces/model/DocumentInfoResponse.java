@@ -9,7 +9,7 @@ public class DocumentInfoResponse {
     String data;
     String templateName;
     String assetId;
-    String location;
+    String path;
     String description;
     String descriptionIdentifier;
     String contentType;
@@ -39,12 +39,12 @@ public class DocumentInfoResponse {
         this.assetId = assetId;
     }
 
-    public String getLocation() {
-        return location;
+    public String getPath() {
+        return path;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setPath(String location) {
+        this.path = path;
     }
 
     public String getDescription() {
@@ -91,7 +91,7 @@ public class DocumentInfoResponse {
         return Objects.equals(data, that.data) &&
                 Objects.equals(templateName, that.templateName) &&
                 Objects.equals(assetId, that.assetId) &&
-                Objects.equals(location, that.location) &&
+                Objects.equals(path, that.path) &&
                 Objects.equals(description, that.description) &&
                 Objects.equals(descriptionIdentifier, that.descriptionIdentifier) &&
                 Objects.equals(descriptionValues, that.descriptionValues);
@@ -100,7 +100,7 @@ public class DocumentInfoResponse {
     @Override
     public int hashCode() {
         return Objects
-                .hash(data, templateName, assetId, location, description, descriptionIdentifier,
+                .hash(data, templateName, assetId, path, description, descriptionIdentifier,
                         descriptionValues);
     }
 
