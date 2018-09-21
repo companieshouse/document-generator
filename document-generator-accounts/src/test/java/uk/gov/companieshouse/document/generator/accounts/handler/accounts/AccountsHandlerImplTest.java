@@ -21,6 +21,7 @@ import uk.gov.companieshouse.api.model.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.accounts.service.AccountsService;
+import uk.gov.companieshouse.environment.EnvironmentReader;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(Lifecycle.PER_CLASS)
@@ -34,6 +35,9 @@ public class AccountsHandlerImplTest {
 
     @Mock
     private Transaction transaction;
+
+    @Mock
+    private EnvironmentReader environmentReader;
 
     private static final String ACCOUNTS_RESOURCE_LINK = "/transactions/091174-913515-326060";
     private static final String ABRIDGED_ACCOUNTS_RESOURCE_LINK = "/transactions/091174-913515-326060/accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
@@ -60,6 +64,7 @@ public class AccountsHandlerImplTest {
     @Test
     @DisplayName("Tests the successful return of Abridged accounts data")
     void testGetAbridgedAccountsData() throws ServiceException, HandlerException {
+        when(environmentReader.getMandatoryString(accountsHandlerImpl.getDocGenAccBucketNameEnvVar())).thenReturn("TEST");
         when(accountsService.getAccounts(anyString())).thenReturn(createAccountsObject());
         when(accountsService.getAbridgedAccounts(anyString())).thenReturn(new AbridgedAccountsApi());
         assertNotNull(accountsHandlerImpl.getAbridgedAccountsData(transaction, ACCOUNTS_RESOURCE_LINK));

@@ -17,7 +17,6 @@ import uk.gov.companieshouse.document.generator.accounts.exception.ServiceExcept
 import uk.gov.companieshouse.document.generator.accounts.service.AccountsService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.environment.EnvironmentReader;
-import uk.gov.companieshouse.environment.impl.EnvironmentReaderImpl;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
@@ -29,8 +28,10 @@ public class AccountsHandlerImpl implements AccountsHandler  {
     @Autowired
     private AccountsService accountsService;
 
-    private static final EnvironmentReader READER = new EnvironmentReaderImpl();
-    private final String bucketName = READER.getOptionalString("DOC_GEN_ACC_BUCKET_NAME");
+    @Autowired
+    private EnvironmentReader reader;
+
+    private static final String DOC_GEN_ACC_BUCKET_NAME_ENV_VAR = "DOC_GEN_ACC_BUCKET_NAME";
 
     /**
      * {@inheritDoc}
@@ -124,7 +125,11 @@ public class AccountsHandlerImpl implements AccountsHandler  {
         return String.format("%s/%s/%s", getBucketName(), accountType.getAssetId(), accountType.getUniqueFileName());
     }
 
-    private String getBucketName() {
-        return bucketName;
+    public String getBucketName() {
+        return reader.getMandatoryString(DOC_GEN_ACC_BUCKET_NAME_ENV_VAR);
+    }
+
+    public static String getDocGenAccBucketNameEnvVar() {
+        return DOC_GEN_ACC_BUCKET_NAME_ENV_VAR;
     }
 }
