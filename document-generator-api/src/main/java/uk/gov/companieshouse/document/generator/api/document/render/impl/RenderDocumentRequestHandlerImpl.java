@@ -57,7 +57,7 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
     /**
      * handle Response from http connection
      *
-     * @param connection the httpUrlConnection
+     * @param connection the HttpUrlConnection
      * @return RenderDocumentResponse
      * @throws IOException
      */

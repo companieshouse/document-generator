@@ -1,14 +1,14 @@
 package uk.gov.companieshouse.document.generator.api.Exception;
 
 /**
- * The class {@code DocumentGeneratorServiceException} is a form of {@code Exception}
- * that should be used at the handler layer to abstract lower level
- * exceptions from being propagated up the call stack.
+ * DocumentGeneratorServiceException is a wrapper exception that hides
+ * lower level exceptions from the caller and prevents them
+ * from being propagated up the call stack.
  */
 public class DocumentGeneratorServiceException extends Exception {
 
     /**
-     * Constructs a new {@code DocumentGeneratorServiceException} with a custom message
+     * Constructs a new DocumentGeneratorServiceException with a custom message
      *
      * @param message a custom message
      */
@@ -17,7 +17,7 @@ public class DocumentGeneratorServiceException extends Exception {
     }
 
     /**
-     * Constructs a new {@code DocumentGeneratorServiceException} with a custom message and specified cause
+     * Constructs a new DocumentGeneratorServiceException with a custom message and specified cause
      *
      * @param message a custom message
      * @param cause the cause
