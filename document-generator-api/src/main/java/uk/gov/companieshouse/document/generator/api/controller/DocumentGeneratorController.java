@@ -45,7 +45,7 @@ public class DocumentGeneratorController {
 
         if (result.hasErrors()) {
             final Map<String, Object> debugMap = new HashMap<>();
-            debugMap.put("resource_uri", documentRequest.getResourceUrl());
+            debugMap.put("resource_uri", documentRequest.getResourceUri());
             debugMap.put("resource_id", documentRequest.getResourceId());
             LOG.debugRequest(request, "error in request body", debugMap);
             return new ResponseEntity<>(result.getAllErrors(), HttpStatus.BAD_REQUEST);
