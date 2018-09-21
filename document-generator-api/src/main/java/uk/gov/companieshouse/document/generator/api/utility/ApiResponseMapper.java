@@ -14,9 +14,9 @@ public class ApiResponseMapper {
             case CREATED:
                 return ResponseEntity.status(HttpStatus.CREATED).body(responseObject.getData());
             case NO_DATA_RETRIEVED:
-            case NO_DOCUMENT_TYPE_FOUND:
+            case NO_TYPE_FOUND:
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-            case DOCUMENT_NOT_RENDERED:
+            case NOT_RENDERED:
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseObject.getData());
             default:
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

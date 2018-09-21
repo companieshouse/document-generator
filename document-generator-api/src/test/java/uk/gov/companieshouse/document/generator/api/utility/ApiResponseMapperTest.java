@@ -84,7 +84,7 @@ public class ApiResponseMapperTest {
         documentResponse.setDescription(DESCRIPTION);
         documentResponse.setDescriptionIdentifier(DESCRIPTION_IDENTIFIER);
 
-        ResponseObject responseObject = new ResponseObject(ResponseStatus.DOCUMENT_NOT_RENDERED, documentResponse);
+        ResponseObject responseObject = new ResponseObject(ResponseStatus.NOT_RENDERED, documentResponse);
 
         ResponseEntity responseEntity = apiResponseMapper.map(responseObject);
 

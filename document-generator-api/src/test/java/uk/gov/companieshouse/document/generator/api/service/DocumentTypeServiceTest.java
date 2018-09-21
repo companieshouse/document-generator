@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.document.generator.api.Exception.DocumentGeneratorServiceException;
 import uk.gov.companieshouse.document.generator.api.service.impl.DocumentTypeServiceImpl;
+import uk.gov.companieshouse.document.generator.api.utility.DocumentType;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -24,18 +25,28 @@ public class DocumentTypeServiceTest {
     }
 
     @Test
-    @DisplayName("tests that a string containing 'ACCOUNTS' is returned")
-    public void testSuccessfulPatternMatchToAccountsReturned() throws DocumentGeneratorServiceException {
+    @DisplayName("tests that a DocumentType containing 'ACCOUNTS' is returned when uri contains 'accounts'")
+    public void testSuccessfulPatternMatchToAccountsReturnedForAccounts() throws DocumentGeneratorServiceException {
 
         String testValidAccountUri = "/transactions/111111-222222-333333/accounts/Abc1Defg2hiJkLmNoP34QR5sT6u=";
-        String result = documentTypeService.getDocumentType(testValidAccountUri);
+        DocumentType result = documentTypeService.getDocumentType(testValidAccountUri);
 
-        assertEquals("ACCOUNTS", result);
+        assertEquals(DocumentType.ACCOUNTS, result);
+    }
+
+    @Test
+    @DisplayName("tests that a DocumentType containing 'ACCOUNTS' is returned when uri contains 'company-accounts'")
+    public void testSuccessfulPatternMatchToAccountsReturnedForCompanyAccounts() throws DocumentGeneratorServiceException {
+
+        String testValidAccountUri = "/transactions/111111-222222-333333/company-accounts/Abc1Defg2hiJkLmNoP34QR5sT6u=";
+        DocumentType result = documentTypeService.getDocumentType(testValidAccountUri);
+
+        assertEquals(DocumentType.ACCOUNTS, result);
     }
 
     @Test
     @DisplayName("tests that an error returned when incorrect Uri input")
-    public void testErrorReturnedWhenUriDoesNotMatchPattern() throws DocumentGeneratorServiceException {
+    public void testErrorReturnedWhenUriDoesNotMatchPattern() {
 
         String testInvalidAccountUri = "/transactions";
 

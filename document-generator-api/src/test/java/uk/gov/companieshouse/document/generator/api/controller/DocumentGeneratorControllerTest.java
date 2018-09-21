@@ -112,7 +112,7 @@ public class DocumentGeneratorControllerTest {
         response.setDescriptionIdentifier(DESCRIPTION_IDENTIFIER);
         response.setDescriptionValues(setDescriptionValue());
 
-        ResponseObject responseObject = new ResponseObject(ResponseStatus.DOCUMENT_NOT_RENDERED, response);
+        ResponseObject responseObject = new ResponseObject(ResponseStatus.NOT_RENDERED, response);
 
         when(mockBindingResult.hasErrors()).thenReturn(false);
         when(mockDocumentGeneratorService.generate(any(DocumentRequest.class), any(String.class))).thenReturn(responseObject);
@@ -148,7 +148,7 @@ public class DocumentGeneratorControllerTest {
 
         DocumentRequest request = setDocumentgeneratorRequest();
 
-        ResponseObject responseObject = new ResponseObject(ResponseStatus.NO_DOCUMENT_TYPE_FOUND);
+        ResponseObject responseObject = new ResponseObject(ResponseStatus.NO_TYPE_FOUND);
 
         when(mockBindingResult.hasErrors()).thenReturn(false);
         when(mockDocumentGeneratorService.generate(any(DocumentRequest.class), any(String.class))).thenReturn(responseObject);

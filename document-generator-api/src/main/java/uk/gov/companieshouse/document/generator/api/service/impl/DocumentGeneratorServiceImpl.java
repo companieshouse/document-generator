@@ -13,6 +13,7 @@ import uk.gov.companieshouse.document.generator.api.service.DocumentGeneratorSer
 import uk.gov.companieshouse.document.generator.api.service.DocumentTypeService;
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseObject;
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseStatus;
+import uk.gov.companieshouse.document.generator.api.utility.DocumentType;
 import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
@@ -63,10 +64,10 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
 
         try {
             //TODO implement the use of DocumentType SFA 719
-            String DocumentType = documentTypeService.getDocumentType(documentRequest.getResourceUri());
+            DocumentType DocumentType = documentTypeService.getDocumentType(documentRequest.getResourceUri());
         } catch (DocumentGeneratorServiceException dgse){
             LOG.errorContext(requestId, dgse, debugMap);
-            return new ResponseObject(ResponseStatus.NO_DOCUMENT_TYPE_FOUND, null);
+            return new ResponseObject(ResponseStatus.NO_TYPE_FOUND, null);
         }
 
         //TODO currently no impl present, being completed in SFA 567
@@ -86,7 +87,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
                 LOG.errorContext(requestId, documentGeneratorServiceException, debugMap);
 
                 response = setDocumentResponse(renderResponse, documentInfoResponse);
-                return new ResponseObject(ResponseStatus.DOCUMENT_NOT_RENDERED, response);
+                return new ResponseObject(ResponseStatus.NOT_RENDERED, response);
             }
 
             response = setDocumentResponse(renderResponse, documentInfoResponse);
