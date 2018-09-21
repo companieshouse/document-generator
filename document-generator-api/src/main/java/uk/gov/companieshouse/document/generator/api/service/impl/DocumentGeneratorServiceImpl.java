@@ -1,5 +1,10 @@
 package uk.gov.companieshouse.document.generator.api.service.impl;
 
+import static uk.gov.companieshouse.document.generator.api.DocumentGeneratorApplication.APPLICATION_NAME_SPACE;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.document.generator.api.Exception.DocumentGeneratorServiceException;
@@ -17,12 +22,6 @@ import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRes
 import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import static uk.gov.companieshouse.document.generator.api.DocumentGeneratorApplication.APPLICATION_NAME_SPACE;
 
 @Service
 public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
@@ -110,7 +109,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
         requestData.setData(documentInfoResponse.getData());
         requestData.setDocumentType(documentRequest.getMimeType());
         requestData.setTemplateName(documentInfoResponse.getTemplateName());
-        requestData.setLocation(documentInfoResponse.getLocation());
+        requestData.setLocation(documentInfoResponse.getPath());
 
         return requestHandler.sendDataToDocumentRenderService(url, requestData);
     }
