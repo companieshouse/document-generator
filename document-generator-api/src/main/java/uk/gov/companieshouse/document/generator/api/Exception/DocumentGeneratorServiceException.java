@@ -3,7 +3,7 @@ package uk.gov.companieshouse.document.generator.api.Exception;
 /**
  * The class {@code DocumentGeneratorServiceException} is a form of {@code Exception}
  * that should be used at the handler layer to abstract lower level
- * level exceptions from being propagated up the call stack.
+ * exceptions from being propagated up the call stack.
  */
 public class DocumentGeneratorServiceException extends Exception {
 
