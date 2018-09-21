@@ -8,7 +8,7 @@ import java.util.Map;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.gov.companieshouse.document.generator.api.Exception.DocumentGeneratorServiceException;
+import uk.gov.companieshouse.document.generator.api.exception.DocumentGeneratorServiceException;
 import uk.gov.companieshouse.document.generator.api.document.render.RenderDocumentRequestHandler;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentRequest;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentResponse;
@@ -52,6 +52,9 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
         this.documentTypeService = documentTypeService;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ResponseObject generate(DocumentRequest documentRequest, String requestId) {
 
@@ -106,8 +109,8 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
     /**
      * Send data to Render Service and generate document
      *
-     * @param documentRequest
-     * @param documentInfoResponse
+     * @param documentRequest object that contains the request details
+     * @param documentInfoResponse object that contain the Response from documentInfoService
      * @return A populated RenderDocumentResponse model or Null
      */
     private RenderDocumentResponse renderSubmittedDocumentData(DocumentRequest documentRequest,
@@ -131,8 +134,8 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
     /**
      * Set documentResponse for Api
      *
-     * @param renderResponse
-     * @param documentInfoResponse
+     * @param renderResponse object that contains the RenderDocumentResponse details
+     * @param documentInfoResponse object that contain the Response from documentInfoService
      * @return a Document Response
      */
     private DocumentResponse setDocumentResponse(RenderDocumentResponse renderResponse,

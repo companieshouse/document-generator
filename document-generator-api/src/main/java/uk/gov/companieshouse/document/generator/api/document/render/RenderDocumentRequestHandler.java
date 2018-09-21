@@ -10,9 +10,9 @@ public interface RenderDocumentRequestHandler {
     /**
      * Call the document render service and convert the data into a document
      *
-     * @param url
-     * @param request
-     * @return
+     * @param url a string formatted url
+     * @param request the RenderDocumentRequest
+     * @return RenderDocumentResponse
      * @throws IOException
      */
     RenderDocumentResponse sendDataToDocumentRenderService(String url, RenderDocumentRequest request) throws IOException;

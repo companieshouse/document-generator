@@ -8,7 +8,7 @@ public interface HttpConnectionHandler {
     /**
      * Open a HttpUrlConnection for the request
      *
-     * @param url
+     * @param url a string formatted url
      * @return HttpUrlConnection for the given request
      * @throws IOException
      */

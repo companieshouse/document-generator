@@ -26,11 +26,7 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
     private ConvertJsonHandler convertJsonHandler;
 
     /**
-     * Call the document render service and convert the data into a document
-     * @param url
-     * @param request
-     * @return
-     * @throws IOException
+     * {@inheritDoc}
      */
     @Override
     public RenderDocumentResponse sendDataToDocumentRenderService(String url, RenderDocumentRequest request) throws IOException {
@@ -61,8 +57,8 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
     /**
      * handle Response from http connection
      *
-     * @param connection
-     * @return
+     * @param connection the HttpUrlConnection
+     * @return RenderDocumentResponse
      * @throws IOException
      */
     private RenderDocumentResponse handleResponse(HttpURLConnection connection) throws IOException {
@@ -81,10 +77,11 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
     }
 
     /**
-     * send request to service
+     * Send request to service
      *
-     * @param connection
-     * @param request
+     * @param connection the HttpUrlConnection
+     * @param request the RenderDocumentRequest
+     * @throws IOException
      */
     private void sendRequest(HttpURLConnection connection, RenderDocumentRequest request) throws IOException {
 
@@ -97,8 +94,8 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
     /**
      * Prepare the HTTP connection
      *
-     * @param connection
-     * @param request
+     * @param connection the HttpUrlConnection
+     * @param request the RenderDocumentRequest
      * @throws IOException
      */
     private void prepareConnection(HttpURLConnection connection, RenderDocumentRequest request) throws IOException {
@@ -112,8 +109,8 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
     /**
      * Set the connection request properties
      *
-     * @param connection
-     * @param request
+     * @param connection the HttpUrlConnection
+     * @param request the RenderDocumentRequest
      */
     private void setConnectionRequestProperties(HttpURLConnection connection, RenderDocumentRequest request) {
 
