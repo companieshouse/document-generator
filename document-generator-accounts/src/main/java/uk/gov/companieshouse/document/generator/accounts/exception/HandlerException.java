@@ -1,14 +1,14 @@
 package uk.gov.companieshouse.document.generator.accounts.exception;
 
 /**
- * The class {@code HandlerException} is a form of {@code Exception}
- * that should be used at the handler layer to abstract lower level
- * level exceptions from being propagated up the call stack.
+ * HandlerException is a wrapper exception that hides
+ * lower level exceptions from the caller and prevents them
+ * from being propagated up the call stack.
  */
 public class HandlerException extends Exception {
 
     /**
-     * Constructs a new {@code HandlerException} with a custom message.
+     * Constructs a new HandlerException with a custom message.
      *
      * @param message a custom message
      */
@@ -18,7 +18,7 @@ public class HandlerException extends Exception {
 
 
     /**
-     * Constructs a new {@code HandlerException} with a custom message and the specified
+     * Constructs a new HandlerException with a custom message and the specified
      * cause.
      *
      * @param message a custom message
