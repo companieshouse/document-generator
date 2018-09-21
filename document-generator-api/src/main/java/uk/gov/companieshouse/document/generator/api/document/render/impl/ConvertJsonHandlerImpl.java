@@ -8,10 +8,7 @@ import uk.gov.companieshouse.document.generator.api.document.render.ConvertJsonH
 public class ConvertJsonHandlerImpl implements ConvertJsonHandler {
 
     /**
-     * Convert to Json Object
-     *
-     * @param jsonString
-     * @return converted String for documentSize
+     * {@inheritDoc}
      */
     @Override
     public String convert(String jsonString) {

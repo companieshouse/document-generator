@@ -12,11 +12,7 @@ import java.net.URLConnection;
 public class HttpConnectionHandlerImpl implements HttpConnectionHandler {
 
     /**
-     * Open a HttpUrlConnection for the request
-     *
-     * @param url
-     * @return HttpUrlConnection for the given request
-     * @throws IOException
+     * {@inheritDoc}
      */
     @Override
     public HttpURLConnection openConnection(String url) throws IOException {
