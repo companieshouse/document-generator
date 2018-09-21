@@ -30,7 +30,7 @@ public class ResponseObject  {
         return documentResponse;
     }
 
-    public void setData(DocumentResponse data) {
+    public void setData(DocumentResponse documentResponse) {
         this.documentResponse = documentResponse;
     }
 

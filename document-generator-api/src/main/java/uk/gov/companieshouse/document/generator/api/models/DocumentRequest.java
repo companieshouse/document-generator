@@ -8,8 +8,8 @@ import javax.validation.constraints.NotNull;
 public class DocumentRequest {
 
     @NotNull
-    @JsonProperty("resource_url")
-    private String resourceUrl;
+    @JsonProperty("resource_uri")
+    private String resourceUri;
 
     @NotNull
     @JsonProperty("resource_id")
@@ -22,12 +22,12 @@ public class DocumentRequest {
     @JsonProperty("document_type")
     private String documentType;
 
-    public String getResourceUrl() {
-        return resourceUrl;
+    public String getResourceUri() {
+        return resourceUri;
     }
 
-    public void setResourceUrl(String resourceUrl) {
-        this.resourceUrl = resourceUrl;
+    public void setResourceUri(String resourceUri) {
+        this.resourceUri = resourceUri;
     }
 
     public String getResourceId() {

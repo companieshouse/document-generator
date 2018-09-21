@@ -16,6 +16,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.companieshouse.document.generator.api.Exception.DocumentGeneratorServiceException;
 import uk.gov.companieshouse.document.generator.api.document.render.RenderDocumentRequestHandler;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentRequest;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentResponse;
@@ -23,6 +24,7 @@ import uk.gov.companieshouse.document.generator.api.models.DocumentRequest;
 import uk.gov.companieshouse.document.generator.api.service.impl.DocumentGeneratorServiceImpl;
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseObject;
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseStatus;
+import uk.gov.companieshouse.document.generator.api.utility.DocumentType;
 import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
@@ -37,6 +39,9 @@ public class DocumentGeneratorServiceTest {
 
     @Mock
     private RenderDocumentRequestHandler mockRequestHandler;
+
+    @Mock
+    private DocumentTypeService mockDocumentTypeService;
 
     @Mock
     private EnvironmentReader mockEnvironmentReader;
@@ -60,13 +65,14 @@ public class DocumentGeneratorServiceTest {
     @BeforeEach
     public void setUp() {
         documentGeneratorService = new DocumentGeneratorServiceImpl(mockDocumentInfoService,
-                mockEnvironmentReader, mockRequestHandler);
+                mockEnvironmentReader, mockRequestHandler, mockDocumentTypeService);
     }
 
     @Test
     @DisplayName("Test a successful generate completed")
-    public void testsSuccessfulGenerateCompleted() throws IOException {
+    public void testsSuccessfulGenerateCompleted() throws IOException, DocumentGeneratorServiceException {
 
+        when(mockDocumentTypeService.getDocumentType(any(String.class))).thenReturn(DocumentType.ACCOUNTS);
         when(mockDocumentInfoService.getDocumentInfo(any(DocumentInfoRequest.class))).thenReturn(setSuccessfulDocumentInfo());
         when(mockRequestHandler.sendDataToDocumentRenderService(any(String.class), any(RenderDocumentRequest.class))).thenReturn(setSuccessfulRenderResponse());
 
@@ -85,8 +91,9 @@ public class DocumentGeneratorServiceTest {
 
     @Test
     @DisplayName("Tests when null returned from documentInfoService")
-    public void testsWhenErrorThrownFromDocumentInfoService() {
+    public void testsWhenErrorThrownFromDocumentInfoService() throws DocumentGeneratorServiceException {
 
+        when(mockDocumentTypeService.getDocumentType(any(String.class))).thenReturn(DocumentType.ACCOUNTS);
         when(mockDocumentInfoService.getDocumentInfo(any(DocumentInfoRequest.class))).thenReturn(null);
 
         ResponseObject response = documentGeneratorService.generate(setValidRequest(), REQUEST_ID);
@@ -96,9 +103,22 @@ public class DocumentGeneratorServiceTest {
     }
 
     @Test
-    @DisplayName("Tests when an error thrown from requestHandler")
-    public void testsWhenErrorThrownFromRequestHandler() throws IOException {
+    @DisplayName("Tests when error thrown from documentTypeService")
+    public void testsWhenErrorThrownFromDocumentTypeService() throws DocumentGeneratorServiceException {
 
+        when(mockDocumentTypeService.getDocumentType(any(String.class))).thenThrow(DocumentGeneratorServiceException.class);
+
+        ResponseObject response = documentGeneratorService.generate(setValidRequest(), REQUEST_ID);
+
+        assertNull(response.getData());
+        assertEquals(ResponseStatus.NO_TYPE_FOUND, response.getStatus());
+    }
+
+    @Test
+    @DisplayName("Tests when an error thrown from requestHandler")
+    public void testsWhenErrorThrownFromRequestHandler() throws IOException, DocumentGeneratorServiceException {
+
+        when(mockDocumentTypeService.getDocumentType(any(String.class))).thenReturn(DocumentType.ACCOUNTS);
         when(mockDocumentInfoService.getDocumentInfo(any(DocumentInfoRequest.class))).thenReturn(setSuccessfulDocumentInfo());
         when(mockRequestHandler.sendDataToDocumentRenderService(any(String.class), any(RenderDocumentRequest.class))).thenThrow(IOException.class);
 
@@ -112,7 +132,7 @@ public class DocumentGeneratorServiceTest {
         assertEquals(DESCRIPTION, response.getData().getDescription());
         assertEquals(DESCRIPTION_IDENTIFIER, response.getData().getDescriptionIdentifier());
 
-        assertEquals(ResponseStatus.DOCUMENT_NOT_RENDERED, response.getStatus());
+        assertEquals(ResponseStatus.NOT_RENDERED, response.getStatus());
     }
 
     /**
@@ -123,7 +143,7 @@ public class DocumentGeneratorServiceTest {
     private DocumentRequest setValidRequest() {
 
         DocumentRequest request = new DocumentRequest();
-        request.setResourceUrl("resourceUri");
+        request.setResourceUri("resourceUri");
         request.setResourceId("resourceId");
         request.setMimeType("mimeType");
         request.setDocumentType("documentType");
