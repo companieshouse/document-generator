@@ -1,14 +1,5 @@
 package uk.gov.companieshouse.document.generator.api.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,10 +7,11 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.companieshouse.document.generator.api.exception.DocumentGeneratorServiceException;
 import uk.gov.companieshouse.document.generator.api.document.render.RenderDocumentRequestHandler;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentRequest;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentResponse;
+import uk.gov.companieshouse.document.generator.api.exception.DocumentGeneratorServiceException;
+import uk.gov.companieshouse.document.generator.api.factory.DocumentInfoServiceFactory;
 import uk.gov.companieshouse.document.generator.api.models.DocumentRequest;
 import uk.gov.companieshouse.document.generator.api.service.impl.DocumentGeneratorServiceImpl;
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseObject;
@@ -30,12 +22,25 @@ import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoReq
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.environment.EnvironmentReader;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DocumentGeneratorServiceTest {
 
     @Mock
     private DocumentInfoService mockDocumentInfoService;
+
+    @Mock
+    private DocumentInfoServiceFactory mockDocumentInfoServiceFactory;
 
     @Mock
     private RenderDocumentRequestHandler mockRequestHandler;
@@ -64,8 +69,8 @@ public class DocumentGeneratorServiceTest {
 
     @BeforeEach
     public void setUp() {
-        documentGeneratorService = new DocumentGeneratorServiceImpl(mockDocumentInfoService,
-                mockEnvironmentReader, mockRequestHandler, mockDocumentTypeService);
+        documentGeneratorService = new DocumentGeneratorServiceImpl(mockDocumentInfoServiceFactory, mockEnvironmentReader,
+                mockRequestHandler, mockDocumentTypeService);
     }
 
     @Test
@@ -73,6 +78,7 @@ public class DocumentGeneratorServiceTest {
     public void testsSuccessfulGenerateCompleted() throws IOException, DocumentGeneratorServiceException {
 
         when(mockDocumentTypeService.getDocumentType(any(String.class))).thenReturn(DocumentType.ACCOUNTS);
+        when(mockDocumentInfoServiceFactory.get(any(String.class))).thenReturn(mockDocumentInfoService);
         when(mockDocumentInfoService.getDocumentInfo(any(DocumentInfoRequest.class))).thenReturn(setSuccessfulDocumentInfo());
         when(mockRequestHandler.sendDataToDocumentRenderService(any(String.class), any(RenderDocumentRequest.class))).thenReturn(setSuccessfulRenderResponse());
 
@@ -94,6 +100,7 @@ public class DocumentGeneratorServiceTest {
     public void testsWhenErrorThrownFromDocumentInfoService() throws DocumentGeneratorServiceException {
 
         when(mockDocumentTypeService.getDocumentType(any(String.class))).thenReturn(DocumentType.ACCOUNTS);
+        when(mockDocumentInfoServiceFactory.get(any(String.class))).thenReturn(mockDocumentInfoService);
         when(mockDocumentInfoService.getDocumentInfo(any(DocumentInfoRequest.class))).thenReturn(null);
 
         ResponseObject response = documentGeneratorService.generate(setValidRequest(), REQUEST_ID);
@@ -119,6 +126,7 @@ public class DocumentGeneratorServiceTest {
     public void testsWhenErrorThrownFromRequestHandler() throws IOException, DocumentGeneratorServiceException {
 
         when(mockDocumentTypeService.getDocumentType(any(String.class))).thenReturn(DocumentType.ACCOUNTS);
+        when(mockDocumentInfoServiceFactory.get(any(String.class))).thenReturn(mockDocumentInfoService);
         when(mockDocumentInfoService.getDocumentInfo(any(DocumentInfoRequest.class))).thenReturn(setSuccessfulDocumentInfo());
         when(mockRequestHandler.sendDataToDocumentRenderService(any(String.class), any(RenderDocumentRequest.class))).thenThrow(IOException.class);
 
