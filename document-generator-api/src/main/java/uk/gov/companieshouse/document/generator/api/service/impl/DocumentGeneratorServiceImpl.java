@@ -1,17 +1,13 @@
 package uk.gov.companieshouse.document.generator.api.service.impl;
 
-import static uk.gov.companieshouse.document.generator.api.DocumentGeneratorApplication.APPLICATION_NAME_SPACE;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.gov.companieshouse.document.generator.api.exception.DocumentGeneratorServiceException;
 import uk.gov.companieshouse.document.generator.api.document.render.RenderDocumentRequestHandler;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentRequest;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentResponse;
+import uk.gov.companieshouse.document.generator.api.exception.DocumentGeneratorServiceException;
+import uk.gov.companieshouse.document.generator.api.factory.DocumentInfoServiceFactory;
 import uk.gov.companieshouse.document.generator.api.models.DocumentRequest;
 import uk.gov.companieshouse.document.generator.api.models.DocumentResponse;
 import uk.gov.companieshouse.document.generator.api.service.DocumentGeneratorService;
@@ -19,23 +15,28 @@ import uk.gov.companieshouse.document.generator.api.service.DocumentTypeService;
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseObject;
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseStatus;
 import uk.gov.companieshouse.document.generator.api.utility.DocumentType;
-import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import static uk.gov.companieshouse.document.generator.api.DocumentGeneratorApplication.APPLICATION_NAME_SPACE;
+
 @Service
 public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
-
-    private DocumentInfoService documentInfoService;
 
     private EnvironmentReader environmentReader;
 
     private RenderDocumentRequestHandler requestHandler;
 
     private DocumentTypeService documentTypeService;
+
+    private DocumentInfoServiceFactory documentInfoServiceFactory;
 
     private static final String DOCUMENT_RENDER_SERVICE_HOST_ENV_VAR = "DOCUMENT_RENDER_SERVICE_HOST";
 
@@ -44,9 +45,12 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
     private static final Logger LOG = LoggerFactory.getLogger(APPLICATION_NAME_SPACE);
 
     @Autowired
-    public DocumentGeneratorServiceImpl(DocumentInfoService documentInfoService, EnvironmentReader environmentReader,
-                                        RenderDocumentRequestHandler requestHandler, DocumentTypeService documentTypeService) {
-        this.documentInfoService = documentInfoService;
+    public DocumentGeneratorServiceImpl(DocumentInfoServiceFactory documentInfoServiceFactory,
+                                        EnvironmentReader environmentReader,
+                                        RenderDocumentRequestHandler requestHandler,
+                                        DocumentTypeService documentTypeService) {
+
+        this.documentInfoServiceFactory = documentInfoServiceFactory;
         this.environmentReader = environmentReader;
         this.requestHandler = requestHandler;
         this.documentTypeService = documentTypeService;
@@ -64,19 +68,22 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
         debugMap.put("resource_uri", documentRequest.getResourceUri());
         debugMap.put("resource_id", documentRequest.getResourceId());
 
+        DocumentType documentType;
         try {
-            //TODO implement the use of DocumentType SFA 719
-            DocumentType DocumentType = documentTypeService.getDocumentType(documentRequest.getResourceUri());
+            documentType = documentTypeService.getDocumentType(documentRequest.getResourceUri());
         } catch (DocumentGeneratorServiceException dgse){
             LOG.errorContext(requestId, dgse, debugMap);
             return new ResponseObject(ResponseStatus.NO_TYPE_FOUND, null);
         }
 
-        //TODO currently no impl present, being completed in SFA 567
         DocumentInfoRequest documentInfoRequest = new DocumentInfoRequest();
-        BeanUtils.copyProperties(documentInfoRequest, documentRequest);
+        BeanUtils.copyProperties(documentRequest, documentInfoRequest);
 
-        DocumentInfoResponse documentInfoResponse = documentInfoService.getDocumentInfo(documentInfoRequest);
+        //TODO refine exception handling in doc-gen-accounts SFA-723
+        DocumentInfoResponse documentInfoResponse = documentInfoServiceFactory
+                    .get(documentType.toString())
+                    .getDocumentInfo(documentInfoRequest);
+
 
         if (documentInfoResponse != null) {
             RenderDocumentResponse renderResponse = null;
@@ -96,7 +103,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
 
         } else {
             DocumentGeneratorServiceException documentGeneratorServiceException =
-                    new DocumentGeneratorServiceException("No data was returned from documentInfoService" +
+                    new DocumentGeneratorServiceException("No data was returned from documentInfoService " +
                             documentInfoRequest.getResourceUri());
             LOG.errorContext(requestId, documentGeneratorServiceException, debugMap);
 
