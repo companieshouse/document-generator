@@ -182,7 +182,7 @@ public class DocumentGeneratorServiceTest {
     /**
      * Build the string path for parameter location
      *
-     * @return location as a string value
+     * @return String the Location as a string value
      */
     private String buildLocation() {
 

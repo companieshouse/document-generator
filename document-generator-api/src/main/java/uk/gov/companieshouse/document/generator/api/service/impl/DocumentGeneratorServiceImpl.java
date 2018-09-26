@@ -143,10 +143,10 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
     }
 
     /**
-     * Set the location the document the document is to be stored at
+     * build the location the document is to be stored at
      *
      * @param path the path to be added
-     * @return location the full location path
+     * @return String the full location path constructed with StringBuilder
      */
     private String buildLocation(String path) {
 
