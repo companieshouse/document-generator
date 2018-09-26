@@ -43,7 +43,7 @@ public class DocumentInfoResponse {
         return path;
     }
 
-    public void setPath(String location) {
+    public void setPath(String path) {
         this.path = path;
     }
 

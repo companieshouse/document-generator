@@ -61,7 +61,11 @@ public class DocumentGeneratorServiceTest {
 
     private String SIZE = "size";
 
-    private String LOCATION = "location.file";
+    private String PATH = "/assetId/UniqueFileName";
+
+    private String LOCATION = "s3://bucket_location/assetId/UniqueFileName";
+
+    private String BUCKET_LOCATION = "bucket_location";
 
     private String DATE = "date";
 
@@ -81,6 +85,7 @@ public class DocumentGeneratorServiceTest {
         when(mockDocumentInfoServiceFactory.get(any(String.class))).thenReturn(mockDocumentInfoService);
         when(mockDocumentInfoService.getDocumentInfo(any(DocumentInfoRequest.class))).thenReturn(setSuccessfulDocumentInfo());
         when(mockRequestHandler.sendDataToDocumentRenderService(any(String.class), any(RenderDocumentRequest.class))).thenReturn(setSuccessfulRenderResponse());
+        when(mockEnvironmentReader.getMandatoryString(any(String.class))).thenReturn(BUCKET_LOCATION);
 
         ResponseObject response = documentGeneratorService.generate(setValidRequest(), REQUEST_ID);
 
@@ -129,6 +134,7 @@ public class DocumentGeneratorServiceTest {
         when(mockDocumentInfoServiceFactory.get(any(String.class))).thenReturn(mockDocumentInfoService);
         when(mockDocumentInfoService.getDocumentInfo(any(DocumentInfoRequest.class))).thenReturn(setSuccessfulDocumentInfo());
         when(mockRequestHandler.sendDataToDocumentRenderService(any(String.class), any(RenderDocumentRequest.class))).thenThrow(IOException.class);
+        when(mockEnvironmentReader.getMandatoryString(any(String.class))).thenReturn(BUCKET_LOCATION);
 
         ResponseObject response = documentGeneratorService.generate(setValidRequest(), REQUEST_ID);
 
@@ -181,13 +187,14 @@ public class DocumentGeneratorServiceTest {
     private DocumentInfoResponse setSuccessfulDocumentInfo() {
 
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
-        documentInfoResponse.setPath(LOCATION);
+        documentInfoResponse.setPath(PATH);
         documentInfoResponse.setTemplateName("templateName");
         documentInfoResponse.setData("data");
         documentInfoResponse.setAssetId("assetId");
         documentInfoResponse.setDescription(DESCRIPTION);
         documentInfoResponse.setDescriptionIdentifier(DESCRIPTION_IDENTIFIER);
         documentInfoResponse.setDescriptionValues(setDescriptionValue());
+        documentInfoResponse.setContentType("contentType");
 
         return documentInfoResponse;
     }
