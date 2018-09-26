@@ -129,7 +129,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
             throws IOException {
 
         String host = environmentReader.getMandatoryString(DOCUMENT_RENDER_SERVICE_HOST_ENV_VAR);
-        String url = host + CONTEXT_PATH;
+        String url = new StringBuilder(host).append(CONTEXT_PATH).toString();
 
         RenderDocumentRequest requestData = new RenderDocumentRequest();
         requestData.setAssetId(documentInfoResponse.getAssetId());
@@ -137,7 +137,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
         requestData.setData(documentInfoResponse.getData());
         requestData.setDocumentType(documentRequest.getMimeType());
         requestData.setTemplateName(documentInfoResponse.getTemplateName());
-        requestData.setLocation(setLocation(documentInfoResponse.getPath()));
+        requestData.setLocation(buildLocation(documentInfoResponse.getPath()));
 
         return requestHandler.sendDataToDocumentRenderService(url, requestData);
     }
@@ -148,12 +148,11 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
      * @param path the path to be added
      * @return location the full location path
      */
-    private String setLocation(String path) {
+    private String buildLocation(String path) {
 
         String bucketName = environmentReader.getMandatoryString(DOCUMENT_BUCKET_NAME_ENV_VAR);
-        String location = S3 + bucketName + path;
 
-        return location;
+        return new StringBuilder(S3).append(bucketName).append(path).toString();
     }
 
     /**

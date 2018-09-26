@@ -63,9 +63,9 @@ public class DocumentGeneratorServiceTest {
 
     private String PATH = "/assetId/UniqueFileName";
 
-    private String LOCATION = "s3://bucket_location/assetId/UniqueFileName";
-
     private String BUCKET_LOCATION = "bucket_location";
+
+    private String S3 = "s3://";
 
     private String DATE = "date";
 
@@ -95,7 +95,7 @@ public class DocumentGeneratorServiceTest {
         assertEquals(DESCRIPTION, response.getData().getDescription());
         assertEquals(DESCRIPTION_IDENTIFIER, response.getData().getDescriptionIdentifier());
         assertEquals(SIZE, response.getData().getSize());
-        assertEquals(LOCATION, response.getData().getLinks());
+        assertEquals(buildLocation(), response.getData().getLinks());
 
         assertEquals(ResponseStatus.CREATED, response.getStatus());
     }
@@ -174,9 +174,19 @@ public class DocumentGeneratorServiceTest {
 
         RenderDocumentResponse renderDocumentResponse = new RenderDocumentResponse();
         renderDocumentResponse.setDocumentSize(SIZE);
-        renderDocumentResponse.setLocation(LOCATION);
+        renderDocumentResponse.setLocation(buildLocation());
 
         return renderDocumentResponse;
+    }
+
+    /**
+     * Build the string path for parameter location
+     *
+     * @return location as a string value
+     */
+    private String buildLocation() {
+
+        return new StringBuilder(S3).append(BUCKET_LOCATION).append(PATH).toString();
     }
 
     /**
