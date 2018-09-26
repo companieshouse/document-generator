@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.document.generator.api.utility;
+package uk.gov.companieshouse.document.generator.api.mapper;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

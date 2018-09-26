@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.document.generator.api.utility;
+package uk.gov.companieshouse.document.generator.api.mapper;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
