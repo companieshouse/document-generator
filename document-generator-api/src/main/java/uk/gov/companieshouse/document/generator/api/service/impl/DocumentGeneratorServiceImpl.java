@@ -40,6 +40,10 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
 
     private static final String DOCUMENT_RENDER_SERVICE_HOST_ENV_VAR = "DOCUMENT_RENDER_SERVICE_HOST";
 
+    private static final String DOCUMENT_BUCKET_NAME_ENV_VAR = "DOCUMENT_BUCKET_NAME";
+
+    private static final String S3 = "s3://";
+
     private static final String CONTEXT_PATH = "/document-render/store?is_public=true";
 
     private static final Logger LOG = LoggerFactory.getLogger(APPLICATION_NAME_SPACE);
@@ -133,9 +137,23 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
         requestData.setData(documentInfoResponse.getData());
         requestData.setDocumentType(documentRequest.getMimeType());
         requestData.setTemplateName(documentInfoResponse.getTemplateName());
-        requestData.setLocation(documentInfoResponse.getPath());
+        requestData.setLocation(setLocation(documentInfoResponse.getPath()));
 
         return requestHandler.sendDataToDocumentRenderService(url, requestData);
+    }
+
+    /**
+     * Set the location the document the document is to be stored at
+     *
+     * @param path the path to be added
+     * @return location the full location path
+     */
+    private String setLocation(String path) {
+
+        String bucketName = environmentReader.getMandatoryString(DOCUMENT_BUCKET_NAME_ENV_VAR);
+        String location = S3 + bucketName + path;
+
+        return location;
     }
 
     /**
