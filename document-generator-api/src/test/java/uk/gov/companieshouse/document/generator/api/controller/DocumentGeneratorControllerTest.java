@@ -17,7 +17,7 @@ import uk.gov.companieshouse.document.generator.api.models.DocumentResponse;
 import uk.gov.companieshouse.document.generator.api.service.DocumentGeneratorService;
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseObject;
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseStatus;
-import uk.gov.companieshouse.document.generator.api.utility.ApiResponseMapper;
+import uk.gov.companieshouse.document.generator.api.mapper.ApiResponseMapper;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;

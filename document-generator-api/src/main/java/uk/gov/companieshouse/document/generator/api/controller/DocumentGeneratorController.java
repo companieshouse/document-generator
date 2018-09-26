@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.companieshouse.document.generator.api.models.DocumentRequest;
 import uk.gov.companieshouse.document.generator.api.service.DocumentGeneratorService;
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseObject;
-import uk.gov.companieshouse.document.generator.api.utility.ApiResponseMapper;
+import uk.gov.companieshouse.document.generator.api.mapper.ApiResponseMapper;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 

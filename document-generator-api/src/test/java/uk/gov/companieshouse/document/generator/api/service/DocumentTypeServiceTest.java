@@ -8,7 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.document.generator.api.exception.DocumentGeneratorServiceException;
 import uk.gov.companieshouse.document.generator.api.service.impl.DocumentTypeServiceImpl;
-import uk.gov.companieshouse.document.generator.api.utility.DocumentType;
+import uk.gov.companieshouse.document.generator.api.document.DocumentType;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
