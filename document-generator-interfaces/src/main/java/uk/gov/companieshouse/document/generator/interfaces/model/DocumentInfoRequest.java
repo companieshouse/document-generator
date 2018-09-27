@@ -3,11 +3,26 @@ package uk.gov.companieshouse.document.generator.interfaces.model;
 import com.google.gson.Gson;
 import java.util.Objects;
 
+/**
+ * Represents the request to be sent to the implementation that uses getDocumentInfo
+ */
 public class DocumentInfoRequest {
 
+    /**
+     * The link to the resource
+     */
     String resourceUri;
+    /**
+     * The id of the resource
+     */
     String resourceId;
+    /**
+     * the mime type that the document should be rendered as
+     */
     String mimeType;
+    /**
+     * The document or report type to be generated
+     */
     String documentType;
 
     public String getResourceUri() {

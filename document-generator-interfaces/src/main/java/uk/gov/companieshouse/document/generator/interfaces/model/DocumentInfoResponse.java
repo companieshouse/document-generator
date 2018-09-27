@@ -4,15 +4,42 @@ import com.google.gson.Gson;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Represents the response from the implementation that implements getDocumentInfo
+ */
 public class DocumentInfoResponse {
 
+    /**
+     * The data to be rendered to the document
+     */
     String data;
+    /**
+     * The name of the template to be used
+     */
     String templateName;
+    /**
+     * The identifier of the asset within the assets registry
+     */
     String assetId;
+    /**
+     * The unique path to be added to the location the document is to be stored
+     */
     String path;
+    /**
+     * The description of the document produced
+     */
     String description;
+    /**
+     * The identifier for the document description
+     */
     String descriptionIdentifier;
+    /**
+     * The type of type of data used for generation
+     */
     String contentType;
+    /**
+     * A map of key/value pairs used to complete the looked up description identifier enum
+     */
     Map<String, String> descriptionValues;
 
     public String getData() {
