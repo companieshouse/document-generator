@@ -202,8 +202,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
             documentGeneratorServiceException =
                     new DocumentGeneratorServiceException(message);
         }
-
-
+        
         LOG.errorContext(requestId, documentGeneratorServiceException, debugMap);
     }
 }
