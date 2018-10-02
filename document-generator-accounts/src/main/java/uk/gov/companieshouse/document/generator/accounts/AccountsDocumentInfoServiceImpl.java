@@ -1,6 +1,5 @@
 package uk.gov.companieshouse.document.generator.accounts;
 
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.api.model.transaction.Resource;
@@ -10,10 +9,15 @@ import uk.gov.companieshouse.document.generator.accounts.exception.ServiceExcept
 import uk.gov.companieshouse.document.generator.accounts.handler.accounts.AccountsHandler;
 import uk.gov.companieshouse.document.generator.accounts.service.TransactionService;
 import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
+import uk.gov.companieshouse.document.generator.interfaces.exception.DocumentGeneratorInterfaceException;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
@@ -29,18 +33,22 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
     @Override
-    public DocumentInfoResponse getDocumentInfo(DocumentInfoRequest documentInfoRequest) {
+    public DocumentInfoResponse getDocumentInfo(DocumentInfoRequest documentInfoRequest) throws DocumentGeneratorInterfaceException {
         LOG.info("Started getting document");
 
         String resourceId = documentInfoRequest.getResourceId();
         String resourceUri = documentInfoRequest.getResourceUri();
 
+        final Map< String, Object > debugMap = new HashMap< >();
+        debugMap.put("resource_uri", resourceUri);
+        debugMap.put("resource_id", resourceId);
+
         Transaction transaction;
         try {
             transaction = transactionService.getTransaction(resourceId);
         } catch (ServiceException e) {
-            LOG.error(e);
-            return null;
+            LOG.error(e, debugMap);
+            throw new DocumentGeneratorInterfaceException("Failed to get transaction with resourceId: " + resourceId, e);
         }
 
         String resourceLink =  Optional.of(transaction)
@@ -59,7 +67,9 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
             try {
                 return accountsHandler.getAbridgedAccountsData(transaction, resourceLink);
             } catch (HandlerException e) {
-                LOG.error(e);
+                LOG.error(e, debugMap);
+                throw new DocumentGeneratorInterfaceException("Failed to get abridged data for transaction: "
+                        + transaction + " and resource link: " + resourceLink);
             }
         }
 

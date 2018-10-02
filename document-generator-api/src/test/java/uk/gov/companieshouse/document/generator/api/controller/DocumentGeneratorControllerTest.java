@@ -112,7 +112,7 @@ public class DocumentGeneratorControllerTest {
         response.setDescriptionIdentifier(DESCRIPTION_IDENTIFIER);
         response.setDescriptionValues(setDescriptionValue());
 
-        ResponseObject responseObject = new ResponseObject(ResponseStatus.NOT_RENDERED, response);
+        ResponseObject responseObject = new ResponseObject(ResponseStatus.FAILED_TO_RENDER, response);
 
         when(mockBindingResult.hasErrors()).thenReturn(false);
         when(mockDocumentGeneratorService.generate(any(DocumentRequest.class), any(String.class))).thenReturn(responseObject);

@@ -4,6 +4,7 @@ public enum ResponseStatus {
 
     CREATED,
     NO_DATA_RETRIEVED,
-    NOT_RENDERED,
-    NO_TYPE_FOUND
+    NO_TYPE_FOUND,
+    FAILED_TO_RETRIEVE_DATA,
+    FAILED_TO_RENDER
 }

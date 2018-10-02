@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.document.generator.interfaces;
 
+import uk.gov.companieshouse.document.generator.interfaces.exception.DocumentGeneratorInterfaceException;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 
@@ -13,5 +14,5 @@ public interface DocumentInfoService {
      * @param documentInfoRequest - document info request
      * @return DocumentInfo
      */
-    DocumentInfoResponse getDocumentInfo(DocumentInfoRequest documentInfoRequest);
+    DocumentInfoResponse getDocumentInfo(DocumentInfoRequest documentInfoRequest) throws DocumentGeneratorInterfaceException;
 }
