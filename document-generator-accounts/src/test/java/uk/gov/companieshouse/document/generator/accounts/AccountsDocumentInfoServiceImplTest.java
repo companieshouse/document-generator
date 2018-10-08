@@ -14,7 +14,7 @@ import uk.gov.companieshouse.document.generator.accounts.exception.HandlerExcept
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.accounts.handler.accounts.AccountsHandler;
 import uk.gov.companieshouse.document.generator.accounts.service.TransactionService;
-import uk.gov.companieshouse.document.generator.interfaces.exception.DocumentGeneratorInterfaceException;
+import uk.gov.companieshouse.document.generator.interfaces.exception.DocumentInfoException;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 
@@ -48,11 +48,11 @@ public class AccountsDocumentInfoServiceImplTest {
     private static final String RESOURCE_ID = "/transactions/091174-913515-326060/accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
 
     @Test
-    @DisplayName("Test DocumentGeneratorInterfaceException thrown when error returned from transaction retrieval")
+    @DisplayName("Test DocumentInfoException thrown when error returned from transaction retrieval")
     void testErrorThrownWhenFailedTransactionRetrieval() throws ServiceException {
         when(transactionService.getTransaction(anyString())).thenThrow(new ServiceException("error"));
 
-        assertThrows(DocumentGeneratorInterfaceException.class, () ->
+        assertThrows(DocumentInfoException.class, () ->
                 accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest()));
     }
 
@@ -66,7 +66,7 @@ public class AccountsDocumentInfoServiceImplTest {
 
     @Test
     @DisplayName("Tests the unsuccessful retrieval of document data due to no accounts resource in transaction")
-    void testUnsuccessfulGetDocumentInfoNoAccountsResourceInTransaction() throws ServiceException, DocumentGeneratorInterfaceException {
+    void testUnsuccessfulGetDocumentInfoNoAccountsResourceInTransaction() throws ServiceException, DocumentInfoException {
         Transaction transaction = createTransaction();
         transaction.getResources().remove(RESOURCE_ID);
         transaction.getResources().put("error", createResource());
@@ -76,14 +76,14 @@ public class AccountsDocumentInfoServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test DocumentGeneratorInterfaceException thrown when error returned from accounts handler")
+    @DisplayName("Test DocumentInfoException thrown when error returned from accounts handler")
     void testErrorThrownWhenFailedAccountsHandler() throws HandlerException, ServiceException {
 
         when(transactionService.getTransaction(anyString())).thenReturn(createTransaction());
         when(accountsHandlerMock.getAbridgedAccountsData(any(Transaction.class),  anyString())).
                 thenThrow(new HandlerException("error"));
 
-        assertThrows(DocumentGeneratorInterfaceException.class, () ->
+        assertThrows(DocumentInfoException.class, () ->
                 accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest()));
     }
 
@@ -98,7 +98,7 @@ public class AccountsDocumentInfoServiceImplTest {
 
     @Test
     @DisplayName("Tests the successful retrieval of document data")
-    void testSuccessfulGetDocumentInfo() throws HandlerException, ServiceException, DocumentGeneratorInterfaceException {
+    void testSuccessfulGetDocumentInfo() throws HandlerException, ServiceException, DocumentInfoException {
         when(transactionService.getTransaction(anyString())).thenReturn(createTransaction());
         when(accountsHandlerMock.getAbridgedAccountsData(any(Transaction.class), anyString())).thenReturn(new DocumentInfoResponse());
 

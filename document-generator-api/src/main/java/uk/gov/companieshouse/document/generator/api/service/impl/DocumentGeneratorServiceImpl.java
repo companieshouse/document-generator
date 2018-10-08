@@ -15,7 +15,7 @@ import uk.gov.companieshouse.document.generator.api.service.DocumentTypeService;
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseObject;
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseStatus;
 import uk.gov.companieshouse.document.generator.api.document.DocumentType;
-import uk.gov.companieshouse.document.generator.interfaces.exception.DocumentGeneratorInterfaceException;
+import uk.gov.companieshouse.document.generator.interfaces.exception.DocumentInfoException;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.environment.EnvironmentReader;
@@ -88,8 +88,8 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
             documentInfoResponse = documentInfoServiceFactory
                         .get(documentType.toString())
                         .getDocumentInfo(documentInfoRequest);
-        } catch (DocumentGeneratorInterfaceException dgie) {
-             createAndLogErrorMessage("Error occurred whilst obtaining the data to generator document " +
+        } catch (DocumentInfoException dgie) {
+             createAndLogErrorMessage("Error occurred whilst obtaining the data to generate document " +
                      "for resource: " + documentInfoRequest.getResourceUri(), dgie, resourceId, resourceUri, requestId);
             return new ResponseObject(ResponseStatus.FAILED_TO_RETRIEVE_DATA, null);
         }
