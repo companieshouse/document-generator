@@ -3,6 +3,7 @@ package uk.gov.companieshouse.document.generator.api.service.impl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.gov.companieshouse.document.generator.api.document.RetrieveApiEnumerationDescription;
 import uk.gov.companieshouse.document.generator.api.document.render.RenderDocumentRequestHandler;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentRequest;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentResponse;
@@ -39,6 +40,8 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
 
     private DocumentInfoServiceFactory documentInfoServiceFactory;
 
+    private RetrieveApiEnumerationDescription retrieveApiEnumerationDescription;
+
     private static final String DOCUMENT_RENDER_SERVICE_HOST_ENV_VAR = "DOCUMENT_RENDER_SERVICE_HOST";
 
     private static final String DOCUMENT_BUCKET_NAME_ENV_VAR = "DOCUMENT_BUCKET_NAME";
@@ -49,16 +52,22 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
 
     private static final Logger LOG = LoggerFactory.getLogger(APPLICATION_NAME_SPACE);
 
+    private static final String FILING_DESCRIPTIONS_FILE_NAME = "api-enumerations/filing_descriptions.yml";
+
+    private static final String DESCRIPTION_IDENTIFIERS_KEY = "description_identifiers";
+
     @Autowired
     public DocumentGeneratorServiceImpl(DocumentInfoServiceFactory documentInfoServiceFactory,
                                         EnvironmentReader environmentReader,
                                         RenderDocumentRequestHandler requestHandler,
-                                        DocumentTypeService documentTypeService) {
+                                        DocumentTypeService documentTypeService,
+                                        RetrieveApiEnumerationDescription retrieveApiEnumerationDescription) {
 
         this.documentInfoServiceFactory = documentInfoServiceFactory;
         this.environmentReader = environmentReader;
         this.requestHandler = requestHandler;
         this.documentTypeService = documentTypeService;
+        this.retrieveApiEnumerationDescription = retrieveApiEnumerationDescription;
     }
 
     /**
@@ -171,10 +180,31 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
         }
 
         response.setDescriptionValues(documentInfoResponse.getDescriptionValues());
-        response.setDescription(documentInfoResponse.getDescription());
+        response.setDescription(getDescription(documentInfoResponse));
         response.setDescriptionIdentifier(documentInfoResponse.getDescriptionIdentifier());
 
         return response;
+    }
+
+    /**
+     * Get the document description
+     *
+     * @param documentInfoResponse
+     * @return
+     * @throws IOException
+     */
+    private String getDescription(DocumentInfoResponse documentInfoResponse) {
+
+        String description = null;
+        try {
+            description = retrieveApiEnumerationDescription.getApiEnumerationDescription(
+                    FILING_DESCRIPTIONS_FILE_NAME, DESCRIPTION_IDENTIFIERS_KEY,
+                    documentInfoResponse.getTemplateName(), documentInfoResponse.getDescriptionValues());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return description;
     }
 
     /**

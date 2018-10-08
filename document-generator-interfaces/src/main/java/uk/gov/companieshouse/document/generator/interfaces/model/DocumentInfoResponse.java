@@ -26,15 +26,11 @@ public class DocumentInfoResponse {
      */
     String path;
     /**
-     * The description of the document produced
-     */
-    String description;
-    /**
      * The identifier for the document description
      */
     String descriptionIdentifier;
     /**
-     * The type of type of data used for generation
+     * The type of data used for generation
      */
     String contentType;
     /**
@@ -74,14 +70,6 @@ public class DocumentInfoResponse {
         this.path = path;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public String getDescriptionIdentifier() {
         return descriptionIdentifier;
     }
@@ -119,7 +107,6 @@ public class DocumentInfoResponse {
                 Objects.equals(templateName, that.templateName) &&
                 Objects.equals(assetId, that.assetId) &&
                 Objects.equals(path, that.path) &&
-                Objects.equals(description, that.description) &&
                 Objects.equals(descriptionIdentifier, that.descriptionIdentifier) &&
                 Objects.equals(descriptionValues, that.descriptionValues);
     }
@@ -127,7 +114,7 @@ public class DocumentInfoResponse {
     @Override
     public int hashCode() {
         return Objects
-                .hash(data, templateName, assetId, path, description, descriptionIdentifier,
+                .hash(data, templateName, assetId, path, descriptionIdentifier,
                         descriptionValues);
     }
 

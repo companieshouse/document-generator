@@ -8,6 +8,13 @@ artifactory_publish := $(shell if [[ -n "$(tag)" ]]; then echo release; else ech
 .PHONY: all
 all: build
 
+.PHONY: submodules
+submodules: api-enumerations/.git
+
+.PHONY: api-enumerations/.git
+	git submodule init
+	git submodule update
+
 .PHONY: clean
 clean:
 	mvn clean
@@ -16,7 +23,7 @@ clean:
 	rm -rf ./build-*
 
 .PHONY: build
-build:
+build: submodules
 	mvn versions:set -DnewVersion=$(version) -DgenerateBackupPoms=false
 	mvn package -DskipTests=true
 	mv ./$(artifact_core_name)/target/$(artifact_core_name)-$(version).jar ./$(artifact_name).jar

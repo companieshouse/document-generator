@@ -65,7 +65,7 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
         // when the Accounts migration has been completed to Company Accounts, this code can be removed
         if (isAccounts(resourceLink)) {
             try {
-                return accountsHandler.getAbridgedAccountsData(transaction, resourceLink);
+                return accountsHandler.getAbridgedAccountsData(transaction, resourceLink, documentInfoRequest.getMimeType());
             } catch (HandlerException e) {
                 LOG.error(e, debugMap);
                 throw new DocumentGeneratorInterfaceException("Failed to get abridged data for transaction: "

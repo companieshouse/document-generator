@@ -1,9 +1,5 @@
 package uk.gov.companieshouse.document.generator.accounts.handler.accounts;
 
-import static uk.gov.companieshouse.document.generator.accounts.AccountsDocumentInfoServiceImpl.MODULE_NAME_SPACE;
-
-import java.util.HashMap;
-import java.util.Map;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,6 +15,14 @@ import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRes
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
+
+import static uk.gov.companieshouse.document.generator.accounts.AccountsDocumentInfoServiceImpl.MODULE_NAME_SPACE;
+
 @Component
 public class AccountsHandlerImpl implements AccountsHandler  {
 
@@ -27,13 +31,21 @@ public class AccountsHandlerImpl implements AccountsHandler  {
     @Autowired
     private AccountsService accountsService;
 
-    private static final String DOC_GEN_ACC_BUCKET_NAME_ENV_VAR = "DOC_GEN_ACC_BUCKET_NAME";
+    /** @{link DateFormat} for the date displayed in the description */
+    private static final DateFormat RESPONSE_DISPLAY_DATE_FORMAT = new SimpleDateFormat("dd MMMMM yyyy");
+
+    /** Date format expected by the file delivery API */
+    private static final DateFormat ISO_DATE_AND_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+
+    /** Date format received from the accounts API */
+    private static final DateFormat ISO_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public DocumentInfoResponse getAbridgedAccountsData(Transaction transaction, String resourceLink) throws HandlerException {
+    public DocumentInfoResponse getAbridgedAccountsData(Transaction transaction, String resourceLink, String mimeType)
+            throws HandlerException {
         Accounts accounts;
 
         try {
@@ -48,12 +60,18 @@ public class AccountsHandlerImpl implements AccountsHandler  {
         try {
             AbridgedAccountsApi abridgedAccountData = accountsService.getAbridgedAccounts(abridgedAccountLink);
 
-            return createResponse(transaction, accountType, abridgedAccountData);
+            return createResponse(transaction, accountType, abridgedAccountData, mimeType);
         } catch (ServiceException e) {
             Map<String, Object> logMap = new HashMap<>();
             logMap.put("resource", abridgedAccountLink);
             logMap.put("accountType", accountType);
             LOG.error("Error in service layer", logMap);
+            throw new HandlerException(e.getMessage(), e.getCause());
+        } catch (ParseException e) {
+            Map<String, Object> logMap = new HashMap<>();
+            logMap.put("resource", abridgedAccountLink);
+            logMap.put("accountType", accountType);
+            LOG.error("Error when parsing period end on date", logMap);
             throw new HandlerException(e.getMessage(), e.getCause());
         }
     }
@@ -72,7 +90,8 @@ public class AccountsHandlerImpl implements AccountsHandler  {
                 .filter(e -> !e.equalsIgnoreCase(LinkType.SELF.getLink()))
                 .map(AccountType::getAccountType)
                 .findFirst()
-                .orElseThrow(() -> new HandlerException("Unable to find account type in account data" + accountsData.getId()));
+                .orElseThrow(() -> new HandlerException("Unable to find account type in account data" +
+                        accountsData.getId()));
     }
 
     /**
@@ -87,37 +106,74 @@ public class AccountsHandlerImpl implements AccountsHandler  {
     }
 
     /**
-     * Creates the 'data' string in {@link DocumentInfoResponse}.
-     * @param transaction the transaction data
-     * @param abridgedAccountData the abridged accounts data
-     * @return data string in {@link DocumentInfoResponse}
-     */
-    private String createDocumentInfoResponseData(Transaction transaction, AbridgedAccountsApi abridgedAccountData) {
-        JSONObject abridgedAccountJSON = new JSONObject(abridgedAccountData);
-        JSONObject abridgedAccount = new JSONObject();
-        abridgedAccount.put("abridged_account", abridgedAccountJSON);
-        abridgedAccount.put("company_name", transaction.getCompanyName());
-        abridgedAccount.put("company_number", transaction.getCompanyNumber());
-        return abridgedAccount.toString();
-    }
-
-    /**
      * Creates the {@link DocumentInfoResponse} object
      * @param transaction transaction data
      * @param accountType account type
-     * @param abridgedAccountData abridged account data
+     * @param accountData The account data
+     * @param mimeType
      * @return {@link DocumentInfoResponse} object
      */
-    private DocumentInfoResponse createResponse(Transaction transaction, AccountType accountType, AbridgedAccountsApi abridgedAccountData) {
+    private <T> DocumentInfoResponse createResponse(Transaction transaction, AccountType accountType,
+                                                    T accountData, String mimeType) throws ParseException {
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
-        documentInfoResponse.setData(createDocumentInfoResponseData(transaction, abridgedAccountData));
+        documentInfoResponse.setData(createDocumentInfoResponseData(transaction, accountData, accountType));
         documentInfoResponse.setAssetId(accountType.getAssetId());
         documentInfoResponse.setTemplateName(accountType.getTemplateName());
         documentInfoResponse.setPath(createPathString(accountType));
+
+        Map<String, String> descriptionValues = new HashMap<>();
+        descriptionValues.put("period_end_on", RESPONSE_DISPLAY_DATE_FORMAT.format(ISO_DATE_FORMAT.
+                parse(getCurrentPeriodEndOn(accountData))));
+
+        documentInfoResponse.setDescriptionValues(descriptionValues);
+        documentInfoResponse.setDescriptionIdentifier(accountType.getEnumerationKey());
+        documentInfoResponse.setContentType(mimeType);
         return documentInfoResponse;
     }
 
     private String createPathString(AccountType accountType) {
         return String.format("/%s/%s", accountType.getAssetId(), accountType.getUniqueFileName());
+    }
+
+    /**
+     * Creates the 'data' string in {@link DocumentInfoResponse}.
+     * @param transaction the transaction data
+     * @param accountData the abridged accounts data
+     * @param accountType the type of account
+     * @return data string in {@link DocumentInfoResponse}
+     */
+    private <T> String createDocumentInfoResponseData(Transaction transaction, T accountData, AccountType accountType) {
+        String accountTypeName = accountType.getResourceKey();
+        JSONObject accountJSON = new JSONObject(accountData);
+        JSONObject account = new JSONObject();
+        account.put(accountTypeName, accountJSON);
+        account.put("company_name", transaction.getCompanyName());
+        account.put("company_number", transaction.getCompanyNumber());
+        return account.toString();
+    }
+
+    /**
+     * Get the period end Date from the account data
+     *
+     * @param accountData the account data
+     * @return periodEndDate The formatted periodEndDate
+     * @throws ParseException
+     */
+    private <T> String getCurrentPeriodEndOn(T accountData) throws ParseException {
+        JSONObject account = new JSONObject(accountData);
+        JSONObject currentPeriod = account.getJSONObject("currentPeriodApi");
+        String periodEndOn = currentPeriod.get("periodEndDate").toString();
+
+        return formatDate(periodEndOn);
+    }
+
+    /**
+     * Convert from ISO 8601 date format into ISO 8601 date and time format
+     *
+     * @param date
+     * @throws ParseException
+     */
+    private String formatDate(String date) throws ParseException {
+        return ISO_DATE_AND_TIME_FORMAT.format(ISO_DATE_FORMAT.parse(date));
     }
 }

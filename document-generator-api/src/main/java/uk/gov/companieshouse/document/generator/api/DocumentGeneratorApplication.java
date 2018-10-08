@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class DocumentGeneratorApplication {
 
-    public static final String APPLICATION_NAME_SPACE = "document-generator";
+    public static final String APPLICATION_NAME_SPACE = "document-generator-api";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(APPLICATION_NAME_SPACE);
 
