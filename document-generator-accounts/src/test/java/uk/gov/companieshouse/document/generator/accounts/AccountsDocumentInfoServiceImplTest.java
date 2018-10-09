@@ -8,8 +8,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.companieshouse.api.model.transaction.Resource;
-import uk.gov.companieshouse.api.model.transaction.Transaction;
+
+import uk.gov.companieshouse.document.generator.accounts.data.transaction.Resources;
+import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.accounts.handler.accounts.AccountsHandler;
@@ -113,7 +114,7 @@ public class AccountsDocumentInfoServiceImplTest {
     }
 
     private Transaction createTransaction() {
-        Map<String, Resource> resources = new HashMap<>();
+        Map<String, Resources> resources = new HashMap<>();
         resources.put(RESOURCE_ID, createResource());
 
         Transaction transaction = new Transaction();
@@ -122,8 +123,8 @@ public class AccountsDocumentInfoServiceImplTest {
         return transaction;
     }
 
-    private Resource createResource() {
-        Resource resource = new Resource();
+    private Resources createResource() {
+        Resources resource = new Resources();
         resource.setKind("kind");
         Map<String, String> links = new HashMap<>();
         links.put("resource", RESOURCE_ID);
