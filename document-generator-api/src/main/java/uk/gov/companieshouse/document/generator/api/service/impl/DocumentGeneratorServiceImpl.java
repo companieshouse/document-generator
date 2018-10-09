@@ -15,6 +15,7 @@ import uk.gov.companieshouse.document.generator.api.service.DocumentTypeService;
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseObject;
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseStatus;
 import uk.gov.companieshouse.document.generator.api.document.DocumentType;
+import uk.gov.companieshouse.document.generator.interfaces.exception.DocumentInfoException;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.environment.EnvironmentReader;
@@ -67,50 +68,47 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
     public ResponseObject generate(DocumentRequest documentRequest, String requestId) {
 
         DocumentResponse response;
-
-        final Map < String, Object > debugMap = new HashMap < > ();
-        debugMap.put("resource_uri", documentRequest.getResourceUri());
-        debugMap.put("resource_id", documentRequest.getResourceId());
+        String resourceId = documentRequest.getResourceId();
+        String resourceUri = documentRequest.getResourceUri();
 
         DocumentType documentType;
         try {
             documentType = documentTypeService.getDocumentType(documentRequest.getResourceUri());
         } catch (DocumentGeneratorServiceException dgse){
-            LOG.errorContext(requestId, dgse, debugMap);
+            createAndLogErrorMessage("Failed to get document type from resource:  "
+                    + documentRequest.getResourceUri(), dgse, resourceId, resourceUri, requestId);
             return new ResponseObject(ResponseStatus.NO_TYPE_FOUND, null);
         }
 
         DocumentInfoRequest documentInfoRequest = new DocumentInfoRequest();
         BeanUtils.copyProperties(documentRequest, documentInfoRequest);
 
-        //TODO refine exception handling in doc-gen-accounts SFA-723
-        DocumentInfoResponse documentInfoResponse = documentInfoServiceFactory
-                    .get(documentType.toString())
-                    .getDocumentInfo(documentInfoRequest);
-
+        DocumentInfoResponse documentInfoResponse;
+        try {
+            documentInfoResponse = documentInfoServiceFactory
+                        .get(documentType.toString())
+                        .getDocumentInfo(documentInfoRequest);
+        } catch (DocumentInfoException dgie) {
+             createAndLogErrorMessage("Error occurred whilst obtaining the data to generate document " +
+                     "for resource: " + documentInfoRequest.getResourceUri(), dgie, resourceId, resourceUri, requestId);
+            return new ResponseObject(ResponseStatus.FAILED_TO_RETRIEVE_DATA, null);
+        }
 
         if (documentInfoResponse != null) {
             RenderDocumentResponse renderResponse = null;
             try {
                 renderResponse = renderSubmittedDocumentData(documentRequest, documentInfoResponse);
             } catch (IOException ioe) {
-                DocumentGeneratorServiceException documentGeneratorServiceException =
-                        new DocumentGeneratorServiceException("failed to render the document for " +
-                                documentInfoRequest.getResourceUri(), ioe);
-                LOG.errorContext(requestId, documentGeneratorServiceException, debugMap);
-
+                createAndLogErrorMessage("Error occurred whilst rendering the document for resource: " +
+                        documentInfoRequest.getResourceUri(), ioe, resourceId, resourceUri, requestId);
                 response = setDocumentResponse(renderResponse, documentInfoResponse);
-                return new ResponseObject(ResponseStatus.NOT_RENDERED, response);
+                return new ResponseObject(ResponseStatus.FAILED_TO_RENDER, response);
             }
 
             response = setDocumentResponse(renderResponse, documentInfoResponse);
-
         } else {
-            DocumentGeneratorServiceException documentGeneratorServiceException =
-                    new DocumentGeneratorServiceException("No data was returned from documentInfoService " +
-                            documentInfoRequest.getResourceUri());
-            LOG.errorContext(requestId, documentGeneratorServiceException, debugMap);
-
+            createAndLogErrorMessage("No data was returned from documentInfoService for resource: " +
+                    documentInfoRequest.getResourceUri(), null, resourceId, resourceUri, requestId);
             return new ResponseObject(ResponseStatus.NO_DATA_RETRIEVED, null);
         }
 
@@ -177,5 +175,34 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
         response.setDescriptionIdentifier(documentInfoResponse.getDescriptionIdentifier());
 
         return response;
+    }
+
+    /**
+     * Create and log the error message
+     *
+     * @param message The message to be logged
+     * @param <T> generic exception parameter to be stored in message
+     * @param resourceId The resource Id
+     * @param resourceUri The resource Url
+     * @param requestId The request Id
+     */
+    private <T extends Exception> void createAndLogErrorMessage(String message, T exception,
+                                                                String resourceId, String resourceUri, String requestId) {
+
+        Map < String, Object > debugMap = new HashMap < > ();
+        debugMap.put("resource_uri", resourceUri);
+        debugMap.put("resource_id",resourceId);
+
+        DocumentGeneratorServiceException documentGeneratorServiceException;
+
+        if (exception != null) {
+            documentGeneratorServiceException =
+                    new DocumentGeneratorServiceException(message, exception);
+        } else {
+            documentGeneratorServiceException =
+                    new DocumentGeneratorServiceException(message);
+        }
+        
+        LOG.errorContext(requestId, documentGeneratorServiceException, debugMap);
     }
 }
