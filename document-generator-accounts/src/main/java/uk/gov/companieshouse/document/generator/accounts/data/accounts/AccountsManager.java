@@ -81,6 +81,7 @@ public class AccountsManager {
     public AbridgedAccountsApi getAbridgedAccounts(String link) throws Exception {
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.set(AUTHORIZATION_HEADER, getApiKey());
+        requestHeaders.set("Content-Type", "application/Json");
 
         HttpEntity requestEntity = new HttpEntity(requestHeaders);
 
