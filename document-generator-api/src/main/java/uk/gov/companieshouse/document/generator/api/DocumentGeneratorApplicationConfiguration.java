@@ -9,11 +9,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import uk.gov.companieshouse.document.generator.accounts.AccountsDocumentInfoServiceImpl;
 import uk.gov.companieshouse.document.generator.api.factory.DocumentInfoServiceFactory;
+import uk.gov.companieshouse.document.generator.sjp.SjpDocumentInfoServiceImpl;
 import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.environment.impl.EnvironmentReaderImpl;
 
 @Configuration
-@ComponentScan(basePackages = {"uk.gov.companieshouse.document.generator.accounts"})
+@ComponentScan(basePackages = {"uk.gov.companieshouse.document.generator.accounts", "uk.gov.companieshouse.document.generator.sjp"})
 public class DocumentGeneratorApplicationConfiguration {
 
     @Bean
@@ -27,6 +28,12 @@ public class DocumentGeneratorApplicationConfiguration {
     @Scope(scopeName = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public AccountsDocumentInfoServiceImpl accountsDocumentInfoService() {
         return new AccountsDocumentInfoServiceImpl();
+    }
+
+    @Bean(name = "SJP")
+    @Scope(scopeName = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    public SjpDocumentInfoServiceImpl sjpDocumentInfoService() {
+        return new SjpDocumentInfoServiceImpl();
     }
 
     @Bean
