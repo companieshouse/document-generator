@@ -53,7 +53,7 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
 
         String resourceLink =  Optional.of(transaction)
                 .map(Transaction::getResources)
-                .map(resources -> resources.get(resourceId))
+                .map(resources -> resources.get(resourceUri))
                 .map(Resources::getLinks)
                 .map(links -> links.get(LinkType.RESOURCE.getLink()))
                 .orElseGet(() -> {

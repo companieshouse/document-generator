@@ -45,8 +45,8 @@ public class AccountsDocumentInfoServiceImplTest {
     @Mock
     private Transaction transaction;
 
-    private static final String RESOURCE_URI = "/transactions/091174-913515-326060";
-    private static final String RESOURCE_ID = "/transactions/091174-913515-326060/accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
+    private static final String RESOURCE_ID = "/transactions/091174-913515-326060";
+    private static final String RESOURCE_URI = "/transactions/091174-913515-326060/accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
 
     @Test
     @DisplayName("Test DocumentInfoException thrown when error returned from transaction retrieval")
@@ -115,7 +115,7 @@ public class AccountsDocumentInfoServiceImplTest {
 
     private Transaction createTransaction() {
         Map<String, Resources> resources = new HashMap<>();
-        resources.put(RESOURCE_ID, createResource());
+        resources.put(RESOURCE_URI, createResource());
 
         Transaction transaction = new Transaction();
         transaction.setResources(resources);
@@ -127,7 +127,7 @@ public class AccountsDocumentInfoServiceImplTest {
         Resources resource = new Resources();
         resource.setKind("kind");
         Map<String, String> links = new HashMap<>();
-        links.put("resource", RESOURCE_ID);
+        links.put("resource", RESOURCE_URI);
         resource.setLinks(links);
         return resource;
     }
