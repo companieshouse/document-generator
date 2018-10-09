@@ -9,7 +9,7 @@ import uk.gov.companieshouse.document.generator.accounts.exception.ServiceExcept
 import uk.gov.companieshouse.document.generator.accounts.handler.accounts.AccountsHandler;
 import uk.gov.companieshouse.document.generator.accounts.service.TransactionService;
 import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
-import uk.gov.companieshouse.document.generator.interfaces.exception.DocumentGeneratorInterfaceException;
+import uk.gov.companieshouse.document.generator.interfaces.exception.DocumentInfoException;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.logging.Logger;
@@ -33,7 +33,7 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
     @Override
-    public DocumentInfoResponse getDocumentInfo(DocumentInfoRequest documentInfoRequest) throws DocumentGeneratorInterfaceException {
+    public DocumentInfoResponse getDocumentInfo(DocumentInfoRequest documentInfoRequest) throws DocumentInfoException {
         LOG.info("Started getting document");
 
         String resourceId = documentInfoRequest.getResourceId();
@@ -48,7 +48,7 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
             transaction = transactionService.getTransaction(resourceId);
         } catch (ServiceException e) {
             LOG.error(e, debugMap);
-            throw new DocumentGeneratorInterfaceException("Failed to get transaction with resourceId: " + resourceId, e);
+            throw new DocumentInfoException("Failed to get transaction with resourceId: " + resourceId, e);
         }
 
         String resourceLink =  Optional.of(transaction)
@@ -68,8 +68,8 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
                 return accountsHandler.getAbridgedAccountsData(transaction, resourceLink, documentInfoRequest.getMimeType());
             } catch (HandlerException e) {
                 LOG.error(e, debugMap);
-                throw new DocumentGeneratorInterfaceException("Failed to get abridged data for transaction: "
-                        + transaction + " and resource link: " + resourceLink);
+                throw new DocumentInfoException("Failed to get abridged data for transaction: "
+                        + transaction.getId() + " and resource link: " + resourceLink);
             }
         }
 
