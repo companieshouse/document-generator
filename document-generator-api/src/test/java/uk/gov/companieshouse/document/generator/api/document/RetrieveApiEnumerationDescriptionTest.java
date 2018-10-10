@@ -3,6 +3,7 @@ package uk.gov.companieshouse.document.generator.api.document;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import uk.gov.companieshouse.document.generator.api.document.description.RetrieveApiEnumerationDescription;
 import uk.gov.companieshouse.document.generator.api.document.description.impl.RetrieveApiEnumerationDescriptionImpl;
 
 import java.io.IOException;

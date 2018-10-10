@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.document.generator.api.document;
+package uk.gov.companieshouse.document.generator.api.document.description;
 
 import java.io.IOException;
 import java.util.Map;

@@ -3,7 +3,7 @@ package uk.gov.companieshouse.document.generator.api.document.description.impl;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.Yaml;
-import uk.gov.companieshouse.document.generator.api.document.RetrieveApiEnumerationDescription;
+import uk.gov.companieshouse.document.generator.api.document.description.RetrieveApiEnumerationDescription;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
@@ -31,9 +31,7 @@ public class RetrieveApiEnumerationDescriptionImpl implements RetrieveApiEnumera
 
         String description = "";
 
-        InputStream inputStream;
-        try {
-            inputStream = new FileInputStream(descriptionsFile);
+        try (InputStream inputStream = new FileInputStream(descriptionsFile)) {
 
             Map<String, Object> descriptions = (Map<String, Object>) yaml.load(inputStream);
             Map<String, Object> filteredDescriptions = (Map<String, Object>) getDescriptionsValue(descriptions,
@@ -41,7 +39,6 @@ public class RetrieveApiEnumerationDescriptionImpl implements RetrieveApiEnumera
             if(filteredDescriptions != null) {
                 description =  String.valueOf(getDescriptionsValue(filteredDescriptions, accountType, fileName));
             }
-            inputStream.close();
         } catch (FileNotFoundException e) {
             Map<String, Object> dataMap = new HashMap<>();
             dataMap.put("file", fileName);
