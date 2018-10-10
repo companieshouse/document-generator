@@ -110,6 +110,7 @@ public class AccountsDocumentInfoServiceImplTest {
         DocumentInfoRequest documentInfoRequest = new DocumentInfoRequest();
         documentInfoRequest.setResourceId(RESOURCE_ID);
         documentInfoRequest.setResourceUri(RESOURCE_URI);
+        documentInfoRequest.setMimeType(MIME_TYPE);
         return documentInfoRequest;
     }
 
@@ -127,7 +128,7 @@ public class AccountsDocumentInfoServiceImplTest {
         Resource resource = new Resource();
         resource.setKind("kind");
         Map<String, String> links = new HashMap<>();
-        links.put("resource", RESOURCE_ID);
+        links.put("resource", RESOURCE_URI);
         resource.setLinks(links);
         return resource;
     }
