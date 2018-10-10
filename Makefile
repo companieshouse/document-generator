@@ -9,9 +9,7 @@ artifactory_publish := $(shell if [[ -n "$(tag)" ]]; then echo release; else ech
 all: build
 
 .PHONY: submodules
-submodules: api-enumerations/.git
-
-.PHONY: api-enumerations/.git
+submodules:
 	git submodule init
 	git submodule update
 
