@@ -4,6 +4,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import uk.gov.companieshouse.api.ApiClient;
+import uk.gov.companieshouse.api.error.ApiErrorResponseException;
+import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.http.ApiKeyHttpClient;
 import uk.gov.companieshouse.api.http.HttpClient;
 import uk.gov.companieshouse.api.model.accounts.Accounts;
@@ -26,9 +28,6 @@ import static uk.gov.companieshouse.document.generator.accounts.AccountsDocument
 @Component
 public class AccountsManager {
 
-    /** represents the Authorization header name in the request */
-    private static final String AUTHORIZATION_HEADER = "Authorization";
-
     private static final EnvironmentReader READER = new EnvironmentReaderImpl();
 
     private final String apiUrl = READER.getMandatoryString("API_URL");
@@ -42,12 +41,10 @@ public class AccountsManager {
      *
      * @param link - self link for the accounts resource
      * @return accounts object along with the status or not found status.
-     * @throws Exception - throws a generic exception to mimic the private sdk throwing an exception.
-     *                     We're not to create a custom exception as it will have to be removed when
-     *                     the private sdk  gets implemented - additionally the generic exception is
-     *                     sufficient
+     * @throws ApiErrorResponseException
+     * @throws URIValidationException
      */
-    public Accounts getAccounts(String link) throws Exception {
+    public Accounts getAccounts(String link) throws ApiErrorResponseException, URIValidationException {
 
         HttpClient httpClient = new ApiKeyHttpClient(chsApiKey);
 
@@ -60,16 +57,14 @@ public class AccountsManager {
     }
 
     /**
-     * Get abridged accounts resource if exists
+     *Get abridged accounts resource if exists
      *
      * @param link - self link for the abridged accounts resource
      * @return AbridgedAccountsApi object
-     * @throws Exception - throws a generic exception to mimic the private sdk throwing an exception.
-     *                     We're not to create a custom exception as it will have to be removed when
-     *                     the private sdk  gets implemented - additionally the generic exception is
-     *                     sufficient
+     * @throws ApiErrorResponseException
+     * @throws URIValidationException
      */
-    public AbridgedAccountsApi getAbridgedAccounts(String link) throws Exception {
+    public AbridgedAccountsApi getAbridgedAccounts(String link) throws ApiErrorResponseException, URIValidationException {
 
         HttpClient httpClient = new ApiKeyHttpClient(chsApiKey);
 
@@ -81,6 +76,10 @@ public class AccountsManager {
         return apiClient.abridgedAccounts().get(link).execute();
     }
 
+    /**
+     *  Set request ID using httpclient
+     * @param httpClient
+     */
     private static void setRequestId(HttpClient httpClient) {
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder
                 .currentRequestAttributes();
@@ -99,15 +98,11 @@ public class AccountsManager {
         httpClient.setRequestId(requestId);
     }
 
+    /**
+     * Generate a universally unique identifier
+     * @return
+     */
     private static String generateRequestId() {
         return UUID.randomUUID().toString().substring(0,20);
-    }
-
-    private String getRootUri() {
-        return apiUrl;
-    }
-
-    private String getApiKey() {
-        return chsApiKey;
     }
 }
