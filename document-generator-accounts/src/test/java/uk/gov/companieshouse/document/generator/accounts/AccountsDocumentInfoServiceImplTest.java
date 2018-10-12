@@ -37,7 +37,7 @@ public class AccountsDocumentInfoServiceImplTest {
     private AccountsDocumentInfoServiceImpl accountsDocumentInfoService;
 
     @Mock
-    private AccountsHandler accountsHandlerMock;
+    private AccountsHandler accountsHandler;
 
     @Mock
     private TransactionService transactionService;
@@ -81,7 +81,7 @@ public class AccountsDocumentInfoServiceImplTest {
     void testErrorThrownWhenFailedAccountsHandler() throws HandlerException, ServiceException {
 
         when(transactionService.getTransaction(anyString())).thenReturn(createTransaction());
-        when(accountsHandlerMock.getAbridgedAccountsData(any(Transaction.class),  anyString())).
+        when(accountsHandler.getAbridgedAccountsData(any(Transaction.class),  anyString())).
                 thenThrow(new HandlerException("error"));
 
         assertThrows(DocumentInfoException.class, () ->
@@ -92,16 +92,16 @@ public class AccountsDocumentInfoServiceImplTest {
     @DisplayName("Tests the unsuccessful retrieval of document data due to error in Accounts handler")
     void testUnsuccessfulGetDocumentInfoExceptionFromAccountsHandler()
             throws HandlerException {
-        when(accountsHandlerMock.getAbridgedAccountsData(any(Transaction.class),  anyString())).thenThrow(new HandlerException("error"));
+        when(accountsHandler.getAbridgedAccountsData(any(Transaction.class),  anyString())).thenThrow(new HandlerException("error"));
 
-        assertThrows(HandlerException.class, () -> accountsHandlerMock.getAbridgedAccountsData(transaction, ""));
+        assertThrows(HandlerException.class, () -> accountsHandler.getAbridgedAccountsData(transaction, ""));
     }
 
     @Test
     @DisplayName("Tests the successful retrieval of document data")
     void testSuccessfulGetDocumentInfo() throws HandlerException, ServiceException, DocumentInfoException {
         when(transactionService.getTransaction(anyString())).thenReturn(createTransaction());
-        when(accountsHandlerMock.getAbridgedAccountsData(any(Transaction.class), anyString())).thenReturn(new DocumentInfoResponse());
+        when(accountsHandler.getAbridgedAccountsData(any(Transaction.class), anyString())).thenReturn(new DocumentInfoResponse());
 
         assertNotNull(accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest()));
     }

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.companieshouse.document.generator.api.document.description.RetrieveApiEnumerationDescription;
 import uk.gov.companieshouse.document.generator.api.document.render.RenderDocumentRequestHandler;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentRequest;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentResponse;
@@ -52,6 +53,9 @@ public class DocumentGeneratorServiceTest {
     @Mock
     private EnvironmentReader mockEnvironmentReader;
 
+    @Mock
+    private RetrieveApiEnumerationDescription mockRetrieveApiEnumerationDescription;
+
     private DocumentGeneratorService documentGeneratorService;
 
     private String REQUEST_ID = "requestId";
@@ -75,7 +79,7 @@ public class DocumentGeneratorServiceTest {
     @BeforeEach
     public void setUp() {
         documentGeneratorService = new DocumentGeneratorServiceImpl(mockDocumentInfoServiceFactory, mockEnvironmentReader,
-                mockRequestHandler, mockDocumentTypeService);
+                mockRequestHandler, mockDocumentTypeService, mockRetrieveApiEnumerationDescription);
     }
 
     @Test
@@ -87,6 +91,8 @@ public class DocumentGeneratorServiceTest {
         when(mockDocumentInfoService.getDocumentInfo(any(DocumentInfoRequest.class))).thenReturn(setSuccessfulDocumentInfo());
         when(mockRequestHandler.sendDataToDocumentRenderService(any(String.class), any(RenderDocumentRequest.class))).thenReturn(setSuccessfulRenderResponse());
         when(mockEnvironmentReader.getMandatoryString(any(String.class))).thenReturn(BUCKET_LOCATION);
+        when(mockRetrieveApiEnumerationDescription.getApiEnumerationDescription(any(String.class), any(String.class),
+                any(String.class), any(Map.class))).thenReturn(DESCRIPTION);
 
         ResponseObject response = documentGeneratorService.generate(setValidRequest(), REQUEST_ID);
 
@@ -150,6 +156,8 @@ public class DocumentGeneratorServiceTest {
         when(mockDocumentInfoService.getDocumentInfo(any(DocumentInfoRequest.class))).thenReturn(setSuccessfulDocumentInfo());
         when(mockRequestHandler.sendDataToDocumentRenderService(any(String.class), any(RenderDocumentRequest.class))).thenThrow(IOException.class);
         when(mockEnvironmentReader.getMandatoryString(any(String.class))).thenReturn(BUCKET_LOCATION);
+        when(mockRetrieveApiEnumerationDescription.getApiEnumerationDescription(any(String.class), any(String.class),
+                any(String.class), any(Map.class))).thenReturn(DESCRIPTION);
 
         ResponseObject response = documentGeneratorService.generate(setValidRequest(), REQUEST_ID);
 
@@ -172,9 +180,9 @@ public class DocumentGeneratorServiceTest {
     private DocumentRequest setValidRequest() {
 
         DocumentRequest request = new DocumentRequest();
-        request.setResourceUri("resourceUri");
-        request.setResourceId("resourceId");
-        request.setMimeType("mimeType");
+        request.setResourceUri("/transactions/091174-913515-326060/accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=");
+        request.setResourceId("/transactions/091174-913515-326060");
+        request.setMimeType("text/html");
         request.setDocumentType("documentType");
 
         return request;
@@ -216,10 +224,8 @@ public class DocumentGeneratorServiceTest {
         documentInfoResponse.setTemplateName("templateName");
         documentInfoResponse.setData("data");
         documentInfoResponse.setAssetId("assetId");
-        documentInfoResponse.setDescription(DESCRIPTION);
         documentInfoResponse.setDescriptionIdentifier(DESCRIPTION_IDENTIFIER);
         documentInfoResponse.setDescriptionValues(setDescriptionValue());
-        documentInfoResponse.setContentType("contentType");
 
         return documentInfoResponse;
     }

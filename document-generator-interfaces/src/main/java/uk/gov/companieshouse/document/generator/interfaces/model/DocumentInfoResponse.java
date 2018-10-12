@@ -26,17 +26,9 @@ public class DocumentInfoResponse {
      */
     String path;
     /**
-     * The description of the document produced
-     */
-    String description;
-    /**
      * The identifier for the document description
      */
     String descriptionIdentifier;
-    /**
-     * The type of type of data used for generation
-     */
-    String contentType;
     /**
      * A map of key/value pairs used to complete the looked up description identifier enum
      */
@@ -74,28 +66,12 @@ public class DocumentInfoResponse {
         this.path = path;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public String getDescriptionIdentifier() {
         return descriptionIdentifier;
     }
 
     public void setDescriptionIdentifier(String descriptionIdentifier) {
         this.descriptionIdentifier = descriptionIdentifier;
-    }
-
-    public String getContentType() {
-        return contentType;
-    }
-
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
     }
 
     public Map<String, String> getDescriptionValues() {
@@ -119,7 +95,6 @@ public class DocumentInfoResponse {
                 Objects.equals(templateName, that.templateName) &&
                 Objects.equals(assetId, that.assetId) &&
                 Objects.equals(path, that.path) &&
-                Objects.equals(description, that.description) &&
                 Objects.equals(descriptionIdentifier, that.descriptionIdentifier) &&
                 Objects.equals(descriptionValues, that.descriptionValues);
     }
@@ -127,7 +102,7 @@ public class DocumentInfoResponse {
     @Override
     public int hashCode() {
         return Objects
-                .hash(data, templateName, assetId, path, description, descriptionIdentifier,
+                .hash(data, templateName, assetId, path, descriptionIdentifier,
                         descriptionValues);
     }
 
