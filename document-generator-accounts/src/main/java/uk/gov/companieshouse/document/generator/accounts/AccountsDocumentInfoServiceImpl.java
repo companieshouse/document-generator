@@ -2,8 +2,8 @@ package uk.gov.companieshouse.document.generator.accounts;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.gov.companieshouse.api.model.transaction.Resource;
-import uk.gov.companieshouse.api.model.transaction.Transaction;
+import uk.gov.companieshouse.document.generator.accounts.data.transaction.Resources;
+import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.accounts.handler.accounts.AccountsHandler;
@@ -53,8 +53,8 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
 
         String resourceLink =  Optional.of(transaction)
                 .map(Transaction::getResources)
-                .map(resources -> resources.get(resourceId))
-                .map(Resource::getLinks)
+                .map(resources -> resources.get(resourceUri))
+                .map(Resources::getLinks)
                 .map(links -> links.get(LinkType.RESOURCE.getLink()))
                 .orElseGet(() -> {
                     LOG.info("Unable to find resource: " + resourceId + " in transaction: " + resourceUri);

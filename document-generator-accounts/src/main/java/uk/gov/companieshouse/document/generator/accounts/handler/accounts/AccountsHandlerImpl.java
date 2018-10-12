@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.api.model.accounts.Accounts;
 import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
-import uk.gov.companieshouse.api.model.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.AccountType;
 import uk.gov.companieshouse.document.generator.accounts.LinkType;
+import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.accounts.service.AccountsService;
@@ -143,7 +143,6 @@ public class AccountsHandlerImpl implements AccountsHandler  {
         JSONObject accountJSON = new JSONObject(accountData);
         JSONObject account = new JSONObject();
         account.put(accountTypeName, accountJSON);
-        account.put("company_name", transaction.getCompanyName());
         account.put("company_number", transaction.getCompanyNumber());
         return account.toString();
     }

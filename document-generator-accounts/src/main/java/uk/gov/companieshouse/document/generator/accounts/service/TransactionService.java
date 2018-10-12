@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.document.generator.accounts.service;
 
-import uk.gov.companieshouse.api.model.transaction.Transaction;
+
+import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
 
 public interface TransactionService {

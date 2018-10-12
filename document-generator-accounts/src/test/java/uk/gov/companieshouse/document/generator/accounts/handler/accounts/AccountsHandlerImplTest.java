@@ -13,7 +13,7 @@ import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
 import uk.gov.companieshouse.api.model.accounts.abridged.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.abridged.balancesheet.BalanceSheetApi;
 import uk.gov.companieshouse.api.model.accounts.abridged.notes.CurrentNotesApi;
-import uk.gov.companieshouse.api.model.transaction.Transaction;
+import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.accounts.service.AccountsService;
