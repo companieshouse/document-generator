@@ -8,8 +8,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.companieshouse.api.model.transaction.Resource;
-import uk.gov.companieshouse.api.model.transaction.Transaction;
+
+import uk.gov.companieshouse.document.generator.accounts.data.transaction.Resources;
+import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.accounts.handler.accounts.AccountsHandler;
@@ -44,8 +45,8 @@ public class AccountsDocumentInfoServiceImplTest {
     @Mock
     private Transaction transaction;
 
-    private static final String RESOURCE_URI = "/transactions/091174-913515-326060";
-    private static final String RESOURCE_ID = "/transactions/091174-913515-326060/accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
+    private static final String RESOURCE_ID = "/transactions/091174-913515-326060";
+    private static final String RESOURCE_URI = "/transactions/091174-913515-326060/accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
 
     @Test
     @DisplayName("Test DocumentInfoException thrown when error returned from transaction retrieval")
@@ -113,8 +114,8 @@ public class AccountsDocumentInfoServiceImplTest {
     }
 
     private Transaction createTransaction() {
-        Map<String, Resource> resources = new HashMap<>();
-        resources.put(RESOURCE_ID, createResource());
+        Map<String, Resources> resources = new HashMap<>();
+        resources.put(RESOURCE_URI, createResource());
 
         Transaction transaction = new Transaction();
         transaction.setResources(resources);
@@ -122,11 +123,11 @@ public class AccountsDocumentInfoServiceImplTest {
         return transaction;
     }
 
-    private Resource createResource() {
-        Resource resource = new Resource();
+    private Resources createResource() {
+        Resources resource = new Resources();
         resource.setKind("kind");
         Map<String, String> links = new HashMap<>();
-        links.put("resource", RESOURCE_ID);
+        links.put("resource", RESOURCE_URI);
         resource.setLinks(links);
         return resource;
     }
