@@ -18,6 +18,7 @@ import uk.gov.companieshouse.logging.LoggerFactory;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,20 +32,19 @@ public class AccountsHandlerImpl implements AccountsHandler  {
     @Autowired
     private AccountsService accountsService;
 
-    /** @{link DateFormat} for the date displayed in the description */
     private static final DateFormat RESPONSE_DISPLAY_DATE_FORMAT = new SimpleDateFormat("dd MMMMM yyyy");
 
-    /** Date format expected by the file delivery API */
-    private static final DateFormat ISO_DATE_AND_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-
-    /** Date format received from the accounts API */
     private static final DateFormat ISO_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+
+    private static final String RESOURCE = "resource";
+
+    private static final String ACCOUNT_TYPE = "accountType";
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public DocumentInfoResponse getAbridgedAccountsData(Transaction transaction, String resourceLink, String mimeType)
+    public DocumentInfoResponse getAbridgedAccountsData(Transaction transaction, String resourceLink)
             throws HandlerException {
         Accounts accounts;
 
@@ -57,25 +57,24 @@ public class AccountsHandlerImpl implements AccountsHandler  {
         AccountType accountType = getAccountType(accounts);
 
         String abridgedAccountLink = getAccountLink(accounts, accountType);
+
         try {
             AbridgedAccountsApi abridgedAccountData = accountsService.getAbridgedAccounts(abridgedAccountLink);
-
-            return createResponse(transaction, accountType, abridgedAccountData, mimeType);
+            return createResponse(transaction, accountType, abridgedAccountData);
         } catch (ServiceException e) {
             Map<String, Object> logMap = new HashMap<>();
-            logMap.put("resource", abridgedAccountLink);
-            logMap.put("accountType", accountType);
+            logMap.put(RESOURCE, abridgedAccountLink);
+            logMap.put(ACCOUNT_TYPE, accountType);
             LOG.error("Error in service layer", logMap);
             throw new HandlerException(e.getMessage(), e.getCause());
         } catch (ParseException e) {
             Map<String, Object> logMap = new HashMap<>();
-            logMap.put("resource", abridgedAccountLink);
-            logMap.put("accountType", accountType);
-            LOG.error("Error when parsing period end on date", logMap);
+            logMap.put(RESOURCE, abridgedAccountLink);
+            logMap.put(ACCOUNT_TYPE, accountType);
+            LOG.errorContext("Error when parsing period end on date from abridged accounts data", e, logMap);
             throw new HandlerException(e.getMessage(), e.getCause());
         }
     }
-
 
     /**
      * Get the account type from the links resource within the given accounts data object
@@ -110,11 +109,10 @@ public class AccountsHandlerImpl implements AccountsHandler  {
      * @param transaction transaction data
      * @param accountType account type
      * @param accountData The account data
-     * @param mimeType
      * @return {@link DocumentInfoResponse} object
      */
     private <T> DocumentInfoResponse createResponse(Transaction transaction, AccountType accountType,
-                                                    T accountData, String mimeType) throws ParseException {
+                                                    T accountData) throws ParseException {
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
         documentInfoResponse.setData(createDocumentInfoResponseData(transaction, accountData, accountType));
         documentInfoResponse.setAssetId(accountType.getAssetId());
@@ -122,12 +120,10 @@ public class AccountsHandlerImpl implements AccountsHandler  {
         documentInfoResponse.setPath(createPathString(accountType));
 
         Map<String, String> descriptionValues = new HashMap<>();
-        descriptionValues.put("period_end_on", RESPONSE_DISPLAY_DATE_FORMAT.format(ISO_DATE_FORMAT.
-                parse(getCurrentPeriodEndOn(accountData))));
+        descriptionValues.put("period_end_on", RESPONSE_DISPLAY_DATE_FORMAT.format(getCurrentPeriodEndOn(accountData)));
 
         documentInfoResponse.setDescriptionValues(descriptionValues);
         documentInfoResponse.setDescriptionIdentifier(accountType.getEnumerationKey());
-        documentInfoResponse.setContentType(mimeType);
         return documentInfoResponse;
     }
 
@@ -138,7 +134,7 @@ public class AccountsHandlerImpl implements AccountsHandler  {
     /**
      * Creates the 'data' string in {@link DocumentInfoResponse}.
      * @param transaction the transaction data
-     * @param accountData the abridged accounts data
+     * @param accountData the accounts data
      * @param accountType the type of account
      * @return data string in {@link DocumentInfoResponse}
      */
@@ -159,7 +155,7 @@ public class AccountsHandlerImpl implements AccountsHandler  {
      * @return periodEndDate The formatted periodEndDate
      * @throws ParseException
      */
-    private <T> String getCurrentPeriodEndOn(T accountData) throws ParseException {
+    private <T> Date getCurrentPeriodEndOn(T accountData) throws ParseException {
         JSONObject account = new JSONObject(accountData);
         JSONObject currentPeriod = account.getJSONObject("currentPeriodApi");
         String periodEndOn = currentPeriod.get("periodEndDate").toString();
@@ -168,12 +164,12 @@ public class AccountsHandlerImpl implements AccountsHandler  {
     }
 
     /**
-     * Convert from ISO 8601 date format into ISO 8601 date and time format
+     * Convert into ISO 8601 date and time format
      *
      * @param date
      * @throws ParseException
      */
-    private String formatDate(String date) throws ParseException {
-        return ISO_DATE_AND_TIME_FORMAT.format(ISO_DATE_FORMAT.parse(date));
+    private Date formatDate(String date) throws ParseException {
+        return ISO_DATE_FORMAT.parse(date);
     }
 }

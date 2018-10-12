@@ -180,9 +180,9 @@ public class DocumentGeneratorServiceTest {
     private DocumentRequest setValidRequest() {
 
         DocumentRequest request = new DocumentRequest();
-        request.setResourceUri("resourceUri");
-        request.setResourceId("resourceId");
-        request.setMimeType("mimeType");
+        request.setResourceUri("/transactions/091174-913515-326060/accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=");
+        request.setResourceId("/transactions/091174-913515-326060");
+        request.setMimeType("text/html");
         request.setDocumentType("documentType");
 
         return request;

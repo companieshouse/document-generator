@@ -3,6 +3,7 @@ package uk.gov.companieshouse.document.generator.api.service.impl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.gov.companieshouse.document.generator.api.document.DocumentType;
 import uk.gov.companieshouse.document.generator.api.document.description.RetrieveApiEnumerationDescription;
 import uk.gov.companieshouse.document.generator.api.document.render.RenderDocumentRequestHandler;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentRequest;
@@ -15,7 +16,6 @@ import uk.gov.companieshouse.document.generator.api.service.DocumentGeneratorSer
 import uk.gov.companieshouse.document.generator.api.service.DocumentTypeService;
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseObject;
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseStatus;
-import uk.gov.companieshouse.document.generator.api.document.DocumentType;
 import uk.gov.companieshouse.document.generator.interfaces.exception.DocumentInfoException;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
@@ -55,6 +55,8 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
     private static final String FILING_DESCRIPTIONS_FILE_NAME = "api-enumerations/filing_descriptions.yml";
 
     private static final String DESCRIPTION_IDENTIFIERS_KEY = "description_identifiers";
+
+    private static final String TEXT_HTML = "text/html";
 
     @Autowired
     public DocumentGeneratorServiceImpl(DocumentInfoServiceFactory documentInfoServiceFactory,
@@ -127,7 +129,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
     /**
      * Send data to Render Service and generate document
      *
-     * @param documentRequest object that contains the request details
+     * @param documentRequest object that contains the request details from the Api call
      * @param documentInfoResponse object that contain the Response from documentInfoService
      * @return A populated RenderDocumentResponse model or Null
      */
@@ -140,13 +142,36 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
 
         RenderDocumentRequest requestData = new RenderDocumentRequest();
         requestData.setAssetId(documentInfoResponse.getAssetId());
-        requestData.setContentType(documentInfoResponse.getContentType());
         requestData.setData(documentInfoResponse.getData());
-        requestData.setDocumentType(documentRequest.getMimeType());
         requestData.setTemplateName(documentInfoResponse.getTemplateName());
         requestData.setLocation(buildLocation(documentInfoResponse.getPath()));
 
+        setContentAndDocumentType(documentRequest.getMimeType(), documentRequest.getDocumentType(), requestData);
+
         return requestHandler.sendDataToDocumentRenderService(url, requestData);
+    }
+
+    /**
+     * Sets the content and document type required in render document request.
+     *
+     * @param mimeType The content type of the document, also the document type if no document type set
+     * @param documentType The document type
+     * @param requestData The object containing the populated request data for the render service
+     * @throws IOException
+     */
+    private void setContentAndDocumentType(String mimeType, String documentType, RenderDocumentRequest requestData)
+            throws IOException {
+
+        if (mimeType == TEXT_HTML) {
+            requestData.setContentType(mimeType);
+            if (documentType != null) {
+                requestData.setDocumentType(documentType);
+            } else {
+                requestData.setDocumentType(mimeType);
+            }
+        } else {
+            throw new IOException("The mime type: " + mimeType + " is not valid");
+        }
     }
 
     /**
@@ -166,7 +191,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
      * Set documentResponse for Api
      *
      * @param renderResponse object that contains the RenderDocumentResponse details
-     * @param documentInfoResponse object that contain the Response from documentInfoService
+     * @param documentInfoResponse object that contains the Response from documentInfoService
      * @return a Document Response
      */
     private DocumentResponse setDocumentResponse(RenderDocumentResponse renderResponse,
@@ -190,8 +215,8 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
     /**
      * Get the document description
      *
-     * @param documentInfoResponse
-     * @return
+     * @param documentInfoResponse object that contains the Response from documentInfoService
+     * @return String containing the description
      * @throws IOException
      */
     private String getDescription(DocumentInfoResponse documentInfoResponse, String requestId,

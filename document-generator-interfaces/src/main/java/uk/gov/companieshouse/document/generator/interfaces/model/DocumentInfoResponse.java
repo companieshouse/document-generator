@@ -30,10 +30,6 @@ public class DocumentInfoResponse {
      */
     String descriptionIdentifier;
     /**
-     * The type of data used for generation
-     */
-    String contentType;
-    /**
      * A map of key/value pairs used to complete the looked up description identifier enum
      */
     Map<String, String> descriptionValues;
@@ -76,14 +72,6 @@ public class DocumentInfoResponse {
 
     public void setDescriptionIdentifier(String descriptionIdentifier) {
         this.descriptionIdentifier = descriptionIdentifier;
-    }
-
-    public String getContentType() {
-        return contentType;
-    }
-
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
     }
 
     public Map<String, String> getDescriptionValues() {

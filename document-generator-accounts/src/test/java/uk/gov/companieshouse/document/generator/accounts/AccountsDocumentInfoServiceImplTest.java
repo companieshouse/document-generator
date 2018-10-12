@@ -36,7 +36,7 @@ public class AccountsDocumentInfoServiceImplTest {
     private AccountsDocumentInfoServiceImpl accountsDocumentInfoService;
 
     @Mock
-    private AccountsHandler accountsHandlerMock;
+    private AccountsHandler accountsHandler;
 
     @Mock
     private TransactionService transactionService;
@@ -46,7 +46,6 @@ public class AccountsDocumentInfoServiceImplTest {
 
     private static final String RESOURCE_ID = "/transactions/091174-913515-326060";
     private static final String RESOURCE_URI = "/transactions/091174-913515-326060/accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
-    private static final String MIME_TYPE = "application/Json";
 
     @Test
     @DisplayName("Test DocumentInfoException thrown when error returned from transaction retrieval")
@@ -81,7 +80,7 @@ public class AccountsDocumentInfoServiceImplTest {
     void testErrorThrownWhenFailedAccountsHandler() throws HandlerException, ServiceException {
 
         when(transactionService.getTransaction(anyString())).thenReturn(createTransaction());
-        when(accountsHandlerMock.getAbridgedAccountsData(any(Transaction.class),  anyString(), anyString())).
+        when(accountsHandler.getAbridgedAccountsData(any(Transaction.class),  anyString())).
                 thenThrow(new HandlerException("error"));
 
         assertThrows(DocumentInfoException.class, () ->
@@ -92,16 +91,16 @@ public class AccountsDocumentInfoServiceImplTest {
     @DisplayName("Tests the unsuccessful retrieval of document data due to error in Accounts handler")
     void testUnsuccessfulGetDocumentInfoExceptionFromAccountsHandler()
             throws HandlerException {
-        when(accountsHandlerMock.getAbridgedAccountsData(any(Transaction.class),  anyString(), anyString())).thenThrow(new HandlerException("error"));
+        when(accountsHandler.getAbridgedAccountsData(any(Transaction.class),  anyString())).thenThrow(new HandlerException("error"));
 
-        assertThrows(HandlerException.class, () -> accountsHandlerMock.getAbridgedAccountsData(transaction, "", MIME_TYPE));
+        assertThrows(HandlerException.class, () -> accountsHandler.getAbridgedAccountsData(transaction, ""));
     }
 
     @Test
     @DisplayName("Tests the successful retrieval of document data")
     void testSuccessfulGetDocumentInfo() throws HandlerException, ServiceException, DocumentInfoException {
         when(transactionService.getTransaction(anyString())).thenReturn(createTransaction());
-        when(accountsHandlerMock.getAbridgedAccountsData(any(Transaction.class), anyString(), anyString())).thenReturn(new DocumentInfoResponse());
+        when(accountsHandler.getAbridgedAccountsData(any(Transaction.class), anyString())).thenReturn(new DocumentInfoResponse());
 
         assertNotNull(accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest()));
     }
@@ -110,7 +109,6 @@ public class AccountsDocumentInfoServiceImplTest {
         DocumentInfoRequest documentInfoRequest = new DocumentInfoRequest();
         documentInfoRequest.setResourceId(RESOURCE_ID);
         documentInfoRequest.setResourceUri(RESOURCE_URI);
-        documentInfoRequest.setMimeType(MIME_TYPE);
         return documentInfoRequest;
     }
 

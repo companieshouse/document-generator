@@ -41,7 +41,6 @@ public class AccountsHandlerImplTest {
 
     private static final String ACCOUNTS_RESOURCE_LINK = "/transactions/091174-913515-326060";
     private static final String ABRIDGED_ACCOUNTS_RESOURCE_LINK = "/transactions/091174-913515-326060/accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
-    private static final String MIME_TYPE = "application/Json";
 
     @Test
     @DisplayName("Tests the unsuccessful return of accounts data due to failure in service layer")
@@ -49,7 +48,7 @@ public class AccountsHandlerImplTest {
         when(accountsService.getAccounts(anyString())).thenThrow(new ServiceException("Failure in service layer"));
 
         assertThrows(ServiceException.class, () -> accountsService.getAccounts(anyString()));
-        assertThrows(HandlerException.class, () -> accountsHandlerImpl.getAbridgedAccountsData(transaction, ACCOUNTS_RESOURCE_LINK, MIME_TYPE));
+        assertThrows(HandlerException.class, () -> accountsHandlerImpl.getAbridgedAccountsData(transaction, ACCOUNTS_RESOURCE_LINK));
     }
 
     @Test
@@ -59,7 +58,7 @@ public class AccountsHandlerImplTest {
         when(accountsService.getAbridgedAccounts(anyString())).thenThrow(new ServiceException("Failure in service layer"));
 
         assertThrows(ServiceException.class, () -> accountsService.getAbridgedAccounts(anyString()));
-        assertThrows(HandlerException.class, () -> accountsHandlerImpl.getAbridgedAccountsData(transaction, ACCOUNTS_RESOURCE_LINK, MIME_TYPE));
+        assertThrows(HandlerException.class, () -> accountsHandlerImpl.getAbridgedAccountsData(transaction, ACCOUNTS_RESOURCE_LINK));
     }
 
     @Test
@@ -67,7 +66,7 @@ public class AccountsHandlerImplTest {
     void testGetAbridgedAccountsData() throws ServiceException, HandlerException {
         when(accountsService.getAccounts(anyString())).thenReturn(createAccountsObject());
         when(accountsService.getAbridgedAccounts(anyString())).thenReturn(createCurrentPeriodAbridgedAccountObject());
-        assertNotNull(accountsHandlerImpl.getAbridgedAccountsData(transaction, ACCOUNTS_RESOURCE_LINK, MIME_TYPE));
+        assertNotNull(accountsHandlerImpl.getAbridgedAccountsData(transaction, ACCOUNTS_RESOURCE_LINK));
     }
 
     private AbridgedAccountsApi createCurrentPeriodAbridgedAccountObject() {
