@@ -14,10 +14,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.accounts.Accounts;
 import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
 import uk.gov.companieshouse.document.generator.accounts.data.accounts.AccountsManager;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
+
+import java.io.IOException;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(Lifecycle.PER_CLASS)
@@ -32,7 +35,7 @@ public class AccountsServiceImplTest {
     @Test
     @DisplayName("Tests unsuccessful retrieval of accounts that throws exception")
     void testGetAccountsThrownException() throws Exception {
-        when(accountsManager.getAccounts(anyString())).thenThrow(new Exception());
+        when(accountsManager.getAccounts(anyString())).thenThrow(new URIValidationException(""));
 
         assertThrows(ServiceException.class, () -> accountsService.getAccounts("resource"));
     }
@@ -56,7 +59,7 @@ public class AccountsServiceImplTest {
     @Test
     @DisplayName("Tests unsuccessful retrieval of abridged accounts that throws exception")
     void testGetAbridgedAccountsThrownException() throws Exception {
-        when(accountsManager.getAbridgedAccounts(anyString())).thenThrow(new Exception());
+        when(accountsManager.getAbridgedAccounts(anyString())).thenThrow(new URIValidationException(""));
 
         assertThrows(ServiceException.class, () -> accountsService.getAbridgedAccounts("resource"));
     }

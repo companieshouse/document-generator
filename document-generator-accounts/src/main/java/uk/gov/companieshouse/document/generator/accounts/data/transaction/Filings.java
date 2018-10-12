@@ -12,7 +12,6 @@ public class Filings {
 
     private String id;
 
-    @Field("processed_at")
     @JsonProperty("processed_at")
     private Date processedAt;
 
@@ -20,7 +19,6 @@ public class Filings {
 
     private String type;
 
-    @Field("reject_reasons")
     @JsonProperty("reject_reasons")
     private Set<RejectReasons> rejectReasons;
 

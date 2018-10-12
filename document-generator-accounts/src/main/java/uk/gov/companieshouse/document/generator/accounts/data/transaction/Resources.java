@@ -8,13 +8,11 @@ import java.util.Map;
 
 public class Resources {
 
-    @Field("updated_by")
     @JsonProperty("updated_by")
     private Map<String, String> updatedBy;
 
     private String kind;
 
-    @Field("updated_at")
     @JsonProperty("updated_at")
     private Date updatedAt;
 
