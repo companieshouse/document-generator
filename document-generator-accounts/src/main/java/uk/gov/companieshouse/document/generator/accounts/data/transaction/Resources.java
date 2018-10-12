@@ -1,7 +1,6 @@
 package uk.gov.companieshouse.document.generator.accounts.data.transaction;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Date;
 import java.util.Map;

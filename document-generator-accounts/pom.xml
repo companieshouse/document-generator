@@ -61,10 +61,6 @@
             <artifactId>spring-boot-starter-web</artifactId>
             <version>${spring-boot-start-web.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-mongodb</artifactId>
-        </dependency>
 
         <!-- Testing -->
         <dependency>

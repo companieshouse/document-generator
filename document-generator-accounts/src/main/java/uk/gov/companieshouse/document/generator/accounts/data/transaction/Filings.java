@@ -1,12 +1,10 @@
 package uk.gov.companieshouse.document.generator.accounts.data.transaction;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
-
-import org.springframework.data.mongodb.core.mapping.Field;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Filings {
 
