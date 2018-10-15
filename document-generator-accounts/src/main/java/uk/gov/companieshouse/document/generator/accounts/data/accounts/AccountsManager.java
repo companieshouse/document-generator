@@ -65,9 +65,7 @@ public class AccountsManager {
      * @throws URIValidationException
      */
     public AbridgedAccountsApi getAbridgedAccounts(String link) throws ApiErrorResponseException, URIValidationException {
-
-
-
+        
         HttpClient httpClient = new ApiKeyHttpClient(chsApiKey);
 
         setRequestId(httpClient);
