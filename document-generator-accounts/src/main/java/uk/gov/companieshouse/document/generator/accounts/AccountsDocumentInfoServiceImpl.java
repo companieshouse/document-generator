@@ -34,7 +34,7 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
 
     @Override
     public DocumentInfoResponse getDocumentInfo(DocumentInfoRequest documentInfoRequest) throws DocumentInfoException {
-        LOG.info("Started getting document");
+        LOG.info("Started getting document info");
 
         String resourceId = documentInfoRequest.getResourceId();
         String resourceUri = documentInfoRequest.getResourceUri();
@@ -47,7 +47,8 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
         try {
             transaction = transactionService.getTransaction(resourceId);
         } catch (ServiceException e) {
-            LOG.error(e, debugMap);
+            LOG.errorContext("An error occurred when calling the transaction service with resource id: "
+                    + resourceId, e, debugMap);
             throw new DocumentInfoException("Failed to get transaction with resourceId: " + resourceId, e);
         }
 
@@ -67,7 +68,9 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
             try {
                 return accountsHandler.getAbridgedAccountsData(transaction, resourceLink);
             } catch (HandlerException e) {
-                LOG.error(e, debugMap);
+                LOG.errorContext("An error occurred when calling the account handler to obtain " +
+                        "abridged accounts data for transaction: " + transaction.getId() + " and resource link: "
+                        + resourceLink, e, debugMap);
                 throw new DocumentInfoException("Failed to get abridged data for transaction: "
                         + transaction.getId() + " and resource link: " + resourceLink);
             }

@@ -9,12 +9,16 @@ import uk.gov.companieshouse.document.generator.api.document.render.HttpConnecti
 import uk.gov.companieshouse.document.generator.api.document.render.RenderDocumentRequestHandler;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentRequest;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentResponse;
+import uk.gov.companieshouse.logging.Logger;
+import uk.gov.companieshouse.logging.LoggerFactory;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
+
+import static uk.gov.companieshouse.document.generator.api.DocumentGeneratorApplication.APPLICATION_NAME_SPACE;
 
 @Service
 public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHandler {
@@ -24,6 +28,8 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
 
     @Autowired
     private ConvertJsonHandler convertJsonHandler;
+
+    private static final Logger LOG = LoggerFactory.getLogger(APPLICATION_NAME_SPACE);
 
     /**
      * {@inheritDoc}
@@ -66,6 +72,7 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
         String generatedDocumentJson;
         RenderDocumentResponse renderDocumentResponse = new RenderDocumentResponse();
 
+        LOG.info("handling the response from the render service");
         try (InputStream response = connection.getInputStream()) {
             generatedDocumentJson = new String(IOUtils.toByteArray(response));
         }
@@ -85,6 +92,7 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
      */
     private void sendRequest(HttpURLConnection connection, RenderDocumentRequest request) throws IOException {
 
+        LOG.info("Sending the request to the render service");
         try (DataOutputStream out = new DataOutputStream(connection.getOutputStream())) {
             out.write(request.getData().getBytes(StandardCharsets.UTF_8));
             out.flush();
@@ -100,6 +108,7 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
      */
     private void prepareConnection(HttpURLConnection connection, RenderDocumentRequest request) throws IOException {
 
+        LOG.info("Preparing the connection for render service");
         connection.setDoOutput(true);
         connection.setRequestMethod("POST");
 

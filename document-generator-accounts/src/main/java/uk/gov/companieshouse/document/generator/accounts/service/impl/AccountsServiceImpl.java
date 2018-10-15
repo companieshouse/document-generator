@@ -37,7 +37,7 @@ public class AccountsServiceImpl implements AccountsService {
 
             Map<String, Object> logMap = new HashMap<>();
             logMap.put("resource", resource);
-            LOG.error("Failed to retreive accounts data: ", e);
+            LOG.errorContext("Failed to retrieve accounts data: ", e, logMap);
             throw new ServiceException(e.getMessage(), e.getCause());
         }
     }
@@ -54,7 +54,7 @@ public class AccountsServiceImpl implements AccountsService {
 
             Map<String, Object> logMap = new HashMap<>();
             logMap.put("resource", resource);
-            LOG.error("Failed to retreive abridged accounts data: ", e);
+            LOG.errorContext("Failed to retrieve abridged accounts data: ", e, logMap);
             throw new ServiceException(e.getMessage(), e.getCause());
         }
     }

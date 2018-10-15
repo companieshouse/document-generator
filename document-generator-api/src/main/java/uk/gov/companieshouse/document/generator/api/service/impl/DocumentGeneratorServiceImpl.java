@@ -82,6 +82,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
         String resourceId = documentRequest.getResourceId();
         String resourceUri = documentRequest.getResourceUri();
 
+        LOG.info("Generation of document for resource: " + resourceUri + " has started");
         DocumentType documentType;
         try {
             documentType = documentTypeService.getDocumentType(documentRequest.getResourceUri());
@@ -108,7 +109,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
         if (documentInfoResponse != null) {
             RenderDocumentResponse renderResponse = null;
             try {
-                renderResponse = renderSubmittedDocumentData(documentRequest, documentInfoResponse);
+                renderResponse = renderSubmittedDocumentData(documentRequest, documentInfoResponse, resourceUri);
             } catch (IOException ioe) {
                 createAndLogErrorMessage("Error occurred whilst rendering the document for resource: " +
                         resourceUri, resourceId, resourceUri, ioe, requestId);
@@ -123,6 +124,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
             return new ResponseObject(ResponseStatus.NO_DATA_RETRIEVED, null);
         }
 
+        LOG.info("Document generated for resource: " + resourceUri);
         return new ResponseObject(ResponseStatus.CREATED, response);
     }
 
@@ -134,7 +136,8 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
      * @return A populated RenderDocumentResponse model or Null
      */
     private RenderDocumentResponse renderSubmittedDocumentData(DocumentRequest documentRequest,
-                                                               DocumentInfoResponse documentInfoResponse)
+                                                               DocumentInfoResponse documentInfoResponse,
+                                                               String resourceUri)
             throws IOException {
 
         String host = environmentReader.getMandatoryString(DOCUMENT_RENDER_SERVICE_HOST_ENV_VAR);
@@ -146,7 +149,8 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
         requestData.setTemplateName(documentInfoResponse.getTemplateName());
         requestData.setLocation(buildLocation(documentInfoResponse.getPath()));
 
-        setContentAndDocumentType(documentRequest.getMimeType(), documentRequest.getDocumentType(), requestData);
+        setContentAndDocumentType(documentRequest.getMimeType(), documentRequest.getDocumentType(),
+                requestData, resourceUri);
 
         return requestHandler.sendDataToDocumentRenderService(url, requestData);
     }
@@ -159,8 +163,8 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
      * @param requestData The object containing the populated request data for the render service
      * @throws IOException
      */
-    private void setContentAndDocumentType(String mimeType, String documentType, RenderDocumentRequest requestData)
-            throws IOException {
+    private void setContentAndDocumentType(String mimeType, String documentType, RenderDocumentRequest requestData,
+                                           String resourceUri) throws IOException {
 
         if (mimeType == TEXT_HTML) {
             requestData.setContentType(mimeType);
@@ -170,6 +174,12 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
                 requestData.setDocumentType(mimeType);
             }
         } else {
+            Map <String, Object> debugMap = new HashMap <>();
+            debugMap.put("mime_type", mimeType);
+            debugMap.put("document_type", documentType);
+            debugMap.put("resource_uri", resourceUri);
+            LOG.info("error occurred while setting content and document type as mime type: " + mimeType
+                    + " is not valid");
             throw new IOException("The mime type: " + mimeType + " is not valid");
         }
     }

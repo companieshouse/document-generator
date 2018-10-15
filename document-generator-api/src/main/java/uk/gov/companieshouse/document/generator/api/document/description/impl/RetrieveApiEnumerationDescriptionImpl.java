@@ -31,8 +31,10 @@ public class RetrieveApiEnumerationDescriptionImpl implements RetrieveApiEnumera
 
         String description = "";
 
+        LOG.info("obtaining file for api enumerations with file name: " + descriptionsFile);
         try (InputStream inputStream = new FileInputStream(descriptionsFile)) {
 
+            LOG.info("The file: " + descriptionsFile + " has been found, obtaining descriptions");
             Map<String, Object> descriptions = (Map<String, Object>) yaml.load(inputStream);
             Map<String, Object> filteredDescriptions = (Map<String, Object>) getDescriptionsValue(descriptions,
                     identifier, fileName);
@@ -59,6 +61,7 @@ public class RetrieveApiEnumerationDescriptionImpl implements RetrieveApiEnumera
      * @return
      */
     private static Object getDescriptionsValue(Map<String, Object> descriptions, String key, String fileName) {
+        LOG.info("getting value from the file descriptions using key: " + key);
         return descriptions.entrySet().stream()
                 .filter(map -> descriptions.containsKey(key))
                 .map(Map.Entry::getValue)
@@ -67,7 +70,7 @@ public class RetrieveApiEnumerationDescriptionImpl implements RetrieveApiEnumera
                     Map<String, Object> dataMap = new HashMap<>();
                     dataMap.put("file", fileName);
                     dataMap.put("key", key);
-                    LOG.trace("Value not found in file descriptions", dataMap);
+                    LOG.trace("Value not found in file descriptions for key: " + key, dataMap);
                     return null;
                 });
     }
