@@ -1,9 +1,5 @@
 package uk.gov.companieshouse.document.generator.accounts.data.transaction;
 
-import static uk.gov.companieshouse.document.generator.accounts.AccountsDocumentInfoServiceImpl.MODULE_NAME_SPACE;
-
-import java.util.HashMap;
-import java.util.Map;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -16,6 +12,11 @@ import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.environment.impl.EnvironmentReaderImpl;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static uk.gov.companieshouse.document.generator.accounts.AccountsDocumentInfoServiceImpl.MODULE_NAME_SPACE;
 
 /**
  * TransactionManager is the current temporary internal project solution for communicating with
@@ -48,7 +49,7 @@ public class TransactionManager {
      *                     the private sdk  gets implemented - additionally the generic exception is
      *                     sufficient
      */
-    public Transaction getTransaction(String id) throws Exception {
+    public Transaction getTransaction(String id, String requestId) throws Exception {
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.set(AUTHORIZATION_HEADER, getApiKey());
 
@@ -61,7 +62,7 @@ public class TransactionManager {
             logMap.put("transaction_id", id);
             logMap.put("uri_path", url);
             logMap.put("status", transactionResponseEntity.getStatusCode());
-            LOG.error("Failed to retrieve data from API", logMap);
+            LOG.infoContext(requestId,"Failed to retrieve data from API", logMap);
 
             throw new Exception("Failed to retrieve data from API");
         }

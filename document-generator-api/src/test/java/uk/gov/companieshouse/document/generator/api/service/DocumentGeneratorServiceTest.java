@@ -89,10 +89,11 @@ public class DocumentGeneratorServiceTest {
         when(mockDocumentTypeService.getDocumentType(any(String.class))).thenReturn(DocumentType.ACCOUNTS);
         when(mockDocumentInfoServiceFactory.get(any(String.class))).thenReturn(mockDocumentInfoService);
         when(mockDocumentInfoService.getDocumentInfo(any(DocumentInfoRequest.class))).thenReturn(setSuccessfulDocumentInfo());
-        when(mockRequestHandler.sendDataToDocumentRenderService(any(String.class), any(RenderDocumentRequest.class))).thenReturn(setSuccessfulRenderResponse());
+        when(mockRequestHandler.sendDataToDocumentRenderService(any(String.class), any(RenderDocumentRequest.class),
+                any(String.class), any(String.class))).thenReturn(setSuccessfulRenderResponse());
         when(mockEnvironmentReader.getMandatoryString(any(String.class))).thenReturn(BUCKET_LOCATION);
         when(mockRetrieveApiEnumerationDescription.getApiEnumerationDescription(any(String.class), any(String.class),
-                any(String.class), any(Map.class))).thenReturn(DESCRIPTION);
+                any(String.class), any(Map.class), any(String.class), any(String.class), any(String.class))).thenReturn(DESCRIPTION);
 
         ResponseObject response = documentGeneratorService.generate(setValidRequest(), REQUEST_ID);
 
@@ -154,10 +155,11 @@ public class DocumentGeneratorServiceTest {
         when(mockDocumentTypeService.getDocumentType(any(String.class))).thenReturn(DocumentType.ACCOUNTS);
         when(mockDocumentInfoServiceFactory.get(any(String.class))).thenReturn(mockDocumentInfoService);
         when(mockDocumentInfoService.getDocumentInfo(any(DocumentInfoRequest.class))).thenReturn(setSuccessfulDocumentInfo());
-        when(mockRequestHandler.sendDataToDocumentRenderService(any(String.class), any(RenderDocumentRequest.class))).thenThrow(IOException.class);
+        when(mockRequestHandler.sendDataToDocumentRenderService(any(String.class), any(RenderDocumentRequest.class),
+                any(String.class), any(String.class))).thenThrow(IOException.class);
         when(mockEnvironmentReader.getMandatoryString(any(String.class))).thenReturn(BUCKET_LOCATION);
         when(mockRetrieveApiEnumerationDescription.getApiEnumerationDescription(any(String.class), any(String.class),
-                any(String.class), any(Map.class))).thenReturn(DESCRIPTION);
+                any(String.class), any(Map.class), any(String.class), any(String.class), any(String.class))).thenReturn(DESCRIPTION);
 
         ResponseObject response = documentGeneratorService.generate(setValidRequest(), REQUEST_ID);
 

@@ -15,8 +15,9 @@ public interface TransactionService {
      * transaction package and use the SDK in the implementation of this method.
      *
      * @param id id of transaction
+     * @param requestId id of the request
      * @return {@link Transaction} data
      * @throws ServiceException throw if the service layer is thrown
      */
-    Transaction getTransaction(String id) throws ServiceException;
+    Transaction getTransaction(String id, String requestId) throws ServiceException;
 }

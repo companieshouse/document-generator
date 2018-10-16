@@ -24,27 +24,31 @@ public class RetrieveApiEnumerationDescriptionImpl implements RetrieveApiEnumera
 
     @Override
     public String getApiEnumerationDescription(String fileName, String identifier, String accountType,
-                                               Map<String, String> parameters) throws IOException {
+                                               Map<String, String> parameters, String requestId, String resourceUri,
+                                               String resourceId) throws IOException {
+
 
         Yaml yaml = new Yaml();
         File descriptionsFile = new File(fileName);
 
         String description = "";
 
+        LOG.infoContext(requestId,"obtaining file for api enumerations with file name: " +
+                descriptionsFile, setDebugMap(resourceUri, resourceId));
         try (InputStream inputStream = new FileInputStream(descriptionsFile)) {
 
+            LOG.infoContext(requestId,"The file: " + descriptionsFile + " has been found, obtaining descriptions",
+                    setDebugMap(resourceUri, resourceId));
             Map<String, Object> descriptions = (Map<String, Object>) yaml.load(inputStream);
             Map<String, Object> filteredDescriptions = (Map<String, Object>) getDescriptionsValue(descriptions,
-                    identifier, fileName);
+                    identifier, fileName, requestId, resourceUri, resourceId);
             if(filteredDescriptions != null) {
-                description =  String.valueOf(getDescriptionsValue(filteredDescriptions, accountType, fileName));
+                description =  String.valueOf(getDescriptionsValue(filteredDescriptions, accountType, fileName,
+                        requestId, resourceUri, resourceId));
             }
         } catch (FileNotFoundException e) {
-            Map<String, Object> dataMap = new HashMap<>();
-            dataMap.put("file", fileName);
-            dataMap.put("identifier", identifier);
             LOG.trace("file not found when obtain api enumeration descriptions for file name: "
-                    + descriptionsFile, dataMap);
+                    + descriptionsFile, setDebugMap(resourceUri, resourceId));
         }
 
         return populateParameters(description, parameters);
@@ -58,16 +62,18 @@ public class RetrieveApiEnumerationDescriptionImpl implements RetrieveApiEnumera
      * @param fileName
      * @return
      */
-    private static Object getDescriptionsValue(Map<String, Object> descriptions, String key, String fileName) {
+    private Object getDescriptionsValue(Map<String, Object> descriptions, String key, String fileName,
+                                               String requestId, String resourceUri, String resourceId) {
+        LOG.infoContext(requestId,"getting value from the file descriptions file: " + fileName
+                        + " using key: " + key, setDebugMap(resourceUri, resourceId));
         return descriptions.entrySet().stream()
                 .filter(map -> descriptions.containsKey(key))
                 .map(Map.Entry::getValue)
                 .findFirst()
                 .orElseGet(() -> {
-                    Map<String, Object> dataMap = new HashMap<>();
-                    dataMap.put("file", fileName);
-                    dataMap.put("key", key);
-                    LOG.trace("Value not found in file descriptions", dataMap);
+                    LOG.infoContext(requestId,"Value not found in file descriptions file: " + fileName
+                                    + " for key: " + key,
+                            setDebugMap(resourceUri, resourceId));
                     return null;
                 });
     }
@@ -82,5 +88,14 @@ public class RetrieveApiEnumerationDescriptionImpl implements RetrieveApiEnumera
     private static String populateParameters(Object description, Map<String, String> parameters) {
         StrSubstitutor sub = new StrSubstitutor(parameters, "{", "}");
         return sub.replace(description);
+    }
+
+    private Map<String, Object> setDebugMap(String resourceUri, String resourceId) {
+
+        Map <String, Object> debugMap = new HashMap <>();
+        debugMap.put("resource_uri", resourceUri);
+        debugMap.put("resource_id",resourceId);
+
+        return debugMap;
     }
 }

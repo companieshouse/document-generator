@@ -26,6 +26,12 @@ public class RetrieveApiEnumerationDescriptionTest {
 
     private static final String EMPTY_RESPONSE = "";
 
+    private static final String RESOURCE_ID = "/transactions/091174-913515-326060";
+
+    private static final String RESOURCE_URI = "/transactions/091174-913515-326060/accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
+
+    private static final String REQUEST_ID = "requestId";
+
     private RetrieveApiEnumerationDescription retrieveApiEnumerationDescription;
 
     @BeforeEach
@@ -41,7 +47,8 @@ public class RetrieveApiEnumerationDescriptionTest {
         descriptionValues.put("period_end_on", "01 October 2018");
 
         String result = retrieveApiEnumerationDescription.getApiEnumerationDescription(FILING_DESCRIPTIONS_FILE_NAME_VALID,
-                DESCRIPTION_IDENTIFIERS_KEY_VALID,"abridged-accounts", descriptionValues);
+                DESCRIPTION_IDENTIFIERS_KEY_VALID,"abridged-accounts", descriptionValues,
+                REQUEST_ID, RESOURCE_URI, RESOURCE_ID);
 
         assertEquals(POPULATED_RESPONSE, result);
     }
@@ -54,7 +61,8 @@ public class RetrieveApiEnumerationDescriptionTest {
         descriptionValues.put("period_end_on", "01 October 2018");
 
         String result = retrieveApiEnumerationDescription.getApiEnumerationDescription(FILING_DESCRIPTIONS_FILE_NAME_INVALID,
-                DESCRIPTION_IDENTIFIERS_KEY_VALID,"abridged-accounts", descriptionValues);
+                DESCRIPTION_IDENTIFIERS_KEY_VALID,"abridged-accounts", descriptionValues,
+                REQUEST_ID, RESOURCE_URI, RESOURCE_ID);
 
         assertEquals(EMPTY_RESPONSE, result);
     }
@@ -67,7 +75,8 @@ public class RetrieveApiEnumerationDescriptionTest {
         descriptionValues.put("period_end_on", "01 October 2018");
 
         String result = retrieveApiEnumerationDescription.getApiEnumerationDescription(FILING_DESCRIPTIONS_FILE_NAME_VALID,
-                DESCRIPTION_IDENTIFIERS_KEY_INVALID,"abridged-accounts", descriptionValues);
+                DESCRIPTION_IDENTIFIERS_KEY_INVALID,"abridged-accounts", descriptionValues,
+                REQUEST_ID, RESOURCE_URI, RESOURCE_ID);
 
         assertEquals(EMPTY_RESPONSE, result);
     }

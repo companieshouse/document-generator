@@ -25,6 +25,11 @@ public class DocumentInfoRequest {
      */
     String documentType;
 
+    /**
+     * The id of the request
+     */
+    String requestId;
+
     public String getResourceUri() {
         return resourceUri;
     }
@@ -57,6 +62,14 @@ public class DocumentInfoRequest {
         this.documentType = documentType;
     }
 
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
+    }
+
     @Override
     public String toString() {
         return new Gson().toJson(this);
@@ -74,11 +87,12 @@ public class DocumentInfoRequest {
         return Objects.equals(resourceUri, that.resourceUri) &&
                 Objects.equals(resourceId, that.resourceId) &&
                 Objects.equals(mimeType, that.mimeType) &&
-                Objects.equals(documentType, that.documentType);
+                Objects.equals(documentType, that.documentType) &&
+                Objects.equals(requestId, that.requestId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(resourceUri, resourceId, mimeType, documentType);
+        return Objects.hash(resourceUri, resourceId, mimeType, documentType, requestId);
     }
 }

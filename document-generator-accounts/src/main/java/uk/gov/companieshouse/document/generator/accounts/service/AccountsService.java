@@ -14,10 +14,11 @@ public interface AccountsService {
      * (SFA-518, SFA-670), we can replace the internal sdk solution with private-sdk calls.
      *
      * @param resource resource link
+     * @param requestId id of the request
      * @return base {@link Accounts} resource
      * @throws ServiceException throws a service exception
      */
-    Accounts getAccounts(String resource) throws ServiceException;
+    Accounts getAccounts(String resource, String requestId) throws ServiceException;
 
     /**
      * Call to private-sdk to get abridged accounts resource data.
@@ -27,8 +28,9 @@ public interface AccountsService {
      * (SFA-518, SFA-670), we can replace the internal sdk solution with private-sdk calls.
      *
      * @param resource resource link
+     * @param requestId id of the request
      * @return {@link AbridgedAccountsApi} resource
      * @throws ServiceException throws a service exception
      */
-    AbridgedAccountsApi getAbridgedAccounts(String resource) throws ServiceException;
+    AbridgedAccountsApi getAbridgedAccounts(String resource, String requestId) throws ServiceException;
 }

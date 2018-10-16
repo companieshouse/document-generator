@@ -44,13 +44,17 @@ public class AccountsHandlerImpl implements AccountsHandler  {
      * {@inheritDoc}
      */
     @Override
-    public DocumentInfoResponse getAbridgedAccountsData(Transaction transaction, String resourceLink)
+    public DocumentInfoResponse getAbridgedAccountsData(Transaction transaction, String resourceLink, String requestId)
             throws HandlerException {
         Accounts accounts;
 
         try {
-            accounts = accountsService.getAccounts(resourceLink);
+            accounts = accountsService.getAccounts(resourceLink, requestId);
         } catch (ServiceException e) {
+            Map<String, Object> logMap = new HashMap<>();
+            logMap.put(RESOURCE, resourceLink);
+            LOG.errorContext(requestId,"Error in service layer when obtaining accounts data for resource: "
+                    + resourceLink, e, logMap);
             throw new HandlerException(e.getMessage(), e.getCause());
         }
 
@@ -59,19 +63,20 @@ public class AccountsHandlerImpl implements AccountsHandler  {
         String abridgedAccountLink = getAccountLink(accounts, accountType);
 
         try {
-            AbridgedAccountsApi abridgedAccountData = accountsService.getAbridgedAccounts(abridgedAccountLink);
+            AbridgedAccountsApi abridgedAccountData = accountsService.getAbridgedAccounts(abridgedAccountLink, requestId);
             return createResponse(transaction, accountType, abridgedAccountData);
         } catch (ServiceException e) {
             Map<String, Object> logMap = new HashMap<>();
             logMap.put(RESOURCE, abridgedAccountLink);
             logMap.put(ACCOUNT_TYPE, accountType);
-            LOG.error("Error in service layer", logMap);
+            LOG.errorContext(requestId,"Error in service layer when obtaining abridged accounts data for resource: "
+                    + abridgedAccountLink, e, logMap);
             throw new HandlerException(e.getMessage(), e.getCause());
         } catch (ParseException e) {
             Map<String, Object> logMap = new HashMap<>();
             logMap.put(RESOURCE, abridgedAccountLink);
             logMap.put(ACCOUNT_TYPE, accountType);
-            LOG.errorContext("Error when parsing period end on date from abridged accounts data", e, logMap);
+            LOG.errorContext(requestId,"Error when parsing period end on date from abridged accounts data", e, logMap);
             throw new HandlerException(e.getMessage(), e.getCause());
         }
     }
