@@ -162,7 +162,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
     private void setContentAndDocumentType(String mimeType, String documentType, RenderDocumentRequest requestData)
             throws IOException {
 
-        if (mimeType == TEXT_HTML) {
+        if (mimeType.equals(TEXT_HTML)) {
             requestData.setContentType(mimeType);
             if (documentType != null) {
                 requestData.setDocumentType(documentType);

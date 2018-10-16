@@ -1,5 +1,11 @@
 package uk.gov.companieshouse.document.generator.accounts.handler.accounts;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.api.client.http.json.JsonHttpContent;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.gson.Gson;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,6 +21,7 @@ import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRes
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -61,7 +68,7 @@ public class AccountsHandlerImpl implements AccountsHandler  {
         try {
             AbridgedAccountsApi abridgedAccountData = accountsService.getAbridgedAccounts(abridgedAccountLink);
             return createResponse(transaction, accountType, abridgedAccountData);
-        } catch (ServiceException e) {
+        } catch (ServiceException | IOException e) {
             Map<String, Object> logMap = new HashMap<>();
             logMap.put(RESOURCE, abridgedAccountLink);
             logMap.put(ACCOUNT_TYPE, accountType);
@@ -112,7 +119,7 @@ public class AccountsHandlerImpl implements AccountsHandler  {
      * @return {@link DocumentInfoResponse} object
      */
     private <T> DocumentInfoResponse createResponse(Transaction transaction, AccountType accountType,
-                                                    T accountData) throws ParseException {
+                                                    T accountData) throws ParseException, IOException {
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
         documentInfoResponse.setData(createDocumentInfoResponseData(transaction, accountData, accountType));
         documentInfoResponse.setAssetId(accountType.getAssetId());
@@ -138,8 +145,23 @@ public class AccountsHandlerImpl implements AccountsHandler  {
      * @param accountType the type of account
      * @return data string in {@link DocumentInfoResponse}
      */
-    private <T> String createDocumentInfoResponseData(Transaction transaction, T accountData, AccountType accountType) {
+    private <T> String createDocumentInfoResponseData(Transaction transaction, T accountData, AccountType accountType) throws IOException {
         String accountTypeName = accountType.getResourceKey();
+
+        // Works when adding @JsonProperty to api-sdk-java models
+        ObjectMapper mapper = new ObjectMapper();
+        String accountsJSON = mapper.writeValueAsString(accountData);
+        JsonNode node = mapper.readTree(accountsJSON);
+        ((ObjectNode)node).put("company_number", transaction.getCompanyNumber());
+
+        // Example from api-sdk-java, maps using field names
+        JsonHttpContent content = new JsonHttpContent(new JacksonFactory(), accountData);
+
+        // Maps to field names
+        Gson gson = new Gson();
+        String test = gson.toJson(accountData);
+
+        // Existing solution, maps to field names
         JSONObject accountJSON = new JSONObject(accountData);
         JSONObject account = new JSONObject();
         account.put(accountTypeName, accountJSON);
