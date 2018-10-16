@@ -6,5 +6,6 @@ import java.util.Map;
 public interface RetrieveApiEnumerationDescription {
 
     String getApiEnumerationDescription(String fileName, String identifier, String accountType,
-                                        Map<String, String> descriptionValues) throws IOException;
+                                        Map<String, String> descriptionValues, String requestId, String resourceUri,
+                                        String resourceId) throws IOException;
 }
