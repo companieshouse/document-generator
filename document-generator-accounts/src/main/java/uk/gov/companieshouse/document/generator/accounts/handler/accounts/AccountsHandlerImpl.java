@@ -1,11 +1,6 @@
 package uk.gov.companieshouse.document.generator.accounts.handler.accounts;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.api.client.http.json.JsonHttpContent;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.gson.Gson;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -148,24 +143,13 @@ public class AccountsHandlerImpl implements AccountsHandler  {
     private <T> String createDocumentInfoResponseData(Transaction transaction, T accountData, AccountType accountType) throws IOException {
         String accountTypeName = accountType.getResourceKey();
 
-        // Works when adding @JsonProperty to api-sdk-java models
-        ObjectMapper mapper = new ObjectMapper();
-        String accountsJSON = mapper.writeValueAsString(accountData);
-        JsonNode node = mapper.readTree(accountsJSON);
-        ((ObjectNode)node).put("company_number", transaction.getCompanyNumber());
+        JacksonFactory factory = new JacksonFactory();
 
-        // Example from api-sdk-java, maps using field names
-        JsonHttpContent content = new JsonHttpContent(new JacksonFactory(), accountData);
-
-        // Maps to field names
-        Gson gson = new Gson();
-        String test = gson.toJson(accountData);
-
-        // Existing solution, maps to field names
-        JSONObject accountJSON = new JSONObject(accountData);
+        JSONObject accountJSON = new JSONObject(factory.toString(accountData));
         JSONObject account = new JSONObject();
         account.put(accountTypeName, accountJSON);
         account.put("company_number", transaction.getCompanyNumber());
+
         return account.toString();
     }
 
