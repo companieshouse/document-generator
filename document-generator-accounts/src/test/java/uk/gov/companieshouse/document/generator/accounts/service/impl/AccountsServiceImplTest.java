@@ -1,11 +1,5 @@
 package uk.gov.companieshouse.document.generator.accounts.service.impl;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -20,7 +14,11 @@ import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
 import uk.gov.companieshouse.document.generator.accounts.data.accounts.AccountsManager;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
 
-import java.io.IOException;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(Lifecycle.PER_CLASS)
@@ -32,12 +30,15 @@ public class AccountsServiceImplTest {
     @Mock
     private AccountsManager accountsManager;
 
+    private static final String REQUEST_ID = "requestId";
+    private static final String RESOURCE = "resource";
+
     @Test
     @DisplayName("Tests unsuccessful retrieval of accounts that throws exception")
     void testGetAccountsThrownException() throws Exception {
         when(accountsManager.getAccounts(anyString())).thenThrow(new URIValidationException(""));
 
-        assertThrows(ServiceException.class, () -> accountsService.getAccounts("resource"));
+        assertThrows(ServiceException.class, () -> accountsService.getAccounts(RESOURCE, REQUEST_ID));
     }
 
     @Test
@@ -45,7 +46,7 @@ public class AccountsServiceImplTest {
     void testGetAccountsReturningNull() throws Exception {
         when(accountsManager.getAccounts(anyString())).thenReturn(null);
 
-        assertNull(accountsService.getAccounts("resource"));
+        assertNull(accountsService.getAccounts(RESOURCE, REQUEST_ID));
     }
 
     @Test
@@ -53,7 +54,7 @@ public class AccountsServiceImplTest {
     void testGetAccountsSuccess() throws Exception {
         when(accountsManager.getAccounts(anyString())).thenReturn(new Accounts());
 
-        assertNotNull(accountsService.getAccounts("resource"));
+        assertNotNull(accountsService.getAccounts(RESOURCE, REQUEST_ID));
     }
 
     @Test
@@ -61,7 +62,7 @@ public class AccountsServiceImplTest {
     void testGetAbridgedAccountsThrownException() throws Exception {
         when(accountsManager.getAbridgedAccounts(anyString())).thenThrow(new URIValidationException(""));
 
-        assertThrows(ServiceException.class, () -> accountsService.getAbridgedAccounts("resource"));
+        assertThrows(ServiceException.class, () -> accountsService.getAbridgedAccounts(RESOURCE, REQUEST_ID));
     }
 
     @Test
@@ -69,7 +70,7 @@ public class AccountsServiceImplTest {
     void testGetAbridgedAccountsReturningNull() throws Exception {
         when(accountsManager.getAbridgedAccounts(anyString())).thenReturn(null);
 
-        assertNull(accountsService.getAbridgedAccounts("resource"));
+        assertNull(accountsService.getAbridgedAccounts(RESOURCE, REQUEST_ID));
     }
 
     @Test
@@ -77,6 +78,6 @@ public class AccountsServiceImplTest {
     void testGetAbridgedAccountsSuccess() throws Exception {
         when(accountsManager.getAbridgedAccounts(anyString())).thenReturn(new AbridgedAccountsApi());
 
-        assertNotNull(accountsService.getAbridgedAccounts("resource"));
+        assertNotNull(accountsService.getAbridgedAccounts(RESOURCE, REQUEST_ID));
     }
 }

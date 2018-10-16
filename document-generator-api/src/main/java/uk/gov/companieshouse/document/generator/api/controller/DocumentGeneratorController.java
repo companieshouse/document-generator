@@ -30,6 +30,8 @@ public class DocumentGeneratorController {
 
     private static final Logger LOG = LoggerFactory.getLogger(APPLICATION_NAME_SPACE);
 
+    private static final String REQUEST_ID = "X-Request-Id";
+
     @Autowired
     private DocumentGeneratorService documentGeneratorService;
 
@@ -41,7 +43,7 @@ public class DocumentGeneratorController {
     public ResponseEntity generateDocument(@Valid @RequestBody DocumentRequest documentRequest,
                                            BindingResult result, HttpServletRequest request) {
 
-        String requestId = request.getHeader("X-Request-Id");
+        String requestId = getRequestId(request);
 
         if (result.hasErrors()) {
             final Map<String, Object> debugMap = new HashMap<>();
@@ -54,6 +56,16 @@ public class DocumentGeneratorController {
         ResponseObject responseObject = documentGeneratorService.generate(documentRequest, requestId);
 
         return apiResponseMapper.map(responseObject);
+    }
+
+    /**
+     * Get the request id from the http request
+     *
+     * @param request HttpServletRequest
+     * @return String with request id
+     */
+    private String getRequestId(HttpServletRequest request) {
+        return request.getHeader(REQUEST_ID) ;
     }
 }
 

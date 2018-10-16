@@ -32,6 +32,10 @@ public class RenderDocumentRequestHandlerTest {
 
     private static final String RESPONSE_TEXT = "{\"document_size\":12345}";
 
+    private static final String RESOURCE_URI = "/transactions/091174-913515-326060/accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
+
+    private static final String REQUEST_ID = "requestId";
+
     @Mock
     private HttpURLConnection mockHttpURLConnection;
 
@@ -70,7 +74,8 @@ public class RenderDocumentRequestHandlerTest {
 
         setMockHttpConnectionForSuccess(201);
 
-        RenderDocumentResponse response = renderDocumentRequestHandler.sendDataToDocumentRenderService("http://www.test.com", renderDocumentRequest);
+        RenderDocumentResponse response = renderDocumentRequestHandler.sendDataToDocumentRenderService(
+                "http://www.test.com", renderDocumentRequest, RESOURCE_URI, REQUEST_ID);
 
         assertEquals(PDF_LOCATION, response.getLocation());
 
@@ -83,7 +88,8 @@ public class RenderDocumentRequestHandlerTest {
     public void testSendDataToRenderServiceServerResponseError() throws IOException {
 
         setMockHttpConnectionForError(500);
-        RenderDocumentResponse response = renderDocumentRequestHandler.sendDataToDocumentRenderService("http://www.test.com", renderDocumentRequest);
+        RenderDocumentResponse response = renderDocumentRequestHandler.sendDataToDocumentRenderService(
+                "http://www.test.com", renderDocumentRequest, RESOURCE_URI, REQUEST_ID);
 
         assertNull(response.getDocumentSize());
         assertNull(response.getLocation());

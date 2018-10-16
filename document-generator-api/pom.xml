@@ -31,7 +31,7 @@
         <mockito-junit-jupiter.version>2.18.0</mockito-junit-jupiter.version>
 
         <!-- Structured logging -->
-        <structured-logging.version>1.2.0-rc1</structured-logging.version>
+        <structured-logging.version>1.4.0-rc2</structured-logging.version>
 
         <apache-http-components.version>4.5.2</apache-http-components.version>
 

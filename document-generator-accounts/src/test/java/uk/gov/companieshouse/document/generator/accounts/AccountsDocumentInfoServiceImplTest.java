@@ -47,11 +47,12 @@ public class AccountsDocumentInfoServiceImplTest {
 
     private static final String RESOURCE_ID = "/transactions/091174-913515-326060";
     private static final String RESOURCE_URI = "/transactions/091174-913515-326060/accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
+    private static final String REQUEST_ID = "requestId";
 
     @Test
     @DisplayName("Test DocumentInfoException thrown when error returned from transaction retrieval")
     void testErrorThrownWhenFailedTransactionRetrieval() throws ServiceException {
-        when(transactionService.getTransaction(anyString())).thenThrow(new ServiceException("error"));
+        when(transactionService.getTransaction(anyString(), anyString())).thenThrow(new ServiceException("error"));
 
         assertThrows(DocumentInfoException.class, () ->
                 accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest()));
@@ -60,9 +61,9 @@ public class AccountsDocumentInfoServiceImplTest {
     @Test
     @DisplayName("Tests the unsuccessful retrieval of an document data due to an error in transaction retrieval")
     void testUnsuccessfulGetDocumentInfoFailedTransactionRetrieval() throws ServiceException {
-        when(transactionService.getTransaction(anyString())).thenThrow(new ServiceException("error"));
+        when(transactionService.getTransaction(anyString(), anyString())).thenThrow(new ServiceException("error"));
 
-        assertThrows(ServiceException.class, () -> transactionService.getTransaction(""));
+        assertThrows(ServiceException.class, () -> transactionService.getTransaction("", REQUEST_ID));
     }
 
     @Test
@@ -71,7 +72,7 @@ public class AccountsDocumentInfoServiceImplTest {
         Transaction transaction = createTransaction();
         transaction.getResources().remove(RESOURCE_ID);
         transaction.getResources().put("error", createResource());
-        when(transactionService.getTransaction(anyString())).thenReturn(transaction);
+        when(transactionService.getTransaction(anyString(), anyString())).thenReturn(transaction);
 
         assertNull(accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest()));
     }
@@ -80,8 +81,8 @@ public class AccountsDocumentInfoServiceImplTest {
     @DisplayName("Test DocumentInfoException thrown when error returned from accounts handler")
     void testErrorThrownWhenFailedAccountsHandler() throws HandlerException, ServiceException {
 
-        when(transactionService.getTransaction(anyString())).thenReturn(createTransaction());
-        when(accountsHandler.getAbridgedAccountsData(any(Transaction.class),  anyString())).
+        when(transactionService.getTransaction(anyString(), anyString())).thenReturn(createTransaction());
+        when(accountsHandler.getAbridgedAccountsData(any(Transaction.class),  anyString(), anyString())).
                 thenThrow(new HandlerException("error"));
 
         assertThrows(DocumentInfoException.class, () ->
@@ -92,16 +93,16 @@ public class AccountsDocumentInfoServiceImplTest {
     @DisplayName("Tests the unsuccessful retrieval of document data due to error in Accounts handler")
     void testUnsuccessfulGetDocumentInfoExceptionFromAccountsHandler()
             throws HandlerException {
-        when(accountsHandler.getAbridgedAccountsData(any(Transaction.class),  anyString())).thenThrow(new HandlerException("error"));
+        when(accountsHandler.getAbridgedAccountsData(any(Transaction.class),  anyString(), anyString())).thenThrow(new HandlerException("error"));
 
-        assertThrows(HandlerException.class, () -> accountsHandler.getAbridgedAccountsData(transaction, ""));
+        assertThrows(HandlerException.class, () -> accountsHandler.getAbridgedAccountsData(transaction, "", REQUEST_ID));
     }
 
     @Test
     @DisplayName("Tests the successful retrieval of document data")
     void testSuccessfulGetDocumentInfo() throws HandlerException, ServiceException, DocumentInfoException {
-        when(transactionService.getTransaction(anyString())).thenReturn(createTransaction());
-        when(accountsHandler.getAbridgedAccountsData(any(Transaction.class), anyString())).thenReturn(new DocumentInfoResponse());
+        when(transactionService.getTransaction(anyString(), anyString())).thenReturn(createTransaction());
+        when(accountsHandler.getAbridgedAccountsData(any(Transaction.class), anyString(), anyString())).thenReturn(new DocumentInfoResponse());
 
         assertNotNull(accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest()));
     }
@@ -110,6 +111,7 @@ public class AccountsDocumentInfoServiceImplTest {
         DocumentInfoRequest documentInfoRequest = new DocumentInfoRequest();
         documentInfoRequest.setResourceId(RESOURCE_ID);
         documentInfoRequest.setResourceUri(RESOURCE_URI);
+        documentInfoRequest.setRequestId(REQUEST_ID);
         return documentInfoRequest;
     }
 
