@@ -53,7 +53,7 @@ public class AccountsHandlerImpl implements AccountsHandler  {
         } catch (ServiceException e) {
             Map<String, Object> logMap = new HashMap<>();
             logMap.put(RESOURCE, resourceLink);
-            LOG.errorContext("Error in service layer when obtaining accounts data for resource: "
+            LOG.errorContext(requestId,"Error in service layer when obtaining accounts data for resource: "
                     + resourceLink, e, logMap);
             throw new HandlerException(e.getMessage(), e.getCause());
         }
@@ -69,14 +69,14 @@ public class AccountsHandlerImpl implements AccountsHandler  {
             Map<String, Object> logMap = new HashMap<>();
             logMap.put(RESOURCE, abridgedAccountLink);
             logMap.put(ACCOUNT_TYPE, accountType);
-            LOG.errorContext("Error in service layer when obtaining abridged accounts data for resource: "
+            LOG.errorContext(requestId,"Error in service layer when obtaining abridged accounts data for resource: "
                     + abridgedAccountLink, e, logMap);
             throw new HandlerException(e.getMessage(), e.getCause());
         } catch (ParseException e) {
             Map<String, Object> logMap = new HashMap<>();
             logMap.put(RESOURCE, abridgedAccountLink);
             logMap.put(ACCOUNT_TYPE, accountType);
-            LOG.errorContext("Error when parsing period end on date from abridged accounts data", e, logMap);
+            LOG.errorContext(requestId,"Error when parsing period end on date from abridged accounts data", e, logMap);
             throw new HandlerException(e.getMessage(), e.getCause());
         }
     }

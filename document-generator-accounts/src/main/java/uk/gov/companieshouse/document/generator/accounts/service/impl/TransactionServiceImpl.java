@@ -37,12 +37,6 @@ public class TransactionServiceImpl implements TransactionService {
         }
     }
 
-    /**
-     * Get the debug map
-     *
-     * @param id the transaction id
-     * @return Map containing id for debugMap
-     */
     private Map<String, Object> getDebugMap(String id) {
 
         Map<String, Object> debugMap = new HashMap<>();

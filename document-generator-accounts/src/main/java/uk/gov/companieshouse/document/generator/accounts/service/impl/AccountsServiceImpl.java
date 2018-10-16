@@ -53,12 +53,6 @@ public class AccountsServiceImpl implements AccountsService {
         }
     }
 
-    /**
-     * Get the debug Map
-     *
-     * @param resource the resource of the request
-     * @return map containing the resource for the debug map
-     */
     private Map<String, Object> getDebugMap(String resource) {
 
         Map<String, Object> debugMap = new HashMap<>();
