@@ -93,9 +93,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
             return new ResponseObject(ResponseStatus.NO_TYPE_FOUND, null);
         }
 
-        DocumentInfoRequest documentInfoRequest = new DocumentInfoRequest();
-        BeanUtils.copyProperties(documentRequest, documentInfoRequest);
-        documentInfoRequest.setRequestId(requestId);
+        DocumentInfoRequest documentInfoRequest = setDocumentInfoRequest(documentRequest, requestId);
 
         DocumentInfoResponse documentInfoResponse;
         try {
@@ -132,11 +130,31 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
     }
 
     /**
+     * Set parameters required in the document info request
+     *
+     * @param documentRequest An object containing the request details from the Api call
+     * @param requestId The id of the request
+     * @return A populated documentInfoRequest object
+     */
+    private DocumentInfoRequest setDocumentInfoRequest(DocumentRequest documentRequest, String requestId) {
+
+        DocumentInfoRequest documentInfoRequest = new DocumentInfoRequest();
+        BeanUtils.copyProperties(documentRequest, documentInfoRequest);
+        documentInfoRequest.setRequestId(requestId);
+
+        return  documentInfoRequest;
+    }
+
+    /**
      * Send data to Render Service and generate document
      *
      * @param documentRequest object that contains the request details from the Api call
      * @param documentInfoResponse object that contain the Response from documentInfoService
+     * @param resourceUri The url for the resource
+     * @param resourceId The id of the resource
+     * @param requestId The id of the request
      * @return A populated RenderDocumentResponse model or Null
+     * @throws IOException
      */
     private RenderDocumentResponse renderSubmittedDocumentData(DocumentRequest documentRequest,
                                                                DocumentInfoResponse documentInfoResponse,
@@ -164,6 +182,9 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
      * @param mimeType The content type of the document, also the document type if no document type set
      * @param documentType The document type
      * @param requestData The object containing the populated request data for the render service
+     * @param resourceId The id of the resource
+     * @param resourceUri The url for the resource
+     * @param requestId The id of the request
      * @throws IOException
      */
     private void setContentAndDocumentType(String mimeType, String documentType, RenderDocumentRequest requestData,
@@ -202,6 +223,10 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
      * @param renderResponse object that contains the RenderDocumentResponse details
      * @param documentInfoResponse object that contains the Response from documentInfoService
      * @return a Document Response
+     * @param resourceId The id of the resource
+     * @param resourceUri The url for the resource
+     * @param requestId The id of the request
+     * @return
      */
     private DocumentResponse setDocumentResponse(RenderDocumentResponse renderResponse,
                                                  DocumentInfoResponse documentInfoResponse, String requestId,
@@ -222,11 +247,13 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
     }
 
     /**
-     * Get the document description
+     * Get the document description from an api enumeration file
      *
      * @param documentInfoResponse object that contains the Response from documentInfoService
+     * @param requestId The id of the request
+     * @param resourceId The id of the resource
+     * @param resourceUri The url for the resource
      * @return String containing the description
-     * @throws IOException
      */
     private String getDescription(DocumentInfoResponse documentInfoResponse, String requestId,
                                   String resourceId, String resourceUri) {
@@ -245,12 +272,15 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
         return description;
     }
 
+
     /**
      * Create and log the error message
      *
      * @param message The message to be logged
      * @param <T> generic exception parameter to be stored in message
-     * @param requestId The request Id
+     * @param requestId The id of the request
+     * @param resourceId The id of the resource
+     * @param resourceUri The url for the resource
      */
     private <T extends Exception> void createAndLogErrorMessage(String message, String resourceId, String resourceUri,
                                                                 T exception, String requestId) {

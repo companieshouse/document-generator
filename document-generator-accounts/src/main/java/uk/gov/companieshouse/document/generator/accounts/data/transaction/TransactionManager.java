@@ -43,6 +43,7 @@ public class TransactionManager {
      * Get transaction if exists
      *
      * @param id - transaction id
+     * @param requestId - the id of the request
      * @return transaction object along with the status or not found status.
      * @throws Exception - throws a generic exception to mimic the private sdk throwing an exception.
      *                     We're not to create a custom exception as it will have to be removed when

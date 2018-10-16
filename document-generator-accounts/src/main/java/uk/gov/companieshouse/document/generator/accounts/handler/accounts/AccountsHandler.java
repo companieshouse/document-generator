@@ -16,6 +16,7 @@ public interface AccountsHandler {
      * Get an Abridged accounts resource from the given resource link
      * @param transaction the transaction data
      * @param resourceLink the resource link of the abridged accounts
+     * @param requestId the id of the request
      * @return a populated {@link DocumentInfoResponse} object
      * @throws HandlerException throws a custom handler exception
      */

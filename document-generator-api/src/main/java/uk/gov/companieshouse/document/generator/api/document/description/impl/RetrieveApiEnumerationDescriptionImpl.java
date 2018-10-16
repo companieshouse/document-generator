@@ -22,6 +22,9 @@ public class RetrieveApiEnumerationDescriptionImpl implements RetrieveApiEnumera
 
     private static final Logger LOG = LoggerFactory.getLogger(APPLICATION_NAME_SPACE);
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getApiEnumerationDescription(String fileName, String identifier, String accountType,
                                                Map<String, String> parameters, String requestId, String resourceUri,

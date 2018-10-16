@@ -71,7 +71,8 @@ public class AccountsManager {
     }
 
     /**
-     *  Set request ID using httpclient
+     * Set request ID using httpclient
+     *
      * @param httpClient
      */
     private static void setRequestId(HttpClient httpClient) {
@@ -94,7 +95,8 @@ public class AccountsManager {
 
     /**
      * Generate a universally unique identifier
-     * @return
+     *
+     * @return A string containing the universally unique identifier
      */
     private static String generateRequestId() {
         return UUID.randomUUID().toString().substring(0,20);
