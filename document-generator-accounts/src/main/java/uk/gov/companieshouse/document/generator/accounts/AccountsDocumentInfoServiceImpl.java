@@ -34,20 +34,22 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
 
     @Override
     public DocumentInfoResponse getDocumentInfo(DocumentInfoRequest documentInfoRequest) throws DocumentInfoException {
-        LOG.info("Started getting document info");
 
         String resourceId = documentInfoRequest.getResourceId();
         String resourceUri = documentInfoRequest.getResourceUri();
+        String requestId = documentInfoRequest.getRequestId();
 
         final Map< String, Object > debugMap = new HashMap< >();
         debugMap.put("resource_uri", resourceUri);
         debugMap.put("resource_id", resourceId);
 
+        LOG.infoContext(requestId,"Started getting document info", debugMap);
+
         Transaction transaction;
         try {
-            transaction = transactionService.getTransaction(resourceId);
+            transaction = transactionService.getTransaction(resourceId, requestId);
         } catch (ServiceException e) {
-            LOG.errorContext("An error occurred when calling the transaction service with resource id: "
+            LOG.errorContext(requestId,"An error occurred when calling the transaction service with resource id: "
                     + resourceId, e, debugMap);
             throw new DocumentInfoException("Failed to get transaction with resourceId: " + resourceId, e);
         }
@@ -58,7 +60,8 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
                 .map(Resources::getLinks)
                 .map(links -> links.get(LinkType.RESOURCE.getLink()))
                 .orElseGet(() -> {
-                    LOG.info("Unable to find resource: " + resourceId + " in transaction: " + resourceUri);
+                    LOG.infoContext(requestId,"Unable to find resource: " + resourceId
+                            + " in transaction: " + resourceUri, debugMap);
                     return "";
                 });
 
@@ -66,9 +69,9 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
         // when the Accounts migration has been completed to Company Accounts, this code can be removed
         if (isAccounts(resourceLink)) {
             try {
-                return accountsHandler.getAbridgedAccountsData(transaction, resourceLink);
+                return accountsHandler.getAbridgedAccountsData(transaction, resourceLink, requestId);
             } catch (HandlerException e) {
-                LOG.errorContext("An error occurred when calling the account handler to obtain " +
+                LOG.errorContext(requestId,"An error occurred when calling the account handler to obtain " +
                         "abridged accounts data for transaction: " + transaction.getId() + " and resource link: "
                         + resourceLink, e, debugMap);
                 throw new DocumentInfoException("Failed to get abridged data for transaction: "

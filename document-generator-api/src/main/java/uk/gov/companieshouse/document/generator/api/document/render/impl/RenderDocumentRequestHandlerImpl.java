@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 import static uk.gov.companieshouse.document.generator.api.DocumentGeneratorApplication.APPLICATION_NAME_SPACE;
 
@@ -35,17 +37,26 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
      * {@inheritDoc}
      */
     @Override
-    public RenderDocumentResponse sendDataToDocumentRenderService(String url, RenderDocumentRequest request) throws IOException {
+    public RenderDocumentResponse sendDataToDocumentRenderService(String url, RenderDocumentRequest request,
+                                                                  String resourceUri, String requestId) throws IOException {
 
         RenderDocumentResponse response = new RenderDocumentResponse();
 
         HttpURLConnection connection = httpConnectionHandler.openConnection(url);
 
+        Map<String, Object> debugMap = new HashMap<>();
+        debugMap.put("resource_uri", resourceUri);
+        debugMap.put("template_name", request.getTemplateName());
+        debugMap.put("asset_id", request.getAssetId());
+
         try {
+            LOG.infoContext(requestId,"Preparing the connection for render service", debugMap);
             prepareConnection(connection, request);
+            LOG.infoContext(requestId,"Sending the request to the render service", debugMap);
             sendRequest(connection, request);
 
             if (connection.getResponseCode() == HttpURLConnection.HTTP_CREATED) {
+                LOG.infoContext(requestId,"handling the response from the render service", debugMap);
                 response = handleResponse(connection);
             }
 
@@ -57,6 +68,7 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
             }
         }
 
+        LOG.infoContext(requestId,"returning response from the render service", debugMap);
         return response;
     }
 
@@ -72,7 +84,6 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
         String generatedDocumentJson;
         RenderDocumentResponse renderDocumentResponse = new RenderDocumentResponse();
 
-        LOG.info("handling the response from the render service");
         try (InputStream response = connection.getInputStream()) {
             generatedDocumentJson = new String(IOUtils.toByteArray(response));
         }
@@ -92,7 +103,6 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
      */
     private void sendRequest(HttpURLConnection connection, RenderDocumentRequest request) throws IOException {
 
-        LOG.info("Sending the request to the render service");
         try (DataOutputStream out = new DataOutputStream(connection.getOutputStream())) {
             out.write(request.getData().getBytes(StandardCharsets.UTF_8));
             out.flush();
@@ -108,7 +118,6 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
      */
     private void prepareConnection(HttpURLConnection connection, RenderDocumentRequest request) throws IOException {
 
-        LOG.info("Preparing the connection for render service");
         connection.setDoOutput(true);
         connection.setRequestMethod("POST");
 

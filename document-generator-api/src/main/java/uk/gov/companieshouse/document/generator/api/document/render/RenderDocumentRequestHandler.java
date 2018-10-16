@@ -15,5 +15,6 @@ public interface RenderDocumentRequestHandler {
      * @return RenderDocumentResponse
      * @throws IOException
      */
-    RenderDocumentResponse sendDataToDocumentRenderService(String url, RenderDocumentRequest request) throws IOException;
+    RenderDocumentResponse sendDataToDocumentRenderService(String url, RenderDocumentRequest request,
+                                                           String resourceUri, String requestId) throws IOException;
 }

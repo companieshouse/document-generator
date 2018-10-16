@@ -29,15 +29,12 @@ public class AccountsServiceImpl implements AccountsService {
      * {@inheritDoc}
      */
     @Override
-    public Accounts getAccounts(String resource) throws ServiceException {
+    public Accounts getAccounts(String resource, String requestId) throws ServiceException {
         try {
-            LOG.info("Getting accounts data: " + resource);
+            LOG.infoContext(requestId, "Getting accounts data: " + resource, getDebugMap(resource));
             return accountsManager.getAccounts(resource);
         } catch (URIValidationException | ApiErrorResponseException e) {
-
-            Map<String, Object> logMap = new HashMap<>();
-            logMap.put("resource", resource);
-            LOG.errorContext("Failed to retrieve accounts data: ", e, logMap);
+            LOG.errorContext(requestId,"Failed to retrieve accounts data: ", e, getDebugMap(resource));
             throw new ServiceException(e.getMessage(), e.getCause());
         }
     }
@@ -46,16 +43,27 @@ public class AccountsServiceImpl implements AccountsService {
      * {@inheritDoc}
      */
     @Override
-    public AbridgedAccountsApi getAbridgedAccounts(String resource) throws ServiceException {
+    public AbridgedAccountsApi getAbridgedAccounts(String resource, String requestId) throws ServiceException {
         try {
-            LOG.info("Getting abridged accounts data: " + resource);
+            LOG.infoContext(requestId, "Getting abridged accounts data: " + resource, getDebugMap(resource));
             return accountsManager.getAbridgedAccounts(resource);
         } catch (URIValidationException | ApiErrorResponseException e) {
-
-            Map<String, Object> logMap = new HashMap<>();
-            logMap.put("resource", resource);
-            LOG.errorContext("Failed to retrieve abridged accounts data: ", e, logMap);
+            LOG.errorContext(requestId,"Failed to retrieve abridged accounts data: ", e, getDebugMap(resource));
             throw new ServiceException(e.getMessage(), e.getCause());
         }
+    }
+
+    /**
+     * Get the debug Map
+     *
+     * @param resource the resource of the request
+     * @return map containing the resource for the debug map
+     */
+    private Map<String, Object> getDebugMap(String resource) {
+
+        Map<String, Object> debugMap = new HashMap<>();
+        debugMap.put("resource", resource);
+
+        return debugMap;
     }
 }

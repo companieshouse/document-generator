@@ -12,13 +12,9 @@ import uk.gov.companieshouse.api.model.accounts.Accounts;
 import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
 import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.environment.impl.EnvironmentReaderImpl;
-import uk.gov.companieshouse.logging.Logger;
-import uk.gov.companieshouse.logging.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.UUID;
-
-import static uk.gov.companieshouse.document.generator.accounts.AccountsDocumentInfoServiceImpl.MODULE_NAME_SPACE;
 
 /**
  * Temporary solution until private-sdk has been completed (SFA-518, SFA-670). When completed, this
@@ -33,8 +29,6 @@ public class AccountsManager {
     private final String apiUrl = READER.getMandatoryString("API_URL");
     private final String chsApiKey = READER.getMandatoryString("CHS_API_KEY");
     private static final String X_REQUEST_ID_HEADER = "x-request-id";
-
-    private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
     /**
      * Get accounts resource if exists
@@ -65,7 +59,7 @@ public class AccountsManager {
      * @throws URIValidationException
      */
     public AbridgedAccountsApi getAbridgedAccounts(String link) throws ApiErrorResponseException, URIValidationException {
-        
+
         HttpClient httpClient = new ApiKeyHttpClient(chsApiKey);
 
         setRequestId(httpClient);

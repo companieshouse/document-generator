@@ -26,15 +26,28 @@ public class TransactionServiceImpl implements TransactionService {
      * {@inheritDoc}
      */
     @Override
-    public Transaction getTransaction(String id) throws ServiceException {
+    public Transaction getTransaction(String id, String requestId) throws ServiceException {
+
         try {
-            LOG.info("Getting transaction data: " + id);
-            return transactionManager.getTransaction(id);
+            LOG.infoContext(requestId,"Getting transaction data: " + id, getDebugMap(id));
+            return transactionManager.getTransaction(id, requestId);
         } catch (Exception e) {
-            Map<String, Object> logMap = new HashMap<>();
-            logMap.put("id", id);
-            LOG.errorContext("Failed to get transaction data: " + id, e, logMap);
+            LOG.errorContext(requestId,"Failed to get transaction data: " + id, e, getDebugMap(id));
             throw new ServiceException(e.getMessage(), e.getCause());
         }
+    }
+
+    /**
+     * Get the debug map
+     *
+     * @param id the transaction id
+     * @return Map containing id for debugMap
+     */
+    private Map<String, Object> getDebugMap(String id) {
+
+        Map<String, Object> debugMap = new HashMap<>();
+        debugMap.put("id", id);
+
+        return debugMap;
     }
 }

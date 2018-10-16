@@ -44,12 +44,12 @@ public class AccountsHandlerImpl implements AccountsHandler  {
      * {@inheritDoc}
      */
     @Override
-    public DocumentInfoResponse getAbridgedAccountsData(Transaction transaction, String resourceLink)
+    public DocumentInfoResponse getAbridgedAccountsData(Transaction transaction, String resourceLink, String requestId)
             throws HandlerException {
         Accounts accounts;
 
         try {
-            accounts = accountsService.getAccounts(resourceLink);
+            accounts = accountsService.getAccounts(resourceLink, requestId);
         } catch (ServiceException e) {
             Map<String, Object> logMap = new HashMap<>();
             logMap.put(RESOURCE, resourceLink);
@@ -63,7 +63,7 @@ public class AccountsHandlerImpl implements AccountsHandler  {
         String abridgedAccountLink = getAccountLink(accounts, accountType);
 
         try {
-            AbridgedAccountsApi abridgedAccountData = accountsService.getAbridgedAccounts(abridgedAccountLink);
+            AbridgedAccountsApi abridgedAccountData = accountsService.getAbridgedAccounts(abridgedAccountLink, requestId);
             return createResponse(transaction, accountType, abridgedAccountData);
         } catch (ServiceException e) {
             Map<String, Object> logMap = new HashMap<>();
