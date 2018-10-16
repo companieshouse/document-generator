@@ -150,6 +150,9 @@ public class AccountsHandlerImpl implements AccountsHandler  {
         account.put(accountTypeName, accountJSON);
         account.put("company_number", transaction.getCompanyNumber());
 
+        //TODO - Currently hardcoded for testing purposes, will return to grab the correct company name
+        account.put("company_name", "THE GIRLS' DAY SCHOOL TRUST");
+
         return account.toString();
     }
 
