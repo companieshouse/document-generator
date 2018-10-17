@@ -33,30 +33,37 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
 
     private static final Logger LOG = LoggerFactory.getLogger(APPLICATION_NAME_SPACE);
 
+    private static final String RESOURCE_URI = "resource_uri";
+
+    private static final String RESOURCE_ID = "resource_id";
+
+    private static final String REQUEST_ID = "request_id";
+
     /**
      * {@inheritDoc}
      */
     @Override
     public RenderDocumentResponse sendDataToDocumentRenderService(String url, RenderDocumentRequest request,
-                                                                  String resourceUri, String requestId) throws IOException {
+                                                                  Map<String, String> requestParameters) throws IOException {
 
         RenderDocumentResponse response = new RenderDocumentResponse();
 
         HttpURLConnection connection = httpConnectionHandler.openConnection(url);
 
         Map<String, Object> debugMap = new HashMap<>();
-        debugMap.put("resource_uri", resourceUri);
-        debugMap.put("template_name", request.getTemplateName());
-        debugMap.put("asset_id", request.getAssetId());
+        debugMap.put(RESOURCE_URI, requestParameters.get(RESOURCE_URI));
+        debugMap.put(RESOURCE_ID, requestParameters.get(RESOURCE_ID));
+
+        String requestId = requestParameters.get(REQUEST_ID);
 
         try {
             LOG.infoContext(requestId,"Preparing the connection for render service", debugMap);
             prepareConnection(connection, request);
-            LOG.infoContext(requestId,"Sending the request to the render service", debugMap);
+            LOG.infoContext(requestId, "Sending the request to the render service", debugMap);
             sendRequest(connection, request);
 
             if (connection.getResponseCode() == HttpURLConnection.HTTP_CREATED) {
-                LOG.infoContext(requestId,"handling the response from the render service", debugMap);
+                LOG.infoContext(requestId, "handling the response from the render service", debugMap);
                 response = handleResponse(connection);
             }
 

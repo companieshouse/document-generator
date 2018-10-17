@@ -34,21 +34,30 @@ public class RetrieveApiEnumerationDescriptionTest {
 
     private RetrieveApiEnumerationDescription retrieveApiEnumerationDescription;
 
+    private static Map<String, String> descriptionValues;
+
+    private static Map<String, String> requestParameters;
+
     @BeforeEach
     public void setUp() {
         retrieveApiEnumerationDescription = new RetrieveApiEnumerationDescriptionImpl();
+
+        descriptionValues = new HashMap<>();
+        descriptionValues.put("period_end_on", "01 October 2018");
+
+        requestParameters = new HashMap<>();
+        requestParameters.put("resource_uri", RESOURCE_URI);
+        requestParameters.put("resource_id", RESOURCE_ID);
+        requestParameters.put("request_id", REQUEST_ID);
     }
 
     @Test
     @DisplayName("test that a valid response is received when retrieving api enumerations with a valid file name")
     public void testValidReturnValue() throws IOException {
 
-        Map<String, String> descriptionValues = new HashMap<>();
-        descriptionValues.put("period_end_on", "01 October 2018");
-
         String result = retrieveApiEnumerationDescription.getApiEnumerationDescription(FILING_DESCRIPTIONS_FILE_NAME_VALID,
                 DESCRIPTION_IDENTIFIERS_KEY_VALID,"abridged-accounts", descriptionValues,
-                REQUEST_ID, RESOURCE_URI, RESOURCE_ID);
+                requestParameters);
 
         assertEquals(POPULATED_RESPONSE, result);
     }
@@ -57,12 +66,9 @@ public class RetrieveApiEnumerationDescriptionTest {
     @DisplayName("test Null is returned when file not found")
     public void testNullReturnedWhenFileNotFound() throws IOException {
 
-        Map<String, String> descriptionValues = new HashMap<>();
-        descriptionValues.put("period_end_on", "01 October 2018");
-
         String result = retrieveApiEnumerationDescription.getApiEnumerationDescription(FILING_DESCRIPTIONS_FILE_NAME_INVALID,
                 DESCRIPTION_IDENTIFIERS_KEY_VALID,"abridged-accounts", descriptionValues,
-                REQUEST_ID, RESOURCE_URI, RESOURCE_ID);
+                requestParameters);
 
         assertEquals(EMPTY_RESPONSE, result);
     }
@@ -71,12 +77,9 @@ public class RetrieveApiEnumerationDescriptionTest {
     @DisplayName("test Null is returned when no description found")
     public void testNullReturnedWhenDescriptionNotFound() throws IOException {
 
-        Map<String, String> descriptionValues = new HashMap<>();
-        descriptionValues.put("period_end_on", "01 October 2018");
-
         String result = retrieveApiEnumerationDescription.getApiEnumerationDescription(FILING_DESCRIPTIONS_FILE_NAME_VALID,
                 DESCRIPTION_IDENTIFIERS_KEY_INVALID,"abridged-accounts", descriptionValues,
-                REQUEST_ID, RESOURCE_URI, RESOURCE_ID);
+               requestParameters);
 
         assertEquals(EMPTY_RESPONSE, result);
     }

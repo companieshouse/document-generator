@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -53,6 +55,8 @@ public class RenderDocumentRequestHandlerTest {
 
     private RenderDocumentRequest renderDocumentRequest;
 
+    private static Map<String, String> requestParameters;
+
     @BeforeEach
     public void setUp() throws IOException{
 
@@ -62,6 +66,10 @@ public class RenderDocumentRequestHandlerTest {
         renderDocumentRequest.setData("test-data");
         renderDocumentRequest.setDocumentType("application/pdf");
         renderDocumentRequest.setTemplateName("template1");
+
+        requestParameters = new HashMap<>();
+        requestParameters.put("resource_uri", RESOURCE_URI);
+        requestParameters.put("request_id", REQUEST_ID);
 
         when(mockHttpConnectionHandler.openConnection(any(String.class))).thenReturn(mockHttpURLConnection);
     }
@@ -75,7 +83,7 @@ public class RenderDocumentRequestHandlerTest {
         setMockHttpConnectionForSuccess(201);
 
         RenderDocumentResponse response = renderDocumentRequestHandler.sendDataToDocumentRenderService(
-                "http://www.test.com", renderDocumentRequest, RESOURCE_URI, REQUEST_ID);
+                "http://www.test.com", renderDocumentRequest, requestParameters);
 
         assertEquals(PDF_LOCATION, response.getLocation());
 
@@ -89,7 +97,7 @@ public class RenderDocumentRequestHandlerTest {
 
         setMockHttpConnectionForError(500);
         RenderDocumentResponse response = renderDocumentRequestHandler.sendDataToDocumentRenderService(
-                "http://www.test.com", renderDocumentRequest, RESOURCE_URI, REQUEST_ID);
+                "http://www.test.com", renderDocumentRequest, requestParameters);
 
         assertNull(response.getDocumentSize());
         assertNull(response.getLocation());
