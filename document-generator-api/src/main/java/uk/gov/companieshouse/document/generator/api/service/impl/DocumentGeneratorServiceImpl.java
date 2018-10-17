@@ -58,6 +58,12 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
 
     private static final String TEXT_HTML = "text/html";
 
+    private static final String RESOURCE_URI = "resource_uri";
+
+    private static final String RESOURCE_ID = "resource_id";
+
+    private static final String REQUEST_ID = "request_id";
+
     @Autowired
     public DocumentGeneratorServiceImpl(DocumentInfoServiceFactory documentInfoServiceFactory,
                                         EnvironmentReader environmentReader,
@@ -79,23 +85,24 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
     public ResponseObject generate(DocumentRequest documentRequest, String requestId) {
 
         DocumentResponse response;
-        String resourceId = documentRequest.getResourceId();
-        String resourceUri = documentRequest.getResourceUri();
 
-        createAndLogInfoMessage("Generation of document for resource: " + resourceUri + " has started",
-                resourceId, resourceUri, requestId);
+        Map<String, String> requestParameters = new HashMap<>();
+        requestParameters.put(RESOURCE_URI, documentRequest.getResourceUri());
+        requestParameters.put(RESOURCE_ID, documentRequest.getResourceId());
+        requestParameters.put(REQUEST_ID, requestId);
+
+        createAndLogInfoMessage("Generation of document for resource: "
+                        + requestParameters.get(RESOURCE_URI) + " has started", requestParameters);
         DocumentType documentType;
         try {
-            documentType = documentTypeService.getDocumentType(documentRequest.getResourceUri());
+            documentType = documentTypeService.getDocumentType(requestParameters);
         } catch (DocumentGeneratorServiceException dgse){
             createAndLogErrorMessage("Failed to get document type from resource:  "
-                    + resourceUri, resourceId, resourceUri, dgse, requestId);
+                    + requestParameters.get(RESOURCE_URI), dgse, requestParameters);
             return new ResponseObject(ResponseStatus.NO_TYPE_FOUND, null);
         }
 
-        DocumentInfoRequest documentInfoRequest = new DocumentInfoRequest();
-        BeanUtils.copyProperties(documentRequest, documentInfoRequest);
-        documentInfoRequest.setRequestId(requestId);
+        DocumentInfoRequest documentInfoRequest = setDocumentInfoRequest(documentRequest, requestId);
 
         DocumentInfoResponse documentInfoResponse;
         try {
@@ -104,7 +111,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
                         .getDocumentInfo(documentInfoRequest);
         } catch (DocumentInfoException dgie) {
              createAndLogErrorMessage("Error occurred whilst obtaining the data to generate document " +
-                     "for resource: " + resourceUri, resourceId, resourceUri, dgie, requestId);
+                     "for resource: " + requestParameters.get(RESOURCE_URI), dgie, requestParameters);
             return new ResponseObject(ResponseStatus.FAILED_TO_RETRIEVE_DATA, null);
         }
 
@@ -112,23 +119,39 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
             RenderDocumentResponse renderResponse = null;
             try {
                 renderResponse = renderSubmittedDocumentData(documentRequest, documentInfoResponse,
-                        resourceId, resourceUri, requestId);
+                        requestParameters);
             } catch (IOException ioe) {
                 createAndLogErrorMessage("Error occurred whilst rendering the document for resource: " +
-                        resourceUri, resourceId, resourceUri, ioe, requestId);
-                response = setDocumentResponse(renderResponse, documentInfoResponse, requestId, resourceId, resourceUri);
+                        requestParameters.get(RESOURCE_URI), ioe, requestParameters);
+                response = setDocumentResponse(renderResponse, documentInfoResponse, requestParameters);
                 return new ResponseObject(ResponseStatus.FAILED_TO_RENDER, response);
             }
 
-            response = setDocumentResponse(renderResponse, documentInfoResponse, requestId, resourceId, resourceUri);
+            response = setDocumentResponse(renderResponse, documentInfoResponse, requestParameters);
         } else {
             createAndLogErrorMessage("No data was returned from documentInfoService for resource: " +
-                    resourceUri, resourceId, resourceUri, null, requestId);
+                    requestParameters.get(RESOURCE_URI),null, requestParameters);
             return new ResponseObject(ResponseStatus.NO_DATA_RETRIEVED, null);
         }
-        createAndLogInfoMessage("Document generated for resource: " + resourceUri,
-                resourceId, resourceUri, requestId);
+        createAndLogInfoMessage("Document generated for resource: " + requestParameters.get(RESOURCE_URI),
+                requestParameters);
         return new ResponseObject(ResponseStatus.CREATED, response);
+    }
+
+    /**
+     * Set parameters required in the document info request
+     *
+     * @param documentRequest An object containing the request details from the Api call
+     * @param requestId The id of the request
+     * @return A populated documentInfoRequest object
+     */
+    private DocumentInfoRequest setDocumentInfoRequest(DocumentRequest documentRequest, String requestId) {
+
+        DocumentInfoRequest documentInfoRequest = new DocumentInfoRequest();
+        BeanUtils.copyProperties(documentRequest, documentInfoRequest);
+        documentInfoRequest.setRequestId(requestId);
+
+        return  documentInfoRequest;
     }
 
     /**
@@ -136,11 +159,13 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
      *
      * @param documentRequest object that contains the request details from the Api call
      * @param documentInfoResponse object that contain the Response from documentInfoService
+     * @param requestParameters Map containing requestId, resourceId and resourceUri as a key/value pair
      * @return A populated RenderDocumentResponse model or Null
+     * @throws IOException
      */
     private RenderDocumentResponse renderSubmittedDocumentData(DocumentRequest documentRequest,
                                                                DocumentInfoResponse documentInfoResponse,
-                                                               String resourceUri, String resourceId, String requestId)
+                                                               Map<String, String> requestParameters)
             throws IOException {
 
         String host = environmentReader.getMandatoryString(DOCUMENT_RENDER_SERVICE_HOST_ENV_VAR);
@@ -153,10 +178,11 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
         requestData.setLocation(buildLocation(documentInfoResponse.getPath()));
 
         setContentAndDocumentType(documentRequest.getMimeType(), documentRequest.getDocumentType(),
-                requestData, resourceId, resourceUri, requestId);
+                requestData, requestParameters);
 
-        return requestHandler.sendDataToDocumentRenderService(url, requestData, resourceUri, requestId);
+        return requestHandler.sendDataToDocumentRenderService(url, requestData, requestParameters);
     }
+
 
     /**
      * Sets the content and document type required in render document request.
@@ -164,10 +190,11 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
      * @param mimeType The content type of the document, also the document type if no document type set
      * @param documentType The document type
      * @param requestData The object containing the populated request data for the render service
+     * @param requestParameters Map containing requestId, resourceId and resourceUri as a key/value pair
      * @throws IOException
      */
     private void setContentAndDocumentType(String mimeType, String documentType, RenderDocumentRequest requestData,
-                                           String resourceId, String resourceUri, String requestId) throws IOException {
+                                           Map<String, String> requestParameters) throws IOException {
 
         if (mimeType.equals(TEXT_HTML)) {
             requestData.setContentType(mimeType);
@@ -178,7 +205,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
             }
         } else {
             createAndLogInfoMessage("error occurred while setting content and document type, as mime type: "
-                    + mimeType + " is not valid", resourceId, resourceUri, requestId);
+                    + mimeType + " is not valid", requestParameters);
             throw new IOException("The mime type: " + mimeType + " is not valid");
         }
     }
@@ -201,11 +228,13 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
      *
      * @param renderResponse object that contains the RenderDocumentResponse details
      * @param documentInfoResponse object that contains the Response from documentInfoService
+     * @param requestParameters Map containing requestId, resourceId and resourceUri as a key/value pair
      * @return a Document Response
+     * @return
      */
     private DocumentResponse setDocumentResponse(RenderDocumentResponse renderResponse,
-                                                 DocumentInfoResponse documentInfoResponse, String requestId,
-                                                 String resourceId, String resourceUri) {
+                                                 DocumentInfoResponse documentInfoResponse,
+                                                 Map<String, String> requestParameters) {
 
         DocumentResponse response = new DocumentResponse();
 
@@ -215,45 +244,45 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
         }
 
         response.setDescriptionValues(documentInfoResponse.getDescriptionValues());
-        response.setDescription(getDescription(documentInfoResponse, requestId, resourceId, resourceUri));
+        response.setDescription(getDescription(documentInfoResponse, requestParameters));
         response.setDescriptionIdentifier(documentInfoResponse.getDescriptionIdentifier());
 
         return response;
     }
 
     /**
-     * Get the document description
+     * Get the document description from an api enumeration file
      *
      * @param documentInfoResponse object that contains the Response from documentInfoService
+     * @param requestParameters Map containing requestId, resourceId and resourceUri as a key/value pair
      * @return String containing the description
-     * @throws IOException
      */
-    private String getDescription(DocumentInfoResponse documentInfoResponse, String requestId,
-                                  String resourceId, String resourceUri) {
+    private String getDescription(DocumentInfoResponse documentInfoResponse, Map<String, String> requestParameters) {
 
         String description = null;
         try {
             description = retrieveApiEnumerationDescription.getApiEnumerationDescription(
                     FILING_DESCRIPTIONS_FILE_NAME, DESCRIPTION_IDENTIFIERS_KEY,
-                    documentInfoResponse.getTemplateName(), documentInfoResponse.getDescriptionValues(),
-                    requestId, resourceUri, resourceId);
+                    documentInfoResponse.getTemplateName(), documentInfoResponse.getDescriptionValues(), requestParameters);
         } catch (IOException ioe) {
             createAndLogErrorMessage("Error retrieving description from api-enumeration from: "
-                    + FILING_DESCRIPTIONS_FILE_NAME, resourceId, resourceUri, ioe, requestId);
+                    + FILING_DESCRIPTIONS_FILE_NAME, ioe, requestParameters);
         }
 
         return description;
     }
+
 
     /**
      * Create and log the error message
      *
      * @param message The message to be logged
      * @param <T> generic exception parameter to be stored in message
-     * @param requestId The request Id
+     * @param requestParameters Map containing requestId, resourceId and resourceUri as a key/value pair
      */
-    private <T extends Exception> void createAndLogErrorMessage(String message, String resourceId, String resourceUri,
-                                                                T exception, String requestId) {
+    private <T extends Exception> void createAndLogErrorMessage(String message, T exception,
+                                                                Map<String, String> requestParameters) {
+
         DocumentGeneratorServiceException documentGeneratorServiceException;
 
         if (exception != null) {
@@ -264,26 +293,26 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
                     new DocumentGeneratorServiceException(message);
         }
         
-        LOG.errorContext(requestId, documentGeneratorServiceException, setDebugMap(resourceId, resourceUri));
+        LOG.errorContext(requestParameters.get(REQUEST_ID), documentGeneratorServiceException,
+                setDebugMap(requestParameters));
     }
+
 
     /**
      * Create and log Info Message
      *
      * @param message message to be logged
-     * @param resourceId the id of the resource
-     * @param resourceUri the uri of the resource
-     * @param requestId the id of the request
+     * @param requestParameters Map containing requestId, resourceId and resourceUri as a key/value pair
      */
-    private void createAndLogInfoMessage(String message, String resourceId, String resourceUri, String requestId) {
-        LOG.infoContext(requestId, message, setDebugMap(resourceId, resourceUri));
+    private void createAndLogInfoMessage(String message, Map<String, String> requestParameters) {
+        LOG.infoContext(requestParameters.get(REQUEST_ID), message, setDebugMap(requestParameters));
     }
 
-    private Map<String, Object> setDebugMap(String resourceId, String resourceUri) {
+    private Map<String, Object> setDebugMap(Map<String, String> requestParameters) {
 
         Map <String, Object> debugMap = new HashMap <>();
-        debugMap.put("resource_uri", resourceUri);
-        debugMap.put("resource_id",resourceId);
+        debugMap.put(RESOURCE_URI, requestParameters.get(RESOURCE_URI));
+        debugMap.put(RESOURCE_ID, requestParameters.get(RESOURCE_ID));
 
         return debugMap;
     }
