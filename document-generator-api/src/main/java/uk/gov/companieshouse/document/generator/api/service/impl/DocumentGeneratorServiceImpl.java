@@ -52,7 +52,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
 
     private static final Logger LOG = LoggerFactory.getLogger(APPLICATION_NAME_SPACE);
 
-    private static final String FILING_DESCRIPTIONS_FILE_NAME = "api-enumerations/filing_descriptions.yml";
+    private static final String FILING_DESCRIPTIONS_FILE_NAME = "document-generator-api/api-enumerations/filing_descriptions.yml";
 
     private static final String DESCRIPTION_IDENTIFIERS_KEY = "description_identifiers";
 
@@ -263,7 +263,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
         try {
             description = retrieveApiEnumerationDescription.getApiEnumerationDescription(
                     FILING_DESCRIPTIONS_FILE_NAME, DESCRIPTION_IDENTIFIERS_KEY,
-                    documentInfoResponse.getTemplateName(), documentInfoResponse.getDescriptionValues(), requestParameters);
+                    documentInfoResponse.getDescriptionIdentifier(), documentInfoResponse.getDescriptionValues(), requestParameters);
         } catch (IOException ioe) {
             createAndLogErrorMessage("Error retrieving description from api-enumeration from: "
                     + FILING_DESCRIPTIONS_FILE_NAME, ioe, requestParameters);
