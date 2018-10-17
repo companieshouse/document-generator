@@ -22,13 +22,19 @@ public class RetrieveApiEnumerationDescriptionImpl implements RetrieveApiEnumera
 
     private static final Logger LOG = LoggerFactory.getLogger(APPLICATION_NAME_SPACE);
 
+    private static final String RESOURCE_URI = "resource_uri";
+
+    private static final String RESOURCE_ID = "resource_id";
+
+    private static final String REQUEST_ID = "request_id";
+
     /**
      * {@inheritDoc}
      */
     @Override
     public String getApiEnumerationDescription(String fileName, String identifier, String accountType,
-                                               Map<String, String> parameters, String requestId, String resourceUri,
-                                               String resourceId) throws IOException {
+                                               Map<String, String> parameters, Map<String, String> requestParameters)
+            throws IOException {
 
 
         Yaml yaml = new Yaml();
@@ -36,22 +42,22 @@ public class RetrieveApiEnumerationDescriptionImpl implements RetrieveApiEnumera
 
         String description = "";
 
-        LOG.infoContext(requestId,"obtaining file for api enumerations with file name: " +
-                descriptionsFile, setDebugMap(resourceUri, resourceId));
+        LOG.infoContext(requestParameters.get(REQUEST_ID),"obtaining file for api enumerations with file name: " +
+                descriptionsFile, setDebugMap(requestParameters));
         try (InputStream inputStream = new FileInputStream(descriptionsFile)) {
 
-            LOG.infoContext(requestId,"The file: " + descriptionsFile + " has been found, obtaining descriptions",
-                    setDebugMap(resourceUri, resourceId));
+            LOG.infoContext(requestParameters.get(REQUEST_ID),"The file: " + descriptionsFile + " has been found, obtaining descriptions",
+                    setDebugMap(requestParameters));
             Map<String, Object> descriptions = (Map<String, Object>) yaml.load(inputStream);
             Map<String, Object> filteredDescriptions = (Map<String, Object>) getDescriptionsValue(descriptions,
-                    identifier, fileName, requestId, resourceUri, resourceId);
+                    identifier, fileName, requestParameters);
             if(filteredDescriptions != null) {
                 description =  String.valueOf(getDescriptionsValue(filteredDescriptions, accountType, fileName,
-                        requestId, resourceUri, resourceId));
+                        requestParameters));
             }
         } catch (FileNotFoundException e) {
-            LOG.trace("file not found when obtain api enumeration descriptions for file name: "
-                    + descriptionsFile, setDebugMap(resourceUri, resourceId));
+            LOG.errorContext(requestParameters.get(REQUEST_ID),"file not found when obtain api enumeration " +
+                    "descriptions for file name: " + descriptionsFile, e, setDebugMap(requestParameters));
         }
 
         return populateParameters(description, parameters);
@@ -66,17 +72,18 @@ public class RetrieveApiEnumerationDescriptionImpl implements RetrieveApiEnumera
      * @return
      */
     private Object getDescriptionsValue(Map<String, Object> descriptions, String key, String fileName,
-                                               String requestId, String resourceUri, String resourceId) {
-        LOG.infoContext(requestId,"getting value from the file descriptions file: " + fileName
-                        + " using key: " + key, setDebugMap(resourceUri, resourceId));
+                                               Map<String, String> requestParameters) {
+
+        LOG.infoContext(requestParameters.get(REQUEST_ID),"getting value from the file descriptions file: "
+                + fileName + " using key: " + key, setDebugMap(requestParameters));
         return descriptions.entrySet().stream()
                 .filter(map -> descriptions.containsKey(key))
                 .map(Map.Entry::getValue)
                 .findFirst()
                 .orElseGet(() -> {
-                    LOG.infoContext(requestId,"Value not found in file descriptions file: " + fileName
-                                    + " for key: " + key,
-                            setDebugMap(resourceUri, resourceId));
+                    LOG.infoContext(requestParameters.get(REQUEST_ID),"Value not found in file descriptions file: "
+                                    + fileName + " for key: " + key,
+                            setDebugMap(requestParameters));
                     return null;
                 });
     }
@@ -93,11 +100,11 @@ public class RetrieveApiEnumerationDescriptionImpl implements RetrieveApiEnumera
         return sub.replace(description);
     }
 
-    private Map<String, Object> setDebugMap(String resourceUri, String resourceId) {
+    private Map<String, Object> setDebugMap(Map<String, String> requestParameters) {
 
         Map <String, Object> debugMap = new HashMap <>();
-        debugMap.put("resource_uri", resourceUri);
-        debugMap.put("resource_id",resourceId);
+        debugMap.put(RESOURCE_URI, requestParameters.get(RESOURCE_URI));
+        debugMap.put(RESOURCE_ID,requestParameters.get(RESOURCE_ID));
 
         return debugMap;
     }

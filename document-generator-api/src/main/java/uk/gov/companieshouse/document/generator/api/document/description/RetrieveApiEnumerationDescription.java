@@ -12,13 +12,10 @@ public interface RetrieveApiEnumerationDescription {
      * @param identifier The identifier/key used to select the description
      * @param accountType The type of account
      * @param descriptionValues A map of the description values used to obtain the description
-     * @param requestId The id of the request
-     * @param resourceUri The resource Uri
-     * @param resourceId The Id of the resource
+     * @param requestParameters Map containing requestId, resourceId and resourceUri as a key/value pair
      * @return String containing the description
      * @throws IOException
      */
     String getApiEnumerationDescription(String fileName, String identifier, String accountType,
-                                        Map<String, String> descriptionValues, String requestId, String resourceUri,
-                                        String resourceId) throws IOException;
+                                        Map<String, String> descriptionValues, Map<String, String> requestParameters) throws IOException;
 }
