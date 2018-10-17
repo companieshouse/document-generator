@@ -13,10 +13,12 @@ import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
 import uk.gov.companieshouse.api.model.accounts.abridged.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.abridged.balancesheet.BalanceSheetApi;
 import uk.gov.companieshouse.api.model.accounts.abridged.notes.CurrentNotesApi;
+import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.accounts.service.AccountsService;
+import uk.gov.companieshouse.document.generator.accounts.service.CompanyService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,6 +40,9 @@ public class AccountsHandlerImplTest {
 
     @Mock
     private Transaction transaction;
+
+    @Mock
+    private CompanyService companyService;
 
     private static final String ACCOUNTS_RESOURCE_LINK = "/transactions/091174-913515-326060";
     private static final String ABRIDGED_ACCOUNTS_RESOURCE_LINK = "/transactions/091174-913515-326060/accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
@@ -67,7 +72,18 @@ public class AccountsHandlerImplTest {
     void testGetAbridgedAccountsData() throws ServiceException, HandlerException {
         when(accountsService.getAccounts(anyString(), anyString())).thenReturn(createAccountsObject());
         when(accountsService.getAbridgedAccounts(anyString(), anyString())).thenReturn(createCurrentPeriodAbridgedAccountObject());
+        when(companyService.getCompanyProfile(anyString())).thenReturn(createCompanyProfile());
+        when(transaction.getCompanyNumber()).thenReturn("000667733");
         assertNotNull(accountsHandlerImpl.getAbridgedAccountsData(transaction, ACCOUNTS_RESOURCE_LINK, REQUEST_ID));
+    }
+
+    private CompanyProfileApi createCompanyProfile() {
+
+        CompanyProfileApi companyProfileApi = new CompanyProfileApi();
+
+        companyProfileApi.setCompanyName("company_name");
+
+        return companyProfileApi;
     }
 
     private AbridgedAccountsApi createCurrentPeriodAbridgedAccountObject() {
