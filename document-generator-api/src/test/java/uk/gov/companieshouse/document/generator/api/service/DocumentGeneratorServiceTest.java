@@ -86,7 +86,7 @@ public class DocumentGeneratorServiceTest {
     @DisplayName("Test a successful generate completed")
     public void testsSuccessfulGenerateCompleted() throws IOException, DocumentGeneratorServiceException, DocumentInfoException {
 
-        when(mockDocumentTypeService.getDocumentType(any(String.class))).thenReturn(DocumentType.ACCOUNTS);
+        when(mockDocumentTypeService.getDocumentType(any(Map.class))).thenReturn(DocumentType.ACCOUNTS);
         when(mockDocumentInfoServiceFactory.get(any(String.class))).thenReturn(mockDocumentInfoService);
         when(mockDocumentInfoService.getDocumentInfo(any(DocumentInfoRequest.class))).thenReturn(setSuccessfulDocumentInfo());
         when(mockRequestHandler.sendDataToDocumentRenderService(any(String.class), any(RenderDocumentRequest.class),
@@ -112,7 +112,7 @@ public class DocumentGeneratorServiceTest {
     @DisplayName("Tests when null returned from documentInfoService")
     public void testsWhenNullReturnedFromDocumentInfoService() throws DocumentGeneratorServiceException, DocumentInfoException {
 
-        when(mockDocumentTypeService.getDocumentType(any(String.class))).thenReturn(DocumentType.ACCOUNTS);
+        when(mockDocumentTypeService.getDocumentType(any(Map.class))).thenReturn(DocumentType.ACCOUNTS);
         when(mockDocumentInfoServiceFactory.get(any(String.class))).thenReturn(mockDocumentInfoService);
         when(mockDocumentInfoService.getDocumentInfo(any(DocumentInfoRequest.class))).thenReturn(null);
 
@@ -126,7 +126,7 @@ public class DocumentGeneratorServiceTest {
     @DisplayName("Tests when error returned from documentInfoService")
     public void testsWhenErrorThrownFromDocumentInfoService() throws DocumentGeneratorServiceException, DocumentInfoException {
 
-        when(mockDocumentTypeService.getDocumentType(any(String.class))).thenReturn(DocumentType.ACCOUNTS);
+        when(mockDocumentTypeService.getDocumentType(any(Map.class))).thenReturn(DocumentType.ACCOUNTS);
         when(mockDocumentInfoServiceFactory.get(any(String.class))).thenReturn(mockDocumentInfoService);
         when(mockDocumentInfoService.getDocumentInfo(any(DocumentInfoRequest.class))).thenThrow(DocumentInfoException.class);
 
@@ -140,7 +140,7 @@ public class DocumentGeneratorServiceTest {
     @DisplayName("Tests when error thrown from documentTypeService")
     public void testsWhenErrorThrownFromDocumentTypeService() throws DocumentGeneratorServiceException {
 
-        when(mockDocumentTypeService.getDocumentType(any(String.class))).thenThrow(DocumentGeneratorServiceException.class);
+        when(mockDocumentTypeService.getDocumentType(any(Map.class))).thenThrow(DocumentGeneratorServiceException.class);
 
         ResponseObject response = documentGeneratorService.generate(setValidRequest(), REQUEST_ID);
 
@@ -152,7 +152,7 @@ public class DocumentGeneratorServiceTest {
     @DisplayName("Tests when an error thrown from requestHandler")
     public void testsWhenErrorThrownFromRequestHandler() throws IOException, DocumentGeneratorServiceException, DocumentInfoException {
 
-        when(mockDocumentTypeService.getDocumentType(any(String.class))).thenReturn(DocumentType.ACCOUNTS);
+        when(mockDocumentTypeService.getDocumentType(any(Map.class))).thenReturn(DocumentType.ACCOUNTS);
         when(mockDocumentInfoServiceFactory.get(any(String.class))).thenReturn(mockDocumentInfoService);
         when(mockDocumentInfoService.getDocumentInfo(any(DocumentInfoRequest.class))).thenReturn(setSuccessfulDocumentInfo());
         when(mockRequestHandler.sendDataToDocumentRenderService(any(String.class), any(RenderDocumentRequest.class),

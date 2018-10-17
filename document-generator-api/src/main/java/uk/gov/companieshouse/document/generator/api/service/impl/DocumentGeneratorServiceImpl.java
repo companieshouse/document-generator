@@ -95,7 +95,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
                         + requestParameters.get(RESOURCE_URI) + " has started", requestParameters);
         DocumentType documentType;
         try {
-            documentType = documentTypeService.getDocumentType(documentRequest.getResourceUri());
+            documentType = documentTypeService.getDocumentType(requestParameters);
         } catch (DocumentGeneratorServiceException dgse){
             createAndLogErrorMessage("Failed to get document type from resource:  "
                     + requestParameters.get(RESOURCE_URI), dgse, requestParameters);
