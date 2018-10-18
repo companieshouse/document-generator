@@ -50,20 +50,16 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
 
         HttpURLConnection connection = httpConnectionHandler.openConnection(url);
 
-        Map<String, Object> debugMap = new HashMap<>();
-        debugMap.put(RESOURCE_URI, requestParameters.get(RESOURCE_URI));
-        debugMap.put(RESOURCE_ID, requestParameters.get(RESOURCE_ID));
-
         String requestId = requestParameters.get(REQUEST_ID);
 
         try {
-            LOG.infoContext(requestId,"Preparing the connection for render service", debugMap);
+            LOG.infoContext(requestId,"Preparing the connection for render service", setDebugMap(requestParameters));
             prepareConnection(connection, request);
-            LOG.infoContext(requestId, "Sending the request to the render service", debugMap);
+            LOG.infoContext(requestId, "Sending the request to the render service", setDebugMap(requestParameters));
             sendRequest(connection, request);
 
             if (connection.getResponseCode() == HttpURLConnection.HTTP_CREATED) {
-                LOG.infoContext(requestId, "handling the response from the render service", debugMap);
+                LOG.infoContext(requestId, "handling the response from the render service", setDebugMap(requestParameters));
                 response = handleResponse(connection);
             }
 
@@ -75,7 +71,7 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
             }
         }
 
-        LOG.infoContext(requestId,"returning response from the render service", debugMap);
+        LOG.infoContext(requestId,"returning response from the render service", setDebugMap(requestParameters));
         return response;
     }
 
@@ -149,5 +145,14 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
         connection.setRequestProperty("Content-Type", request.getContentType());
         connection.setRequestProperty("Accept", request.getDocumentType());
         connection.setRequestProperty("Location", request.getLocation());
+    }
+
+    private Map<String, Object> setDebugMap(Map<String, String> requestParameters) {
+
+        Map<String, Object> debugMap = new HashMap<>();
+        debugMap.put(RESOURCE_URI, requestParameters.get(RESOURCE_URI));
+        debugMap.put(RESOURCE_ID, requestParameters.get(RESOURCE_ID));
+
+        return debugMap;
     }
 }
