@@ -47,11 +47,14 @@ public class AccountsHandlerImplTest {
     private static final String ACCOUNTS_RESOURCE_LINK = "/transactions/091174-913515-326060";
     private static final String ABRIDGED_ACCOUNTS_RESOURCE_LINK = "/transactions/091174-913515-326060/accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
     private static final String REQUEST_ID = "requestId";
+    private static final String COMPANY_NUMBER = "000667733";
+    private static final String COMPANY_NAME = "company_name";
+    private static final String SERVICE_EXCEPTION = "Failure in service layer";
 
     @Test
     @DisplayName("Tests the unsuccessful return of accounts data due to failure in service layer")
     void testGetAccountsDataFailureFromServiceLayer() throws ServiceException {
-        when(accountsService.getAccounts(anyString(), anyString())).thenThrow(new ServiceException("Failure in service layer"));
+        when(accountsService.getAccounts(anyString(), anyString())).thenThrow(new ServiceException(SERVICE_EXCEPTION));
 
         assertThrows(ServiceException.class, () -> accountsService.getAccounts(anyString(), anyString()));
         assertThrows(HandlerException.class, () -> accountsHandlerImpl.getAbridgedAccountsData(transaction, ACCOUNTS_RESOURCE_LINK, REQUEST_ID));
@@ -61,7 +64,7 @@ public class AccountsHandlerImplTest {
     @DisplayName("Tests the unsuccessful return of Abridged accounts data due to failure in service layer")
     void testGetAbridgedAccountsDataFailureFromServiceLayer() throws ServiceException {
         when(accountsService.getAccounts(anyString(), anyString())).thenReturn(createAccountsObject());
-        when(accountsService.getAbridgedAccounts(anyString(), anyString())).thenThrow(new ServiceException("Failure in service layer"));
+        when(accountsService.getAbridgedAccounts(anyString(), anyString())).thenThrow(new ServiceException(SERVICE_EXCEPTION));
 
         assertThrows(ServiceException.class, () -> accountsService.getAbridgedAccounts(anyString(), anyString()));
         assertThrows(HandlerException.class, () -> accountsHandlerImpl.getAbridgedAccountsData(transaction, ACCOUNTS_RESOURCE_LINK, REQUEST_ID));
@@ -73,7 +76,7 @@ public class AccountsHandlerImplTest {
         when(accountsService.getAccounts(anyString(), anyString())).thenReturn(createAccountsObject());
         when(accountsService.getAbridgedAccounts(anyString(), anyString())).thenReturn(createCurrentPeriodAbridgedAccountObject());
         when(companyService.getCompanyProfile(anyString())).thenReturn(createCompanyProfile());
-        when(transaction.getCompanyNumber()).thenReturn("000667733");
+        when(transaction.getCompanyNumber()).thenReturn(COMPANY_NUMBER);
         assertNotNull(accountsHandlerImpl.getAbridgedAccountsData(transaction, ACCOUNTS_RESOURCE_LINK, REQUEST_ID));
     }
 
@@ -81,7 +84,7 @@ public class AccountsHandlerImplTest {
 
         CompanyProfileApi companyProfileApi = new CompanyProfileApi();
 
-        companyProfileApi.setCompanyName("company_name");
+        companyProfileApi.setCompanyName(COMPANY_NAME);
 
         return companyProfileApi;
     }
