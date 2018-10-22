@@ -119,12 +119,13 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
 
         if (documentInfoResponse != null) {
             RenderDocumentResponse renderResponse = null;
+
             try {
                 renderResponse = renderSubmittedDocumentData(documentRequest, documentInfoResponse,
                         requestParameters);
-                if (renderResponse.getStatus() > 400) {
+                if (renderResponse.getStatus() >= 400) {
                     createAndLogErrorMessage("An error occurred in the render service, returning a status of: " +
-                            renderResponse.getStatus() + " for resource: " + requestParameters.get(RESOURCE_URI),
+                                    renderResponse.getStatus() + " for resource: " + requestParameters.get(RESOURCE_URI),
                             null, requestParameters);
                     response = setDocumentResponse(renderResponse, documentInfoResponse, requestParameters);
                     return new ResponseObject(ResponseStatus.FAILED_TO_RENDER, response);
