@@ -14,16 +14,20 @@ import uk.gov.companieshouse.document.generator.api.document.render.models.Rende
 import uk.gov.companieshouse.document.generator.api.exception.RenderServiceException;
 
 import java.io.ByteArrayInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -37,13 +41,22 @@ public class RenderDocumentRequestHandlerTest {
 
     private static final String RESOURCE_URI = "/transactions/091174-913515-326060/accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
 
+    private static final String RESOURCE_ID = "/transactions/091174-913515-326060";
+
     private static final String REQUEST_ID = "requestId";
+
+    private static final int HTTP_CREATED = 201;
+
+    private static final int HTTP_INTERNAL_ERROR = 500;
 
     @Mock
     private HttpURLConnection mockHttpURLConnection;
 
     @Mock
     private OutputStream mockOutputSteam;
+
+    @Mock
+    private DataOutputStream mockDataOutputStream;
 
     @InjectMocks
     private RenderDocumentRequestHandlerImpl renderDocumentRequestHandler;
@@ -59,7 +72,7 @@ public class RenderDocumentRequestHandlerTest {
     private static Map<String, String> requestParameters;
 
     @BeforeEach
-    public void setUp() throws IOException{
+    public void setUp() {
 
         renderDocumentRequest = new RenderDocumentRequest();
         renderDocumentRequest.setAssetId("asset1");
@@ -70,33 +83,34 @@ public class RenderDocumentRequestHandlerTest {
 
         requestParameters = new HashMap<>();
         requestParameters.put("resource_uri", RESOURCE_URI);
+        requestParameters.put("resource_id", RESOURCE_ID);
         requestParameters.put("request_id", REQUEST_ID);
-
-        when(mockHttpConnectionHandler.openConnection(any(String.class))).thenReturn(mockHttpURLConnection);
     }
 
     @Test
     @DisplayName("Send the data to the render service successfully")
     public void testSendDataToRenderServiceSuccess() throws IOException, RenderServiceException {
 
+        setValidOpenConnection();
         when(convertJsonHandler.convert(any(String.class))).thenReturn("long data");
 
-        setMockHttpConnectionForSuccess(201);
-
+        setMockHttpConnectionForSuccess(HTTP_CREATED);
         RenderDocumentResponse response = renderDocumentRequestHandler.sendDataToDocumentRenderService(
                 "http://www.test.com", renderDocumentRequest, requestParameters);
 
         assertEquals(PDF_LOCATION, response.getLocation());
 
         verifyHttpConnectionMock(true);
-        assertEquals(201, response.getStatus());
+        assertEquals(HTTP_CREATED, response.getStatus());
     }
 
     @Test
     @DisplayName("Send the data to the render service and obtain a response error")
     public void testSendDataToRenderServiceServerResponseError() throws IOException, RenderServiceException {
 
-        setMockHttpConnectionForError(500);
+        setValidOpenConnection();
+
+        setMockHttpConnectionForError(HTTP_INTERNAL_ERROR);
         RenderDocumentResponse response = renderDocumentRequestHandler.sendDataToDocumentRenderService(
                 "http://www.test.com", renderDocumentRequest, requestParameters);
 
@@ -104,7 +118,52 @@ public class RenderDocumentRequestHandlerTest {
         assertNull(response.getLocation());
 
         verifyHttpConnectionMock(false);
-        assertEquals(500, response.getStatus());
+        assertEquals(HTTP_INTERNAL_ERROR, response.getStatus());
+    }
+
+    @Test
+    @DisplayName("Error Thrown when opening connection fails")
+    public void testErrorThrownWhenOpeningConnectionFails() throws IOException {
+
+        when(mockHttpConnectionHandler.openConnection(any(String.class))).thenThrow(IOException.class);
+
+        assertThrows(RenderServiceException.class, () -> renderDocumentRequestHandler.sendDataToDocumentRenderService(
+                "http://www.test.com", renderDocumentRequest, requestParameters));
+    }
+
+    @Test
+    @DisplayName("Error Thrown when preparing connection fails")
+    public void testErrorThrownWhenPreparingConnectionFails() throws IOException {
+
+        setValidOpenConnection();
+        doThrow(ProtocolException.class).when(mockHttpURLConnection).setRequestMethod(any(String.class));
+
+        assertThrows(RenderServiceException.class, () -> renderDocumentRequestHandler.sendDataToDocumentRenderService(
+                "http://www.test.com", renderDocumentRequest, requestParameters));
+    }
+
+    @Test
+    @DisplayName("Error Thrown when send request fails")
+    public void testErrorThrownWhenSendRequestFails() throws IOException {
+
+        setValidOpenConnection();
+        when(mockHttpURLConnection.getOutputStream()).thenThrow(IOException.class);
+
+        assertThrows(RenderServiceException.class, () -> renderDocumentRequestHandler.sendDataToDocumentRenderService(
+                "http://www.test.com", renderDocumentRequest, requestParameters));
+    }
+
+    @Test
+    @DisplayName("Error Thrown when handle request fails")
+    public void testErrorThrownWhenHandleRequestFails() throws IOException {
+
+        setValidOpenConnection();
+        when(mockHttpURLConnection.getOutputStream()).thenReturn(mockOutputSteam);
+        when(mockHttpURLConnection.getResponseCode()).thenReturn(HTTP_CREATED);
+        when(mockHttpURLConnection.getInputStream()).thenThrow(IOException.class);
+
+        assertThrows(RenderServiceException.class, () -> renderDocumentRequestHandler.sendDataToDocumentRenderService(
+                "http://www.test.com", renderDocumentRequest, requestParameters));
     }
 
     /**
@@ -116,6 +175,16 @@ public class RenderDocumentRequestHandlerTest {
     private void setMockHttpConnectionForError(int statusCode) throws IOException {
         when(mockHttpURLConnection.getOutputStream()).thenReturn(mockOutputSteam);
         when(mockHttpURLConnection.getResponseCode()).thenReturn(statusCode);
+    }
+
+    /**
+     * Set a valid open connection
+     *
+     * @throws IOException
+     */
+    private void setValidOpenConnection() throws IOException {
+
+        when(mockHttpConnectionHandler.openConnection(any(String.class))).thenReturn(mockHttpURLConnection);
     }
 
     /**

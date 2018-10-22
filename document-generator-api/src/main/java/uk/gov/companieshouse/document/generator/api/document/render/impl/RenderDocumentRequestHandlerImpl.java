@@ -52,14 +52,15 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
         RenderDocumentResponse response = new RenderDocumentResponse();
         HttpURLConnection connection;
 
+        String requestId = requestParameters.get(REQUEST_ID);
+
         try {
+            LOG.infoContext(requestId, "Opening connection for render service", setDebugMap(requestParameters));
             connection = httpConnectionHandler.openConnection(url);
         } catch (IOException ioe) {
             throw new RenderServiceException("Error occurred when opening connection to the render service for: "
                     + requestParameters.get(RESOURCE_URI), ioe);
         }
-
-        String requestId = requestParameters.get(REQUEST_ID);
 
         try {
             LOG.infoContext(requestId,"Preparing the connection for render service", setDebugMap(requestParameters));
