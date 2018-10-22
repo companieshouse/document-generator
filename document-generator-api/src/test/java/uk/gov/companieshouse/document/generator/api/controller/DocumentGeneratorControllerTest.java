@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import uk.gov.companieshouse.document.generator.api.models.DocumentRequest;
 import uk.gov.companieshouse.document.generator.api.models.DocumentResponse;
+import uk.gov.companieshouse.document.generator.api.models.Links;
 import uk.gov.companieshouse.document.generator.api.service.DocumentGeneratorService;
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseObject;
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseStatus;
@@ -86,7 +87,11 @@ public class DocumentGeneratorControllerTest {
         response.setDescription(DESCRIPTION);
         response.setDescriptionIdentifier(DESCRIPTION_IDENTIFIER);
         response.setSize(SIZE);
-        response.setLinks(LOCATION);
+
+        Links links = new Links();
+        links.setLocation(LOCATION);
+        response.setLinks(links);
+
         response.setDescriptionValues(setDescriptionValue());
 
         ResponseObject responseObject = new ResponseObject(ResponseStatus.CREATED, response);

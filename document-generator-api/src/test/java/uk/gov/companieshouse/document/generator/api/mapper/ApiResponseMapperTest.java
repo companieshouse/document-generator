@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import uk.gov.companieshouse.document.generator.api.models.DocumentResponse;
+import uk.gov.companieshouse.document.generator.api.models.Links;
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseObject;
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseStatus;
 
@@ -49,7 +50,10 @@ public class ApiResponseMapperTest {
         documentResponse.setDescription(DESCRIPTION);
         documentResponse.setSize(SIZE);
         documentResponse.setDescriptionIdentifier(DESCRIPTION_IDENTIFIER);
-        documentResponse.setLinks(LOCATION);
+
+        Links link = new Links();
+        link.setLocation(LOCATION);
+        documentResponse.setLinks(link);
 
         ResponseObject responseObject = new ResponseObject(ResponseStatus.CREATED, documentResponse);
 

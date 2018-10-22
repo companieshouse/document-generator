@@ -11,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.document.generator.api.document.render.impl.RenderDocumentRequestHandlerImpl;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentRequest;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentResponse;
+import uk.gov.companieshouse.document.generator.api.exception.RenderServiceException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -76,7 +77,7 @@ public class RenderDocumentRequestHandlerTest {
 
     @Test
     @DisplayName("Send the data to the render service successfully")
-    public void testSendDataToRenderServiceSuccess() throws IOException {
+    public void testSendDataToRenderServiceSuccess() throws IOException, RenderServiceException {
 
         when(convertJsonHandler.convert(any(String.class))).thenReturn("long data");
 
@@ -93,7 +94,7 @@ public class RenderDocumentRequestHandlerTest {
 
     @Test
     @DisplayName("Send the data to the render service and obtain a response error")
-    public void testSendDataToRenderServiceServerResponseError() throws IOException {
+    public void testSendDataToRenderServiceServerResponseError() throws IOException, RenderServiceException {
 
         setMockHttpConnectionForError(500);
         RenderDocumentResponse response = renderDocumentRequestHandler.sendDataToDocumentRenderService(

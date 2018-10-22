@@ -2,6 +2,7 @@ package uk.gov.companieshouse.document.generator.api.document.render;
 
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentRequest;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentResponse;
+import uk.gov.companieshouse.document.generator.api.exception.RenderServiceException;
 
 import java.io.IOException;
 import java.util.Map;
@@ -18,5 +19,5 @@ public interface RenderDocumentRequestHandler {
      * @throws IOException
      */
     RenderDocumentResponse sendDataToDocumentRenderService(String url, RenderDocumentRequest request,
-                                                           Map<String, String> requestParameters) throws IOException;
+                                                           Map<String, String> requestParameters) throws IOException, RenderServiceException;
 }

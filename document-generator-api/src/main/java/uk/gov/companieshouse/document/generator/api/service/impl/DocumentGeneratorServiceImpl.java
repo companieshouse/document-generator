@@ -8,10 +8,12 @@ import uk.gov.companieshouse.document.generator.api.document.description.Retriev
 import uk.gov.companieshouse.document.generator.api.document.render.RenderDocumentRequestHandler;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentRequest;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentResponse;
-import uk.gov.companieshouse.document.generator.api.exception.DocumentGeneratorServiceException;
+import uk.gov.companieshouse.document.generator.api.exception.RenderServiceException;
+import uk.gov.companieshouse.document.generator.api.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.api.factory.DocumentInfoServiceFactory;
 import uk.gov.companieshouse.document.generator.api.models.DocumentRequest;
 import uk.gov.companieshouse.document.generator.api.models.DocumentResponse;
+import uk.gov.companieshouse.document.generator.api.models.Links;
 import uk.gov.companieshouse.document.generator.api.service.DocumentGeneratorService;
 import uk.gov.companieshouse.document.generator.api.service.DocumentTypeService;
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseObject;
@@ -96,7 +98,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
         DocumentType documentType;
         try {
             documentType = documentTypeService.getDocumentType(requestParameters);
-        } catch (DocumentGeneratorServiceException dgse){
+        } catch (ServiceException dgse){
             createAndLogErrorMessage("Failed to get document type from resource:  "
                     + requestParameters.get(RESOURCE_URI), dgse, requestParameters);
             return new ResponseObject(ResponseStatus.NO_TYPE_FOUND, null);
@@ -120,9 +122,16 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
             try {
                 renderResponse = renderSubmittedDocumentData(documentRequest, documentInfoResponse,
                         requestParameters);
-            } catch (IOException ioe) {
-                createAndLogErrorMessage("Error occurred whilst rendering the document for resource: " +
-                        requestParameters.get(RESOURCE_URI), ioe, requestParameters);
+                if (renderResponse.getStatus() > 400) {
+                    createAndLogErrorMessage("An error occurred in the render service, returning a status of: " +
+                            renderResponse.getStatus() + " for resource: " + requestParameters.get(RESOURCE_URI),
+                            null, requestParameters);
+                    response = setDocumentResponse(renderResponse, documentInfoResponse, requestParameters);
+                    return new ResponseObject(ResponseStatus.FAILED_TO_RENDER, response);
+                }
+            } catch (IOException | RenderServiceException e) {
+                createAndLogErrorMessage("Error occurred when trying to render the document for resource: " +
+                        requestParameters.get(RESOURCE_URI), e, requestParameters);
                 response = setDocumentResponse(renderResponse, documentInfoResponse, requestParameters);
                 return new ResponseObject(ResponseStatus.FAILED_TO_RENDER, response);
             }
@@ -166,7 +175,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
     private RenderDocumentResponse renderSubmittedDocumentData(DocumentRequest documentRequest,
                                                                DocumentInfoResponse documentInfoResponse,
                                                                Map<String, String> requestParameters)
-            throws IOException {
+            throws IOException, RenderServiceException {
 
         String host = environmentReader.getMandatoryString(DOCUMENT_RENDER_SERVICE_HOST_ENV_VAR);
         String url = new StringBuilder(host).append(CONTEXT_PATH).toString();
@@ -239,7 +248,9 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
         DocumentResponse response = new DocumentResponse();
 
         if (renderResponse != null) {
-            response.setLinks(renderResponse.getLocation());
+            Links links = new Links();
+            links.setLocation(renderResponse.getLocation());
+            response.setLinks(links);
             response.setSize(renderResponse.getDocumentSize());
         }
 
@@ -283,17 +294,17 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
     private <T extends Exception> void createAndLogErrorMessage(String message, T exception,
                                                                 Map<String, String> requestParameters) {
 
-        DocumentGeneratorServiceException documentGeneratorServiceException;
+        ServiceException serviceException;
 
         if (exception != null) {
-            documentGeneratorServiceException =
-                    new DocumentGeneratorServiceException(message, exception);
+            serviceException =
+                    new ServiceException(message, exception);
         } else {
-            documentGeneratorServiceException =
-                    new DocumentGeneratorServiceException(message);
+            serviceException =
+                    new ServiceException(message);
         }
         
-        LOG.errorContext(requestParameters.get(REQUEST_ID), documentGeneratorServiceException,
+        LOG.errorContext(requestParameters.get(REQUEST_ID), serviceException,
                 setDebugMap(requestParameters));
     }
 
