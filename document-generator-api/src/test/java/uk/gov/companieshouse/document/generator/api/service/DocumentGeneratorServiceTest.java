@@ -11,7 +11,8 @@ import uk.gov.companieshouse.document.generator.api.document.description.Retriev
 import uk.gov.companieshouse.document.generator.api.document.render.RenderDocumentRequestHandler;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentRequest;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentResponse;
-import uk.gov.companieshouse.document.generator.api.exception.DocumentGeneratorServiceException;
+import uk.gov.companieshouse.document.generator.api.exception.RenderServiceException;
+import uk.gov.companieshouse.document.generator.api.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.api.factory.DocumentInfoServiceFactory;
 import uk.gov.companieshouse.document.generator.api.models.DocumentRequest;
 import uk.gov.companieshouse.document.generator.api.service.impl.DocumentGeneratorServiceImpl;
@@ -84,7 +85,8 @@ public class DocumentGeneratorServiceTest {
 
     @Test
     @DisplayName("Test a successful generate completed")
-    public void testsSuccessfulGenerateCompleted() throws IOException, DocumentGeneratorServiceException, DocumentInfoException {
+    public void testsSuccessfulGenerateCompleted() throws IOException, ServiceException, DocumentInfoException,
+            RenderServiceException {
 
         when(mockDocumentTypeService.getDocumentType(any(Map.class))).thenReturn(DocumentType.ACCOUNTS);
         when(mockDocumentInfoServiceFactory.get(any(String.class))).thenReturn(mockDocumentInfoService);
@@ -103,14 +105,14 @@ public class DocumentGeneratorServiceTest {
         assertEquals(DESCRIPTION, response.getData().getDescription());
         assertEquals(DESCRIPTION_IDENTIFIER, response.getData().getDescriptionIdentifier());
         assertEquals(SIZE, response.getData().getSize());
-        assertEquals(buildLocation(), response.getData().getLinks());
+        assertEquals(buildLocation(), response.getData().getLinks().getLocation());
 
         assertEquals(ResponseStatus.CREATED, response.getStatus());
     }
 
     @Test
     @DisplayName("Tests when null returned from documentInfoService")
-    public void testsWhenNullReturnedFromDocumentInfoService() throws DocumentGeneratorServiceException, DocumentInfoException {
+    public void testsWhenNullReturnedFromDocumentInfoService() throws ServiceException, DocumentInfoException {
 
         when(mockDocumentTypeService.getDocumentType(any(Map.class))).thenReturn(DocumentType.ACCOUNTS);
         when(mockDocumentInfoServiceFactory.get(any(String.class))).thenReturn(mockDocumentInfoService);
@@ -124,7 +126,7 @@ public class DocumentGeneratorServiceTest {
 
     @Test
     @DisplayName("Tests when error returned from documentInfoService")
-    public void testsWhenErrorThrownFromDocumentInfoService() throws DocumentGeneratorServiceException, DocumentInfoException {
+    public void testsWhenErrorThrownFromDocumentInfoService() throws ServiceException, DocumentInfoException {
 
         when(mockDocumentTypeService.getDocumentType(any(Map.class))).thenReturn(DocumentType.ACCOUNTS);
         when(mockDocumentInfoServiceFactory.get(any(String.class))).thenReturn(mockDocumentInfoService);
@@ -138,9 +140,9 @@ public class DocumentGeneratorServiceTest {
 
     @Test
     @DisplayName("Tests when error thrown from documentTypeService")
-    public void testsWhenErrorThrownFromDocumentTypeService() throws DocumentGeneratorServiceException {
+    public void testsWhenErrorThrownFromDocumentTypeService() throws ServiceException {
 
-        when(mockDocumentTypeService.getDocumentType(any(Map.class))).thenThrow(DocumentGeneratorServiceException.class);
+        when(mockDocumentTypeService.getDocumentType(any(Map.class))).thenThrow(ServiceException.class);
 
         ResponseObject response = documentGeneratorService.generate(setValidRequest(), REQUEST_ID);
 
@@ -150,7 +152,8 @@ public class DocumentGeneratorServiceTest {
 
     @Test
     @DisplayName("Tests when an error thrown from requestHandler")
-    public void testsWhenErrorThrownFromRequestHandler() throws IOException, DocumentGeneratorServiceException, DocumentInfoException {
+    public void testsWhenErrorThrownFromRequestHandler() throws IOException, ServiceException,
+            DocumentInfoException, RenderServiceException {
 
         when(mockDocumentTypeService.getDocumentType(any(Map.class))).thenReturn(DocumentType.ACCOUNTS);
         when(mockDocumentInfoServiceFactory.get(any(String.class))).thenReturn(mockDocumentInfoService);

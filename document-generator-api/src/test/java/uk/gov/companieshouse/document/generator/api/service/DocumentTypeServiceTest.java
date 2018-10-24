@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.companieshouse.document.generator.api.exception.DocumentGeneratorServiceException;
+import uk.gov.companieshouse.document.generator.api.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.api.service.impl.DocumentTypeServiceImpl;
 import uk.gov.companieshouse.document.generator.api.document.DocumentType;
 
@@ -45,7 +45,7 @@ public class DocumentTypeServiceTest {
 
     @Test
     @DisplayName("tests that a DocumentType containing 'ACCOUNTS' is returned when uri contains 'accounts'")
-    public void testSuccessfulPatternMatchToAccountsReturnedForAccounts() throws DocumentGeneratorServiceException {
+    public void testSuccessfulPatternMatchToAccountsReturnedForAccounts() throws ServiceException {
 
         requestParameters.put(RESOURCE_URI, ACCOUNTS_RESOURCE_URI);
         DocumentType result = documentTypeService.getDocumentType(requestParameters);
@@ -55,7 +55,7 @@ public class DocumentTypeServiceTest {
 
     @Test
     @DisplayName("tests that a DocumentType containing 'ACCOUNTS' is returned when uri contains 'company-accounts'")
-    public void testSuccessfulPatternMatchToAccountsReturnedForCompanyAccounts() throws DocumentGeneratorServiceException {
+    public void testSuccessfulPatternMatchToAccountsReturnedForCompanyAccounts() throws ServiceException {
 
         requestParameters.put(RESOURCE_URI, COMPANY_ACCOUNTS_RESOURCE_URI);
         DocumentType result = documentTypeService.getDocumentType(requestParameters);
@@ -68,6 +68,6 @@ public class DocumentTypeServiceTest {
     public void testErrorReturnedWhenUriDoesNotMatchPattern() {
 
         requestParameters.put(RESOURCE_URI, "wrong data");
-        assertThrows(DocumentGeneratorServiceException.class, () -> documentTypeService.getDocumentType(requestParameters));
+        assertThrows(ServiceException.class, () -> documentTypeService.getDocumentType(requestParameters));
     }
 }

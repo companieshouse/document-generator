@@ -2,7 +2,7 @@ package uk.gov.companieshouse.document.generator.api.service.impl;
 
 import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.document.generator.api.document.DocumentType;
-import uk.gov.companieshouse.document.generator.api.exception.DocumentGeneratorServiceException;
+import uk.gov.companieshouse.document.generator.api.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.api.service.DocumentTypeService;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
@@ -28,13 +28,13 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
      * {@inheritDoc}
      */
     @Override
-    public DocumentType getDocumentType(Map<String, String> requestParameters) throws DocumentGeneratorServiceException {
+    public DocumentType getDocumentType(Map<String, String> requestParameters) throws ServiceException {
 
         LOG.infoContext(requestParameters.get(REQUEST_ID),"Getting the document type from resource: "
                 + requestParameters.get(RESOURCE_URI), setDebugMap(requestParameters));
         return Arrays.stream(DocumentType.values())
                 .filter(docTypeEntry -> requestParameters.get(RESOURCE_URI).matches(docTypeEntry.getPattern()))
-                .findFirst().orElseThrow(() -> new DocumentGeneratorServiceException(
+                .findFirst().orElseThrow(() -> new ServiceException(
                         "Could not locate the document type from the Uri"));
     }
 

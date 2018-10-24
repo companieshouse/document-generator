@@ -1,7 +1,7 @@
 package uk.gov.companieshouse.document.generator.api.service;
 
 import uk.gov.companieshouse.document.generator.api.document.DocumentType;
-import uk.gov.companieshouse.document.generator.api.exception.DocumentGeneratorServiceException;
+import uk.gov.companieshouse.document.generator.api.exception.ServiceException;
 
 import java.util.Map;
 
@@ -12,7 +12,7 @@ public interface DocumentTypeService {
      *
      * @param requestParameters Map containing requestId, resourceId and resourceUri as a key/value pair
      * @return DocumentType type of document requested
-     * @throws DocumentGeneratorServiceException
+     * @throws ServiceException
      */
-    DocumentType getDocumentType(Map<String, String> requestParameters) throws DocumentGeneratorServiceException;
+    DocumentType getDocumentType(Map<String, String> requestParameters) throws ServiceException;
 }

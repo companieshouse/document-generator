@@ -3,6 +3,7 @@ package uk.gov.companieshouse.document.generator.api.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.Gson;
 
+
 import java.util.Map;
 
 public class DocumentResponse {
@@ -17,7 +18,7 @@ public class DocumentResponse {
     private Map<String, String> descriptionValues;
 
     @JsonProperty("links")
-    private String links;
+    private Links links;
 
     @JsonProperty("size")
     private String size;
@@ -46,11 +47,11 @@ public class DocumentResponse {
         this.descriptionValues = descriptionValues;
     }
 
-    public String getLinks() {
+    public Links getLinks() {
         return links;
     }
 
-    public void setLinks(String links) {
+    public void setLinks(Links links) {
         this.links = links;
     }
 

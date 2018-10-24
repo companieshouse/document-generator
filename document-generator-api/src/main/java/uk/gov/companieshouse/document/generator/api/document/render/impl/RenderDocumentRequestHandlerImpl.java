@@ -9,6 +9,7 @@ import uk.gov.companieshouse.document.generator.api.document.render.HttpConnecti
 import uk.gov.companieshouse.document.generator.api.document.render.RenderDocumentRequestHandler;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentRequest;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentResponse;
+import uk.gov.companieshouse.document.generator.api.exception.RenderServiceException;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
@@ -16,6 +17,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,23 +46,31 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
      */
     @Override
     public RenderDocumentResponse sendDataToDocumentRenderService(String url, RenderDocumentRequest request,
-                                                                  Map<String, String> requestParameters) throws IOException {
+                                                                  Map<String, String> requestParameters)
+            throws RenderServiceException, IOException {
 
         RenderDocumentResponse response = new RenderDocumentResponse();
-
-        HttpURLConnection connection = httpConnectionHandler.openConnection(url);
+        HttpURLConnection connection;
 
         String requestId = requestParameters.get(REQUEST_ID);
 
         try {
+            LOG.infoContext(requestId, "Opening connection for render service", setDebugMap(requestParameters));
+            connection = httpConnectionHandler.openConnection(url);
+        } catch (IOException ioe) {
+            throw new RenderServiceException("Error occurred when opening connection to the render service for: "
+                    + requestParameters.get(RESOURCE_URI), ioe);
+        }
+
+        try {
             LOG.infoContext(requestId,"Preparing the connection for render service", setDebugMap(requestParameters));
-            prepareConnection(connection, request);
+            prepareConnection(connection, request, requestParameters);
             LOG.infoContext(requestId, "Sending the request to the render service", setDebugMap(requestParameters));
-            sendRequest(connection, request);
+            sendRequest(connection, request, requestParameters);
 
             if (connection.getResponseCode() == HttpURLConnection.HTTP_CREATED) {
                 LOG.infoContext(requestId, "handling the response from the render service", setDebugMap(requestParameters));
-                response = handleResponse(connection);
+                response = handleResponse(connection, requestParameters);
             }
 
             response.setStatus(connection.getResponseCode());
@@ -79,16 +89,21 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
      * handle Response from http connection
      *
      * @param connection the HttpUrlConnection
+     * @param requestParameters
      * @return RenderDocumentResponse
      * @throws IOException
      */
-    private RenderDocumentResponse handleResponse(HttpURLConnection connection) throws IOException {
+    private RenderDocumentResponse handleResponse(HttpURLConnection connection, Map<String, String> requestParameters)
+            throws RenderServiceException {
 
         String generatedDocumentJson;
         RenderDocumentResponse renderDocumentResponse = new RenderDocumentResponse();
 
         try (InputStream response = connection.getInputStream()) {
             generatedDocumentJson = new String(IOUtils.toByteArray(response));
+        } catch (IOException ioe) {
+            throw new RenderServiceException("Error occurred handling the response from render service for: "
+                    + requestParameters.get(RESOURCE_URI), ioe);
         }
 
         renderDocumentResponse.setDocumentSize(convertJsonHandler.convert(generatedDocumentJson));
@@ -102,13 +117,18 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
      *
      * @param connection the HttpUrlConnection
      * @param request the RenderDocumentRequest
+     * @param requestParameters
      * @throws IOException
      */
-    private void sendRequest(HttpURLConnection connection, RenderDocumentRequest request) throws IOException {
+    private void sendRequest(HttpURLConnection connection, RenderDocumentRequest request,
+                             Map<String, String> requestParameters) throws RenderServiceException {
 
         try (DataOutputStream out = new DataOutputStream(connection.getOutputStream())) {
             out.write(request.getData().getBytes(StandardCharsets.UTF_8));
             out.flush();
+        } catch (IOException ioe) {
+            throw new RenderServiceException("Error occurred sending request to the render service for: "
+                    + requestParameters.get(RESOURCE_URI), ioe);
         }
     }
 
@@ -117,12 +137,19 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
      *
      * @param connection the HttpUrlConnection
      * @param request the RenderDocumentRequest
+     * @param requestParameters
      * @throws IOException
      */
-    private void prepareConnection(HttpURLConnection connection, RenderDocumentRequest request) throws IOException {
+    private void prepareConnection(HttpURLConnection connection, RenderDocumentRequest request,
+                                   Map<String, String> requestParameters) throws RenderServiceException {
 
-        connection.setDoOutput(true);
-        connection.setRequestMethod("POST");
+        try {
+            connection.setDoOutput(true);
+            connection.setRequestMethod("POST");
+        } catch (ProtocolException pe) {
+            throw new RenderServiceException("Error occurred preparing connection for render service for: "
+                    + requestParameters.get(RESOURCE_URI), pe);
+        }
 
         setConnectionRequestProperties(connection, request);
     }
