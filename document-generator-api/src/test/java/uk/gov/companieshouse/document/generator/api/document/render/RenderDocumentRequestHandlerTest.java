@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.document.generator.api.document.render;
 
+import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -45,9 +46,8 @@ public class RenderDocumentRequestHandlerTest {
 
     private static final String REQUEST_ID = "requestId";
 
-    private static final int HTTP_CREATED = 201;
+    private static final String TEST_URL = "testUrl";
 
-    private static final int HTTP_INTERNAL_ERROR = 500;
 
     @Mock
     private HttpURLConnection mockHttpURLConnection;
@@ -94,14 +94,14 @@ public class RenderDocumentRequestHandlerTest {
         setValidOpenConnection();
         when(convertJsonHandler.convert(any(String.class))).thenReturn("long data");
 
-        setMockHttpConnectionForSuccess(HTTP_CREATED);
+        setMockHttpConnectionForSuccess(HttpStatus.SC_CREATED);
         RenderDocumentResponse response = renderDocumentRequestHandler.sendDataToDocumentRenderService(
-                "http://www.test.com", renderDocumentRequest, requestParameters);
+                TEST_URL, renderDocumentRequest, requestParameters);
 
         assertEquals(PDF_LOCATION, response.getLocation());
 
         verifyHttpConnectionMock(true);
-        assertEquals(HTTP_CREATED, response.getStatus());
+        assertEquals(HttpStatus.SC_CREATED, response.getStatus());
     }
 
     @Test
@@ -110,15 +110,15 @@ public class RenderDocumentRequestHandlerTest {
 
         setValidOpenConnection();
 
-        setMockHttpConnectionForError(HTTP_INTERNAL_ERROR);
+        setMockHttpConnectionForError(HttpStatus.SC_INTERNAL_SERVER_ERROR);
         RenderDocumentResponse response = renderDocumentRequestHandler.sendDataToDocumentRenderService(
-                "http://www.test.com", renderDocumentRequest, requestParameters);
+                TEST_URL, renderDocumentRequest, requestParameters);
 
         assertNull(response.getDocumentSize());
         assertNull(response.getLocation());
 
         verifyHttpConnectionMock(false);
-        assertEquals(HTTP_INTERNAL_ERROR, response.getStatus());
+        assertEquals(HttpStatus.SC_INTERNAL_SERVER_ERROR, response.getStatus());
     }
 
     @Test
@@ -128,7 +128,7 @@ public class RenderDocumentRequestHandlerTest {
         when(mockHttpConnectionHandler.openConnection(any(String.class))).thenThrow(IOException.class);
 
         assertThrows(RenderServiceException.class, () -> renderDocumentRequestHandler.sendDataToDocumentRenderService(
-                "http://www.test.com", renderDocumentRequest, requestParameters));
+                TEST_URL, renderDocumentRequest, requestParameters));
     }
 
     @Test
@@ -139,7 +139,7 @@ public class RenderDocumentRequestHandlerTest {
         doThrow(ProtocolException.class).when(mockHttpURLConnection).setRequestMethod(any(String.class));
 
         assertThrows(RenderServiceException.class, () -> renderDocumentRequestHandler.sendDataToDocumentRenderService(
-                "http://www.test.com", renderDocumentRequest, requestParameters));
+                TEST_URL, renderDocumentRequest, requestParameters));
     }
 
     @Test
@@ -150,7 +150,7 @@ public class RenderDocumentRequestHandlerTest {
         when(mockHttpURLConnection.getOutputStream()).thenThrow(IOException.class);
 
         assertThrows(RenderServiceException.class, () -> renderDocumentRequestHandler.sendDataToDocumentRenderService(
-                "http://www.test.com", renderDocumentRequest, requestParameters));
+                TEST_URL, renderDocumentRequest, requestParameters));
     }
 
     @Test
@@ -159,11 +159,11 @@ public class RenderDocumentRequestHandlerTest {
 
         setValidOpenConnection();
         when(mockHttpURLConnection.getOutputStream()).thenReturn(mockOutputSteam);
-        when(mockHttpURLConnection.getResponseCode()).thenReturn(HTTP_CREATED);
+        when(mockHttpURLConnection.getResponseCode()).thenReturn(HttpStatus.SC_CREATED);
         when(mockHttpURLConnection.getInputStream()).thenThrow(IOException.class);
 
         assertThrows(RenderServiceException.class, () -> renderDocumentRequestHandler.sendDataToDocumentRenderService(
-                "http://www.test.com", renderDocumentRequest, requestParameters));
+                TEST_URL, renderDocumentRequest, requestParameters));
     }
 
     /**

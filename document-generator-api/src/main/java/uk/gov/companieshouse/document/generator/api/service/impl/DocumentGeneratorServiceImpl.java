@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.document.generator.api.service.impl;
 
+import org.apache.http.HttpStatus;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -98,9 +99,9 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
         DocumentType documentType;
         try {
             documentType = documentTypeService.getDocumentType(requestParameters);
-        } catch (ServiceException dgse){
+        } catch (ServiceException se){
             createAndLogErrorMessage("Failed to get document type from resource:  "
-                    + requestParameters.get(RESOURCE_URI), dgse, requestParameters);
+                    + requestParameters.get(RESOURCE_URI), se, requestParameters);
             return new ResponseObject(ResponseStatus.NO_TYPE_FOUND, null);
         }
 
@@ -111,9 +112,9 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
             documentInfoResponse = documentInfoServiceFactory
                         .get(documentType.toString())
                         .getDocumentInfo(documentInfoRequest);
-        } catch (DocumentInfoException dgie) {
+        } catch (DocumentInfoException die) {
              createAndLogErrorMessage("Error occurred whilst obtaining the data to generate document " +
-                     "for resource: " + requestParameters.get(RESOURCE_URI), dgie, requestParameters);
+                     "for resource: " + requestParameters.get(RESOURCE_URI), die, requestParameters);
             return new ResponseObject(ResponseStatus.FAILED_TO_RETRIEVE_DATA, null);
         }
 
@@ -123,16 +124,16 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
             try {
                 renderResponse = renderSubmittedDocumentData(documentRequest, documentInfoResponse,
                         requestParameters);
-                if (renderResponse.getStatus() >= 400) {
+                if (renderResponse.getStatus() >= HttpStatus.SC_BAD_REQUEST) {
                     createAndLogErrorMessage("An error occurred in the render service, returning a status of: " +
                                     renderResponse.getStatus() + " for resource: " + requestParameters.get(RESOURCE_URI),
                             null, requestParameters);
                     response = setDocumentResponse(renderResponse, documentInfoResponse, requestParameters);
                     return new ResponseObject(ResponseStatus.FAILED_TO_RENDER, response);
                 }
-            } catch (IOException | RenderServiceException e) {
+            } catch (IOException | RenderServiceException se) {
                 createAndLogErrorMessage("Error occurred when trying to render the document for resource: " +
-                        requestParameters.get(RESOURCE_URI), e, requestParameters);
+                        requestParameters.get(RESOURCE_URI), se, requestParameters);
                 response = setDocumentResponse(renderResponse, documentInfoResponse, requestParameters);
                 return new ResponseObject(ResponseStatus.FAILED_TO_RENDER, response);
             }
