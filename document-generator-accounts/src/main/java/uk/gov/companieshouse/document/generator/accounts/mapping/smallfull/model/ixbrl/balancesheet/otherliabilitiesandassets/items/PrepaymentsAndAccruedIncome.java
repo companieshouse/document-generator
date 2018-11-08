@@ -17,7 +17,7 @@ public class PrepaymentsAndAccruedIncome {
         return currentAmount;
     }
 
-    public void setCurrentAmount(int currentAmount) {
+    public void setCurrentAmount(long currentAmount) {
         this.currentAmount = currentAmount;
     }
 
@@ -25,7 +25,7 @@ public class PrepaymentsAndAccruedIncome {
         return previousAmount;
     }
 
-    public void setPreviousAmount(int previousAmount) {
+    public void setPreviousAmount(long previousAmount) {
         this.previousAmount = previousAmount;
     }
 
