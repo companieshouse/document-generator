@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 
 import java.util.Objects;
 
-public class CreditorsDueWithinOneYear {
+public class ProvisionForLiabilities {
 
     @JsonProperty("current_amount")
     private long currentAmount;

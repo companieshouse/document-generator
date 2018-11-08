@@ -3,13 +3,13 @@ package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.mode
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.Gson;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.otherliabilitiesandassets.items.AccrualsAndDeferredIncome;
-import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.otherliabilitiesandassets.items.CreditorsAfterMoreThanOneYear;
-import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.otherliabilitiesandassets.items.CreditorsDueWithinOneYear;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.otherliabilitiesandassets.items.CreditorsAmountsFallingDueAfterMoreThanOneYear;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.otherliabilitiesandassets.items.CreditorsAmountsFallingDueWithinOneYear;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.otherliabilitiesandassets.items.CurrentNetCurrentAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.otherliabilitiesandassets.items.CurrentTotalAssetsLessCurrentLiabilities;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.otherliabilitiesandassets.items.PrepaymentsAndAccruedIncome;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.otherliabilitiesandassets.items.PreviousTotalAssetsLessCurrentLiabilities;
-import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.otherliabilitiesandassets.items.ProvisionsForLiabilities;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.otherliabilitiesandassets.items.ProvisionForLiabilities;
 
 import java.util.Objects;
 
@@ -18,8 +18,8 @@ public class OtherLiabilitiesAndAssets {
     @JsonProperty("prepayments_and_accrued_income")
     private PrepaymentsAndAccruedIncome prepaymentsAndAccruedIncome;
 
-    @JsonProperty("creditors_due_within_one_year")
-    private CreditorsDueWithinOneYear creditorsDueWithinOneYear;
+    @JsonProperty("creditors_amounts_falling_due_within_one_year")
+    private CreditorsAmountsFallingDueWithinOneYear creditorsAmountsFallingDueWithinOneYear;
 
     @JsonProperty("current_net_current_assets")
     private CurrentNetCurrentAssets currentNetCurrentAssets;
@@ -30,11 +30,11 @@ public class OtherLiabilitiesAndAssets {
     @JsonProperty("previous_total_assets_less_current_liabilities")
     private PreviousTotalAssetsLessCurrentLiabilities previousTotalAssetsLessCurrentLiabilities;
 
-    @JsonProperty("creditors_after_more_than_one_year")
-    private CreditorsAfterMoreThanOneYear creditorsAfterMoreThanOneYear;
+    @JsonProperty("creditors_amounts_falling_due_after_more_than_one_year")
+    private CreditorsAmountsFallingDueAfterMoreThanOneYear creditorsAmountsFallingDueAfterMoreThanOneYear;
 
-    @JsonProperty("provisions_for_liabilities")
-    private ProvisionsForLiabilities provisionsForLiabilities;
+    @JsonProperty("provision_for_liabilities")
+    private ProvisionForLiabilities provisionForLiabilities;
 
     @JsonProperty("accruals_and_deferred_income")
     private AccrualsAndDeferredIncome accrualsAndDeferredIncome;
@@ -53,12 +53,12 @@ public class OtherLiabilitiesAndAssets {
         this.prepaymentsAndAccruedIncome = prepaymentsAndAccruedIncome;
     }
 
-    public CreditorsDueWithinOneYear getCreditorsDueWithinOneYear() {
-        return creditorsDueWithinOneYear;
+    public CreditorsAmountsFallingDueWithinOneYear getCreditorsAmountsFallingDueWithinOneYear() {
+        return creditorsAmountsFallingDueWithinOneYear;
     }
 
-    public void setCreditorsDueWithinOneYear(CreditorsDueWithinOneYear creditorsDueWithinOneYear) {
-        this.creditorsDueWithinOneYear = creditorsDueWithinOneYear;
+    public void setCreditorsAmountsFallingDueWithinOneYear(CreditorsAmountsFallingDueWithinOneYear creditorsAmountsFallingDueWithinOneYear) {
+        this.creditorsAmountsFallingDueWithinOneYear = creditorsAmountsFallingDueWithinOneYear;
     }
 
     public CurrentNetCurrentAssets getCurrentNetCurrentAssets() {
@@ -85,20 +85,20 @@ public class OtherLiabilitiesAndAssets {
         this.previousTotalAssetsLessCurrentLiabilities = previousTotalAssetsLessCurrentLiabilities;
     }
 
-    public CreditorsAfterMoreThanOneYear getCreditorsAfterMoreThanOneYear() {
-        return creditorsAfterMoreThanOneYear;
+    public CreditorsAmountsFallingDueAfterMoreThanOneYear getCreditorsAmountsFallingDueAfterMoreThanOneYear() {
+        return creditorsAmountsFallingDueAfterMoreThanOneYear;
     }
 
-    public void setCreditorsAfterMoreThanOneYear(CreditorsAfterMoreThanOneYear creditorsAfterMoreThanOneYear) {
-        this.creditorsAfterMoreThanOneYear = creditorsAfterMoreThanOneYear;
+    public void setCreditorsAmountsFallingDueAfterMoreThanOneYear(CreditorsAmountsFallingDueAfterMoreThanOneYear creditorsAmountsFallingDueAfterMoreThanOneYear) {
+        this.creditorsAmountsFallingDueAfterMoreThanOneYear = creditorsAmountsFallingDueAfterMoreThanOneYear;
     }
 
-    public ProvisionsForLiabilities getProvisionsForLiabilities() {
-        return provisionsForLiabilities;
+    public ProvisionForLiabilities getProvisionForLiabilities() {
+        return provisionForLiabilities;
     }
 
-    public void setProvisionsForLiabilities(ProvisionsForLiabilities provisionsForLiabilities) {
-        this.provisionsForLiabilities = provisionsForLiabilities;
+    public void setProvisionForLiabilities(ProvisionForLiabilities provisionForLiabilities) {
+        this.provisionForLiabilities = provisionForLiabilities;
     }
 
     public AccrualsAndDeferredIncome getAccrualsAndDeferredIncome() {
@@ -133,22 +133,22 @@ public class OtherLiabilitiesAndAssets {
         return getCurrentTotalNetAssets() == that.getCurrentTotalNetAssets() &&
                 getPreviousTotalNetAssets() == that.getPreviousTotalNetAssets() &&
                 Objects.equals(getPrepaymentsAndAccruedIncome(), that.getPrepaymentsAndAccruedIncome()) &&
-                Objects.equals(getCreditorsDueWithinOneYear(), that.getCreditorsDueWithinOneYear()) &&
+                Objects.equals(getCreditorsAmountsFallingDueWithinOneYear(), that.getCreditorsAmountsFallingDueWithinOneYear()) &&
                 Objects.equals(getCurrentNetCurrentAssets(), that.getCurrentNetCurrentAssets()) &&
                 Objects.equals(getCurrentTotalAssetsLessCurrentLiabilities(), that.getCurrentTotalAssetsLessCurrentLiabilities()) &&
                 Objects.equals(getPreviousTotalAssetsLessCurrentLiabilities(), that.getPreviousTotalAssetsLessCurrentLiabilities()) &&
-                Objects.equals(getCreditorsAfterMoreThanOneYear(), that.getCreditorsAfterMoreThanOneYear()) &&
-                Objects.equals(getProvisionsForLiabilities(), that.getProvisionsForLiabilities()) &&
+                Objects.equals(getCreditorsAmountsFallingDueAfterMoreThanOneYear(), that.getCreditorsAmountsFallingDueAfterMoreThanOneYear()) &&
+                Objects.equals(getProvisionForLiabilities(), that.getProvisionForLiabilities()) &&
                 Objects.equals(getAccrualsAndDeferredIncome(), that.getAccrualsAndDeferredIncome());
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(getPrepaymentsAndAccruedIncome(), getCreditorsDueWithinOneYear(),
+        return Objects.hash(getPrepaymentsAndAccruedIncome(), getCreditorsAmountsFallingDueWithinOneYear(),
                 getCurrentNetCurrentAssets(), getCurrentTotalAssetsLessCurrentLiabilities(),
-                getPreviousTotalAssetsLessCurrentLiabilities(), getCreditorsAfterMoreThanOneYear(),
-                getProvisionsForLiabilities(), getAccrualsAndDeferredIncome(), getCurrentTotalNetAssets(),
+                getPreviousTotalAssetsLessCurrentLiabilities(), getCreditorsAmountsFallingDueAfterMoreThanOneYear(),
+                getProvisionForLiabilities(), getAccrualsAndDeferredIncome(), getCurrentTotalNetAssets(),
                 getPreviousTotalNetAssets());
     }
 
