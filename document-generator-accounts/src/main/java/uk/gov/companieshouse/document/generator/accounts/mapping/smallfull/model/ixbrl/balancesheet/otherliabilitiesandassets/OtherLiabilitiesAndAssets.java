@@ -8,6 +8,7 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.otherliabilitiesandassets.items.CurrentNetCurrentAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.otherliabilitiesandassets.items.CurrentTotalAssetsLessCurrentLiabilities;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.otherliabilitiesandassets.items.PrepaymentsAndAccruedIncome;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.otherliabilitiesandassets.items.PreviousNetCurrentAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.otherliabilitiesandassets.items.PreviousTotalAssetsLessCurrentLiabilities;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.otherliabilitiesandassets.items.ProvisionForLiabilities;
 
@@ -23,6 +24,9 @@ public class OtherLiabilitiesAndAssets {
 
     @JsonProperty("current_net_current_assets")
     private CurrentNetCurrentAssets currentNetCurrentAssets;
+
+    @JsonProperty("previous_net_current_assets")
+    private PreviousNetCurrentAssets previousNetCurrentAssets;
 
     @JsonProperty("current_total_assets_less_current_liabilities")
     private CurrentTotalAssetsLessCurrentLiabilities currentTotalAssetsLessCurrentLiabilities;
@@ -67,6 +71,14 @@ public class OtherLiabilitiesAndAssets {
 
     public void setCurrentNetCurrentAssets(CurrentNetCurrentAssets currentNetCurrentAssets) {
         this.currentNetCurrentAssets = currentNetCurrentAssets;
+    }
+
+    public PreviousNetCurrentAssets getPreviousNetCurrentAssets() {
+        return previousNetCurrentAssets;
+    }
+
+    public void setPreviousNetCurrentAssets(PreviousNetCurrentAssets previousNetCurrentAssets) {
+        this.previousNetCurrentAssets = previousNetCurrentAssets;
     }
 
     public CurrentTotalAssetsLessCurrentLiabilities getCurrentTotalAssetsLessCurrentLiabilities() {
@@ -135,6 +147,7 @@ public class OtherLiabilitiesAndAssets {
                 Objects.equals(getPrepaymentsAndAccruedIncome(), that.getPrepaymentsAndAccruedIncome()) &&
                 Objects.equals(getCreditorsAmountsFallingDueWithinOneYear(), that.getCreditorsAmountsFallingDueWithinOneYear()) &&
                 Objects.equals(getCurrentNetCurrentAssets(), that.getCurrentNetCurrentAssets()) &&
+                Objects.equals(getPreviousNetCurrentAssets(), that.getPreviousNetCurrentAssets()) &&
                 Objects.equals(getCurrentTotalAssetsLessCurrentLiabilities(), that.getCurrentTotalAssetsLessCurrentLiabilities()) &&
                 Objects.equals(getPreviousTotalAssetsLessCurrentLiabilities(), that.getPreviousTotalAssetsLessCurrentLiabilities()) &&
                 Objects.equals(getCreditorsAmountsFallingDueAfterMoreThanOneYear(), that.getCreditorsAmountsFallingDueAfterMoreThanOneYear()) &&
@@ -146,10 +159,9 @@ public class OtherLiabilitiesAndAssets {
     public int hashCode() {
 
         return Objects.hash(getPrepaymentsAndAccruedIncome(), getCreditorsAmountsFallingDueWithinOneYear(),
-                getCurrentNetCurrentAssets(), getCurrentTotalAssetsLessCurrentLiabilities(),
+                getCurrentNetCurrentAssets(), getPreviousNetCurrentAssets(), getCurrentTotalAssetsLessCurrentLiabilities(),
                 getPreviousTotalAssetsLessCurrentLiabilities(), getCreditorsAmountsFallingDueAfterMoreThanOneYear(),
-                getProvisionForLiabilities(), getAccrualsAndDeferredIncome(), getCurrentTotalNetAssets(),
-                getPreviousTotalNetAssets());
+                getProvisionForLiabilities(), getAccrualsAndDeferredIncome(), getCurrentTotalNetAssets(), getPreviousTotalNetAssets());
     }
 
     @Override
