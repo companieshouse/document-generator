@@ -7,9 +7,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CapitalAndReservesApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentAssetsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.capitalandreserves.CapitalAndReserve;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.currentassets.CurrentAssets;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -57,6 +59,42 @@ public class ApiToBalanceSheetMapperTest {
         assertEquals(new Long(500), capitalAndReserve.getTotalShareHoldersFund().getCurrentAmount());
     }
 
+    @Test
+    @DisplayName("tests that both current and previous period values mapped to current assets IXBRL model")
+    public void testApiToCurrentAssetsMapsCurrentAndPrevious() {
+
+        CurrentPeriodApi currentPeriod = setCurrentPeriod();
+        PreviousPeriodApi previousPeriod = setPreviousPeriod();
+
+        CurrentAssets currentAssets = ApiToBalanceSheetMapper.INSTANCE.apiToCurrentAssets(currentPeriod, previousPeriod);
+
+        assertNotNull(currentAssets);
+        assertEquals(new Long(100), currentAssets.getCashAtBankAndInHand().getCurrentAmount());
+        assertEquals(new Long(200), currentAssets.getDebtors().getCurrentAmount());
+        assertEquals(new Long(300), currentAssets.getStocks().getCurrentAmount());
+        assertEquals(new Long(400), currentAssets.getCurrentTotal());
+        assertEquals(new Long(50), currentAssets.getCashAtBankAndInHand().getPreviousAmount());
+        assertEquals(new Long(150), currentAssets.getDebtors().getPreviousAmount());
+        assertEquals(new Long(250), currentAssets.getStocks().getPreviousAmount());
+        assertEquals(new Long(350), currentAssets.getPreviousTotal());
+    }
+
+    @Test
+    @DisplayName("tests that current period values mapped to current assets IXBRL model")
+    public void testApiToCurrentAssetsMapsCurrentOnly() {
+
+        CurrentPeriodApi currentPeriod = setCurrentPeriod();
+        PreviousPeriodApi previousPeriod = setPreviousPeriod();
+
+        CurrentAssets currentAssets = ApiToBalanceSheetMapper.INSTANCE.apiToCurrentAssets(currentPeriod, previousPeriod);
+
+        assertNotNull(currentAssets);
+        assertEquals(new Long(100), currentAssets.getCashAtBankAndInHand().getCurrentAmount());
+        assertEquals(new Long(200), currentAssets.getDebtors().getCurrentAmount());
+        assertEquals(new Long(300), currentAssets.getStocks().getCurrentAmount());
+        assertEquals(new Long(400), currentAssets.getCurrentTotal());
+    }
+
     private PreviousPeriodApi setPreviousPeriod() {
 
         PreviousPeriodApi previousPeriod = new PreviousPeriodApi();
@@ -69,7 +107,14 @@ public class ApiToBalanceSheetMapperTest {
         capitalAndReservesCurrent.setSharePremiumAccount(new Long(350));
         capitalAndReservesCurrent.setTotalShareholdersFund(new Long(450));
 
+        CurrentAssetsApi currentAssets = new CurrentAssetsApi();
+        currentAssets.setCashInBankAndInHand(new Long(50));
+        currentAssets.setDebtors(new Long(150));
+        currentAssets.setStocks(new Long(250));
+        currentAssets.setTotal(new Long(350));
+
         balanceSheetPrevious.setCapitalAndReservesApi(capitalAndReservesCurrent);
+        balanceSheetPrevious.setCurrentAssetsApi(currentAssets);
 
         previousPeriod.setBalanceSheet(balanceSheetPrevious);
 
@@ -89,7 +134,14 @@ public class ApiToBalanceSheetMapperTest {
         capitalAndReservesCurrent.setSharePremiumAccount(new Long(400));
         capitalAndReservesCurrent.setTotalShareholdersFund(new Long(500));
 
+        CurrentAssetsApi currentAssets = new CurrentAssetsApi();
+        currentAssets.setCashInBankAndInHand(new Long(100));
+        currentAssets.setDebtors(new Long(200));
+        currentAssets.setStocks(new Long(300));
+        currentAssets.setTotal(new Long(400));
+
         balanceSheetCurrent.setCapitalAndReservesApi(capitalAndReservesCurrent);
+        balanceSheetCurrent.setCurrentAssetsApi(currentAssets);
 
         currentPeriod.setBalanceSheetApi(balanceSheetCurrent);
 

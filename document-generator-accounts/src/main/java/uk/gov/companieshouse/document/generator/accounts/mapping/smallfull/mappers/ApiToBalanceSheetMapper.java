@@ -7,6 +7,7 @@ import org.mapstruct.factory.Mappers;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.capitalandreserves.CapitalAndReserve;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.currentassets.CurrentAssets;
 
 @Mapper
 public interface ApiToBalanceSheetMapper {
@@ -36,4 +37,25 @@ public interface ApiToBalanceSheetMapper {
                     target = "totalShareHoldersFund.previousAmount"),
     })
     CapitalAndReserve apiToCapitalAndReserve(CurrentPeriodApi currentPeriod, PreviousPeriodApi previousPeriod);
+
+    @Mappings({
+            @Mapping(source = "currentPeriod.balanceSheetApi.currentAssetsApi.stocks",
+                    target = "stocks.currentAmount"),
+            @Mapping(source = "previousPeriod.balanceSheet.currentAssetsApi.stocks",
+                    target = "stocks.previousAmount"),
+            @Mapping(source = "currentPeriod.balanceSheetApi.currentAssetsApi.debtors",
+                    target = "debtors.currentAmount"),
+            @Mapping(source = "previousPeriod.balanceSheet.currentAssetsApi.debtors",
+                    target = "debtors.previousAmount"),
+            @Mapping(source = "currentPeriod.balanceSheetApi.currentAssetsApi.cashAtBankAndInHand",
+                    target = "cashAtBankAndInHand.currentAmount"),
+            @Mapping(source = "previousPeriod.balanceSheet.currentAssetsApi.cashAtBankAndInHand",
+                    target = "cashAtBankAndInHand.previousAmount"),
+            @Mapping(source = "currentPeriod.balanceSheetApi.currentAssetsApi.total",
+                    target = "currentTotal"),
+            @Mapping(source = "previousPeriod.balanceSheet.currentAssetsApi.total",
+                    target = "previousTotal"),
+    })
+    CurrentAssets apiToCurrentAssets(CurrentPeriodApi currentPeriod, PreviousPeriodApi previousPeriod);
 }
+
