@@ -8,24 +8,24 @@ import java.util.Objects;
 public class PreviousNetCurrentAssets {
 
     @JsonProperty("current_amount")
-    private long currentAmount;
+    private Long currentAmount;
 
     @JsonProperty("previous_amount")
-    private long previousAmount;
+    private Long previousAmount;
 
-    public long getCurrentAmount() {
+    public Long getCurrentAmount() {
         return currentAmount;
     }
 
-    public void setCurrentAmount(long currentAmount) {
+    public void setCurrentAmount(Long currentAmount) {
         this.currentAmount = currentAmount;
     }
 
-    public long getPreviousAmount() {
+    public Long getPreviousAmount() {
         return previousAmount;
     }
 
-    public void setPreviousAmount(long previousAmount) {
+    public void setPreviousAmount(Long previousAmount) {
         this.previousAmount = previousAmount;
     }
 

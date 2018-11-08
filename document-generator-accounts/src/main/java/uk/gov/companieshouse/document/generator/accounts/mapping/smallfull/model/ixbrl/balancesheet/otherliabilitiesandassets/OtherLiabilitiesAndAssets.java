@@ -44,10 +44,10 @@ public class OtherLiabilitiesAndAssets {
     private AccrualsAndDeferredIncome accrualsAndDeferredIncome;
 
     @JsonProperty("current_total_net_assets")
-    private long currentTotalNetAssets;
+    private Long currentTotalNetAssets;
 
     @JsonProperty("previous_total_net_assets")
-    private long previousTotalNetAssets;
+    private Long previousTotalNetAssets;
 
     public PrepaymentsAndAccruedIncome getPrepaymentsAndAccruedIncome() {
         return prepaymentsAndAccruedIncome;
@@ -121,19 +121,19 @@ public class OtherLiabilitiesAndAssets {
         this.accrualsAndDeferredIncome = accrualsAndDeferredIncome;
     }
 
-    public long getCurrentTotalNetAssets() {
+    public Long getCurrentTotalNetAssets() {
         return currentTotalNetAssets;
     }
 
-    public void setCurrentTotalNetAssets(long currentTotalNetAssets) {
+    public void setCurrentTotalNetAssets(Long currentTotalNetAssets) {
         this.currentTotalNetAssets = currentTotalNetAssets;
     }
 
-    public long getPreviousTotalNetAssets() {
+    public Long getPreviousTotalNetAssets() {
         return previousTotalNetAssets;
     }
 
-    public void setPreviousTotalNetAssets(long previousTotalNetAssets) {
+    public void setPreviousTotalNetAssets(Long previousTotalNetAssets) {
         this.previousTotalNetAssets = previousTotalNetAssets;
     }
 
