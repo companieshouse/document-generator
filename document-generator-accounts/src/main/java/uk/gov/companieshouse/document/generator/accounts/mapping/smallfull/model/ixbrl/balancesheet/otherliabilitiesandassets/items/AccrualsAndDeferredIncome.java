@@ -8,12 +8,12 @@ import java.util.Objects;
 public class AccrualsAndDeferredIncome {
 
     @JsonProperty("current_amount")
-    private int currentAmount;
+    private long currentAmount;
 
     @JsonProperty("previous_amount")
-    private int previousAmount;
+    private long previousAmount;
 
-    public int getCurrentAmount() {
+    public long getCurrentAmount() {
         return currentAmount;
     }
 
@@ -21,7 +21,7 @@ public class AccrualsAndDeferredIncome {
         this.currentAmount = currentAmount;
     }
 
-    public int getPreviousAmount() {
+    public long getPreviousAmount() {
         return previousAmount;
     }
 
