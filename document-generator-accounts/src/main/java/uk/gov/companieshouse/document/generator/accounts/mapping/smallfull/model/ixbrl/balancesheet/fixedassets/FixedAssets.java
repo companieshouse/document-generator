@@ -12,10 +12,10 @@ public class FixedAssets {
     public TangibleAssets tangibleAssets;
 
     @JsonProperty("current_total")
-    public long totalFixedAssetsCurrent;
+    public Long totalFixedAssetsCurrent;
 
     @JsonProperty("previous_total")
-    public long totalFixedAssetsPrevious;
+    public Long totalFixedAssetsPrevious;
 
     public TangibleAssets getTangibleAssets() {
         return tangibleAssets;
@@ -25,19 +25,19 @@ public class FixedAssets {
         this.tangibleAssets = tangibleAssets;
     }
 
-    public long getTotalFixedAssetsCurrent() {
+    public Long getTotalFixedAssetsCurrent() {
         return totalFixedAssetsCurrent;
     }
 
-    public void setTotalFixedAssetsCurrent(long totalFixedAssetsCurrent) {
+    public void setTotalFixedAssetsCurrent(Long totalFixedAssetsCurrent) {
         this.totalFixedAssetsCurrent = totalFixedAssetsCurrent;
     }
 
-    public long getTotalFixedAssetsPrevious() {
+    public Long getTotalFixedAssetsPrevious() {
         return totalFixedAssetsPrevious;
     }
 
-    public void setTotalFixedAssetsPrevious(long totalFixedAssetsPrevious) {
+    public void setTotalFixedAssetsPrevious(Long totalFixedAssetsPrevious) {
         this.totalFixedAssetsPrevious = totalFixedAssetsPrevious;
     }
 
