@@ -9,9 +9,13 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CapitalAndReservesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentAssetsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.FixedAssetsApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.OtherLiabilitiesOrAssetsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.capitalandreserves.CapitalAndReserve;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.currentassets.CurrentAssets;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.fixedassets.FixedAssets;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.otherliabilitiesandassets.OtherLiabilitiesOrAssets;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -20,8 +24,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ApiToBalanceSheetMapperTest {
 
+    private static final  Long VALUE_ONE = 100L;
+
+    private static final  Long VALUE_TWO = 200L;
+
+    private static final  Long VALUE_THREE = 300L;
+
+
     @Test
-    @DisplayName("tests that both current and previous period values mapped to capital and reserve IXBRL model")
+    @DisplayName("tests that both current and previous period values map to capital and reserve IXBRL model")
     public void testApiToCapitalReserveMapsCurrentAndPrevious() {
 
         CurrentPeriodApi currentPeriod = setCurrentPeriod();
@@ -30,37 +41,36 @@ public class ApiToBalanceSheetMapperTest {
         CapitalAndReserve capitalAndReserve = ApiToBalanceSheetMapper.INSTANCE.apiToCapitalAndReserve(currentPeriod, previousPeriod);
 
         assertNotNull(capitalAndReserve);
-        assertEquals(new Long(100), capitalAndReserve.getCalledUpShareCapital().getCurrentAmount());
-        assertEquals(new Long(200), capitalAndReserve.getOtherReserves().getCurrentAmount());
-        assertEquals(new Long(300), capitalAndReserve.getProfitAndLoss().getCurrentAmount());
-        assertEquals(new Long(400), capitalAndReserve.getSharePremiumAccount().getCurrentAmount());
-        assertEquals(new Long(500), capitalAndReserve.getTotalShareHoldersFund().getCurrentAmount());
-        assertEquals(new Long(50), capitalAndReserve.getCalledUpShareCapital().getPreviousAmount());
-        assertEquals(new Long(150), capitalAndReserve.getOtherReserves().getPreviousAmount());
-        assertEquals(new Long(250), capitalAndReserve.getProfitAndLoss().getPreviousAmount());
-        assertEquals(new Long(350), capitalAndReserve.getSharePremiumAccount().getPreviousAmount());
-        assertEquals(new Long(450), capitalAndReserve.getTotalShareHoldersFund().getPreviousAmount());
+        assertEquals(new Long(VALUE_ONE), capitalAndReserve.getCalledUpShareCapital().getCurrentAmount());
+        assertEquals(new Long(VALUE_TWO), capitalAndReserve.getOtherReserves().getCurrentAmount());
+        assertEquals(new Long(VALUE_THREE), capitalAndReserve.getProfitAndLoss().getCurrentAmount());
+        assertEquals(new Long(VALUE_ONE), capitalAndReserve.getSharePremiumAccount().getCurrentAmount());
+        assertEquals(new Long(VALUE_TWO), capitalAndReserve.getTotalShareHoldersFund().getCurrentAmount());
+        assertEquals(new Long(VALUE_ONE), capitalAndReserve.getCalledUpShareCapital().getPreviousAmount());
+        assertEquals(new Long(VALUE_TWO), capitalAndReserve.getOtherReserves().getPreviousAmount());
+        assertEquals(new Long(VALUE_THREE), capitalAndReserve.getProfitAndLoss().getPreviousAmount());
+        assertEquals(new Long(VALUE_ONE), capitalAndReserve.getSharePremiumAccount().getPreviousAmount());
+        assertEquals(new Long(VALUE_TWO), capitalAndReserve.getTotalShareHoldersFund().getPreviousAmount());
     }
 
     @Test
-    @DisplayName("tests that current period values mapped to capital and reserve IXBRL model")
+    @DisplayName("tests that current period values map to capital and reserve IXBRL model")
     public void testApiToCapitalReserveMapsCurrentOnly() {
 
         CurrentPeriodApi currentPeriod = setCurrentPeriod();
-        PreviousPeriodApi previousPeriod = setPreviousPeriod();
 
-        CapitalAndReserve capitalAndReserve = ApiToBalanceSheetMapper.INSTANCE.apiToCapitalAndReserve(currentPeriod, previousPeriod);
+        CapitalAndReserve capitalAndReserve = ApiToBalanceSheetMapper.INSTANCE.apiToCapitalAndReserve(currentPeriod, null);
 
         assertNotNull(capitalAndReserve);
-        assertEquals(new Long(100), capitalAndReserve.getCalledUpShareCapital().getCurrentAmount());
-        assertEquals(new Long(200), capitalAndReserve.getOtherReserves().getCurrentAmount());
-        assertEquals(new Long(300), capitalAndReserve.getProfitAndLoss().getCurrentAmount());
-        assertEquals(new Long(400), capitalAndReserve.getSharePremiumAccount().getCurrentAmount());
-        assertEquals(new Long(500), capitalAndReserve.getTotalShareHoldersFund().getCurrentAmount());
+        assertEquals(new Long(VALUE_ONE), capitalAndReserve.getCalledUpShareCapital().getCurrentAmount());
+        assertEquals(new Long(VALUE_TWO), capitalAndReserve.getOtherReserves().getCurrentAmount());
+        assertEquals(new Long(VALUE_THREE), capitalAndReserve.getProfitAndLoss().getCurrentAmount());
+        assertEquals(new Long(VALUE_ONE), capitalAndReserve.getSharePremiumAccount().getCurrentAmount());
+        assertEquals(new Long(VALUE_TWO), capitalAndReserve.getTotalShareHoldersFund().getCurrentAmount());
     }
 
     @Test
-    @DisplayName("tests that both current and previous period values mapped to current assets IXBRL model")
+    @DisplayName("tests that both current and previous period values map to current assets IXBRL model")
     public void testApiToCurrentAssetsMapsCurrentAndPrevious() {
 
         CurrentPeriodApi currentPeriod = setCurrentPeriod();
@@ -69,14 +79,14 @@ public class ApiToBalanceSheetMapperTest {
         CurrentAssets currentAssets = ApiToBalanceSheetMapper.INSTANCE.apiToCurrentAssets(currentPeriod, previousPeriod);
 
         assertNotNull(currentAssets);
-        assertEquals(new Long(100), currentAssets.getCashAtBankAndInHand().getCurrentAmount());
-        assertEquals(new Long(200), currentAssets.getDebtors().getCurrentAmount());
-        assertEquals(new Long(300), currentAssets.getStocks().getCurrentAmount());
-        assertEquals(new Long(400), currentAssets.getCurrentTotal());
-        assertEquals(new Long(50), currentAssets.getCashAtBankAndInHand().getPreviousAmount());
-        assertEquals(new Long(150), currentAssets.getDebtors().getPreviousAmount());
-        assertEquals(new Long(250), currentAssets.getStocks().getPreviousAmount());
-        assertEquals(new Long(350), currentAssets.getPreviousTotal());
+        assertEquals(new Long(VALUE_ONE), currentAssets.getCashAtBankAndInHand().getCurrentAmount());
+        assertEquals(new Long(VALUE_TWO), currentAssets.getDebtors().getCurrentAmount());
+        assertEquals(new Long(VALUE_THREE), currentAssets.getStocks().getCurrentAmount());
+        assertEquals(new Long(VALUE_ONE), currentAssets.getCurrentTotal());
+        assertEquals(new Long(VALUE_ONE), currentAssets.getCashAtBankAndInHand().getPreviousAmount());
+        assertEquals(new Long(VALUE_TWO), currentAssets.getDebtors().getPreviousAmount());
+        assertEquals(new Long(VALUE_THREE), currentAssets.getStocks().getPreviousAmount());
+        assertEquals(new Long(VALUE_ONE), currentAssets.getPreviousTotal());
     }
 
     @Test
@@ -84,15 +94,93 @@ public class ApiToBalanceSheetMapperTest {
     public void testApiToCurrentAssetsMapsCurrentOnly() {
 
         CurrentPeriodApi currentPeriod = setCurrentPeriod();
-        PreviousPeriodApi previousPeriod = setPreviousPeriod();
 
-        CurrentAssets currentAssets = ApiToBalanceSheetMapper.INSTANCE.apiToCurrentAssets(currentPeriod, previousPeriod);
+        CurrentAssets currentAssets = ApiToBalanceSheetMapper.INSTANCE.apiToCurrentAssets(currentPeriod, null);
 
         assertNotNull(currentAssets);
-        assertEquals(new Long(100), currentAssets.getCashAtBankAndInHand().getCurrentAmount());
-        assertEquals(new Long(200), currentAssets.getDebtors().getCurrentAmount());
-        assertEquals(new Long(300), currentAssets.getStocks().getCurrentAmount());
-        assertEquals(new Long(400), currentAssets.getCurrentTotal());
+        assertEquals(new Long(VALUE_ONE), currentAssets.getCashAtBankAndInHand().getCurrentAmount());
+        assertEquals(new Long(VALUE_TWO), currentAssets.getDebtors().getCurrentAmount());
+        assertEquals(new Long(VALUE_THREE), currentAssets.getStocks().getCurrentAmount());
+        assertEquals(new Long(VALUE_ONE), currentAssets.getCurrentTotal());
+    }
+
+    @Test
+    @DisplayName("tests that the current and previous period values map to fixed assets IXBRL model")
+    public void testApiToFixedAssetsMapsCurrentAndPrevious() {
+
+        CurrentPeriodApi currentPeriod = setCurrentPeriod();
+        PreviousPeriodApi previousPeriod = setPreviousPeriod();
+
+        FixedAssets fixedAssets = ApiToBalanceSheetMapper.INSTANCE.apiToFixedAssets(currentPeriod, previousPeriod);
+
+        assertNotNull(fixedAssets);
+        assertEquals(new Long(VALUE_ONE), fixedAssets.getTangibleAssets().getCurrentAmount());
+        assertEquals(new Long(VALUE_TWO), fixedAssets.getTotalFixedAssetsCurrent());
+        assertEquals(new Long(VALUE_ONE), fixedAssets.getTangibleAssets().getPreviousAmount());
+        assertEquals(new Long(VALUE_TWO), fixedAssets.getTotalFixedAssetsPrevious());
+    }
+
+    @Test
+    @DisplayName("tests that the current period values map to fixed assets IXBRL model")
+    public void testApiToFixedAssetsMapsCurrentOnly() {
+
+        CurrentPeriodApi currentPeriod = setCurrentPeriod();
+
+        FixedAssets fixedAssets = ApiToBalanceSheetMapper.INSTANCE.apiToFixedAssets(currentPeriod, null);
+
+        assertNotNull(fixedAssets);
+        assertEquals(new Long(VALUE_ONE), fixedAssets.getTangibleAssets().getCurrentAmount());
+        assertEquals(new Long(VALUE_TWO), fixedAssets.getTotalFixedAssetsCurrent());
+    }
+
+    @Test
+    @DisplayName("tests that the current and previous period values map to other liabilities or assets IXBRL model")
+    public void testApiToOtherLiabilitiesOrAssetsMapsCurrentAndPrevious() {
+
+        CurrentPeriodApi currentPeriod = setCurrentPeriod();
+        PreviousPeriodApi previousPeriod = setPreviousPeriod();
+
+        OtherLiabilitiesOrAssets otherLiabilitiesOrAssets = ApiToBalanceSheetMapper.INSTANCE.apiToOtherLiabilitiesOrAssets(
+                currentPeriod, previousPeriod);
+
+        assertNotNull(otherLiabilitiesOrAssets);
+        assertEquals(new Long(VALUE_ONE), otherLiabilitiesOrAssets.getCurrentTotalNetAssets());
+        assertEquals(new Long(VALUE_TWO), otherLiabilitiesOrAssets.getAccrualsAndDeferredIncome().getCurrentAmount());
+        assertEquals(new Long(VALUE_THREE), otherLiabilitiesOrAssets.getCreditorsAmountsFallingDueAfterMoreThanOneYear().getCurrentAmount());
+        assertEquals(new Long(VALUE_ONE), otherLiabilitiesOrAssets.getCreditorsAmountsFallingDueWithinOneYear().getCurrentAmount());
+        assertEquals(new Long(VALUE_TWO), otherLiabilitiesOrAssets.getNetCurrentAssets().getCurrentAmount());
+        assertEquals(new Long(VALUE_THREE), otherLiabilitiesOrAssets.getPrepaymentsAndAccruedIncome().getCurrentAmount());
+        assertEquals(new Long(VALUE_ONE), otherLiabilitiesOrAssets.getTotalAssetsLessCurrentLiabilities().getCurrentAmount());
+        assertEquals(new Long(VALUE_TWO), otherLiabilitiesOrAssets.getProvisionForLiabilities().getCurrentAmount());
+        assertEquals(new Long(VALUE_ONE), otherLiabilitiesOrAssets.getPreviousTotalNetAssets());
+        assertEquals(new Long(VALUE_TWO), otherLiabilitiesOrAssets.getAccrualsAndDeferredIncome().getPreviousAmount());
+        assertEquals(new Long(VALUE_THREE), otherLiabilitiesOrAssets.getCreditorsAmountsFallingDueAfterMoreThanOneYear().getPreviousAmount());
+        assertEquals(new Long(VALUE_ONE), otherLiabilitiesOrAssets.getCreditorsAmountsFallingDueWithinOneYear().getPreviousAmount());
+        assertEquals(new Long(VALUE_TWO), otherLiabilitiesOrAssets.getNetCurrentAssets().getPreviousAmount());
+        assertEquals(new Long(VALUE_THREE), otherLiabilitiesOrAssets.getPrepaymentsAndAccruedIncome().getPreviousAmount());
+        assertEquals(new Long(VALUE_ONE), otherLiabilitiesOrAssets.getTotalAssetsLessCurrentLiabilities().getPreviousAmount());
+        assertEquals(new Long(VALUE_TWO), otherLiabilitiesOrAssets.getProvisionForLiabilities().getPreviousAmount());
+
+    }
+
+    @Test
+    @DisplayName("tests that the current period values map to other liabilities or assets IXBRL model")
+    public void testApiToOtherLiabilitiesOrAssetsMapsCurrentOnly() {
+
+        CurrentPeriodApi currentPeriod = setCurrentPeriod();
+
+        OtherLiabilitiesOrAssets otherLiabilitiesOrAssets = ApiToBalanceSheetMapper.INSTANCE.apiToOtherLiabilitiesOrAssets(
+                currentPeriod, null);
+
+        assertNotNull(otherLiabilitiesOrAssets);
+        assertEquals(new Long(VALUE_ONE), otherLiabilitiesOrAssets.getCurrentTotalNetAssets());
+        assertEquals(new Long(VALUE_TWO), otherLiabilitiesOrAssets.getAccrualsAndDeferredIncome().getCurrentAmount());
+        assertEquals(new Long(VALUE_THREE), otherLiabilitiesOrAssets.getCreditorsAmountsFallingDueAfterMoreThanOneYear().getCurrentAmount());
+        assertEquals(new Long(VALUE_ONE), otherLiabilitiesOrAssets.getCreditorsAmountsFallingDueWithinOneYear().getCurrentAmount());
+        assertEquals(new Long(VALUE_TWO), otherLiabilitiesOrAssets.getNetCurrentAssets().getCurrentAmount());
+        assertEquals(new Long(VALUE_THREE), otherLiabilitiesOrAssets.getPrepaymentsAndAccruedIncome().getCurrentAmount());
+        assertEquals(new Long(VALUE_ONE), otherLiabilitiesOrAssets.getTotalAssetsLessCurrentLiabilities().getCurrentAmount());
+        assertEquals(new Long(VALUE_TWO), otherLiabilitiesOrAssets.getProvisionForLiabilities().getCurrentAmount());
     }
 
     private PreviousPeriodApi setPreviousPeriod() {
@@ -101,25 +189,41 @@ public class ApiToBalanceSheetMapperTest {
         BalanceSheetApi balanceSheetPrevious = new BalanceSheetApi();
 
         CapitalAndReservesApi capitalAndReservesCurrent = new CapitalAndReservesApi();
-        capitalAndReservesCurrent.setCalledUpShareCapital(new Long(50));
-        capitalAndReservesCurrent.setOtherReserves(new Long(150));
-        capitalAndReservesCurrent.setProfitAndLoss(new Long(250));
-        capitalAndReservesCurrent.setSharePremiumAccount(new Long(350));
-        capitalAndReservesCurrent.setTotalShareholdersFund(new Long(450));
+        capitalAndReservesCurrent.setCalledUpShareCapital(new Long(VALUE_ONE));
+        capitalAndReservesCurrent.setOtherReserves(new Long(VALUE_TWO));
+        capitalAndReservesCurrent.setProfitAndLoss(new Long(VALUE_THREE));
+        capitalAndReservesCurrent.setSharePremiumAccount(new Long(VALUE_ONE));
+        capitalAndReservesCurrent.setTotalShareholdersFund(new Long(VALUE_TWO));
 
         CurrentAssetsApi currentAssets = new CurrentAssetsApi();
-        currentAssets.setCashInBankAndInHand(new Long(50));
-        currentAssets.setDebtors(new Long(150));
-        currentAssets.setStocks(new Long(250));
-        currentAssets.setTotal(new Long(350));
+        currentAssets.setCashInBankAndInHand(new Long(VALUE_ONE));
+        currentAssets.setDebtors(new Long(VALUE_TWO));
+        currentAssets.setStocks(new Long(VALUE_THREE));
+        currentAssets.setTotal(new Long(VALUE_ONE));
+
+        FixedAssetsApi fixedAssets = new FixedAssetsApi();
+        fixedAssets.setTangible(new Long(VALUE_ONE));
+        fixedAssets.setTotal(new Long(VALUE_TWO));
+
+        OtherLiabilitiesOrAssetsApi otherLiabilitiesOrAssets = new OtherLiabilitiesOrAssetsApi();
+        otherLiabilitiesOrAssets.setTotalNetAssets(new Long(VALUE_ONE));
+        otherLiabilitiesOrAssets.setAccrualsAndDeferredIncome(new Long(VALUE_TWO));
+        otherLiabilitiesOrAssets.setCreditorsAfterOneYear(new Long(VALUE_THREE));
+        otherLiabilitiesOrAssets.setCreditorsDueWithinOneYear(new Long(VALUE_ONE));
+        otherLiabilitiesOrAssets.setNetCurrentAssets(new Long(VALUE_TWO));
+        otherLiabilitiesOrAssets.setPrepaymentsAndAccruedIncome(new Long(VALUE_THREE));
+        otherLiabilitiesOrAssets.setTotalAssetsLessCurrentLiabilities(new Long(VALUE_ONE));
+        otherLiabilitiesOrAssets.setProvisionForLiabilities(new Long(VALUE_TWO));
+
 
         balanceSheetPrevious.setCapitalAndReservesApi(capitalAndReservesCurrent);
         balanceSheetPrevious.setCurrentAssetsApi(currentAssets);
+        balanceSheetPrevious.setFixedAssetsApi(fixedAssets);
+        balanceSheetPrevious.setOtherLiabilitiesOrAssetsApi(otherLiabilitiesOrAssets);
 
         previousPeriod.setBalanceSheet(balanceSheetPrevious);
 
         return previousPeriod;
-
     }
 
     private CurrentPeriodApi setCurrentPeriod() {
@@ -128,20 +232,36 @@ public class ApiToBalanceSheetMapperTest {
         BalanceSheetApi balanceSheetCurrent = new BalanceSheetApi();
 
         CapitalAndReservesApi capitalAndReservesCurrent = new CapitalAndReservesApi();
-        capitalAndReservesCurrent.setCalledUpShareCapital(new Long(100));
-        capitalAndReservesCurrent.setOtherReserves(new Long(200));
-        capitalAndReservesCurrent.setProfitAndLoss(new Long(300));
-        capitalAndReservesCurrent.setSharePremiumAccount(new Long(400));
-        capitalAndReservesCurrent.setTotalShareholdersFund(new Long(500));
+        capitalAndReservesCurrent.setCalledUpShareCapital(new Long(VALUE_ONE));
+        capitalAndReservesCurrent.setOtherReserves(new Long(VALUE_TWO));
+        capitalAndReservesCurrent.setProfitAndLoss(new Long(VALUE_THREE));
+        capitalAndReservesCurrent.setSharePremiumAccount(new Long(VALUE_ONE));
+        capitalAndReservesCurrent.setTotalShareholdersFund(new Long(VALUE_TWO));
 
         CurrentAssetsApi currentAssets = new CurrentAssetsApi();
-        currentAssets.setCashInBankAndInHand(new Long(100));
-        currentAssets.setDebtors(new Long(200));
-        currentAssets.setStocks(new Long(300));
-        currentAssets.setTotal(new Long(400));
+        currentAssets.setCashInBankAndInHand(new Long(VALUE_ONE));
+        currentAssets.setDebtors(new Long(VALUE_TWO));
+        currentAssets.setStocks(new Long(VALUE_THREE));
+        currentAssets.setTotal(new Long(VALUE_ONE));
+
+        FixedAssetsApi fixedAssets = new FixedAssetsApi();
+        fixedAssets.setTangible(new Long(VALUE_ONE));
+        fixedAssets.setTotal(new Long(VALUE_TWO));
+
+        OtherLiabilitiesOrAssetsApi otherLiabilitiesOrAssets = new OtherLiabilitiesOrAssetsApi();
+        otherLiabilitiesOrAssets.setTotalNetAssets(new Long(VALUE_ONE));
+        otherLiabilitiesOrAssets.setAccrualsAndDeferredIncome(new Long(VALUE_TWO));
+        otherLiabilitiesOrAssets.setCreditorsAfterOneYear(new Long(VALUE_THREE));
+        otherLiabilitiesOrAssets.setCreditorsDueWithinOneYear(new Long(VALUE_ONE));
+        otherLiabilitiesOrAssets.setNetCurrentAssets(new Long(VALUE_TWO));
+        otherLiabilitiesOrAssets.setPrepaymentsAndAccruedIncome(new Long(VALUE_THREE));
+        otherLiabilitiesOrAssets.setTotalAssetsLessCurrentLiabilities(new Long(VALUE_ONE));
+        otherLiabilitiesOrAssets.setProvisionForLiabilities(new Long(VALUE_TWO));
 
         balanceSheetCurrent.setCapitalAndReservesApi(capitalAndReservesCurrent);
         balanceSheetCurrent.setCurrentAssetsApi(currentAssets);
+        balanceSheetCurrent.setFixedAssetsApi(fixedAssets);
+        balanceSheetCurrent.setOtherLiabilitiesOrAssetsApi(otherLiabilitiesOrAssets);
 
         currentPeriod.setBalanceSheetApi(balanceSheetCurrent);
 

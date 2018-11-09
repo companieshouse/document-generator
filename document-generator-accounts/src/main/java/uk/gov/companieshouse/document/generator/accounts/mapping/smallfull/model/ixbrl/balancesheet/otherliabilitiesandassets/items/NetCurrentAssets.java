@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 
 import java.util.Objects;
 
-public class CurrentNetCurrentAssets {
+public class NetCurrentAssets {
 
     @JsonProperty("current_amount")
     private Long currentAmount;
