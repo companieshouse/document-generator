@@ -27,11 +27,6 @@ public class CapitalAndReserve {
     @JsonProperty("total_share_holders_fund")
     private TotalShareHoldersFund totalShareHoldersFund;
 
-    @JsonProperty("current_total_capital_and_reserve")
-    private long currentTotalCapitalAndReserve;
-
-    @JsonProperty("previous_total_capital_and_reserve")
-    private long previousTotalCapitalAndReserve;
 
     public CalledUpShareCapital getCalledUpShareCapital() {
         return calledUpShareCapital;
@@ -73,30 +68,12 @@ public class CapitalAndReserve {
         this.totalShareHoldersFund = totalShareHoldersFund;
     }
 
-    public long getCurrentTotalCapitalAndReserve() {
-        return currentTotalCapitalAndReserve;
-    }
-
-    public void setCurrentTotalCapitalAndReserve(long currentTotalCapitalAndReserve) {
-        this.currentTotalCapitalAndReserve = currentTotalCapitalAndReserve;
-    }
-
-    public long getPreviousTotalCapitalAndReserve() {
-        return previousTotalCapitalAndReserve;
-    }
-
-    public void setPreviousTotalCapitalAndReserve(long previousTotalCapitalAndReserve) {
-        this.previousTotalCapitalAndReserve = previousTotalCapitalAndReserve;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof CapitalAndReserve)) return false;
         CapitalAndReserve that = (CapitalAndReserve) o;
-        return getCurrentTotalCapitalAndReserve() == that.getCurrentTotalCapitalAndReserve() &&
-                getPreviousTotalCapitalAndReserve() == that.getPreviousTotalCapitalAndReserve() &&
-                Objects.equals(getCalledUpShareCapital(), that.getCalledUpShareCapital()) &&
+        return Objects.equals(getCalledUpShareCapital(), that.getCalledUpShareCapital()) &&
                 Objects.equals(getOtherReserves(), that.getOtherReserves()) &&
                 Objects.equals(getProfitAndLoss(), that.getProfitAndLoss()) &&
                 Objects.equals(getSharePremiumAccount(), that.getSharePremiumAccount()) &&
@@ -106,8 +83,8 @@ public class CapitalAndReserve {
     @Override
     public int hashCode() {
 
-        return Objects.hash(getCalledUpShareCapital(), getOtherReserves(), getProfitAndLoss(), getSharePremiumAccount(),
-                getTotalShareHoldersFund(), getCurrentTotalCapitalAndReserve(), getPreviousTotalCapitalAndReserve());
+        return Objects.hash(getCalledUpShareCapital(), getOtherReserves(), getProfitAndLoss(),
+                getSharePremiumAccount(), getTotalShareHoldersFund());
     }
 
     @Override
