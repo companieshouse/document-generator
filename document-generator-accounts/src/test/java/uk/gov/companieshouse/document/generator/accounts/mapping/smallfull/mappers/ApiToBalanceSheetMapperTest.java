@@ -12,6 +12,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.FixedAssetsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.OtherLiabilitiesOrAssetsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.CalledUpSharedCapitalNotPaid;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.capitalandreserves.CapitalAndReserve;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.currentassets.CurrentAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.fixedassets.FixedAssets;
@@ -162,6 +163,29 @@ public class ApiToBalanceSheetMapperTest {
         assertEquals(new Long(VALUE_TWO), otherLiabilitiesOrAssets.getProvisionForLiabilities().getCurrentAmount());
     }
 
+    @Test
+    @DisplayName("tests that the current and previous period values map to called up share capital not paid IXBRL model")
+    public void testApiToCalledUpShareCapitalNotPaidMapsCurrentAndPrevious() {
+
+        CalledUpSharedCapitalNotPaid calledUpSharedCapitalNotPaid = ApiToBalanceSheetMapper
+                .INSTANCE.apiToCalledUpSharedCapitalNotPaid(setCurrentPeriod(), setPreviousPeriod());
+
+        assertNotNull(calledUpSharedCapitalNotPaid);
+        assertEquals(new Long(VALUE_ONE), calledUpSharedCapitalNotPaid.getCurrentAmount());
+        assertEquals(new Long(VALUE_ONE), calledUpSharedCapitalNotPaid.getPreviousAmount());
+    }
+
+    @Test
+    @DisplayName("tests that the current period values map to called up share capital not paid IXBRL model")
+    public void testApiToCalledUpShareCapitalNotPaidMapsCurrentOnly() {
+
+        CalledUpSharedCapitalNotPaid calledUpSharedCapitalNotPaid = ApiToBalanceSheetMapper
+                .INSTANCE.apiToCalledUpSharedCapitalNotPaid(setCurrentPeriod(), null);
+
+        assertNotNull(calledUpSharedCapitalNotPaid);
+        assertEquals(new Long(VALUE_ONE), calledUpSharedCapitalNotPaid.getCurrentAmount());
+    }
+
     private CurrentPeriodApi setCurrentPeriod() {
 
         CurrentPeriodApi currentPeriod = new CurrentPeriodApi();
@@ -215,6 +239,7 @@ public class ApiToBalanceSheetMapperTest {
         balanceSheet.setCurrentAssetsApi(currentAssets);
         balanceSheet.setFixedAssetsApi(fixedAssets);
         balanceSheet.setOtherLiabilitiesOrAssetsApi(otherLiabilitiesOrAssets);
+        balanceSheet.setCalledUpShareCapitalNotPaid(VALUE_ONE);
 
         return balanceSheet;
     }

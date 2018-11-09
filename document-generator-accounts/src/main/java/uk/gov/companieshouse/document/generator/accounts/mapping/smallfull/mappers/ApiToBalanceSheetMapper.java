@@ -6,6 +6,7 @@ import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.CalledUpSharedCapitalNotPaid;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.capitalandreserves.CapitalAndReserve;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.currentassets.CurrentAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.fixedassets.FixedAssets;
@@ -107,5 +108,11 @@ public interface ApiToBalanceSheetMapper {
                     target = "previousTotalNetAssets"),
     })
     OtherLiabilitiesOrAssets apiToOtherLiabilitiesOrAssets(CurrentPeriodApi currentPeriod, PreviousPeriodApi previousPeriod);
+
+    @Mappings({
+            @Mapping(source = "currentPeriod.balanceSheetApi.calledUpShareCapitalNotPaid", target = "currentAmount"),
+            @Mapping(source = "previousPeriod.balanceSheet.calledUpShareCapitalNotPaid", target = "previousAmount")
+    })
+    CalledUpSharedCapitalNotPaid apiToCalledUpSharedCapitalNotPaid(CurrentPeriodApi currentPeriod, PreviousPeriodApi previousPeriod);
 }
 
