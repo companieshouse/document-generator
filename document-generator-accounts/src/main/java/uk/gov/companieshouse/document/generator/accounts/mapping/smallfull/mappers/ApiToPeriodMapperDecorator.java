@@ -27,12 +27,22 @@ public abstract class ApiToPeriodMapperDecorator implements ApiToPeriodMapper {
 
         boolean isSameYear = isSameYearFiler(companyProfile);
 
+        setCurrentPeriod(period, companyProfile, isSameYear);
+        setPreviousPeriod(period, companyProfile, isSameYear);
+
+        return period;
+    }
+
+    private void setCurrentPeriod(Period period, CompanyProfileApi companyProfile, boolean isSameYear) {
+
         NextAccountsApi nextAccounts = companyProfile.getAccounts().getNextAccounts();
         period.setCurrentPeriodStartOnFormatted(convertToDisplayDate(nextAccounts.getPeriodStartOn()));
         period.setCurrentPeriodEndOnFormatted(convertToDisplayDate(nextAccounts.getPeriodEndOn()));
         period.setCurrentPeriodBSDate(convertDateToBSDate(nextAccounts.getPeriodStartOn(),
                 nextAccounts.getPeriodEndOn(), isSameYear));
+    }
 
+    private void setPreviousPeriod(Period period, CompanyProfileApi companyProfile, boolean isSameYear) {
 
         if (isMultipleYearFiler(companyProfile)) {
             LastAccountsApi lastAccounts = companyProfile.getAccounts().getLastAccounts();
@@ -41,8 +51,6 @@ public abstract class ApiToPeriodMapperDecorator implements ApiToPeriodMapper {
             period.setPreviousPeriodBSDate(convertDateToBSDate(lastAccounts.getPeriodStartOn(),
                     lastAccounts.getPeriodEndOn(), isSameYear));
         }
-
-        return period;
     }
 
     private boolean isMultipleYearFiler(CompanyProfileApi companyProfile) {
