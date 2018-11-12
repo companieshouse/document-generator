@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.company.account.CompanyAccountApi;
 import uk.gov.companieshouse.api.model.company.account.LastAccountsApi;
@@ -20,9 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ApiToPeriodMapperTest {
-
-    @Autowired
-    private ApiToPeriodMapper apiToPeriodMapper;
 
     private static final String CURRENT_PERIOD_START_ON = "2018-01-01";
 
@@ -46,7 +42,7 @@ public class ApiToPeriodMapperTest {
 
     @Test
     @DisplayName("tests that the dates from Api are mapped to Period IXBRL model for multi year filings")
-    public void testApiMapsDatesToPeriodModelForMultiYearFiling() {
+    void testApiMapsDatesToPeriodModelForMultiYearFiling() {
 
         Period period = ApiToPeriodMapper.INSTANCE.apiToPeriod(setAccountsFilingDates(true));
 
@@ -65,7 +61,7 @@ public class ApiToPeriodMapperTest {
 
     @Test
     @DisplayName("tests that the dates from Api are mapped to Period IXBRL model for single year filings")
-    public void testApiMapsDatesToPeriodModelForSingleYearFiling() {
+    void testApiMapsDatesToPeriodModelForSingleYearFiling() {
 
         Period period = ApiToPeriodMapper.INSTANCE.apiToPeriod(setAccountsFilingDates(false));
 
