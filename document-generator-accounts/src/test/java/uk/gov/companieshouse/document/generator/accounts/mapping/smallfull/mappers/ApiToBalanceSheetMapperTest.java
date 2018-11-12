@@ -33,7 +33,7 @@ public class ApiToBalanceSheetMapperTest {
 
     @Test
     @DisplayName("tests that both current and previous period values map to capital and reserve IXBRL model")
-    public void testApiToCapitalReserveMapsCurrentAndPrevious() {
+    void testApiToCapitalReserveMapsCurrentAndPrevious() {
 
         CapitalAndReserve capitalAndReserve = ApiToBalanceSheetMapper.INSTANCE.apiToCapitalAndReserve(setCurrentPeriod(), setPreviousPeriod());
 
@@ -52,7 +52,7 @@ public class ApiToBalanceSheetMapperTest {
 
     @Test
     @DisplayName("tests that current period values map to capital and reserve IXBRL model")
-    public void testApiToCapitalReserveMapsCurrentOnly() {
+    void testApiToCapitalReserveMapsCurrentOnly() {
 
         CapitalAndReserve capitalAndReserve = ApiToBalanceSheetMapper.INSTANCE.apiToCapitalAndReserve(setCurrentPeriod(), null);
 
@@ -66,7 +66,7 @@ public class ApiToBalanceSheetMapperTest {
 
     @Test
     @DisplayName("tests that both current and previous period values map to current assets IXBRL model")
-    public void testApiToCurrentAssetsMapsCurrentAndPrevious() {
+    void testApiToCurrentAssetsMapsCurrentAndPrevious() {
 
         CurrentAssets currentAssets = ApiToBalanceSheetMapper.INSTANCE.apiToCurrentAssets(setCurrentPeriod(), setPreviousPeriod());
 
@@ -83,7 +83,7 @@ public class ApiToBalanceSheetMapperTest {
 
     @Test
     @DisplayName("tests that current period values mapped to current assets IXBRL model")
-    public void testApiToCurrentAssetsMapsCurrentOnly() {
+    void testApiToCurrentAssetsMapsCurrentOnly() {
 
         CurrentAssets currentAssets = ApiToBalanceSheetMapper.INSTANCE.apiToCurrentAssets(setCurrentPeriod(), null);
 
@@ -96,7 +96,7 @@ public class ApiToBalanceSheetMapperTest {
 
     @Test
     @DisplayName("tests that the current and previous period values map to fixed assets IXBRL model")
-    public void testApiToFixedAssetsMapsCurrentAndPrevious() {
+    void testApiToFixedAssetsMapsCurrentAndPrevious() {
 
         FixedAssets fixedAssets = ApiToBalanceSheetMapper.INSTANCE.apiToFixedAssets(setCurrentPeriod(), setPreviousPeriod());
 
@@ -109,7 +109,7 @@ public class ApiToBalanceSheetMapperTest {
 
     @Test
     @DisplayName("tests that the current period values map to fixed assets IXBRL model")
-    public void testApiToFixedAssetsMapsCurrentOnly() {
+    void testApiToFixedAssetsMapsCurrentOnly() {
 
         FixedAssets fixedAssets = ApiToBalanceSheetMapper.INSTANCE.apiToFixedAssets(setCurrentPeriod(), null);
 
@@ -120,7 +120,7 @@ public class ApiToBalanceSheetMapperTest {
 
     @Test
     @DisplayName("tests that the current and previous period values map to other liabilities or assets IXBRL model")
-    public void testApiToOtherLiabilitiesOrAssetsMapsCurrentAndPrevious() {
+    void testApiToOtherLiabilitiesOrAssetsMapsCurrentAndPrevious() {
 
         OtherLiabilitiesOrAssets otherLiabilitiesOrAssets = ApiToBalanceSheetMapper.INSTANCE.apiToOtherLiabilitiesOrAssets(
                 setCurrentPeriod(), setPreviousPeriod());
@@ -147,7 +147,7 @@ public class ApiToBalanceSheetMapperTest {
 
     @Test
     @DisplayName("tests that the current period values map to other liabilities or assets IXBRL model")
-    public void testApiToOtherLiabilitiesOrAssetsMapsCurrentOnly() {
+    void testApiToOtherLiabilitiesOrAssetsMapsCurrentOnly() {
 
         OtherLiabilitiesOrAssets otherLiabilitiesOrAssets = ApiToBalanceSheetMapper.INSTANCE.apiToOtherLiabilitiesOrAssets(
                 setCurrentPeriod(), null);
@@ -165,7 +165,7 @@ public class ApiToBalanceSheetMapperTest {
 
     @Test
     @DisplayName("tests that the current and previous period values map to called up share capital not paid IXBRL model")
-    public void testApiToCalledUpShareCapitalNotPaidMapsCurrentAndPrevious() {
+    void testApiToCalledUpShareCapitalNotPaidMapsCurrentAndPrevious() {
 
         CalledUpSharedCapitalNotPaid calledUpSharedCapitalNotPaid = ApiToBalanceSheetMapper
                 .INSTANCE.apiToCalledUpSharedCapitalNotPaid(setCurrentPeriod(), setPreviousPeriod());
@@ -177,7 +177,7 @@ public class ApiToBalanceSheetMapperTest {
 
     @Test
     @DisplayName("tests that the current period values map to called up share capital not paid IXBRL model")
-    public void testApiToCalledUpShareCapitalNotPaidMapsCurrentOnly() {
+    void testApiToCalledUpShareCapitalNotPaidMapsCurrentOnly() {
 
         CalledUpSharedCapitalNotPaid calledUpSharedCapitalNotPaid = ApiToBalanceSheetMapper
                 .INSTANCE.apiToCalledUpSharedCapitalNotPaid(setCurrentPeriod(), null);
