@@ -208,22 +208,16 @@ public class ApiToBalanceSheetMapperTest {
 
         BalanceSheetApi balanceSheet = new BalanceSheetApi();
 
-        CapitalAndReservesApi capitalAndReserves = new CapitalAndReservesApi();
-        capitalAndReserves.setCalledUpShareCapital(new Long(VALUE_ONE));
-        capitalAndReserves.setOtherReserves(new Long(VALUE_TWO));
-        capitalAndReserves.setProfitAndLoss(new Long(VALUE_THREE));
-        capitalAndReserves.setSharePremiumAccount(new Long(VALUE_ONE));
-        capitalAndReserves.setTotalShareholdersFund(new Long(VALUE_TWO));
+        balanceSheet.setCapitalAndReservesApi(setCaptialAndReservesApiData());
+        balanceSheet.setCurrentAssetsApi(setCurrentAssetsApiData());
+        balanceSheet.setFixedAssetsApi(setFixedAssetsApiData());
+        balanceSheet.setOtherLiabilitiesOrAssetsApi(setOtherLiabilitiesOrAssetsApiData());
+        balanceSheet.setCalledUpShareCapitalNotPaid(VALUE_ONE);
 
-        CurrentAssetsApi currentAssets = new CurrentAssetsApi();
-        currentAssets.setCashInBankAndInHand(new Long(VALUE_ONE));
-        currentAssets.setDebtors(new Long(VALUE_TWO));
-        currentAssets.setStocks(new Long(VALUE_THREE));
-        currentAssets.setTotal(new Long(VALUE_ONE));
+        return balanceSheet;
+    }
 
-        FixedAssetsApi fixedAssets = new FixedAssetsApi();
-        fixedAssets.setTangible(new Long(VALUE_ONE));
-        fixedAssets.setTotal(new Long(VALUE_TWO));
+    private OtherLiabilitiesOrAssetsApi setOtherLiabilitiesOrAssetsApiData() {
 
         OtherLiabilitiesOrAssetsApi otherLiabilitiesOrAssets = new OtherLiabilitiesOrAssetsApi();
         otherLiabilitiesOrAssets.setTotalNetAssets(new Long(VALUE_ONE));
@@ -235,12 +229,38 @@ public class ApiToBalanceSheetMapperTest {
         otherLiabilitiesOrAssets.setTotalAssetsLessCurrentLiabilities(new Long(VALUE_ONE));
         otherLiabilitiesOrAssets.setProvisionForLiabilities(new Long(VALUE_TWO));
 
-        balanceSheet.setCapitalAndReservesApi(capitalAndReserves);
-        balanceSheet.setCurrentAssetsApi(currentAssets);
-        balanceSheet.setFixedAssetsApi(fixedAssets);
-        balanceSheet.setOtherLiabilitiesOrAssetsApi(otherLiabilitiesOrAssets);
-        balanceSheet.setCalledUpShareCapitalNotPaid(VALUE_ONE);
+        return otherLiabilitiesOrAssets;
+    }
 
-        return balanceSheet;
+    private FixedAssetsApi setFixedAssetsApiData() {
+
+        FixedAssetsApi fixedAssets = new FixedAssetsApi();
+        fixedAssets.setTangible(new Long(VALUE_ONE));
+        fixedAssets.setTotal(new Long(VALUE_TWO));
+
+        return fixedAssets;
+    }
+
+    private CurrentAssetsApi setCurrentAssetsApiData() {
+
+        CurrentAssetsApi currentAssets = new CurrentAssetsApi();
+        currentAssets.setCashInBankAndInHand(new Long(VALUE_ONE));
+        currentAssets.setDebtors(new Long(VALUE_TWO));
+        currentAssets.setStocks(new Long(VALUE_THREE));
+        currentAssets.setTotal(new Long(VALUE_ONE));
+
+        return currentAssets;
+    }
+
+    private CapitalAndReservesApi setCaptialAndReservesApiData() {
+
+        CapitalAndReservesApi capitalAndReserves = new CapitalAndReservesApi();
+        capitalAndReserves.setCalledUpShareCapital(new Long(VALUE_ONE));
+        capitalAndReserves.setOtherReserves(new Long(VALUE_TWO));
+        capitalAndReserves.setProfitAndLoss(new Long(VALUE_THREE));
+        capitalAndReserves.setSharePremiumAccount(new Long(VALUE_ONE));
+        capitalAndReserves.setTotalShareholdersFund(new Long(VALUE_TWO));
+
+        return capitalAndReserves;
     }
 }
