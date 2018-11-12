@@ -15,24 +15,30 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ApiToCompanyMapperTest {
 
+    private static final String JURISDICTION = "jurisdiction";
+
+    private static final String COMPANY_NAME = "companyName";
+
+    private static final String COMPANY_NUMBER = "companyNumber";
+
     @Test
     @DisplayName("tests company values map to company IXBRL model")
-    public void testApiToCompanyMaps() {
+    void testApiToCompanyMaps() {
 
-        Company company = ApiToCompanyMapper.INSTANCE.apiToCompany(createCompanyProfile());
+        Company company = ApiToCompanyMapper.INSTANCE.apiToCompany(setCompanyProfile());
 
         assertNotNull(company);
-        assertEquals("companyName", company.getCompanyName());
-        assertEquals("companyNumber", company.getCompanyNumber());
-        assertEquals("jurisdiction", company.getJurisdiction());
+        assertEquals(COMPANY_NAME, company.getCompanyName());
+        assertEquals(COMPANY_NUMBER, company.getCompanyNumber());
+        assertEquals(JURISDICTION, company.getJurisdiction());
     }
 
-    private CompanyProfileApi createCompanyProfile() {
+    private CompanyProfileApi setCompanyProfile() {
 
         CompanyProfileApi companyProfile = new CompanyProfileApi();
-        companyProfile.setCompanyName("companyName");
-        companyProfile.setCompanyNumber("companyNumber");
-        companyProfile.setJurisdiction("jurisdiction");
+        companyProfile.setCompanyName(COMPANY_NAME);
+        companyProfile.setCompanyNumber(COMPANY_NUMBER);
+        companyProfile.setJurisdiction(JURISDICTION);
 
         return companyProfile;
     }
