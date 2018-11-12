@@ -4,7 +4,8 @@ import java.util.Arrays;
 import java.util.UUID;
 
 public enum AccountType {
-    ABRIDGED_ACCOUNTS("accounts", "abridged-accounts", "abridged-accounts", "abridged_accounts");
+    ABRIDGED_ACCOUNTS("accounts", "abridged-accounts", "abridged-accounts", "abridged_accounts"),
+    SMALL_FULL("accounts", "smallFull-accounts", "smallFull-accounts", "smallFull-accounts");
 
     private static final String HTML_EXTENSION = ".html";
     private String assetId;

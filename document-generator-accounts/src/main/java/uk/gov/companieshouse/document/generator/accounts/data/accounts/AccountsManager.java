@@ -7,6 +7,9 @@ import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.accounts.Accounts;
 import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.mappers.SmallFullIXBRLMapper;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.SmallFullApiData;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.SmallFullAccountIxbrl;
 import uk.gov.companieshouse.document.generator.accounts.service.ApiClientService;
 
 /**
@@ -48,5 +51,29 @@ public class AccountsManager {
         ApiClient apiClient = apiClientService.getApiClient();
 
         return apiClient.abridgedAccounts().get(link).execute();
+    }
+
+    /**
+     * Get smallFull resource if exits and map to SmallFull IXBRL model
+     *
+     * @param link - self link for the abridged accounts resource
+     * @return SmallFullAccountIxbrl object
+     * @throws ApiErrorResponseException
+     * @throws URIValidationException
+     */
+    public SmallFullAccountIxbrl getSmallFullAccounts(String link) throws ApiErrorResponseException, URIValidationException {
+
+        SmallFullApiData smallFullApiData = new SmallFullApiData();
+
+        ApiClient apiClient = apiClientService.getApiClient();
+
+        smallFullApiData.setPreviousPeriod(apiClient.smallFull().previousPeriod().get(link + "/previous-period").execute());
+        smallFullApiData.setCurrentPeriod(apiClient.smallFull().currentPeriod().get(link + "/current-period").execute());
+        smallFullApiData.setCompanyProfile(apiClient.company().get(link).execute());
+        smallFullApiData.setApproval(apiClient.smallFull().approval().get(link + "/approval").execute());
+
+        SmallFullAccountIxbrl smallFullAccountIxbrl = SmallFullIXBRLMapper.INSTANCE.mapSmallFullIXBRLModel(smallFullApiData);
+
+        return smallFullAccountIxbrl;
     }
 }

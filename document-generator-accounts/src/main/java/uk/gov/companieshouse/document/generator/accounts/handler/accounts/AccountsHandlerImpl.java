@@ -12,6 +12,7 @@ import uk.gov.companieshouse.document.generator.accounts.LinkType;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.SmallFullAccountIxbrl;
 import uk.gov.companieshouse.document.generator.accounts.service.AccountsService;
 import uk.gov.companieshouse.document.generator.accounts.service.CompanyService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
@@ -53,17 +54,8 @@ public class AccountsHandlerImpl implements AccountsHandler  {
     @Override
     public DocumentInfoResponse getAbridgedAccountsData(Transaction transaction, String resourceLink, String requestId)
             throws HandlerException {
-        Accounts accounts;
 
-        try {
-            accounts = accountsService.getAccounts(resourceLink, requestId);
-        } catch (ServiceException e) {
-            Map<String, Object> logMap = new HashMap<>();
-            logMap.put(RESOURCE, resourceLink);
-            LOG.errorContext(requestId,"Error in service layer when obtaining accounts data for resource: "
-                    + resourceLink, e, logMap);
-            throw new HandlerException(e.getMessage(), e.getCause());
-        }
+        Accounts accounts = getAccounts(resourceLink, requestId);
 
         AccountType accountType = getAccountType(accounts);
 
@@ -86,6 +78,53 @@ public class AccountsHandlerImpl implements AccountsHandler  {
             LOG.errorContext(requestId,"Error when parsing period end on date from abridged accounts data", e, logMap);
             throw new HandlerException(e.getMessage(), e.getCause());
         }
+    }
+
+    @Override
+    public DocumentInfoResponse getSmallFullAccountsData(Transaction transaction, String resourceLink, String requestId)
+            throws HandlerException {
+
+        Accounts accounts = getAccounts(resourceLink, requestId);
+
+        AccountType accountType = getAccountType(accounts);
+
+        String smallFullAccountLink = getAccountLink(accounts, accountType);
+
+        try {
+            SmallFullAccountIxbrl smallFullAccountIxbrl = accountsService.getSmallFullAccounts(smallFullAccountLink, resourceLink);
+            return createResponse(transaction, accountType, smallFullAccountIxbrl);
+        } catch (ServiceException | IOException e) {
+            Map<String, Object> logMap = new HashMap<>();
+            logMap.put(RESOURCE, smallFullAccountLink);
+            logMap.put(ACCOUNT_TYPE, accountType);
+            LOG.errorContext(requestId, "Error in service layer when obtaining smallFull accounts data for resource: "
+                    + smallFullAccountLink, e, logMap);
+            throw new HandlerException(e.getMessage(), e.getCause());
+        } catch (ParseException e) {
+            Map<String, Object> logMap = new HashMap<>();
+            logMap.put(RESOURCE, smallFullAccountLink);
+            logMap.put(ACCOUNT_TYPE, accountType);
+            LOG.errorContext(requestId,"Error when parsing period end on date from smallFull accounts data", e, logMap);
+            throw new HandlerException(e.getMessage(), e.getCause());
+        }
+    }
+
+
+    private Accounts getAccounts(String resourceLink, String requestId) throws HandlerException {
+
+        Accounts accounts;
+
+        try {
+            accounts = accountsService.getAccounts(resourceLink, requestId);
+        } catch (ServiceException e) {
+            Map<String, Object> logMap = new HashMap<>();
+            logMap.put(RESOURCE, resourceLink);
+            LOG.errorContext(requestId,"Error in service layer when obtaining accounts data for resource: "
+                    + resourceLink, e, logMap);
+            throw new HandlerException(e.getMessage(), e.getCause());
+        }
+
+        return accounts;
     }
 
     /**
@@ -157,6 +196,7 @@ public class AccountsHandlerImpl implements AccountsHandler  {
 
         JSONObject accountJSON = new JSONObject(factory.toString(accountData));
         JSONObject account = new JSONObject();
+
         account.put(accountTypeName, accountJSON);
         account.put("company_number", transaction.getCompanyNumber());
 

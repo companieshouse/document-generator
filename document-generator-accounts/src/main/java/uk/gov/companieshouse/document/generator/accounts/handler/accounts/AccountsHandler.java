@@ -6,7 +6,7 @@ import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRes
 
 /**
  * AccountsHandler handles all 'Accounts' resources. When used under doc-gen-accounts, Accounts refers
- * to the base Accounts resource and/or Abridged Accounts resource. Additionally, this handler shall
+ * to the base Accounts resource and/or Abridged/SmallFull Accounts resource. Additionally, this handler shall
  * carry out any processing relating to Accounts resources whether it be service layer calls to retrieve
  * data or formatting that data in order to return to doc-gen-api
  */
@@ -21,5 +21,17 @@ public interface AccountsHandler {
      * @throws HandlerException throws a custom handler exception
      */
     DocumentInfoResponse getAbridgedAccountsData(Transaction transaction, String resourceLink, String requestId)
+            throws HandlerException;
+
+    /**
+     * Get a SmallFull Accounts resource from the given resource link
+     *
+     * @param transaction the transaction data
+     * @param resourceLink the resource link of the smallFull accounts
+     * @param requestId the id of the request
+     * @return a populated {@link DocumentInfoResponse} object
+     * @throws HandlerException throws a custom handler exception
+     */
+    DocumentInfoResponse getSmallFullAccountsData(Transaction transaction, String resourceLink, String requestId)
             throws HandlerException;
 }

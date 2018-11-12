@@ -66,7 +66,7 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
                 });
 
 
-        // when the Accounts migration has been completed to Company Accounts, this code can be removed
+        // when the Accounts migration has been completed to Company Accounts, this code can be refactored
         if (isAccounts(resourceLink)) {
             try {
                 return accountsHandler.getAbridgedAccountsData(transaction, resourceLink, requestId);
@@ -79,7 +79,15 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
             }
         }
 
-        return null;
+        try {
+            return accountsHandler.getSmallFullAccountsData(transaction, resourceLink, requestId);
+        } catch (HandlerException e) {
+            LOG.errorContext(requestId,"An error occurred when calling the account handler to obtain " +
+                    "smallFull accounts data for transaction: " + transaction.getId() + " and resource link: "
+                    + resourceLink, e, debugMap);
+            throw new DocumentInfoException("Failed to get smallFull data for transaction: "
+                    + transaction.getId() + " and resource link: " + resourceLink);
+        }
     }
 
     /**
