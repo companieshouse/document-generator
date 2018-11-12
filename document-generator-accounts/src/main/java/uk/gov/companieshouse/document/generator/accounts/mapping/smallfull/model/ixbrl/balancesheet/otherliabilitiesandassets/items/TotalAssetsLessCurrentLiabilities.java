@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 
 import java.util.Objects;
 
-public class PreviousNetCurrentAssets {
+public class TotalAssetsLessCurrentLiabilities {
 
     @JsonProperty("current_amount")
     private Long currentAmount;
@@ -32,8 +32,8 @@ public class PreviousNetCurrentAssets {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof PreviousNetCurrentAssets)) return false;
-        PreviousNetCurrentAssets that = (PreviousNetCurrentAssets) o;
+        if (!(o instanceof AccrualsAndDeferredIncome)) return false;
+        AccrualsAndDeferredIncome that = (AccrualsAndDeferredIncome) o;
         return getCurrentAmount() == that.getCurrentAmount() &&
                 getPreviousAmount() == that.getPreviousAmount();
     }

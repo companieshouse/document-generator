@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.capitalandreserves.CapitalAndReserve;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.currentassets.CurrentAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.fixedassets.FixedAssets;
-import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.otherliabilitiesandassets.OtherLiabilitiesAndAssets;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.otherliabilitiesandassets.OtherLiabilitiesOrAssets;
 
 import java.util.Objects;
 
@@ -20,8 +20,8 @@ public class BalanceSheet {
     @JsonProperty("current_assets")
     private CurrentAssets currentAssets;
 
-    @JsonProperty("other_liabilities_and_assets")
-    private OtherLiabilitiesAndAssets otherLiabilitiesAndAssets;
+    @JsonProperty("other_liabilities_or_assets")
+    private OtherLiabilitiesOrAssets otherLiabilitiesOrAssets;
 
     @JsonProperty("capital_and_reserve")
     private CapitalAndReserve capitalAndReserve;
@@ -50,12 +50,12 @@ public class BalanceSheet {
         this.currentAssets = currentAssets;
     }
 
-    public OtherLiabilitiesAndAssets getOtherLiabilitiesAndAssets() {
-        return otherLiabilitiesAndAssets;
+    public OtherLiabilitiesOrAssets getOtherLiabilitiesOrAssets() {
+        return otherLiabilitiesOrAssets;
     }
 
-    public void setOtherLiabilitiesAndAssets(OtherLiabilitiesAndAssets otherLiabilitiesAndAssets) {
-        this.otherLiabilitiesAndAssets = otherLiabilitiesAndAssets;
+    public void setOtherLiabilitiesOrAssets(OtherLiabilitiesOrAssets otherLiabilitiesOrAssets) {
+        this.otherLiabilitiesOrAssets = otherLiabilitiesOrAssets;
     }
 
     public CapitalAndReserve getCapitalAndReserve() {
@@ -74,14 +74,14 @@ public class BalanceSheet {
         return Objects.equals(getCalledUpSharedCapitalNotPaid(), that.getCalledUpSharedCapitalNotPaid()) &&
                 Objects.equals(getFixedAssets(), that.getFixedAssets()) &&
                 Objects.equals(getCurrentAssets(), that.getCurrentAssets()) &&
-                Objects.equals(getOtherLiabilitiesAndAssets(), that.getOtherLiabilitiesAndAssets()) &&
+                Objects.equals(getOtherLiabilitiesOrAssets(), that.getOtherLiabilitiesOrAssets()) &&
                 Objects.equals(getCapitalAndReserve(), that.getCapitalAndReserve());
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(getCalledUpSharedCapitalNotPaid(), getFixedAssets(), getCurrentAssets(), getOtherLiabilitiesAndAssets(), getCapitalAndReserve());
+        return Objects.hash(getCalledUpSharedCapitalNotPaid(), getFixedAssets(), getCurrentAssets(), getOtherLiabilitiesOrAssets(), getCapitalAndReserve());
     }
 
     @Override
