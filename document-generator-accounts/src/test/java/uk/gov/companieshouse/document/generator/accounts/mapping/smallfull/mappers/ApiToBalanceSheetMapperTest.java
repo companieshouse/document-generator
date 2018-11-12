@@ -208,7 +208,7 @@ public class ApiToBalanceSheetMapperTest {
 
         BalanceSheetApi balanceSheet = new BalanceSheetApi();
 
-        balanceSheet.setCapitalAndReservesApi(setCaptialAndReservesApiData());
+        balanceSheet.setCapitalAndReservesApi(setCapitalAndReservesApiData());
         balanceSheet.setCurrentAssetsApi(setCurrentAssetsApiData());
         balanceSheet.setFixedAssetsApi(setFixedAssetsApiData());
         balanceSheet.setOtherLiabilitiesOrAssetsApi(setOtherLiabilitiesOrAssetsApiData());
@@ -252,7 +252,7 @@ public class ApiToBalanceSheetMapperTest {
         return currentAssets;
     }
 
-    private CapitalAndReservesApi setCaptialAndReservesApiData() {
+    private CapitalAndReservesApi setCapitalAndReservesApiData() {
 
         CapitalAndReservesApi capitalAndReserves = new CapitalAndReservesApi();
         capitalAndReserves.setCalledUpShareCapital(new Long(VALUE_ONE));
