@@ -20,7 +20,7 @@ import uk.gov.companieshouse.document.generator.accounts.service.ApiClientServic
 @Component
 public class AccountsManager {
 
-    private static final String SMALL_FULL = "small-full";
+    private static final String SMALL_FULL = "/small-full";
 
     @Autowired
     private ApiClientService apiClientService;
@@ -70,13 +70,13 @@ public class AccountsManager {
         ApiClient apiClient = apiClientService.getApiClient();
 
         smallFullApiData.setPreviousPeriod(apiClient.smallFull().previousPeriod()
-                .get(new StringBuilder(link).append(SMALL_FULL).append("previous-period").toString()).execute());
+                .get(new StringBuilder(link).append(SMALL_FULL).append("/previous-period").toString()).execute());
         smallFullApiData.setCurrentPeriod(apiClient.smallFull().currentPeriod()
-                .get(new StringBuilder(link).append(SMALL_FULL).append("current-period").toString()).execute());
+                .get(new StringBuilder(link).append(SMALL_FULL).append("/current-period").toString()).execute());
         smallFullApiData.setCompanyProfile(apiClient.company()
                 .get(new StringBuilder(link).append(SMALL_FULL).toString()).execute());
         smallFullApiData.setApproval(apiClient.smallFull().approval()
-                .get(new StringBuilder(link).append(SMALL_FULL).append("approval").toString()).execute());
+                .get(new StringBuilder(link).append(SMALL_FULL).append("/approval").toString()).execute());
 
         SmallFullAccountIxbrl smallFullAccountIxbrl = SmallFullIXBRLMapper.INSTANCE.mapSmallFullIXBRLModel(smallFullApiData);
 
