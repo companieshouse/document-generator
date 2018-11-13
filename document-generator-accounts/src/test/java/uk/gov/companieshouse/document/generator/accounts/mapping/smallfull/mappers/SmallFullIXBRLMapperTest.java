@@ -42,6 +42,14 @@ public class SmallFullIXBRLMapperTest {
 
     private static final  Long VALUE_THREE = 300L;
 
+    private static final String JURISDICTION = "jurisdiction";
+
+    private static final String COMPANY_NAME = "companyName";
+
+    private static final String COMPANY_NUMBER = "companyNumber";
+
+    private static final String NAME = "name";
+
     @Test
     @DisplayName("tests the mapping of the smallFull IXBRL model with a current and previous period")
     void testSmallFullMapperCurrentAndPreious() {
@@ -104,7 +112,7 @@ public class SmallFullIXBRLMapperTest {
 
         ApprovalApi approval = new ApprovalApi();
         approval.setDate(LocalDate.of(2018, 12, 31));
-        approval.setName("name");
+        approval.setName(NAME);
 
         return approval;
     }
@@ -112,9 +120,9 @@ public class SmallFullIXBRLMapperTest {
     private CompanyProfileApi createCompanyProfile(boolean isMultiYearFiling) {
 
         CompanyProfileApi companyProfile = new CompanyProfileApi();
-        companyProfile.setCompanyName("companyName");
-        companyProfile.setCompanyNumber("companyNumber");
-        companyProfile.setJurisdiction("jurisdiction");
+        companyProfile.setCompanyName(COMPANY_NAME);
+        companyProfile.setCompanyNumber(COMPANY_NUMBER);
+        companyProfile.setJurisdiction(JURISDICTION);
         createAccountsFilingDates(isMultiYearFiling, companyProfile);
 
         return companyProfile;
@@ -296,15 +304,15 @@ public class SmallFullIXBRLMapperTest {
     private void assertCompanyProfileMapped(Company company) {
 
         assertNotNull(company);
-        assertEquals("companyName", company.getCompanyName());
-        assertEquals("companyNumber", company.getCompanyNumber());
-        assertEquals("jurisdiction", company.getJurisdiction());
+        assertEquals(COMPANY_NAME, company.getCompanyName());
+        assertEquals(COMPANY_NUMBER, company.getCompanyNumber());
+        assertEquals(JURISDICTION, company.getJurisdiction());
     }
 
     private void assertApprovalsMapped(String approvalDate, String approvalName) {
 
         assertEquals("2018-12-31", approvalDate);
-        assertEquals("name", approvalName);
+        assertEquals(NAME, approvalName);
     }
 
 
