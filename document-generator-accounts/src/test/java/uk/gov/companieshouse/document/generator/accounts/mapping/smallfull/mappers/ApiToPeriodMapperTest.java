@@ -42,9 +42,9 @@ public class ApiToPeriodMapperTest {
 
     @Test
     @DisplayName("tests that the dates from Api are mapped to Period IXBRL model for multi year filings")
-    public void testApiMapsDatesToPeriodModelForMultiYearFiling() {
+    void testApiMapsDatesToPeriodModelForMultiYearFiling() {
 
-        Period period = ApiToPeriodMapper.INSTANCE.apiToPeriod(setAccountsFilingDates(true));
+        Period period = ApiToPeriodMapper.INSTANCE.apiToPeriod(createAccountsFilingDates(true));
 
         assertNotNull(period);
         assertEquals(CURRENT_PERIOD_START_ON, period.getCurrentPeriodStartOn());
@@ -61,9 +61,9 @@ public class ApiToPeriodMapperTest {
 
     @Test
     @DisplayName("tests that the dates from Api are mapped to Period IXBRL model for single year filings")
-    public void testApiMapsDatesToPeriodModelForSingleYearFiling() {
+    void testApiMapsDatesToPeriodModelForSingleYearFiling() {
 
-        Period period = ApiToPeriodMapper.INSTANCE.apiToPeriod(setAccountsFilingDates(false));
+        Period period = ApiToPeriodMapper.INSTANCE.apiToPeriod(createAccountsFilingDates(false));
 
         assertNotNull(period);
         assertEquals(CURRENT_PERIOD_START_ON, period.getCurrentPeriodStartOn());
@@ -78,7 +78,7 @@ public class ApiToPeriodMapperTest {
         assertEquals(null, period.getPreviousPeriodBSDate());
     }
 
-    private CompanyProfileApi setAccountsFilingDates(boolean multiYearFiling) {
+    private CompanyProfileApi createAccountsFilingDates(boolean multiYearFiling) {
 
         CompanyProfileApi companyProfileApi = new CompanyProfileApi();
         CompanyAccountApi companyAccountsApi = new CompanyAccountApi();
