@@ -20,6 +20,11 @@ import uk.gov.companieshouse.api.model.company.account.NextAccountsApi;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.SmallFullApiData;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.SmallFullAccountIxbrl;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.BalanceSheet;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.CalledUpSharedCapitalNotPaid;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.capitalandreserves.CapitalAndReserve;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.currentassets.CurrentAssets;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.fixedassets.FixedAssets;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.otherliabilitiesandassets.OtherLiabilitiesOrAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.company.Company;
 
 import java.time.LocalDate;
@@ -71,28 +76,28 @@ public class SmallFullIXBRLMapperTest {
 
         smallFullApiData.setApproval(createApproval());
         smallFullApiData.setCompanyProfile(createCompanyProfile(isSameYearFiling));
-        smallFullApiData.setCurrentPeriod(setCurrentPeriod());
+        smallFullApiData.setCurrentPeriod(createCurrentPeriod());
         if(isSameYearFiling == true) {
-            smallFullApiData.setPreviousPeriod(setPreviousPeriod());
+            smallFullApiData.setPreviousPeriod(createPreviousPeriod());
         }
 
         return smallFullApiData;
     }
 
-    private CurrentPeriodApi setCurrentPeriod() {
+    private CurrentPeriodApi createCurrentPeriod() {
 
         CurrentPeriodApi currentPeriod = new CurrentPeriodApi();
 
-        currentPeriod.setBalanceSheetApi(setBalanceSheetValues());
+        currentPeriod.setBalanceSheetApi(createBalanceSheetValues());
 
         return currentPeriod;
     }
 
-    private PreviousPeriodApi setPreviousPeriod() {
+    private PreviousPeriodApi  createPreviousPeriod() {
 
         PreviousPeriodApi previousPeriod = new PreviousPeriodApi();
 
-        previousPeriod.setBalanceSheet(setBalanceSheetValues());
+        previousPeriod.setBalanceSheet(createBalanceSheetValues());
 
         return previousPeriod;
     }
@@ -112,12 +117,12 @@ public class SmallFullIXBRLMapperTest {
         companyProfile.setCompanyName("companyName");
         companyProfile.setCompanyNumber("companyNumber");
         companyProfile.setJurisdiction("jurisdiction");
-        setAccountsFilingDates(isMultiYearFiling, companyProfile);
+        createAccountsFilingDates(isMultiYearFiling, companyProfile);
 
         return companyProfile;
     }
 
-    private CompanyProfileApi setAccountsFilingDates(boolean isMultiYearFiling, CompanyProfileApi companyProfileApi ) {
+    private CompanyProfileApi createAccountsFilingDates(boolean isMultiYearFiling, CompanyProfileApi companyProfileApi ) {
 
         CompanyAccountApi companyAccountsApi = new CompanyAccountApi();
         LastAccountsApi lastAccountsApi = new LastAccountsApi();
@@ -138,26 +143,20 @@ public class SmallFullIXBRLMapperTest {
         return companyProfileApi;
     }
 
-    private BalanceSheetApi setBalanceSheetValues() {
+    private BalanceSheetApi createBalanceSheetValues() {
 
         BalanceSheetApi balanceSheet = new BalanceSheetApi();
 
-        CapitalAndReservesApi capitalAndReserves = new CapitalAndReservesApi();
-        capitalAndReserves.setCalledUpShareCapital(new Long(VALUE_ONE));
-        capitalAndReserves.setOtherReserves(new Long(VALUE_TWO));
-        capitalAndReserves.setProfitAndLoss(new Long(VALUE_THREE));
-        capitalAndReserves.setSharePremiumAccount(new Long(VALUE_ONE));
-        capitalAndReserves.setTotalShareholdersFund(new Long(VALUE_TWO));
+        balanceSheet.setCapitalAndReservesApi(createCapitalAndReserve());
+        balanceSheet.setCurrentAssetsApi(createCurrentAssets());
+        balanceSheet.setFixedAssetsApi(createFixedAssets());
+        balanceSheet.setOtherLiabilitiesOrAssetsApi(createOtherLiabilitiesOrAssets());
+        balanceSheet.setCalledUpShareCapitalNotPaid(VALUE_ONE);
 
-        CurrentAssetsApi currentAssets = new CurrentAssetsApi();
-        currentAssets.setCashInBankAndInHand(new Long(VALUE_ONE));
-        currentAssets.setDebtors(new Long(VALUE_TWO));
-        currentAssets.setStocks(new Long(VALUE_THREE));
-        currentAssets.setTotal(new Long(VALUE_ONE));
+        return balanceSheet;
+    }
 
-        FixedAssetsApi fixedAssets = new FixedAssetsApi();
-        fixedAssets.setTangible(new Long(VALUE_ONE));
-        fixedAssets.setTotal(new Long(VALUE_TWO));
+    private OtherLiabilitiesOrAssetsApi createOtherLiabilitiesOrAssets() {
 
         OtherLiabilitiesOrAssetsApi otherLiabilitiesOrAssets = new OtherLiabilitiesOrAssetsApi();
         otherLiabilitiesOrAssets.setTotalNetAssets(new Long(VALUE_ONE));
@@ -169,13 +168,132 @@ public class SmallFullIXBRLMapperTest {
         otherLiabilitiesOrAssets.setTotalAssetsLessCurrentLiabilities(new Long(VALUE_ONE));
         otherLiabilitiesOrAssets.setProvisionForLiabilities(new Long(VALUE_TWO));
 
-        balanceSheet.setCapitalAndReservesApi(capitalAndReserves);
-        balanceSheet.setCurrentAssetsApi(currentAssets);
-        balanceSheet.setFixedAssetsApi(fixedAssets);
-        balanceSheet.setOtherLiabilitiesOrAssetsApi(otherLiabilitiesOrAssets);
-        balanceSheet.setCalledUpShareCapitalNotPaid(VALUE_ONE);
+        return otherLiabilitiesOrAssets;
+    }
 
-        return balanceSheet;
+    private FixedAssetsApi createFixedAssets() {
+
+        FixedAssetsApi fixedAssets = new FixedAssetsApi();
+        fixedAssets.setTangible(new Long(VALUE_ONE));
+        fixedAssets.setTotal(new Long(VALUE_TWO));
+
+        return fixedAssets;
+    }
+
+    private CurrentAssetsApi createCurrentAssets() {
+
+        CurrentAssetsApi currentAssets = new CurrentAssetsApi();
+        currentAssets.setCashInBankAndInHand(new Long(VALUE_ONE));
+        currentAssets.setDebtors(new Long(VALUE_TWO));
+        currentAssets.setStocks(new Long(VALUE_THREE));
+        currentAssets.setTotal(new Long(VALUE_ONE));
+
+        return currentAssets;
+    }
+
+    private CapitalAndReservesApi createCapitalAndReserve() {
+
+        CapitalAndReservesApi capitalAndReserves = new CapitalAndReservesApi();
+        capitalAndReserves.setCalledUpShareCapital(new Long(VALUE_ONE));
+        capitalAndReserves.setOtherReserves(new Long(VALUE_TWO));
+        capitalAndReserves.setProfitAndLoss(new Long(VALUE_THREE));
+        capitalAndReserves.setSharePremiumAccount(new Long(VALUE_ONE));
+        capitalAndReserves.setTotalShareholdersFund(new Long(VALUE_TWO));
+
+        return capitalAndReserves;
+    }
+
+    private void assertBalanceSheetMapped(BalanceSheet balanceSheet, boolean isMultiYearFiling) {
+
+        assertCapitalAndReserve(balanceSheet.getCapitalAndReserve(), isMultiYearFiling);
+        assertCurrentAssets(balanceSheet.getCurrentAssets(), isMultiYearFiling);
+        assertFixedAssets(balanceSheet.getFixedAssets(), isMultiYearFiling);
+        assertOtherLiabilitiesOrAssets(balanceSheet.getOtherLiabilitiesOrAssets(), isMultiYearFiling);
+        assertCalledUpSharedCapitalNotPaid(balanceSheet.getCalledUpSharedCapitalNotPaid(), isMultiYearFiling);
+    }
+
+    private void assertCalledUpSharedCapitalNotPaid(CalledUpSharedCapitalNotPaid calledUpSharedCapitalNotPaid, boolean isMultiYearFiling) {
+
+        assertNotNull(calledUpSharedCapitalNotPaid);
+        assertEquals(new Long(VALUE_ONE), calledUpSharedCapitalNotPaid.getCurrentAmount());
+
+        if (isMultiYearFiling == true) {
+            assertEquals(new Long(VALUE_ONE), calledUpSharedCapitalNotPaid.getPreviousAmount());
+        }
+    }
+
+    private void assertOtherLiabilitiesOrAssets(OtherLiabilitiesOrAssets otherLiabilitiesOrAssets, boolean isMultiYearFiling) {
+
+        assertNotNull(otherLiabilitiesOrAssets);
+        assertEquals(new Long(VALUE_ONE), otherLiabilitiesOrAssets.getCurrentTotalNetAssets());
+        assertEquals(new Long(VALUE_TWO), otherLiabilitiesOrAssets.getAccrualsAndDeferredIncome().getCurrentAmount());
+        assertEquals(new Long(VALUE_THREE), otherLiabilitiesOrAssets.getCreditorsAmountsFallingDueAfterMoreThanOneYear().getCurrentAmount());
+        assertEquals(new Long(VALUE_ONE), otherLiabilitiesOrAssets.getCreditorsAmountsFallingDueWithinOneYear().getCurrentAmount());
+        assertEquals(new Long(VALUE_TWO), otherLiabilitiesOrAssets.getNetCurrentAssets().getCurrentAmount());
+        assertEquals(new Long(VALUE_THREE), otherLiabilitiesOrAssets.getPrepaymentsAndAccruedIncome().getCurrentAmount());
+        assertEquals(new Long(VALUE_ONE), otherLiabilitiesOrAssets.getTotalAssetsLessCurrentLiabilities().getCurrentAmount());
+        assertEquals(new Long(VALUE_TWO), otherLiabilitiesOrAssets.getProvisionForLiabilities().getCurrentAmount());
+
+        if (isMultiYearFiling == true) {
+
+            assertEquals(new Long(VALUE_ONE), otherLiabilitiesOrAssets.getPreviousTotalNetAssets());
+            assertEquals(new Long(VALUE_TWO), otherLiabilitiesOrAssets.getAccrualsAndDeferredIncome().getPreviousAmount());
+            assertEquals(new Long(VALUE_THREE), otherLiabilitiesOrAssets.getCreditorsAmountsFallingDueAfterMoreThanOneYear().getPreviousAmount());
+            assertEquals(new Long(VALUE_ONE), otherLiabilitiesOrAssets.getCreditorsAmountsFallingDueWithinOneYear().getPreviousAmount());
+            assertEquals(new Long(VALUE_TWO), otherLiabilitiesOrAssets.getNetCurrentAssets().getPreviousAmount());
+            assertEquals(new Long(VALUE_THREE),otherLiabilitiesOrAssets.getPrepaymentsAndAccruedIncome().getPreviousAmount());
+            assertEquals(new Long(VALUE_ONE), otherLiabilitiesOrAssets.getTotalAssetsLessCurrentLiabilities().getPreviousAmount());
+            assertEquals(new Long(VALUE_TWO), otherLiabilitiesOrAssets.getProvisionForLiabilities().getPreviousAmount());
+        }
+    }
+
+    private void assertFixedAssets(FixedAssets fixedAssets, boolean isMultiYearFiling) {
+
+        assertNotNull(fixedAssets);
+        assertEquals(new Long(VALUE_ONE), fixedAssets.getTangibleAssets().getCurrentAmount());
+        assertEquals(new Long(VALUE_TWO), fixedAssets.getTotalFixedAssetsCurrent());
+
+        if (isMultiYearFiling == true) {
+
+            assertEquals(new Long(VALUE_ONE), fixedAssets.getTangibleAssets().getPreviousAmount());
+            assertEquals(new Long(VALUE_TWO), fixedAssets.getTotalFixedAssetsPrevious());
+        }
+    }
+
+    private void assertCurrentAssets(CurrentAssets currentAssets, boolean isMultiYearFiling) {
+
+        assertNotNull(currentAssets);
+        assertEquals(new Long(VALUE_ONE), currentAssets.getCashAtBankAndInHand().getCurrentAmount());
+        assertEquals(new Long(VALUE_TWO), currentAssets.getDebtors().getCurrentAmount());
+        assertEquals(new Long(VALUE_THREE), currentAssets.getStocks().getCurrentAmount());
+        assertEquals(new Long(VALUE_ONE), currentAssets.getCurrentTotal());
+
+        if (isMultiYearFiling == true) {
+
+            assertEquals(new Long(VALUE_ONE), currentAssets.getCashAtBankAndInHand().getPreviousAmount());
+            assertEquals(new Long(VALUE_TWO), currentAssets.getDebtors().getPreviousAmount());
+            assertEquals(new Long(VALUE_THREE), currentAssets.getStocks().getPreviousAmount());
+            assertEquals(new Long(VALUE_ONE), currentAssets.getPreviousTotal());
+        }
+    }
+
+    private void assertCapitalAndReserve(CapitalAndReserve capitalAndReserve, boolean isMultiYearFiling) {
+
+        assertNotNull(capitalAndReserve);
+        assertEquals(new Long(VALUE_ONE), capitalAndReserve.getCalledUpShareCapital().getCurrentAmount());
+        assertEquals(new Long(VALUE_TWO), capitalAndReserve.getOtherReserves().getCurrentAmount());
+        assertEquals(new Long(VALUE_THREE), capitalAndReserve.getProfitAndLoss().getCurrentAmount());
+        assertEquals(new Long(VALUE_ONE), capitalAndReserve.getSharePremiumAccount().getCurrentAmount());
+        assertEquals(new Long(VALUE_TWO), capitalAndReserve.getTotalShareHoldersFund().getCurrentAmount());
+
+        if (isMultiYearFiling == true) {
+
+            assertEquals(new Long(VALUE_ONE),capitalAndReserve.getCalledUpShareCapital().getPreviousAmount());
+            assertEquals(new Long(VALUE_TWO), capitalAndReserve.getOtherReserves().getPreviousAmount());
+            assertEquals(new Long(VALUE_THREE), capitalAndReserve.getProfitAndLoss().getPreviousAmount());
+            assertEquals(new Long(VALUE_ONE), capitalAndReserve.getSharePremiumAccount().getPreviousAmount());
+            assertEquals(new Long(VALUE_TWO), capitalAndReserve.getTotalShareHoldersFund().getPreviousAmount());
+        }
     }
 
     private void assertCompanyProfileMapped(Company company) {
@@ -184,67 +302,6 @@ public class SmallFullIXBRLMapperTest {
         assertEquals("companyName", company.getCompanyName());
         assertEquals("companyNumber", company.getCompanyNumber());
         assertEquals("jurisdiction", company.getJurisdiction());
-    }
-
-    private void assertBalanceSheetMapped(BalanceSheet balanceSheet, boolean isMultiYearFiling) {
-
-        assertNotNull(balanceSheet.getCapitalAndReserve());
-        assertEquals(new Long(VALUE_ONE), balanceSheet.getCapitalAndReserve().getCalledUpShareCapital().getCurrentAmount());
-        assertEquals(new Long(VALUE_TWO), balanceSheet.getCapitalAndReserve().getOtherReserves().getCurrentAmount());
-        assertEquals(new Long(VALUE_THREE), balanceSheet.getCapitalAndReserve().getProfitAndLoss().getCurrentAmount());
-        assertEquals(new Long(VALUE_ONE), balanceSheet.getCapitalAndReserve().getSharePremiumAccount().getCurrentAmount());
-        assertEquals(new Long(VALUE_TWO), balanceSheet.getCapitalAndReserve().getTotalShareHoldersFund().getCurrentAmount());
-
-        assertNotNull(balanceSheet.getCurrentAssets());
-        assertEquals(new Long(VALUE_ONE), balanceSheet.getCurrentAssets().getCashAtBankAndInHand().getCurrentAmount());
-        assertEquals(new Long(VALUE_TWO), balanceSheet.getCurrentAssets().getDebtors().getCurrentAmount());
-        assertEquals(new Long(VALUE_THREE), balanceSheet.getCurrentAssets().getStocks().getCurrentAmount());
-        assertEquals(new Long(VALUE_ONE), balanceSheet.getCurrentAssets().getCurrentTotal());
-
-        assertNotNull(balanceSheet.getFixedAssets());
-        assertEquals(new Long(VALUE_ONE), balanceSheet.getFixedAssets().getTangibleAssets().getCurrentAmount());
-        assertEquals(new Long(VALUE_TWO), balanceSheet.getFixedAssets().getTotalFixedAssetsCurrent());
-
-        assertNotNull(balanceSheet.getOtherLiabilitiesOrAssets());
-        assertEquals(new Long(VALUE_ONE), balanceSheet.getOtherLiabilitiesOrAssets().getCurrentTotalNetAssets());
-        assertEquals(new Long(VALUE_TWO), balanceSheet.getOtherLiabilitiesOrAssets().getAccrualsAndDeferredIncome().getCurrentAmount());
-        assertEquals(new Long(VALUE_THREE), balanceSheet.getOtherLiabilitiesOrAssets().getCreditorsAmountsFallingDueAfterMoreThanOneYear().getCurrentAmount());
-        assertEquals(new Long(VALUE_ONE), balanceSheet.getOtherLiabilitiesOrAssets().getCreditorsAmountsFallingDueWithinOneYear().getCurrentAmount());
-        assertEquals(new Long(VALUE_TWO), balanceSheet.getOtherLiabilitiesOrAssets().getNetCurrentAssets().getCurrentAmount());
-        assertEquals(new Long(VALUE_THREE), balanceSheet.getOtherLiabilitiesOrAssets().getPrepaymentsAndAccruedIncome().getCurrentAmount());
-        assertEquals(new Long(VALUE_ONE), balanceSheet.getOtherLiabilitiesOrAssets().getTotalAssetsLessCurrentLiabilities().getCurrentAmount());
-        assertEquals(new Long(VALUE_TWO), balanceSheet.getOtherLiabilitiesOrAssets().getProvisionForLiabilities().getCurrentAmount());
-
-        assertNotNull(balanceSheet.getCalledUpSharedCapitalNotPaid());
-        assertEquals(new Long(VALUE_ONE), balanceSheet.getCalledUpSharedCapitalNotPaid().getCurrentAmount());
-
-        if (isMultiYearFiling == true) {
-
-            assertEquals(new Long(VALUE_ONE), balanceSheet.getCapitalAndReserve().getCalledUpShareCapital().getPreviousAmount());
-            assertEquals(new Long(VALUE_TWO), balanceSheet.getCapitalAndReserve().getOtherReserves().getPreviousAmount());
-            assertEquals(new Long(VALUE_THREE), balanceSheet.getCapitalAndReserve().getProfitAndLoss().getPreviousAmount());
-            assertEquals(new Long(VALUE_ONE), balanceSheet.getCapitalAndReserve().getSharePremiumAccount().getPreviousAmount());
-            assertEquals(new Long(VALUE_TWO), balanceSheet.getCapitalAndReserve().getTotalShareHoldersFund().getPreviousAmount());
-
-            assertEquals(new Long(VALUE_ONE), balanceSheet.getCurrentAssets().getCashAtBankAndInHand().getPreviousAmount());
-            assertEquals(new Long(VALUE_TWO), balanceSheet.getCurrentAssets().getDebtors().getPreviousAmount());
-            assertEquals(new Long(VALUE_THREE), balanceSheet.getCurrentAssets().getStocks().getPreviousAmount());
-            assertEquals(new Long(VALUE_ONE), balanceSheet.getCurrentAssets().getPreviousTotal());
-
-            assertEquals(new Long(VALUE_ONE), balanceSheet.getFixedAssets().getTangibleAssets().getPreviousAmount());
-            assertEquals(new Long(VALUE_TWO), balanceSheet.getFixedAssets().getTotalFixedAssetsPrevious());
-
-            assertEquals(new Long(VALUE_ONE), balanceSheet.getOtherLiabilitiesOrAssets().getPreviousTotalNetAssets());
-            assertEquals(new Long(VALUE_TWO), balanceSheet.getOtherLiabilitiesOrAssets().getAccrualsAndDeferredIncome().getPreviousAmount());
-            assertEquals(new Long(VALUE_THREE), balanceSheet.getOtherLiabilitiesOrAssets().getCreditorsAmountsFallingDueAfterMoreThanOneYear().getPreviousAmount());
-            assertEquals(new Long(VALUE_ONE), balanceSheet.getOtherLiabilitiesOrAssets().getCreditorsAmountsFallingDueWithinOneYear().getPreviousAmount());
-            assertEquals(new Long(VALUE_TWO), balanceSheet.getOtherLiabilitiesOrAssets().getNetCurrentAssets().getPreviousAmount());
-            assertEquals(new Long(VALUE_THREE), balanceSheet.getOtherLiabilitiesOrAssets().getPrepaymentsAndAccruedIncome().getPreviousAmount());
-            assertEquals(new Long(VALUE_ONE), balanceSheet.getOtherLiabilitiesOrAssets().getTotalAssetsLessCurrentLiabilities().getPreviousAmount());
-            assertEquals(new Long(VALUE_TWO), balanceSheet.getOtherLiabilitiesOrAssets().getProvisionForLiabilities().getPreviousAmount());
-
-            assertEquals(new Long(VALUE_ONE), balanceSheet.getCalledUpSharedCapitalNotPaid().getPreviousAmount());
-        }
     }
 
     private void assertApprovalsMapped(String approvalDate, String approvalName) {

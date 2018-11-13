@@ -25,7 +25,7 @@ public class ApiToCompanyMapperTest {
     @DisplayName("tests company values map to company IXBRL model")
     void testApiToCompanyMaps() {
 
-        Company company = ApiToCompanyMapper.INSTANCE.apiToCompany(setCompanyProfile());
+        Company company = ApiToCompanyMapper.INSTANCE.apiToCompany(createCompanyProfile());
 
         assertNotNull(company);
         assertEquals(COMPANY_NAME, company.getCompanyName());
@@ -33,7 +33,7 @@ public class ApiToCompanyMapperTest {
         assertEquals(JURISDICTION, company.getJurisdiction());
     }
 
-    private CompanyProfileApi setCompanyProfile() {
+    private CompanyProfileApi createCompanyProfile() {
 
         CompanyProfileApi companyProfile = new CompanyProfileApi();
         companyProfile.setCompanyName(COMPANY_NAME);
