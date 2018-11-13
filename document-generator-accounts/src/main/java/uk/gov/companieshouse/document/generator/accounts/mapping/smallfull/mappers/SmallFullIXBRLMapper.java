@@ -14,7 +14,6 @@ public interface SmallFullIXBRLMapper {
 
     SmallFullIXBRLMapper INSTANCE = Mappers.getMapper(SmallFullIXBRLMapper.class);
 
-
     @Mappings({
             @Mapping(source = "smallFullApiData.approval.date", target = "approvalDate"),
             @Mapping(source = "smallFullApiData.approval.name", target = "approvalName")

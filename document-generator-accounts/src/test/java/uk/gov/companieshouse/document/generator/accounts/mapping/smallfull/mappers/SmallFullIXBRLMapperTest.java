@@ -44,7 +44,7 @@ public class SmallFullIXBRLMapperTest {
 
     @Test
     @DisplayName("tests the mapping of the smallFull IXBRL model with a current and previous period")
-    public void testSmallFullMapperCurrentAndPreious() {
+    void testSmallFullMapperCurrentAndPreious() {
 
         SmallFullApiData smallFullApiData = createSmallFullData(true);
 
@@ -58,7 +58,7 @@ public class SmallFullIXBRLMapperTest {
 
     @Test
     @DisplayName("tests the mapping of the smallFull IXBRL model with a current period Only")
-    public void testSmallFullMapperCurrentOny() {
+    void testSmallFullMapperCurrentOny() {
 
         SmallFullApiData smallFullApiData = createSmallFullData(false);
 
@@ -87,7 +87,6 @@ public class SmallFullIXBRLMapperTest {
     private CurrentPeriodApi createCurrentPeriod() {
 
         CurrentPeriodApi currentPeriod = new CurrentPeriodApi();
-
         currentPeriod.setBalanceSheetApi(createBalanceSheetValues());
 
         return currentPeriod;
@@ -96,7 +95,6 @@ public class SmallFullIXBRLMapperTest {
     private PreviousPeriodApi  createPreviousPeriod() {
 
         PreviousPeriodApi previousPeriod = new PreviousPeriodApi();
-
         previousPeriod.setBalanceSheet(createBalanceSheetValues());
 
         return previousPeriod;
@@ -146,7 +144,6 @@ public class SmallFullIXBRLMapperTest {
     private BalanceSheetApi createBalanceSheetValues() {
 
         BalanceSheetApi balanceSheet = new BalanceSheetApi();
-
         balanceSheet.setCapitalAndReservesApi(createCapitalAndReserve());
         balanceSheet.setCurrentAssetsApi(createCurrentAssets());
         balanceSheet.setFixedAssetsApi(createFixedAssets());
