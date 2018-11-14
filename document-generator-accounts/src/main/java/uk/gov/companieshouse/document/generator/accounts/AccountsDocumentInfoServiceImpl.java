@@ -6,7 +6,8 @@ import uk.gov.companieshouse.document.generator.accounts.data.transaction.Resour
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
-import uk.gov.companieshouse.document.generator.accounts.handler.accounts.AccountsHandler;
+import uk.gov.companieshouse.document.generator.accounts.handler.accounts.AbridgedAccountsDataHandler;
+import uk.gov.companieshouse.document.generator.accounts.handler.accounts.SmallFullAccountsDataHandler;
 import uk.gov.companieshouse.document.generator.accounts.service.TransactionService;
 import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
 import uk.gov.companieshouse.document.generator.interfaces.exception.DocumentInfoException;
@@ -26,7 +27,10 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
     private TransactionService transactionService;
 
     @Autowired
-    private AccountsHandler accountsHandler;
+    AbridgedAccountsDataHandler abridgedAccountsDataHandler;
+
+    @Autowired
+    SmallFullAccountsDataHandler smallFullAccountsDataHandler;
 
     public static final String MODULE_NAME_SPACE = "document-generator-accounts";
 
@@ -69,7 +73,7 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
         // when the Accounts migration has been completed to Company Accounts, this code can be refactored
         if (isAccounts(resourceLink)) {
             try {
-                return accountsHandler.getAbridgedAccountsData(transaction, resourceLink, requestId);
+                return abridgedAccountsDataHandler.getAbridgedAccountsData(transaction, resourceLink, requestId);
             } catch (HandlerException e) {
                 LOG.errorContext(requestId,"An error occurred when calling the account handler to obtain " +
                         "abridged accounts data for transaction: " + transaction.getId() + " and resource link: "
@@ -80,7 +84,7 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
         }
 
         try {
-            return accountsHandler.getSmallFullAccountsData(transaction, resourceLink, requestId);
+            return smallFullAccountsDataHandler.getSmallFullAccountsData(transaction, resourceLink, requestId);
         } catch (HandlerException e) {
             LOG.errorContext(requestId,"An error occurred when calling the account handler to obtain " +
                     "smallFull accounts data for transaction: " + transaction.getId() + " and resource link: "

@@ -1,11 +1,14 @@
 package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.fixedassets;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.Gson;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.fixedassets.items.TangibleAssets;
 
 import java.util.Objects;
 
+@JsonInclude(Include.NON_NULL)
 public class FixedAssets {
 
     @JsonProperty("tangible")
