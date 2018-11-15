@@ -311,7 +311,7 @@ public class SmallFullIXBRLMapperTest {
 
     private void assertApprovalsMapped(String approvalDate, String approvalName) {
 
-        assertEquals("2018-12-31", approvalDate);
+        assertEquals("31 December 2018", approvalDate);
         assertEquals(NAME, approvalName);
     }
 
