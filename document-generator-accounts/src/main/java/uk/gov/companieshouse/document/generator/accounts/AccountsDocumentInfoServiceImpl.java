@@ -70,7 +70,7 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
                 });
 
 
-        // when the Accounts migration has been completed to Company Accounts, this code can be refactored
+        // Will need to be refactored when additional accounts are added.
         if (isAccounts(resourceLink)) {
             try {
                 return abridgedAccountsDataHandler.getAbridgedAccountsData(transaction, resourceLink, requestId);
