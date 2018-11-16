@@ -24,8 +24,6 @@ import uk.gov.companieshouse.document.generator.accounts.service.CompanyService;
 @Component
 public class AccountsManager {
 
-    private static final String SMALL_FULL = "/small-full";
-
     @Autowired
     private ApiClientService apiClientService;
 

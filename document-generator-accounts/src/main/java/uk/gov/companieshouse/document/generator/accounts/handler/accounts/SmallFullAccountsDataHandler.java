@@ -17,10 +17,8 @@ import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,9 +35,9 @@ public class SmallFullAccountsDataHandler {
     @Autowired
     private CompanyService companyService;
 
-    private static final DateFormat RESPONSE_DISPLAY_DATE_FORMAT = new SimpleDateFormat("dd MMMMM yyyy");
+    private DateTimeFormatter DATE_TIME_FORMATTER_ISO = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    private static final DateFormat ISO_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private DateTimeFormatter DATE_TIME_FORMATTER_RESPONSE_DISPLAY = DateTimeFormatter.ofPattern("dd MMMMM yyyy");
 
     private static final String RESOURCE = "resource";
 
@@ -72,12 +70,6 @@ public class SmallFullAccountsDataHandler {
             logMap.put(ACCOUNT_TYPE, accountType);
             LOG.errorContext(requestId, "Error in service layer when obtaining smallFull accounts data for resource: "
                     + smallFullAccountLink, e, logMap);
-            throw new HandlerException(e.getMessage(), e.getCause());
-        } catch (ParseException e) {
-            Map<String, Object> logMap = new HashMap<>();
-            logMap.put(RESOURCE, smallFullAccountLink);
-            logMap.put(ACCOUNT_TYPE, accountType);
-            LOG.errorContext(requestId,"Error when parsing period end on date from smallFull accounts data", e, logMap);
             throw new HandlerException(e.getMessage(), e.getCause());
         }
     }
@@ -121,7 +113,7 @@ public class SmallFullAccountsDataHandler {
     }
 
     private DocumentInfoResponse createResponse(AccountType accountType, SmallFullAccountIxbrl accountData)
-            throws ParseException, IOException {
+            throws IOException {
 
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
         documentInfoResponse.setData(createDocumentInfoResponseData(accountData));
@@ -130,7 +122,8 @@ public class SmallFullAccountsDataHandler {
         documentInfoResponse.setPath(createPathString(accountType));
 
         Map<String, String> descriptionValues = new HashMap<>();
-        descriptionValues.put("period_end_on", RESPONSE_DISPLAY_DATE_FORMAT.format(getCurrentPeriodEndOn(accountData)));
+        descriptionValues.put("period_end_on", DATE_TIME_FORMATTER_RESPONSE_DISPLAY
+                .format(getCurrentPeriodEndOn(accountData)));
 
         documentInfoResponse.setDescriptionValues(descriptionValues);
         documentInfoResponse.setDescriptionIdentifier(accountType.getEnumerationKey());
@@ -148,11 +141,11 @@ public class SmallFullAccountsDataHandler {
         return mapper.writeValueAsString(accountData);
     }
 
-    private Date getCurrentPeriodEndOn(SmallFullAccountIxbrl accountData) throws ParseException {
+    private LocalDate getCurrentPeriodEndOn(SmallFullAccountIxbrl accountData) {
         return formatDate(accountData.getPeriod().getCurrentPeriodEndsOn());
     }
 
-    private Date formatDate(String date) throws ParseException {
-        return ISO_DATE_FORMAT.parse(date);
+    private LocalDate formatDate(String date) {
+        return LocalDate.parse(date, DATE_TIME_FORMATTER_ISO);
     }
 }

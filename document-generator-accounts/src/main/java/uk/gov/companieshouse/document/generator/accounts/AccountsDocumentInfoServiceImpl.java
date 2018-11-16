@@ -36,6 +36,13 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
+    private static final String ABRIDGED = "abridged";
+
+    private static final String SMALL_FULL = "smallfull";
+
+    private static final String ERROR_CALLING_ACCOUNTS = "An error occurred when calling: %s handler to obtain: %s" +
+             " accounts data for transaction: %s and resource link: %s";
+
     @Override
     public DocumentInfoResponse getDocumentInfo(DocumentInfoRequest documentInfoRequest) throws DocumentInfoException {
 
@@ -71,27 +78,22 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
 
 
         // Will need to be refactored when additional accounts are added.
-        if (isAccounts(resourceLink)) {
-            try {
+        String accountType = "";
+        try {
+            if (isAbridgedAccounts(resourceLink)) {
+                accountType = ABRIDGED;
                 return abridgedAccountsDataHandler.getAbridgedAccountsData(transaction, resourceLink, requestId);
-            } catch (HandlerException e) {
-                LOG.errorContext(requestId,"An error occurred when calling the account handler to obtain " +
-                        "abridged accounts data for transaction: " + transaction.getId() + " and resource link: "
-                        + resourceLink, e, debugMap);
-                throw new DocumentInfoException("Failed to get abridged data for transaction: "
-                        + transaction.getId() + " and resource link: " + resourceLink);
+            } else {
+                accountType = SMALL_FULL;
+                return smallFullAccountsDataHandler.getSmallFullAccountsData(transaction, resourceLink, requestId);
             }
+        } catch (HandlerException e) {
+        LOG.errorContext(requestId, String.format(ERROR_CALLING_ACCOUNTS, accountType, accountType, transaction.getId(),
+                resourceLink), e, debugMap);
+        throw new DocumentInfoException("Failed to get " + accountType + "data for transaction: "
+                + transaction.getId() + " and resource link: " + resourceLink);
         }
 
-        try {
-            return smallFullAccountsDataHandler.getSmallFullAccountsData(transaction, resourceLink, requestId);
-        } catch (HandlerException e) {
-            LOG.errorContext(requestId,"An error occurred when calling the account handler to obtain " +
-                    "smallFull accounts data for transaction: " + transaction.getId() + " and resource link: "
-                    + resourceLink, e, debugMap);
-            throw new DocumentInfoException("Failed to get smallFull data for transaction: "
-                    + transaction.getId() + " and resource link: " + resourceLink);
-        }
     }
 
     /**
@@ -100,7 +102,7 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
      * @param resourceLink - resource link
      * @return true if accounts, false if not
      */
-    private boolean isAccounts(String resourceLink) {
+    private boolean isAbridgedAccounts(String resourceLink) {
         return resourceLink.matches("/transactions\\/[0-9-]+/accounts\\/.*");
     }
 }
