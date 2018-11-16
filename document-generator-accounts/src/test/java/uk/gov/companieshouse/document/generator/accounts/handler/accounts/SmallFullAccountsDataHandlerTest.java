@@ -43,8 +43,6 @@ public class SmallFullAccountsDataHandlerTest {
     private static final String ACCOUNTS_RESOURCE_LINK = "/transactions/091174-913515-326060";
     private static final String COMPANY_ACCOUNTS_RESOURCE_LINK = "/transactions/091174-913515-326060/company-accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
     private static final String REQUEST_ID = "requestId";
-    private static final String COMPANY_NUMBER = "000667733";
-    private static final String COMPANY_NAME = "company_name";
     private static final String SERVICE_EXCEPTION = "Failure in service layer";
 
     @Test
