@@ -90,7 +90,7 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
         } catch (HandlerException e) {
         LOG.errorContext(requestId, String.format(ERROR_CALLING_ACCOUNTS, accountType, accountType, transaction.getId(),
                 resourceLink), e, debugMap);
-        throw new DocumentInfoException("Failed to get " + accountType + "data for transaction: "
+        throw new DocumentInfoException("Failed to get " + accountType + " data for transaction: "
                 + transaction.getId() + " and resource link: " + resourceLink);
         }
 
