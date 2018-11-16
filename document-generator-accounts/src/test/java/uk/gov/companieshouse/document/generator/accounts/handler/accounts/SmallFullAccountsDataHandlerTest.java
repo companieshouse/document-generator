@@ -17,7 +17,6 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.company.Company;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.period.Period;
 import uk.gov.companieshouse.document.generator.accounts.service.AccountsService;
-import uk.gov.companieshouse.document.generator.accounts.service.CompanyService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,9 +39,6 @@ public class SmallFullAccountsDataHandlerTest {
 
     @Mock
     private Transaction transaction;
-
-    @Mock
-    private CompanyService companyService;
 
     private static final String ACCOUNTS_RESOURCE_LINK = "/transactions/091174-913515-326060";
     private static final String COMPANY_ACCOUNTS_RESOURCE_LINK = "/transactions/091174-913515-326060/company-accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
