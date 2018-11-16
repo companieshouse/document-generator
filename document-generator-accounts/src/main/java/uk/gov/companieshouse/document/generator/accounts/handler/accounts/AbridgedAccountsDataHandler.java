@@ -18,9 +18,9 @@ import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,6 +40,10 @@ public class AbridgedAccountsDataHandler {
     private static final DateFormat RESPONSE_DISPLAY_DATE_FORMAT = new SimpleDateFormat("dd MMMMM yyyy");
 
     private static final DateFormat ISO_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+
+    private DateTimeFormatter DATE_TIME_FORMATTER_ISO = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    private DateTimeFormatter DATE_TIME_FORMATTER_RESPONSE_DISPLAY = DateTimeFormatter.ofPattern("dd MMMMM yyyy");
 
     private static final String RESOURCE = "resource";
 
@@ -73,13 +77,7 @@ public class AbridgedAccountsDataHandler {
             LOG.errorContext(requestId,"Error in service layer when obtaining abridged accounts data for resource: "
                     + abridgedAccountLink, e, logMap);
             throw new HandlerException(e.getMessage(), e.getCause());
-        } catch (ParseException e) {
-            Map<String, Object> logMap = new HashMap<>();
-            logMap.put(RESOURCE, abridgedAccountLink);
-            logMap.put(ACCOUNT_TYPE, accountType);
-            LOG.errorContext(requestId,"Error when parsing period end on date from abridged accounts data", e, logMap);
-            throw new HandlerException(e.getMessage(), e.getCause());
-        }
+        } 
     }
 
     private Accounts getAccounts(String resourceLink, String requestId) throws HandlerException {
@@ -121,7 +119,7 @@ public class AbridgedAccountsDataHandler {
     }
 
     private DocumentInfoResponse createResponse(Transaction transaction, AccountType accountType,
-                                                AbridgedAccountsApi accountData) throws ParseException, ServiceException {
+                                                AbridgedAccountsApi accountData) throws ServiceException {
 
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
         documentInfoResponse.setData(createDocumentInfoResponseData(transaction, accountData, accountType));
@@ -130,7 +128,8 @@ public class AbridgedAccountsDataHandler {
         documentInfoResponse.setPath(createPathString(accountType));
 
         Map<String, String> descriptionValues = new HashMap<>();
-        descriptionValues.put("period_end_on", RESPONSE_DISPLAY_DATE_FORMAT.format(getCurrentPeriodEndOn(accountData)));
+        descriptionValues.put("period_end_on", DATE_TIME_FORMATTER_RESPONSE_DISPLAY
+                .format(getCurrentPeriodEndOn(accountData)));
 
         documentInfoResponse.setDescriptionValues(descriptionValues);
         documentInfoResponse.setDescriptionIdentifier(accountType.getEnumerationKey());
@@ -158,7 +157,7 @@ public class AbridgedAccountsDataHandler {
         return account.toString();
     }
 
-    private Date getCurrentPeriodEndOn(AbridgedAccountsApi accountData) throws ParseException {
+    private LocalDate getCurrentPeriodEndOn(AbridgedAccountsApi accountData) {
 
         JSONObject account = new JSONObject(accountData);
         JSONObject currentPeriod = account.getJSONObject("currentPeriodApi");
@@ -167,7 +166,7 @@ public class AbridgedAccountsDataHandler {
         return formatDate(periodEndOn);
     }
 
-    private Date formatDate(String date) throws ParseException {
-        return ISO_DATE_FORMAT.parse(date);
+    private LocalDate formatDate(String date) {
+        return LocalDate.parse(date, DATE_TIME_FORMATTER_ISO);
     }
 }

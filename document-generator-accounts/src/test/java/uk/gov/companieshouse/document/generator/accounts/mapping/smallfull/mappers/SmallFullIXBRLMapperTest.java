@@ -203,7 +203,7 @@ public class SmallFullIXBRLMapperTest {
         capitalAndReserves.setOtherReserves(new Long(VALUE_TWO));
         capitalAndReserves.setProfitAndLoss(new Long(VALUE_THREE));
         capitalAndReserves.setSharePremiumAccount(new Long(VALUE_ONE));
-        capitalAndReserves.setTotalShareholdersFund(new Long(VALUE_TWO));
+        capitalAndReserves.setTotalShareholdersFunds(new Long(VALUE_TWO));
 
         return capitalAndReserves;
     }

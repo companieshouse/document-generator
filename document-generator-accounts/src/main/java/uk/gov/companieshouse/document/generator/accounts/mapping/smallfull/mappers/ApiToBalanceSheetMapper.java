@@ -34,9 +34,9 @@ public interface ApiToBalanceSheetMapper {
                     target = "sharePremiumAccount.currentAmount"),
             @Mapping(source = "previousPeriod.balanceSheet.capitalAndReservesApi.sharePremiumAccount",
                     target = "sharePremiumAccount.previousAmount"),
-            @Mapping(source = "currentPeriod.balanceSheetApi.capitalAndReservesApi.totalShareholdersFund",
+            @Mapping(source = "currentPeriod.balanceSheetApi.capitalAndReservesApi.totalShareholdersFunds",
                     target = "totalShareHoldersFund.currentAmount"),
-            @Mapping(source = "previousPeriod.balanceSheet.capitalAndReservesApi.totalShareholdersFund",
+            @Mapping(source = "previousPeriod.balanceSheet.capitalAndReservesApi.totalShareholdersFunds",
                     target = "totalShareHoldersFund.previousAmount"),
     })
     CapitalAndReserve apiToCapitalAndReserve(CurrentPeriodApi currentPeriod, PreviousPeriodApi previousPeriod);
