@@ -3,7 +3,6 @@ package uk.gov.companieshouse.document.generator.accounts.handler.accounts;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -29,11 +28,11 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@TestInstance(Lifecycle.PER_CLASS)
-public class AccountsHandlerImplTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class AbridgedAccountsDataHandlerTest {
 
     @InjectMocks
-    private AccountsHandlerImpl accountsHandlerImpl;
+    private AbridgedAccountsDataHandler abridgedAccountsDataHandler;
 
     @Mock
     private AccountsService accountsService;
@@ -56,28 +55,27 @@ public class AccountsHandlerImplTest {
     void testGetAccountsDataFailureFromServiceLayer() throws ServiceException {
         when(accountsService.getAccounts(anyString(), anyString())).thenThrow(new ServiceException(SERVICE_EXCEPTION));
 
-        assertThrows(ServiceException.class, () -> accountsService.getAccounts(anyString(), anyString()));
-        assertThrows(HandlerException.class, () -> accountsHandlerImpl.getAbridgedAccountsData(transaction, ACCOUNTS_RESOURCE_LINK, REQUEST_ID));
+        assertThrows(HandlerException.class, () -> abridgedAccountsDataHandler.getAbridgedAccountsData(transaction, ACCOUNTS_RESOURCE_LINK, REQUEST_ID));
     }
 
     @Test
     @DisplayName("Tests the unsuccessful return of Abridged accounts data due to failure in service layer")
     void testGetAbridgedAccountsDataFailureFromServiceLayer() throws ServiceException {
-        when(accountsService.getAccounts(anyString(), anyString())).thenReturn(createAccountsObject());
+        when(accountsService.getAccounts(anyString(), anyString())).thenReturn(createAccounts());
         when(accountsService.getAbridgedAccounts(anyString(), anyString())).thenThrow(new ServiceException(SERVICE_EXCEPTION));
 
-        assertThrows(ServiceException.class, () -> accountsService.getAbridgedAccounts(anyString(), anyString()));
-        assertThrows(HandlerException.class, () -> accountsHandlerImpl.getAbridgedAccountsData(transaction, ACCOUNTS_RESOURCE_LINK, REQUEST_ID));
+        assertThrows(HandlerException.class, () -> abridgedAccountsDataHandler.getAbridgedAccountsData(transaction, ACCOUNTS_RESOURCE_LINK, REQUEST_ID));
     }
 
     @Test
     @DisplayName("Tests the successful return of Abridged accounts data")
     void testGetAbridgedAccountsData() throws ServiceException, HandlerException {
-        when(accountsService.getAccounts(anyString(), anyString())).thenReturn(createAccountsObject());
-        when(accountsService.getAbridgedAccounts(anyString(), anyString())).thenReturn(createCurrentPeriodAbridgedAccountObject());
+        when(accountsService.getAccounts(anyString(), anyString())).thenReturn(createAccounts());
+        when(accountsService.getAbridgedAccounts(anyString(), anyString())).thenReturn(createCurrentAbridgedAccount());
         when(companyService.getCompanyProfile(anyString())).thenReturn(createCompanyProfile());
         when(transaction.getCompanyNumber()).thenReturn(COMPANY_NUMBER);
-        assertNotNull(accountsHandlerImpl.getAbridgedAccountsData(transaction, ACCOUNTS_RESOURCE_LINK, REQUEST_ID));
+
+        assertNotNull(abridgedAccountsDataHandler.getAbridgedAccountsData(transaction, ACCOUNTS_RESOURCE_LINK, REQUEST_ID));
     }
 
     private CompanyProfileApi createCompanyProfile() {
@@ -89,16 +87,16 @@ public class AccountsHandlerImplTest {
         return companyProfileApi;
     }
 
-    private AbridgedAccountsApi createCurrentPeriodAbridgedAccountObject() {
+    private AbridgedAccountsApi createCurrentAbridgedAccount() {
 
         AbridgedAccountsApi abridgedAccountsApi = new AbridgedAccountsApi();
 
-        abridgedAccountsApi.setCurrentPeriodApi(setCurrentPeriod());
+        abridgedAccountsApi.setCurrentPeriodApi(createCurrentPeriod());
 
         return abridgedAccountsApi;
     }
 
-    private CurrentPeriodApi setCurrentPeriod() {
+    private CurrentPeriodApi createCurrentPeriod() {
         CurrentPeriodApi currentPeriodApi = new CurrentPeriodApi();
 
         currentPeriodApi.setBalanceSheetApi(new BalanceSheetApi());
@@ -109,7 +107,7 @@ public class AccountsHandlerImplTest {
         return currentPeriodApi;
     }
 
-    private Accounts createAccountsObject() {
+    private Accounts createAccounts() {
         Accounts accounts = new Accounts();
 
         Map<String, String> links = new HashMap<>();

@@ -36,11 +36,23 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
 
         BalanceSheet balanceSheet = new BalanceSheet();
 
-        balanceSheet.setCalledUpSharedCapitalNotPaid(ApiToBalanceSheetMapper.INSTANCE.apiToCalledUpSharedCapitalNotPaid(currentPeriod, previousPeriod));
-        balanceSheet.setOtherLiabilitiesOrAssets(ApiToBalanceSheetMapper.INSTANCE.apiToOtherLiabilitiesOrAssets(currentPeriod, previousPeriod));
-        balanceSheet.setFixedAssets(ApiToBalanceSheetMapper.INSTANCE.apiToFixedAssets(currentPeriod, previousPeriod));
-        balanceSheet.setCurrentAssets(ApiToBalanceSheetMapper.INSTANCE.apiToCurrentAssets(currentPeriod,previousPeriod));
-        balanceSheet.setCapitalAndReserve(ApiToBalanceSheetMapper.INSTANCE.apiToCapitalAndReserve(currentPeriod, previousPeriod));
+        if (currentPeriod.getBalanceSheetApi() != null) {
+            if (currentPeriod.getBalanceSheetApi().getCalledUpShareCapitalNotPaid() != null) {
+                balanceSheet.setCalledUpSharedCapitalNotPaid(ApiToBalanceSheetMapper.INSTANCE.apiToCalledUpSharedCapitalNotPaid(currentPeriod, previousPeriod));
+            }
+            if (currentPeriod.getBalanceSheetApi().getOtherLiabilitiesOrAssetsApi() != null) {
+                balanceSheet.setOtherLiabilitiesOrAssets(ApiToBalanceSheetMapper.INSTANCE.apiToOtherLiabilitiesOrAssets(currentPeriod, previousPeriod));
+            }
+            if (currentPeriod.getBalanceSheetApi().getFixedAssetsApi() != null) {
+                balanceSheet.setFixedAssets(ApiToBalanceSheetMapper.INSTANCE.apiToFixedAssets(currentPeriod, previousPeriod));
+            }
+            if (currentPeriod.getBalanceSheetApi().getCurrentAssetsApi() != null) {
+                balanceSheet.setCurrentAssets(ApiToBalanceSheetMapper.INSTANCE.apiToCurrentAssets(currentPeriod,previousPeriod));
+            }
+            if (currentPeriod.getBalanceSheetApi().getCapitalAndReservesApi() != null) {
+                balanceSheet.setCapitalAndReserve(ApiToBalanceSheetMapper.INSTANCE.apiToCapitalAndReserve(currentPeriod, previousPeriod));
+            }
+        }
 
         return balanceSheet;
     }

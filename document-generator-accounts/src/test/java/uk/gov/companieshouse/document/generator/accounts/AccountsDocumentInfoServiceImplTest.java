@@ -13,7 +13,8 @@ import uk.gov.companieshouse.document.generator.accounts.data.transaction.Resour
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
-import uk.gov.companieshouse.document.generator.accounts.handler.accounts.AccountsHandler;
+import uk.gov.companieshouse.document.generator.accounts.handler.accounts.AbridgedAccountsDataHandler;
+import uk.gov.companieshouse.document.generator.accounts.handler.accounts.SmallFullAccountsDataHandler;
 import uk.gov.companieshouse.document.generator.accounts.service.TransactionService;
 import uk.gov.companieshouse.document.generator.interfaces.exception.DocumentInfoException;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
@@ -37,7 +38,10 @@ public class AccountsDocumentInfoServiceImplTest {
     private AccountsDocumentInfoServiceImpl accountsDocumentInfoService;
 
     @Mock
-    private AccountsHandler accountsHandler;
+    private AbridgedAccountsDataHandler abridgedAccountsDataHandler;
+
+    @Mock
+    private SmallFullAccountsDataHandler smallFullAccountsDataHandler;
 
     @Mock
     private TransactionService transactionService;
@@ -46,7 +50,8 @@ public class AccountsDocumentInfoServiceImplTest {
     private Transaction transaction;
 
     private static final String RESOURCE_ID = "/transactions/091174-913515-326060";
-    private static final String RESOURCE_URI = "/transactions/091174-913515-326060/accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
+    private static final String RESOURCE_URI_ABRIDGED = "/transactions/091174-913515-326060/accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
+    private static final String RESOURCE_URI_SMALL_FULL = "/transactions/091174-913515-326060/company-accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
     private static final String REQUEST_ID = "requestId";
 
     @Test
@@ -55,7 +60,7 @@ public class AccountsDocumentInfoServiceImplTest {
         when(transactionService.getTransaction(anyString(), anyString())).thenThrow(new ServiceException("error"));
 
         assertThrows(DocumentInfoException.class, () ->
-                accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest()));
+                accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest(RESOURCE_URI_ABRIDGED)));
     }
 
     @Test
@@ -69,55 +74,86 @@ public class AccountsDocumentInfoServiceImplTest {
     @Test
     @DisplayName("Tests the unsuccessful retrieval of document data due to no accounts resource in transaction")
     void testUnsuccessfulGetDocumentInfoNoAccountsResourceInTransaction() throws ServiceException, DocumentInfoException {
-        Transaction transaction = createTransaction();
+        Transaction transaction = createTransaction(RESOURCE_URI_ABRIDGED);
         transaction.getResources().remove(RESOURCE_ID);
-        transaction.getResources().put("error", createResource());
+        transaction.getResources().put("error", createResource(RESOURCE_URI_ABRIDGED));
         when(transactionService.getTransaction(anyString(), anyString())).thenReturn(transaction);
 
-        assertNull(accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest()));
+        assertNull(accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest(RESOURCE_URI_ABRIDGED)));
     }
 
     @Test
-    @DisplayName("Test DocumentInfoException thrown when error returned from accounts handler")
-    void testErrorThrownWhenFailedAccountsHandler() throws HandlerException, ServiceException {
+    @DisplayName("Test DocumentInfoException thrown when error returned from  abridged accounts handler")
+    void testErrorThrownWhenFailedAbridgedAccountsHandler() throws HandlerException, ServiceException {
 
-        when(transactionService.getTransaction(anyString(), anyString())).thenReturn(createTransaction());
-        when(accountsHandler.getAbridgedAccountsData(any(Transaction.class),  anyString(), anyString())).
+        when(transactionService.getTransaction(anyString(), anyString())).thenReturn(createTransaction(RESOURCE_URI_ABRIDGED));
+        when(abridgedAccountsDataHandler.getAbridgedAccountsData(any(Transaction.class),  anyString(), anyString())).
                 thenThrow(new HandlerException("error"));
 
         assertThrows(DocumentInfoException.class, () ->
-                accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest()));
+                accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest(RESOURCE_URI_ABRIDGED)));
     }
 
     @Test
-    @DisplayName("Tests the unsuccessful retrieval of document data due to error in Accounts handler")
-    void testUnsuccessfulGetDocumentInfoExceptionFromAccountsHandler()
+    @DisplayName("Tests the successful retrieval of document data for abridged")
+    void testSuccessfulGetDocumentInfoForAbridged() throws HandlerException, ServiceException, DocumentInfoException {
+        when(transactionService.getTransaction(anyString(), anyString())).thenReturn(createTransaction(RESOURCE_URI_ABRIDGED));
+        when(abridgedAccountsDataHandler.getAbridgedAccountsData(any(Transaction.class), anyString(), anyString())).thenReturn(new DocumentInfoResponse());
+
+        assertNotNull(accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest(RESOURCE_URI_ABRIDGED)));
+    }
+
+    @Test
+    @DisplayName("Tests the unsuccessful retrieval of document data due to error in abridged accounts handler")
+    void testUnsuccessfulGetDocumentInfoExceptionFromAbridgedAccountsHandler()
             throws HandlerException {
-        when(accountsHandler.getAbridgedAccountsData(any(Transaction.class),  anyString(), anyString())).thenThrow(new HandlerException("error"));
+        when(abridgedAccountsDataHandler.getAbridgedAccountsData(any(Transaction.class),  anyString(), anyString())).thenThrow(new HandlerException("error"));
 
-        assertThrows(HandlerException.class, () -> accountsHandler.getAbridgedAccountsData(transaction, "", REQUEST_ID));
+        assertThrows(HandlerException.class, () -> abridgedAccountsDataHandler.getAbridgedAccountsData(transaction, "", REQUEST_ID));
     }
 
     @Test
-    @DisplayName("Tests the successful retrieval of document data")
-    void testSuccessfulGetDocumentInfo() throws HandlerException, ServiceException, DocumentInfoException {
-        when(transactionService.getTransaction(anyString(), anyString())).thenReturn(createTransaction());
-        when(accountsHandler.getAbridgedAccountsData(any(Transaction.class), anyString(), anyString())).thenReturn(new DocumentInfoResponse());
+    @DisplayName("Test DocumentInfoException thrown when error returned from small full accounts handler")
+    void testErrorThrownWhenFailedSmallFullAccountsHandler() throws HandlerException, ServiceException {
 
-        assertNotNull(accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest()));
+        when(transactionService.getTransaction(anyString(), anyString())).thenReturn(createTransaction(RESOURCE_URI_SMALL_FULL));
+        when(smallFullAccountsDataHandler.getSmallFullAccountsData(any(Transaction.class),  anyString(), anyString())).
+                thenThrow(new HandlerException("error"));
+
+        assertThrows(DocumentInfoException.class, () ->
+                accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest(RESOURCE_URI_SMALL_FULL)));
     }
 
-    private DocumentInfoRequest createDocumentInfoRequest() {
+    @Test
+    @DisplayName("Tests the successful retrieval of document data for small full")
+    void testSuccessfulGetDocumentInfoForSmallFull() throws HandlerException, ServiceException, DocumentInfoException {
+        when(transactionService.getTransaction(anyString(), anyString())).thenReturn(createTransaction(RESOURCE_URI_SMALL_FULL));
+        when(smallFullAccountsDataHandler.getSmallFullAccountsData(any(Transaction.class), anyString(), anyString())).thenReturn(new DocumentInfoResponse());
+
+        assertNotNull(accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest(RESOURCE_URI_SMALL_FULL)));
+    }
+
+    @Test
+    @DisplayName("Tests the unsuccessful retrieval of document data due to error in small full accounts handler")
+    void testUnsuccessfulGetDocumentInfoExceptionFromSmallAccountsHandler()
+            throws HandlerException {
+        when(smallFullAccountsDataHandler.getSmallFullAccountsData(any(Transaction.class),  anyString(), anyString())).thenThrow(new HandlerException("error"));
+
+        assertThrows(HandlerException.class, () -> smallFullAccountsDataHandler.getSmallFullAccountsData(transaction, "", REQUEST_ID));
+    }
+
+
+    private DocumentInfoRequest createDocumentInfoRequest(String resourceUri) {
         DocumentInfoRequest documentInfoRequest = new DocumentInfoRequest();
         documentInfoRequest.setResourceId(RESOURCE_ID);
-        documentInfoRequest.setResourceUri(RESOURCE_URI);
+        documentInfoRequest.setResourceUri(resourceUri);
         documentInfoRequest.setRequestId(REQUEST_ID);
         return documentInfoRequest;
     }
 
-    private Transaction createTransaction() {
+    private Transaction createTransaction(String resourceUri) {
         Map<String, Resources> resources = new HashMap<>();
-        resources.put(RESOURCE_URI, createResource());
+        resources.put(resourceUri, createResource(resourceUri));
 
         Transaction transaction = new Transaction();
         transaction.setResources(resources);
@@ -125,11 +161,11 @@ public class AccountsDocumentInfoServiceImplTest {
         return transaction;
     }
 
-    private Resources createResource() {
+    private Resources createResource(String resourceUri) {
         Resources resource = new Resources();
         resource.setKind("kind");
         Map<String, String> links = new HashMap<>();
-        links.put("resource", RESOURCE_URI);
+        links.put("resource", resourceUri);
         resource.setLinks(links);
         return resource;
     }

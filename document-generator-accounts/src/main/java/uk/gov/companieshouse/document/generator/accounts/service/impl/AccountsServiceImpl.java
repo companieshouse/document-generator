@@ -5,9 +5,12 @@ import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.accounts.Accounts;
+import uk.gov.companieshouse.api.model.accounts.CompanyAccounts;
 import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
 import uk.gov.companieshouse.document.generator.accounts.data.accounts.AccountsManager;
+import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.SmallFullAccountIxbrl;
 import uk.gov.companieshouse.document.generator.accounts.service.AccountsService;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
@@ -49,6 +52,31 @@ public class AccountsServiceImpl implements AccountsService {
             return accountsManager.getAbridgedAccounts(resource);
         } catch (URIValidationException | ApiErrorResponseException e) {
             LOG.errorContext(requestId,"Failed to retrieve abridged accounts data: ", e, getDebugMap(resource));
+            throw new ServiceException(e.getMessage(), e.getCause());
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public CompanyAccounts getCompanyAccounts(String resource, String requestId) throws ServiceException {
+        try {
+            LOG.infoContext(requestId, "Getting company-accounts data: " + resource, getDebugMap(resource));
+            return accountsManager.getCompanyAccounts(resource);
+        } catch (URIValidationException | ApiErrorResponseException e) {
+            LOG.errorContext(requestId,"Failed to retrieve company-accounts data: ", e, getDebugMap(resource));
+            throw new ServiceException(e.getMessage(), e.getCause());
+        }
+    }
+
+    @Override
+    public SmallFullAccountIxbrl getSmallFullAccounts(String resource, String requestId, Transaction transaction) throws ServiceException {
+        try {
+            LOG.infoContext(requestId, "Getting smallFull accounts data: " + resource, getDebugMap(resource));
+            return accountsManager.getSmallFullAccounts(resource, transaction);
+        } catch (URIValidationException | ApiErrorResponseException e) {
+            LOG.errorContext(requestId,"Failed to retrieve smallFull accounts data: ", e, getDebugMap(resource));
             throw new ServiceException(e.getMessage(), e.getCause());
         }
     }

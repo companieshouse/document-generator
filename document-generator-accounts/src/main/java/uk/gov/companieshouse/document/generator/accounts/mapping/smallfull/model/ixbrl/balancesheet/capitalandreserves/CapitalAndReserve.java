@@ -1,5 +1,7 @@
 package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.capitalandreserves;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.Gson;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.capitalandreserves.items.CalledUpShareCapital;
@@ -10,6 +12,7 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 
 import java.util.Objects;
 
+@JsonInclude(Include.NON_NULL)
 public class CapitalAndReserve {
 
     @JsonProperty("called_up_share_capital")

@@ -6,7 +6,8 @@ import uk.gov.companieshouse.document.generator.accounts.data.transaction.Resour
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
-import uk.gov.companieshouse.document.generator.accounts.handler.accounts.AccountsHandler;
+import uk.gov.companieshouse.document.generator.accounts.handler.accounts.AbridgedAccountsDataHandler;
+import uk.gov.companieshouse.document.generator.accounts.handler.accounts.SmallFullAccountsDataHandler;
 import uk.gov.companieshouse.document.generator.accounts.service.TransactionService;
 import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
 import uk.gov.companieshouse.document.generator.interfaces.exception.DocumentInfoException;
@@ -26,11 +27,21 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
     private TransactionService transactionService;
 
     @Autowired
-    private AccountsHandler accountsHandler;
+    AbridgedAccountsDataHandler abridgedAccountsDataHandler;
+
+    @Autowired
+    SmallFullAccountsDataHandler smallFullAccountsDataHandler;
 
     public static final String MODULE_NAME_SPACE = "document-generator-accounts";
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
+
+    private static final String ABRIDGED = "abridged";
+
+    private static final String SMALL_FULL = "smallfull";
+
+    private static final String ERROR_CALLING_ACCOUNTS = "An error occurred when calling: %s handler to obtain: %s" +
+             " accounts data for transaction: %s and resource link: %s";
 
     @Override
     public DocumentInfoResponse getDocumentInfo(DocumentInfoRequest documentInfoRequest) throws DocumentInfoException {
@@ -66,20 +77,23 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
                 });
 
 
-        // when the Accounts migration has been completed to Company Accounts, this code can be removed
-        if (isAccounts(resourceLink)) {
-            try {
-                return accountsHandler.getAbridgedAccountsData(transaction, resourceLink, requestId);
-            } catch (HandlerException e) {
-                LOG.errorContext(requestId,"An error occurred when calling the account handler to obtain " +
-                        "abridged accounts data for transaction: " + transaction.getId() + " and resource link: "
-                        + resourceLink, e, debugMap);
-                throw new DocumentInfoException("Failed to get abridged data for transaction: "
-                        + transaction.getId() + " and resource link: " + resourceLink);
+        // Will need to be refactored when additional accounts are added.
+        String accountType = "";
+        try {
+            if (isAbridgedAccounts(resourceLink)) {
+                accountType = ABRIDGED;
+                return abridgedAccountsDataHandler.getAbridgedAccountsData(transaction, resourceLink, requestId);
+            } else {
+                accountType = SMALL_FULL;
+                return smallFullAccountsDataHandler.getSmallFullAccountsData(transaction, resourceLink, requestId);
             }
+        } catch (HandlerException e) {
+        LOG.errorContext(requestId, String.format(ERROR_CALLING_ACCOUNTS, accountType, accountType, transaction.getId(),
+                resourceLink), e, debugMap);
+        throw new DocumentInfoException("Failed to get " + accountType + " data for transaction: "
+                + transaction.getId() + " and resource link: " + resourceLink);
         }
 
-        return null;
     }
 
     /**
@@ -88,7 +102,7 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
      * @param resourceLink - resource link
      * @return true if accounts, false if not
      */
-    private boolean isAccounts(String resourceLink) {
+    private boolean isAbridgedAccounts(String resourceLink) {
         return resourceLink.matches("/transactions\\/[0-9-]+/accounts\\/.*");
     }
 }
