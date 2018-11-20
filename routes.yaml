@@ -1,0 +1,5 @@
+app_name: document-generator
+weight: 925
+group: api
+routes:
+   1: ^/private/documents/generate
