@@ -39,6 +39,7 @@ package:
 	$(eval tmpdir:=$(shell mktemp -d build-XXXXXXXXXX))
 	cp ./$(artifact_name).jar $(tmpdir)
 	cp ./start.sh $(tmpdir)
+	cp ./document-generator-api/api-enumerations/filing_descriptions.yml $(tmpdir)
 	cd $(tmpdir); zip -r ../$(artifact_name)-$(version).zip *
 	rm -rf $(tmpdir)
 
