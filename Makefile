@@ -49,5 +49,5 @@ dist: clean build package
 
 .PHONY: sonar
 sonar:
-    mvn sonar:sonar
+	mvn sonar:sonar
 
