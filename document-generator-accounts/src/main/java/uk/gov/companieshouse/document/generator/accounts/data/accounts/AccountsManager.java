@@ -15,6 +15,13 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.SmallFullAccountIxbrl;
 import uk.gov.companieshouse.document.generator.accounts.service.ApiClientService;
 import uk.gov.companieshouse.document.generator.accounts.service.CompanyService;
+import uk.gov.companieshouse.logging.Logger;
+import uk.gov.companieshouse.logging.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static uk.gov.companieshouse.document.generator.accounts.AccountsDocumentInfoServiceImpl.MODULE_NAME_SPACE;
 
 /**
  * Temporary solution until private-sdk has been completed (SFA-518, SFA-670). When completed, this
@@ -29,6 +36,10 @@ public class AccountsManager {
 
     @Autowired
     private CompanyService companyService;
+
+    private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
+
+    private static final String ERROR_CALLING_API = "An Api Error Response was thrown when obtaining the %s for link: %s";
 
     /**
      * Get accounts resource if exists
@@ -84,20 +95,43 @@ public class AccountsManager {
      * @throws URIValidationException
      */
     public SmallFullAccountIxbrl getSmallFullAccounts(String link, Transaction transaction)
-            throws ApiErrorResponseException, URIValidationException, ServiceException {
+            throws URIValidationException, ServiceException {
 
         SmallFullApiData smallFullApiData = new SmallFullApiData();
 
         ApiClient apiClient = apiClientService.getApiClient();
 
-        smallFullApiData.setPreviousPeriod(apiClient.smallFull().previousPeriod()
-                .get(new StringBuilder(link).append("/previous-period").toString()).execute());
-        smallFullApiData.setCurrentPeriod(apiClient.smallFull().currentPeriod()
-                .get(new StringBuilder(link).append("/current-period").toString()).execute());
+        try {
+            smallFullApiData.setPreviousPeriod(apiClient.smallFull().previousPeriod()
+                    .get(new StringBuilder(link).append("/previous-period").toString()).execute());
+        } catch (ApiErrorResponseException e)  {
+            LOG.errorContext(String.format(ERROR_CALLING_API, "previous period", link), e, setDebugMap(link));
+        }
+
+        try {
+            smallFullApiData.setCurrentPeriod(apiClient.smallFull().currentPeriod()
+                    .get(new StringBuilder(link).append("/current-period").toString()).execute());
+        } catch (ApiErrorResponseException e) {
+            LOG.errorContext(String.format(ERROR_CALLING_API, "current period", link), e, setDebugMap(link));
+        }
+
+        try {
+            smallFullApiData.setApproval(apiClient.smallFull().approval()
+                    .get(new StringBuilder(link).append("/approval").toString()).execute());
+        } catch (ApiErrorResponseException e) {
+            LOG.errorContext(String.format(ERROR_CALLING_API, "approvals", link), e, setDebugMap(link));
+        }
+
         smallFullApiData.setCompanyProfile(companyService.getCompanyProfile(transaction.getCompanyNumber()));
-        smallFullApiData.setApproval(apiClient.smallFull().approval()
-                .get(new StringBuilder(link).append("/approval").toString()).execute());
+
 
         return SmallFullIXBRLMapper.INSTANCE.mapSmallFullIXBRLModel(smallFullApiData);
+    }
+
+    private Map<String,Object> setDebugMap(String link) {
+        Map<String, Object> logMap = new HashMap<>();
+        logMap.put("LINK", link);
+
+        return logMap;
     }
 }

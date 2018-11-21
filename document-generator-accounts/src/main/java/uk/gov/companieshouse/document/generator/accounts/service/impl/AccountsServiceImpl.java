@@ -75,7 +75,7 @@ public class AccountsServiceImpl implements AccountsService {
         try {
             LOG.infoContext(requestId, "Getting smallFull accounts data: " + resource, getDebugMap(resource));
             return accountsManager.getSmallFullAccounts(resource, transaction);
-        } catch (URIValidationException | ApiErrorResponseException e) {
+        } catch (URIValidationException e) {
             LOG.errorContext(requestId,"Failed to retrieve smallFull accounts data: ", e, getDebugMap(resource));
             throw new ServiceException(e.getMessage(), e.getCause());
         }
