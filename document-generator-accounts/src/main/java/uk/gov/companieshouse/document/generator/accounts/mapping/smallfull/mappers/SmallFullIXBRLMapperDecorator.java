@@ -28,7 +28,7 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
         smallFullAccountIxbrl.setCompany(ApiToCompanyMapper.INSTANCE.apiToCompany(smallFullApiData.getCompanyProfile()));
         smallFullAccountIxbrl.setPeriod(ApiToPeriodMapper.INSTANCE.apiToPeriod(smallFullApiData.getCompanyProfile()));
 
-        if (smallFullApiData.getApproval() != null & smallFullApiData.getApproval().getDate() != null) {
+        if (smallFullApiData.getApproval() != null && smallFullApiData.getApproval().getDate() != null) {
             smallFullAccountIxbrl.setApprovalDate(convertToDisplayDate(smallFullApiData.getApproval().getDate()));
         }
 
