@@ -8,7 +8,7 @@ import com.google.gson.Gson;
 import java.util.Objects;
 
 @JsonInclude(Include.NON_NULL)
-public class TotalShareHoldersFund {
+public class TotalShareHoldersFunds {
 
     @JsonProperty("current_amount")
     private Long currentAmount;
@@ -35,8 +35,8 @@ public class TotalShareHoldersFund {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof TotalShareHoldersFund)) return false;
-        TotalShareHoldersFund that = (TotalShareHoldersFund) o;
+        if (!(o instanceof TotalShareHoldersFunds)) return false;
+        TotalShareHoldersFunds that = (TotalShareHoldersFunds) o;
         return Objects.equals(getCurrentAmount(), that.getCurrentAmount()) &&
                 Objects.equals(getPreviousAmount(), that.getPreviousAmount());
     }

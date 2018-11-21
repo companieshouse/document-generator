@@ -8,7 +8,7 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.capitalandreserves.items.OtherReserves;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.capitalandreserves.items.ProfitAndLoss;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.capitalandreserves.items.SharePremiumAccount;
-import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.capitalandreserves.items.TotalShareHoldersFund;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.capitalandreserves.items.TotalShareHoldersFunds;
 
 import java.util.Objects;
 
@@ -28,7 +28,7 @@ public class CapitalAndReserve {
     private SharePremiumAccount sharePremiumAccount;
 
     @JsonProperty("total_share_holders_fund")
-    private TotalShareHoldersFund totalShareHoldersFund;
+    private TotalShareHoldersFunds totalShareHoldersFunds;
 
 
     public CalledUpShareCapital getCalledUpShareCapital() {
@@ -63,12 +63,12 @@ public class CapitalAndReserve {
         this.sharePremiumAccount = sharePremiumAccount;
     }
 
-    public TotalShareHoldersFund getTotalShareHoldersFund() {
-        return totalShareHoldersFund;
+    public TotalShareHoldersFunds getTotalShareHoldersFunds() {
+        return totalShareHoldersFunds;
     }
 
-    public void setTotalShareHoldersFund(TotalShareHoldersFund totalShareHoldersFund) {
-        this.totalShareHoldersFund = totalShareHoldersFund;
+    public void setTotalShareHoldersFunds(TotalShareHoldersFunds totalShareHoldersFunds) {
+        this.totalShareHoldersFunds = totalShareHoldersFunds;
     }
 
     @Override
@@ -80,14 +80,14 @@ public class CapitalAndReserve {
                 Objects.equals(getOtherReserves(), that.getOtherReserves()) &&
                 Objects.equals(getProfitAndLoss(), that.getProfitAndLoss()) &&
                 Objects.equals(getSharePremiumAccount(), that.getSharePremiumAccount()) &&
-                Objects.equals(getTotalShareHoldersFund(), that.getTotalShareHoldersFund());
+                Objects.equals(getTotalShareHoldersFunds(), that.getTotalShareHoldersFunds());
     }
 
     @Override
     public int hashCode() {
 
         return Objects.hash(getCalledUpShareCapital(), getOtherReserves(), getProfitAndLoss(),
-                getSharePremiumAccount(), getTotalShareHoldersFund());
+                getSharePremiumAccount(), getTotalShareHoldersFunds());
     }
 
     @Override

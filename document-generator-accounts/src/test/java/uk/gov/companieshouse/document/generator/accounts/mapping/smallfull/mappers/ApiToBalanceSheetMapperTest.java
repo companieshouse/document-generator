@@ -42,12 +42,12 @@ public class ApiToBalanceSheetMapperTest {
         assertEquals(new Long(VALUE_TWO), capitalAndReserve.getOtherReserves().getCurrentAmount());
         assertEquals(new Long(VALUE_THREE), capitalAndReserve.getProfitAndLoss().getCurrentAmount());
         assertEquals(new Long(VALUE_ONE), capitalAndReserve.getSharePremiumAccount().getCurrentAmount());
-        assertEquals(new Long(VALUE_TWO), capitalAndReserve.getTotalShareHoldersFund().getCurrentAmount());
+        assertEquals(new Long(VALUE_TWO), capitalAndReserve.getTotalShareHoldersFunds().getCurrentAmount());
         assertEquals(new Long(VALUE_ONE), capitalAndReserve.getCalledUpShareCapital().getPreviousAmount());
         assertEquals(new Long(VALUE_TWO), capitalAndReserve.getOtherReserves().getPreviousAmount());
         assertEquals(new Long(VALUE_THREE), capitalAndReserve.getProfitAndLoss().getPreviousAmount());
         assertEquals(new Long(VALUE_ONE), capitalAndReserve.getSharePremiumAccount().getPreviousAmount());
-        assertEquals(new Long(VALUE_TWO), capitalAndReserve.getTotalShareHoldersFund().getPreviousAmount());
+        assertEquals(new Long(VALUE_TWO), capitalAndReserve.getTotalShareHoldersFunds().getPreviousAmount());
     }
 
     @Test
@@ -61,7 +61,7 @@ public class ApiToBalanceSheetMapperTest {
         assertEquals(new Long(VALUE_TWO), capitalAndReserve.getOtherReserves().getCurrentAmount());
         assertEquals(new Long(VALUE_THREE), capitalAndReserve.getProfitAndLoss().getCurrentAmount());
         assertEquals(new Long(VALUE_ONE), capitalAndReserve.getSharePremiumAccount().getCurrentAmount());
-        assertEquals(new Long(VALUE_TWO), capitalAndReserve.getTotalShareHoldersFund().getCurrentAmount());
+        assertEquals(new Long(VALUE_TWO), capitalAndReserve.getTotalShareHoldersFunds().getCurrentAmount());
     }
 
     @Test
@@ -259,7 +259,7 @@ public class ApiToBalanceSheetMapperTest {
         capitalAndReserves.setOtherReserves(new Long(VALUE_TWO));
         capitalAndReserves.setProfitAndLoss(new Long(VALUE_THREE));
         capitalAndReserves.setSharePremiumAccount(new Long(VALUE_ONE));
-        capitalAndReserves.setTotalShareholdersFund(new Long(VALUE_TWO));
+        capitalAndReserves.setTotalShareholdersFunds(new Long(VALUE_TWO));
 
         return capitalAndReserves;
     }
