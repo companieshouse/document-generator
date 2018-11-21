@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.document.generator.accounts.data.accounts;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.api.ApiClient;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
@@ -39,7 +40,7 @@ public class AccountsManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
-    private static final String ERROR_CALLING_API = "An Api Error Response was thrown when obtaining the %s for link: %s";
+    private static final String NOT_FOUND_API_DATA = "No data found in %s api for link: ";
 
     /**
      * Get accounts resource if exists
@@ -95,7 +96,7 @@ public class AccountsManager {
      * @throws URIValidationException
      */
     public SmallFullAccountIxbrl getSmallFullAccounts(String link, Transaction transaction)
-            throws URIValidationException, ServiceException {
+            throws URIValidationException, ServiceException, ApiErrorResponseException {
 
         SmallFullApiData smallFullApiData = new SmallFullApiData();
 
@@ -105,27 +106,37 @@ public class AccountsManager {
             smallFullApiData.setPreviousPeriod(apiClient.smallFull().previousPeriod()
                     .get(new StringBuilder(link).append("/previous-period").toString()).execute());
         } catch (ApiErrorResponseException e)  {
-            LOG.errorContext(String.format(ERROR_CALLING_API, "previous period", link), e, setDebugMap(link));
+            handleException(e, "previous period", link);
         }
 
         try {
             smallFullApiData.setCurrentPeriod(apiClient.smallFull().currentPeriod()
                     .get(new StringBuilder(link).append("/current-period").toString()).execute());
         } catch (ApiErrorResponseException e) {
-            LOG.errorContext(String.format(ERROR_CALLING_API, "current period", link), e, setDebugMap(link));
+            handleException(e, "current period", link);
         }
 
         try {
             smallFullApiData.setApproval(apiClient.smallFull().approval()
                     .get(new StringBuilder(link).append("/approval").toString()).execute());
         } catch (ApiErrorResponseException e) {
-            LOG.errorContext(String.format(ERROR_CALLING_API, "approvals", link), e, setDebugMap(link));
+            handleException(e, "approvals", link);
         }
 
         smallFullApiData.setCompanyProfile(companyService.getCompanyProfile(transaction.getCompanyNumber()));
 
 
         return SmallFullIXBRLMapper.INSTANCE.mapSmallFullIXBRLModel(smallFullApiData);
+    }
+
+    private void handleException(ApiErrorResponseException e, String text, String link)
+            throws ApiErrorResponseException {
+
+        if (e.getStatusCode() == HttpStatus.NOT_FOUND.value()) {
+            LOG.info(String.format(NOT_FOUND_API_DATA, text, link), setDebugMap(link));
+        } else {
+            throw e;
+        }
     }
 
     private Map<String,Object> setDebugMap(String link) {
