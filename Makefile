@@ -40,6 +40,7 @@ package:
 	cp ./$(artifact_name).jar $(tmpdir)
 	cp ./start.sh $(tmpdir)
 	cp ./document-generator-api/api-enumerations/filing_descriptions.yml $(tmpdir)
+	cp ./routes.yaml $(tmpdir)
 	cd $(tmpdir); zip -r ../$(artifact_name)-$(version).zip *
 	rm -rf $(tmpdir)
 
