@@ -3,6 +3,8 @@ package uk.gov.companieshouse.document.generator.accounts.handler.accounts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import uk.gov.companieshouse.accountsdates.AccountsDatesHelper;
+import uk.gov.companieshouse.accountsdates.impl.AccountsDatesHelperImpl;
 import uk.gov.companieshouse.api.model.accounts.CompanyAccounts;
 import uk.gov.companieshouse.document.generator.accounts.AccountType;
 import uk.gov.companieshouse.document.generator.accounts.LinkType;
@@ -18,7 +20,6 @@ import uk.gov.companieshouse.logging.LoggerFactory;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,9 +36,7 @@ public class SmallFullAccountsDataHandler {
     @Autowired
     private CompanyService companyService;
 
-    private DateTimeFormatter DATE_TIME_FORMATTER_ISO = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-    private DateTimeFormatter DATE_TIME_FORMATTER_RESPONSE_DISPLAY = DateTimeFormatter.ofPattern("dd MMMMM yyyy");
+    private AccountsDatesHelper accountsDatesHelper = new AccountsDatesHelperImpl();
 
     private static final String RESOURCE = "resource";
 
@@ -122,8 +121,8 @@ public class SmallFullAccountsDataHandler {
         documentInfoResponse.setPath(createPathString(accountType));
 
         Map<String, String> descriptionValues = new HashMap<>();
-        descriptionValues.put("period_end_on", DATE_TIME_FORMATTER_RESPONSE_DISPLAY
-                .format(getCurrentPeriodEndOn(accountData)));
+        descriptionValues.put("period_end_on", accountsDatesHelper
+                .convertDateToString(getCurrentPeriodEndOn(accountData)));
 
         documentInfoResponse.setDescriptionValues(descriptionValues);
         documentInfoResponse.setDescriptionIdentifier(accountType.getEnumerationKey());
@@ -146,6 +145,6 @@ public class SmallFullAccountsDataHandler {
     }
 
     private LocalDate formatDate(String date) {
-        return LocalDate.parse(date, DATE_TIME_FORMATTER_ISO);
+        return accountsDatesHelper.convertStringToDate(date);
     }
 }
