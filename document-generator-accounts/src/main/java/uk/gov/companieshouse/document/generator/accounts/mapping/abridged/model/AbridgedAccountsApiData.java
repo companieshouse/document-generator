@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model;
+package uk.gov.companieshouse.document.generator.accounts.mapping.abridged.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.Gson;
