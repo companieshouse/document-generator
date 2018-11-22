@@ -8,7 +8,7 @@ import java.util.Objects;
 
 public class AbridgedAccountsApiData {
 
-    @JsonProperty("abridged_accounts")
+    @JsonProperty("abridged_account")
     private AbridgedAccountsApi abridgedAccountsApi;
 
     @JsonProperty("company_number")
