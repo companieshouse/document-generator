@@ -157,6 +157,11 @@ public class AbridgedAccountsDataHandler {
         abridgedAccountsApiData.setCompanyName(companyProfile.getCompanyName());
         abridgedAccountsApiData.setCompanyNumber(companyProfile.getCompanyNumber());
 
+        return writeAccountsValues(abridgedAccountsApiData);
+    }
+
+    private String writeAccountsValues(AbridgedAccountsApiData abridgedAccountsApiData) throws IOException {
+
         ObjectMapper mapper = new ObjectMapper();
         String accountsJSON = mapper.writeValueAsString(abridgedAccountsApiData);
         JsonNode accounts = mapper.readTree(accountsJSON);

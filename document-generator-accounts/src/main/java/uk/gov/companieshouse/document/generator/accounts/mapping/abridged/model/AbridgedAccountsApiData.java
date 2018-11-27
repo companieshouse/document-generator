@@ -53,7 +53,6 @@ public class AbridgedAccountsApiData {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(getAbridgedAccountsApi(), getCompanyNumber(), getCompanyName());
     }
 
