@@ -1,5 +1,7 @@
 package uk.gov.companieshouse.document.generator.accounts.handler.accounts;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,12 +13,14 @@ import uk.gov.companieshouse.document.generator.accounts.LinkType;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
+import uk.gov.companieshouse.document.generator.accounts.mapping.abridged.model.AbridgedAccountsApiData;
 import uk.gov.companieshouse.document.generator.accounts.service.AccountsService;
 import uk.gov.companieshouse.document.generator.accounts.service.CompanyService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -66,7 +70,7 @@ public class AbridgedAccountsDataHandler {
         try {
             AbridgedAccountsApi abridgedAccountData = accountsService.getAbridgedAccounts(abridgedAccountLink, requestId);
             return createResponse(transaction, accountType, abridgedAccountData);
-        } catch (ServiceException e) {
+        } catch (ServiceException | IOException e) {
             Map<String, Object> logMap = new HashMap<>();
             logMap.put(RESOURCE, abridgedAccountLink);
             logMap.put(ACCOUNT_TYPE, accountType);
@@ -121,10 +125,11 @@ public class AbridgedAccountsDataHandler {
     }
 
     private DocumentInfoResponse createResponse(Transaction transaction, AccountType accountType,
-                                                AbridgedAccountsApi accountData) throws ServiceException, ParseException {
+                                                AbridgedAccountsApi accountData)
+            throws ServiceException, ParseException, IOException {
 
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
-        documentInfoResponse.setData(createDocumentInfoResponseData(transaction, accountData, accountType));
+        documentInfoResponse.setData(createDocumentInfoResponseData(transaction, accountData));
         documentInfoResponse.setAssetId(accountType.getAssetId());
         documentInfoResponse.setTemplateName(accountType.getTemplateName());
         documentInfoResponse.setPath(createPathString(accountType));
@@ -142,21 +147,26 @@ public class AbridgedAccountsDataHandler {
         return String.format("/%s/%s", accountType.getAssetId(), accountType.getUniqueFileName());
     }
 
-    private String createDocumentInfoResponseData(Transaction transaction, AbridgedAccountsApi accountData,
-                                                  AccountType accountType) throws ServiceException {
+    private String createDocumentInfoResponseData(Transaction transaction, AbridgedAccountsApi accountData)
+            throws ServiceException, IOException {
 
-        String accountTypeName = accountType.getResourceKey();
-
-        JSONObject accountJSON = new JSONObject(accountData);
-        JSONObject account = new JSONObject();
-
-        account.put(accountTypeName, accountJSON);
-        account.put("company_number", transaction.getCompanyNumber());
+        AbridgedAccountsApiData abridgedAccountsApiData = new AbridgedAccountsApiData();
+        abridgedAccountsApiData.setAbridgedAccountsApi(accountData);
 
         CompanyProfileApi companyProfile = companyService.getCompanyProfile(transaction.getCompanyNumber());
-        account.put("company_name", companyProfile.getCompanyName());
+        abridgedAccountsApiData.setCompanyName(companyProfile.getCompanyName());
+        abridgedAccountsApiData.setCompanyNumber(companyProfile.getCompanyNumber());
 
-        return account.toString();
+        return writeAccountsValues(abridgedAccountsApiData);
+    }
+
+    private String writeAccountsValues(AbridgedAccountsApiData abridgedAccountsApiData) throws IOException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        String accountsJSON = mapper.writeValueAsString(abridgedAccountsApiData);
+        JsonNode accounts = mapper.readTree(accountsJSON);
+
+        return accounts.toString();
     }
 
     private Date getCurrentPeriodEndOn(AbridgedAccountsApi accountData) throws ParseException {
