@@ -20,8 +20,6 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
 
     private static final String RESOURCE_URI = "resource_uri";
 
-    private static final String RESOURCE_ID = "resource_id";
-
     private static final String REQUEST_ID = "request_id";
 
     /**
@@ -42,7 +40,6 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
 
         Map<String, Object> debugMap = new HashMap<>();
         debugMap.put(RESOURCE_URI, requestParameters.get(RESOURCE_URI));
-        debugMap.put(RESOURCE_ID, requestParameters.get(RESOURCE_ID));
 
         return  debugMap;
     }
