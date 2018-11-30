@@ -1,18 +1,24 @@
 package uk.gov.companieshouse.document.generator.accounts.service.impl;
 
-import static uk.gov.companieshouse.document.generator.accounts.AccountsDocumentInfoServiceImpl.MODULE_NAME_SPACE;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
+import uk.gov.companieshouse.document.generator.accounts.data.transaction.TransactionManager;
+import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
+import uk.gov.companieshouse.document.generator.accounts.service.TransactionService;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import uk.gov.companieshouse.api.model.transaction.Transaction;
-import uk.gov.companieshouse.document.generator.accounts.data.transaction.TransactionManager;
-import uk.gov.companieshouse.document.generator.accounts.service.TransactionService;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static uk.gov.companieshouse.document.generator.accounts.AccountsDocumentInfoServiceImpl.MODULE_NAME_SPACE;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
+
+    @Autowired
+    private TransactionManager transactionManager;
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
@@ -20,16 +26,22 @@ public class TransactionServiceImpl implements TransactionService {
      * {@inheritDoc}
      */
     @Override
-    public Transaction getTransaction(String id) {
-        LOG.info("Getting data from transactions-api");
+    public Transaction getTransaction(String id, String requestId) throws ServiceException {
 
-        ResponseEntity<Transaction> transaction = TransactionManager.getTransaction(id);
-
-        if (transaction.getStatusCode() != HttpStatus.OK) {
-            LOG.error(String.format("Failed to retrieve data from API: %s", id));
-            return null;
+        try {
+            LOG.infoContext(requestId,"Getting transaction data: " + id, getDebugMap(id));
+            return transactionManager.getTransaction(id, requestId);
+        } catch (Exception e) {
+            LOG.errorContext(requestId,"Failed to get transaction data: " + id, e, getDebugMap(id));
+            throw new ServiceException(e.getMessage(), e.getCause());
         }
-        LOG.trace("Transaction data retrieved successfully");
-        return transaction.getBody();
+    }
+
+    private Map<String, Object> getDebugMap(String id) {
+
+        Map<String, Object> debugMap = new HashMap<>();
+        debugMap.put("id", id);
+
+        return debugMap;
     }
 }

@@ -28,7 +28,7 @@
         <jdk.version>1.8</jdk.version>
 
         <!-- Maven and Surefire plugins -->
-        <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>2.21.0</maven-surefire-plugin.version>
         <maven-jar-plugin.version>2.4</maven-jar-plugin.version>
         <junit-platform-surefire-provider.version>1.2.0</junit-platform-surefire-provider.version>
@@ -43,6 +43,11 @@
         <sonar.login>${CODE_ANALYSIS_LOGIN}</sonar.login>
         <sonar.password>${CODE_ANALYSIS_PASSWORD}</sonar.password>
 
+        <!--  JaCoCo -->
+        <jacoco-maven-plugin.version>0.7.7.201606060606</jacoco-maven-plugin.version>
+
+        <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
+
     </properties>
 
     <dependencies>
@@ -50,6 +55,17 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-hateoas</artifactId>
             <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.sonarsource.scanner.maven</groupId>
+            <artifactId>sonar-maven-plugin</artifactId>
+            <version>${sonar-maven-plugin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${org.mapstruct.version}</version>
         </dependency>
     </dependencies>
 
@@ -110,7 +126,7 @@
                             <groupId>org.springframework.boot</groupId>
                             <artifactId>spring-boot-maven-plugin</artifactId>
                             <configuration>
-                                <mainClass>uk.gov.companieshouse.document.generator.core.DocumentGeneratorApplication
+                                <mainClass>uk.gov.companieshouse.document.generator.api.DocumentGeneratorApplication
                                 </mainClass>
                                 <layout>ZIP</layout>
                             </configuration>
@@ -139,6 +155,13 @@
                                 <meminitial>128m</meminitial>
                                 <encoding>${project.build.sourceEncoding}</encoding>
                                 <maxmem>512m</maxmem>
+                                <annotationProcessorPaths>
+                                    <path>
+                                        <groupId>org.mapstruct</groupId>
+                                        <artifactId>mapstruct-processor</artifactId>
+                                        <version>${org.mapstruct.version}</version>
+                                    </path>
+                                </annotationProcessorPaths>
                             </configuration>
                         </plugin>
                         <plugin>
@@ -167,7 +190,7 @@
     <modules>
         <module>document-generator-interfaces</module>
         <module>document-generator-accounts</module>
-        <module>document-generator-core</module>
+        <module>document-generator-api</module>
     </modules>
 
     <repositories>
