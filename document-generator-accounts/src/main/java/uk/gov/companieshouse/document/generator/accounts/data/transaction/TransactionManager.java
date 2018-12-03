@@ -87,7 +87,7 @@ public class TransactionManager {
      * @return the private endpoint transaction url with the transaction id
      */
     private String getBaseUrl(String id) {
-        return new StringBuilder("/private/transactions/").append(id).toString();
+        return new StringBuilder("/private").append(id).toString();
     }
 
     private String getRootUri() {
