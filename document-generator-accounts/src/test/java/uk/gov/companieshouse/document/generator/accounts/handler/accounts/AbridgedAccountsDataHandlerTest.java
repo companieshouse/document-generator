@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.document.generator.accounts.handler.accounts;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -24,6 +25,7 @@ import uk.gov.companieshouse.document.generator.accounts.service.TransactionServ
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -49,7 +51,7 @@ public class AbridgedAccountsDataHandlerTest {
 
     private static final String ABRIDGED_ACCOUNTS_RESOURCE_URI = "/transactions/091174-913515-326060/accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
     private static final String REQUEST_ID = "requestId";
-//    private static final String COMPANY_NUMBER = "000667733";
+    private static final String COMPANY_NUMBER = "000667733";
     private static final String COMPANY_NAME = "company_name";
     private static final String SERVICE_EXCEPTION = "Failure in service layer";
 
@@ -73,17 +75,18 @@ public class AbridgedAccountsDataHandlerTest {
     /**
      * Temporarily removed as only correcting transaction details for small-full
      */
-//    @Test
-//    @DisplayName("Tests the successful return of Abridged accounts data")
-//    void testGetAbridgedAccountsData() throws ServiceException, HandlerException {
-//        when(accountsService.getAccounts(anyString(), anyString())).thenReturn(createAccounts());
-//        when(accountsService.getAbridgedAccounts(anyString(), anyString())).thenReturn(createCurrentAbridgedAccount());
-//        when(transactionService.getTransaction(anyString(), anyString())).thenReturn(createTransaction(ABRIDGED_ACCOUNTS_RESOURCE_URI));
-//        when(companyService.getCompanyProfile(anyString())).thenReturn(createCompanyProfile());
-//        when(transaction.getCompanyNumber()).thenReturn(COMPANY_NUMBER);
-//
-//        assertNotNull(abridgedAccountsDataHandler.getAbridgedAccountsData(ABRIDGED_ACCOUNTS_RESOURCE_URI, REQUEST_ID));
-//    }
+    @Test
+    @Disabled
+    @DisplayName("Tests the successful return of Abridged accounts data")
+    void testGetAbridgedAccountsData() throws ServiceException, HandlerException {
+        when(accountsService.getAccounts(anyString(), anyString())).thenReturn(createAccounts());
+        when(accountsService.getAbridgedAccounts(anyString(), anyString())).thenReturn(createCurrentAbridgedAccount());
+        when(transactionService.getTransaction(anyString(), anyString())).thenReturn(createTransaction(ABRIDGED_ACCOUNTS_RESOURCE_URI));
+        when(companyService.getCompanyProfile(anyString())).thenReturn(createCompanyProfile());
+        when(transaction.getCompanyNumber()).thenReturn(COMPANY_NUMBER);
+
+        assertNotNull(abridgedAccountsDataHandler.getAbridgedAccountsData(ABRIDGED_ACCOUNTS_RESOURCE_URI, REQUEST_ID));
+    }
 
     private CompanyProfileApi createCompanyProfile() {
 

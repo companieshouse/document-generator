@@ -8,10 +8,11 @@ import uk.gov.companieshouse.accountsdates.impl.AccountsDatesHelperImpl;
 import uk.gov.companieshouse.api.model.accounts.CompanyAccounts;
 import uk.gov.companieshouse.document.generator.accounts.AccountType;
 import uk.gov.companieshouse.document.generator.accounts.LinkType;
+import uk.gov.companieshouse.document.generator.accounts.data.accounts.CompanyAccountsDocumentDataManager;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
-import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.SmallFullAccountIxbrl;
+import uk.gov.companieshouse.document.generator.accounts.mapping.PeriodAware;
 import uk.gov.companieshouse.document.generator.accounts.service.AccountsService;
 import uk.gov.companieshouse.document.generator.accounts.service.CompanyService;
 import uk.gov.companieshouse.document.generator.accounts.service.TransactionService;
@@ -27,7 +28,7 @@ import java.util.Map;
 import static uk.gov.companieshouse.document.generator.accounts.AccountsDocumentInfoServiceImpl.MODULE_NAME_SPACE;
 
 @Component
-public class SmallFullAccountsDataHandler {
+public class CompanyAccountsDataHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
@@ -40,77 +41,73 @@ public class SmallFullAccountsDataHandler {
     @Autowired
     private TransactionService transactionService;
 
+    @Autowired
+    private CompanyAccountsDocumentDataManager companyAccountsDocumentDataManager;
+
     private AccountsDatesHelper accountsDatesHelper = new AccountsDatesHelperImpl();
 
-    private static final String RESOURCE = "resource";
+    private static final String RESOURCE_URI = "resourceUri";
 
     private static final String ACCOUNT_TYPE = "accountType";
 
     private static final String TRANSACTION_ID = "transactionId";
 
     /**
-     * Get a SmallFull Accounts resource from the given resource link
+     * Get a Company Accounts resource from the given resource link
      *
-     * @param resourceUri the resource uri of the smallFull accounts
+     * @param resourceUri the resource uri of the company accounts
      * @param requestId the id of the request
      * @return a populated {@link DocumentInfoResponse} object
      * @throws HandlerException throws a custom handler exception
      */
-    public DocumentInfoResponse getSmallFullAccountsData(String resourceUri, String requestId)
+    public DocumentInfoResponse getCompanyAccountsData(String resourceUri, String requestId)
             throws HandlerException {
 
         CompanyAccounts companyAccounts = getCompanyAccounts(resourceUri, requestId);
 
-        Transaction transaction = getTransaction(companyAccounts, requestId, resourceUri);
+        String transactionId = getTransactionId(companyAccounts, requestId, resourceUri);
+
+        Transaction transaction = getTransaction(transactionId, requestId);;
 
         AccountType accountType = getCompanyAccountType(companyAccounts);
 
-        String smallFullAccountLink = getCompanyAccountLink(companyAccounts, accountType);
-
         try {
-            SmallFullAccountIxbrl smallFullAccountIxbrl = accountsService.getSmallFullAccounts(smallFullAccountLink,
-                    resourceUri, transaction);
-            return createResponse(accountType, smallFullAccountIxbrl);
+            return createResponse(accountType, companyAccountsDocumentDataManager.getCompanyAccountData(
+                    companyAccounts, accountType, transaction, resourceUri));
         } catch (ServiceException | IOException e) {
             Map<String, Object> logMap = new HashMap<>();
-            logMap.put(RESOURCE, smallFullAccountLink);
+            logMap.put(RESOURCE_URI, resourceUri);
             logMap.put(ACCOUNT_TYPE, accountType);
-            LOG.errorContext(requestId, "Error in service layer when obtaining smallFull accounts data for resource: "
-                    + smallFullAccountLink, e, logMap);
+            LOG.errorContext(requestId, "Error in service layer when obtaining accounts data for resource: "
+                    + resourceUri, e, logMap);
             throw new HandlerException(e.getMessage(), e.getCause());
         }
     }
 
-    private Transaction getTransaction(CompanyAccounts companyAccounts, String requestId, String resourceId)
+    private Transaction getTransaction(String transactionId, String requestId)
             throws HandlerException {
 
-        String transactionId = getTransactionId(companyAccounts, requestId, resourceId);
         try {
             return transactionService.getTransaction(transactionId, requestId);
         } catch (ServiceException e) {
             Map<String, Object> logMap = new HashMap<>();
             logMap.put(TRANSACTION_ID, transactionId);
-            LOG.errorContext(requestId,"An error occurred when calling the transaction service with resource id: "
+            LOG.errorContext(requestId,"An error occurred when calling the transaction service with transaction id: "
                     + transactionId, e, logMap);
-            throw new HandlerException("Failed to get transaction with resourceId: " + transactionId, e);
+            throw new HandlerException("Failed to get transaction with transaction id: " + transactionId, e);
         }
     }
 
-    private String getTransactionId(CompanyAccounts companyAccounts, String requestId, String resourceUri) {
+    private String getTransactionId(CompanyAccounts companyAccounts, String requestId, String resourceUri)
+            throws HandlerException {
 
         return companyAccounts.getLinks().entrySet()
                 .stream()
                 .filter(map -> map.getKey().equals("transaction"))
                 .map(Map.Entry::getValue)
                 .findFirst()
-                .orElseGet(() -> {
-                    Map <String, Object> debugMap = new HashMap <>();
-                    debugMap.put(RESOURCE, resourceUri);
-                    LOG.infoContext(requestId, "No transaction was found in the company accounts resource for resource Uri: "
-                    + resourceUri, debugMap);
-
-            return null;
-        });
+                .orElseThrow(() -> new HandlerException("Failed to get transaction id for resource Uri: "
+                        + resourceUri));
     }
 
     private AccountType getCompanyAccountType(CompanyAccounts accountsData) throws HandlerException {
@@ -125,26 +122,18 @@ public class SmallFullAccountsDataHandler {
 
     private CompanyAccounts getCompanyAccounts(String resourceUri, String requestId) throws HandlerException {
 
-        CompanyAccounts accounts;
-
         try {
-            accounts = accountsService.getCompanyAccounts(resourceUri, requestId);
+            return accountsService.getCompanyAccounts(resourceUri, requestId);
         } catch (ServiceException e) {
             Map<String, Object> logMap = new HashMap<>();
-            logMap.put(RESOURCE, resourceUri);
+            logMap.put(RESOURCE_URI, resourceUri);
             LOG.errorContext(requestId,"Error in service layer when obtaining company-accounts data for resource: "
                     + resourceUri, e, logMap);
             throw new HandlerException(e.getMessage(), e.getCause());
         }
-
-        return accounts;
     }
 
-    private String getCompanyAccountLink(CompanyAccounts accounts, AccountType accountsType) {
-        return accounts.getLinks().get(accountsType.getResourceKey());
-    }
-
-    private DocumentInfoResponse createResponse(AccountType accountType, SmallFullAccountIxbrl accountData)
+    private <T extends PeriodAware> DocumentInfoResponse createResponse(AccountType accountType, T accountData)
             throws IOException {
 
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
@@ -166,14 +155,14 @@ public class SmallFullAccountsDataHandler {
         return String.format("/%s/%s", accountType.getAssetId(), accountType.getUniqueFileName());
     }
 
-    private String createDocumentInfoResponseData(SmallFullAccountIxbrl accountData) throws IOException {
+    private <T> String createDocumentInfoResponseData(T accountData) throws IOException {
 
         ObjectMapper mapper = new ObjectMapper();
 
         return mapper.writeValueAsString(accountData);
     }
 
-    private LocalDate getCurrentPeriodEndOn(SmallFullAccountIxbrl accountData) {
+    private <T extends PeriodAware> LocalDate getCurrentPeriodEndOn(T accountData) {
         return formatDate(accountData.getPeriod().getCurrentPeriodEndsOn());
     }
 

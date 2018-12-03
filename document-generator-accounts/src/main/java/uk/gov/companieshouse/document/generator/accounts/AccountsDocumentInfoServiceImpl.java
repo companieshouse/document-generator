@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.document.generator.accounts.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.accounts.handler.accounts.AbridgedAccountsDataHandler;
-import uk.gov.companieshouse.document.generator.accounts.handler.accounts.SmallFullAccountsDataHandler;
+import uk.gov.companieshouse.document.generator.accounts.handler.accounts.CompanyAccountsDataHandler;
 import uk.gov.companieshouse.document.generator.accounts.service.TransactionService;
 import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
 import uk.gov.companieshouse.document.generator.interfaces.exception.DocumentInfoException;
@@ -26,7 +26,7 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
     AbridgedAccountsDataHandler abridgedAccountsDataHandler;
 
     @Autowired
-    SmallFullAccountsDataHandler smallFullAccountsDataHandler;
+    CompanyAccountsDataHandler companyAccountsDataHandler;
 
     public static final String MODULE_NAME_SPACE = "document-generator-accounts";
 
@@ -34,14 +34,11 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
 
     private static final String ABRIDGED = "abridged";
 
-    private static final String SMALL_FULL = "smallfull";
+    private static final String COMPANY_ACCOUNTS = "company-accounts";
 
     private static final String ABRIDGED_REGEX = "/transactions\\/[0-9-]+/accounts\\/.*";
 
-    private static final String SMALL_FULL_REGEX = "/transactions\\/[0-9-]+/company-accounts\\/.*";
-
-    private static final String ERROR_CALLING_ACCOUNTS = "An error occurred when calling: %s handler to obtain: %s" +
-             " accounts data for resourceUri: %s";
+    private static final String COMPANY_ACCOUNTS_REGEX = "/transactions\\/[0-9-]+/company-accounts\\/.*";
 
     @Override
     public DocumentInfoResponse getDocumentInfo(DocumentInfoRequest documentInfoRequest) throws DocumentInfoException {
@@ -60,16 +57,16 @@ public class AccountsDocumentInfoServiceImpl implements DocumentInfoService {
                 accountType = ABRIDGED;
                 return abridgedAccountsDataHandler.getAbridgedAccountsData(resourceUri, requestId);
 
-            } else if (resourceUri.matches(SMALL_FULL_REGEX)) {
-                accountType = SMALL_FULL;
-                return smallFullAccountsDataHandler.getSmallFullAccountsData(resourceUri, requestId);
+            } else if (resourceUri.matches(COMPANY_ACCOUNTS_REGEX)) {
+                accountType = COMPANY_ACCOUNTS;
+                return companyAccountsDataHandler.getCompanyAccountsData(resourceUri, requestId);
             } else {
                 throw new DocumentInfoException("No Matching account type was located for resourceUri: "
                         + resourceUri);
             }
         } catch (HandlerException e) {
-            LOG.errorContext(requestId, String.format(ERROR_CALLING_ACCOUNTS, accountType, accountType, resourceUri),
-                e, debugMap);
+            debugMap.put("account_type", accountType);
+            LOG.errorContext(requestId, String.format("An error occurred when retrieving the account data"), e, debugMap);
             throw new DocumentInfoException("Failed to get " + accountType + " data for resourceUri: "
                 + resourceUri);
         }

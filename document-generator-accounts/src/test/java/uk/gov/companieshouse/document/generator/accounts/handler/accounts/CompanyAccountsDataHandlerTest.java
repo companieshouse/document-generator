@@ -9,6 +9,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.accounts.CompanyAccounts;
 import uk.gov.companieshouse.api.model.accounts.CompanyAccountsApi;
+import uk.gov.companieshouse.document.generator.accounts.AccountType;
+import uk.gov.companieshouse.document.generator.accounts.data.accounts.CompanyAccountsDocumentDataManager;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Resources;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.HandlerException;
@@ -31,16 +33,19 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class SmallFullAccountsDataHandlerTest {
+public class CompanyAccountsDataHandlerTest {
 
     @InjectMocks
-    private SmallFullAccountsDataHandler smallFullAccountsDataHandler;
+    private CompanyAccountsDataHandler companyAccountsDataHandler;
 
     @Mock
     private AccountsService accountsService;
 
     @Mock
     private TransactionService transactionService;
+
+    @Mock
+    private CompanyAccountsDocumentDataManager companyAccountsDocumentDataManager;
 
     private static final String COMPANY_ACCOUNTS_RESOURCE_URI = "/transactions/091174-913515-326060/company-accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
     private static final String REQUEST_ID = "requestId";
@@ -51,7 +56,7 @@ public class SmallFullAccountsDataHandlerTest {
     void testGetAccountsDataFailureFromServiceLayer() throws ServiceException {
         when(accountsService.getCompanyAccounts(anyString(), anyString())).thenThrow(new ServiceException(SERVICE_EXCEPTION));
 
-        assertThrows(HandlerException.class, () -> smallFullAccountsDataHandler.getSmallFullAccountsData(COMPANY_ACCOUNTS_RESOURCE_URI, REQUEST_ID));
+        assertThrows(HandlerException.class, () -> companyAccountsDataHandler.getCompanyAccountsData(COMPANY_ACCOUNTS_RESOURCE_URI, REQUEST_ID));
     }
 
     @Test
@@ -60,7 +65,7 @@ public class SmallFullAccountsDataHandlerTest {
         when(accountsService.getCompanyAccounts(anyString(), anyString())).thenReturn(createCompanyAccounts());
         when(transactionService.getTransaction(anyString(), anyString())).thenThrow(new ServiceException(SERVICE_EXCEPTION));
 
-        assertThrows(HandlerException.class, () -> smallFullAccountsDataHandler.getSmallFullAccountsData(COMPANY_ACCOUNTS_RESOURCE_URI, REQUEST_ID));
+        assertThrows(HandlerException.class, () -> companyAccountsDataHandler.getCompanyAccountsData(COMPANY_ACCOUNTS_RESOURCE_URI, REQUEST_ID));
     }
 
     @Test
@@ -68,9 +73,10 @@ public class SmallFullAccountsDataHandlerTest {
     void testGetSmallFullAccountsDataFailureFromServiceLayer() throws ServiceException {
         when(accountsService.getCompanyAccounts(anyString(), anyString())).thenReturn(createCompanyAccounts());
         when(transactionService.getTransaction(anyString(), anyString())).thenReturn(createTransaction(COMPANY_ACCOUNTS_RESOURCE_URI));
-        when(accountsService.getSmallFullAccounts(anyString(), anyString(), any(Transaction.class))).thenThrow(new ServiceException(SERVICE_EXCEPTION));
+        when(companyAccountsDocumentDataManager.getCompanyAccountData(any(CompanyAccounts.class), any(AccountType.class),
+                any(Transaction.class), anyString())).thenThrow(new ServiceException(SERVICE_EXCEPTION));
 
-        assertThrows(HandlerException.class, () -> smallFullAccountsDataHandler.getSmallFullAccountsData(COMPANY_ACCOUNTS_RESOURCE_URI, REQUEST_ID));
+        assertThrows(HandlerException.class, () -> companyAccountsDataHandler.getCompanyAccountsData(COMPANY_ACCOUNTS_RESOURCE_URI, REQUEST_ID));
     }
 
     @Test
@@ -78,9 +84,10 @@ public class SmallFullAccountsDataHandlerTest {
     void testGetSmallFullAccountsData() throws ServiceException, HandlerException {
         when(accountsService.getCompanyAccounts(anyString(), anyString())).thenReturn(createCompanyAccounts());
         when(transactionService.getTransaction(anyString(), anyString())).thenReturn(createTransaction(COMPANY_ACCOUNTS_RESOURCE_URI));
-        when(accountsService.getSmallFullAccounts(anyString(), anyString(), any(Transaction.class))).thenReturn(createCurrentSmallFullAccounts());
+        when(companyAccountsDocumentDataManager.getCompanyAccountData(any(CompanyAccounts.class), any(AccountType.class),
+                any(Transaction.class), anyString())).thenReturn(createCurrentSmallFullAccounts());
 
-        assertNotNull(smallFullAccountsDataHandler.getSmallFullAccountsData(COMPANY_ACCOUNTS_RESOURCE_URI, REQUEST_ID));
+        assertNotNull(companyAccountsDataHandler.getCompanyAccountsData(COMPANY_ACCOUNTS_RESOURCE_URI, REQUEST_ID));
     }
 
     private SmallFullAccountIxbrl createCurrentSmallFullAccounts() {
