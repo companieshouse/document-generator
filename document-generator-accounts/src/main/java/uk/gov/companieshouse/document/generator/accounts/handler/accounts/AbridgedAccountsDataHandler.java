@@ -52,16 +52,17 @@ public class AbridgedAccountsDataHandler {
 
     /**
      * Get an Abridged accounts resource from the given resource link
-     * @param transaction the transaction data
      * @param resourceLink the resource link of the abridged accounts
      * @param requestId the id of the request
      * @return a populated {@link DocumentInfoResponse} object
      * @throws HandlerException throws a custom handler exception
      */
-    public DocumentInfoResponse getAbridgedAccountsData(Transaction transaction, String resourceLink, String requestId)
+    public DocumentInfoResponse getAbridgedAccountsData(String resourceLink, String requestId)
             throws HandlerException {
 
         Accounts accounts = getAccounts(resourceLink, requestId);
+
+        Transaction transaction = null;
 
         AccountType accountType = getAccountType(accounts);
 
