@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.accounts.CompanyAccounts;
 import uk.gov.companieshouse.api.model.accounts.CompanyAccountsApi;
+import uk.gov.companieshouse.document.generator.accounts.data.transaction.Resources;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
@@ -17,6 +18,7 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.company.Company;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.period.Period;
 import uk.gov.companieshouse.document.generator.accounts.service.AccountsService;
+import uk.gov.companieshouse.document.generator.accounts.service.TransactionService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,10 +40,9 @@ public class SmallFullAccountsDataHandlerTest {
     private AccountsService accountsService;
 
     @Mock
-    private Transaction transaction;
+    private TransactionService transactionService;
 
-    private static final String ACCOUNTS_RESOURCE_LINK = "/transactions/091174-913515-326060";
-    private static final String COMPANY_ACCOUNTS_RESOURCE_LINK = "/transactions/091174-913515-326060/company-accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
+    private static final String COMPANY_ACCOUNTS_RESOURCE_URI = "/transactions/091174-913515-326060/company-accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
     private static final String REQUEST_ID = "requestId";
     private static final String SERVICE_EXCEPTION = "Failure in service layer";
 
@@ -50,25 +51,36 @@ public class SmallFullAccountsDataHandlerTest {
     void testGetAccountsDataFailureFromServiceLayer() throws ServiceException {
         when(accountsService.getCompanyAccounts(anyString(), anyString())).thenThrow(new ServiceException(SERVICE_EXCEPTION));
 
-        assertThrows(HandlerException.class, () -> smallFullAccountsDataHandler.getSmallFullAccountsData(transaction, ACCOUNTS_RESOURCE_LINK, REQUEST_ID));
+        assertThrows(HandlerException.class, () -> smallFullAccountsDataHandler.getSmallFullAccountsData(COMPANY_ACCOUNTS_RESOURCE_URI, REQUEST_ID));
+    }
+
+    @Test
+    @DisplayName("Tests an error is thrown if transaction service fails ")
+    void testErrorThrownWhenTransactionServiceFails() throws ServiceException {
+        when(accountsService.getCompanyAccounts(anyString(), anyString())).thenReturn(createCompanyAccounts());
+        when(transactionService.getTransaction(anyString(), anyString())).thenThrow(new ServiceException(SERVICE_EXCEPTION));
+
+        assertThrows(HandlerException.class, () -> smallFullAccountsDataHandler.getSmallFullAccountsData(COMPANY_ACCOUNTS_RESOURCE_URI, REQUEST_ID));
     }
 
     @Test
     @DisplayName("Tests the unsuccessful return of SmallFull; accounts data due to failure in service layer")
     void testGetSmallFullAccountsDataFailureFromServiceLayer() throws ServiceException {
         when(accountsService.getCompanyAccounts(anyString(), anyString())).thenReturn(createCompanyAccounts());
+        when(transactionService.getTransaction(anyString(), anyString())).thenReturn(createTransaction(COMPANY_ACCOUNTS_RESOURCE_URI));
         when(accountsService.getSmallFullAccounts(anyString(), anyString(), any(Transaction.class))).thenThrow(new ServiceException(SERVICE_EXCEPTION));
 
-        assertThrows(HandlerException.class, () -> smallFullAccountsDataHandler.getSmallFullAccountsData(transaction, ACCOUNTS_RESOURCE_LINK, REQUEST_ID));
+        assertThrows(HandlerException.class, () -> smallFullAccountsDataHandler.getSmallFullAccountsData(COMPANY_ACCOUNTS_RESOURCE_URI, REQUEST_ID));
     }
 
     @Test
     @DisplayName("Tests the successful return of SmallFull accounts data")
     void testGetSmallFullAccountsData() throws ServiceException, HandlerException {
         when(accountsService.getCompanyAccounts(anyString(), anyString())).thenReturn(createCompanyAccounts());
+        when(transactionService.getTransaction(anyString(), anyString())).thenReturn(createTransaction(COMPANY_ACCOUNTS_RESOURCE_URI));
         when(accountsService.getSmallFullAccounts(anyString(), anyString(), any(Transaction.class))).thenReturn(createCurrentSmallFullAccounts());
 
-        assertNotNull(smallFullAccountsDataHandler.getSmallFullAccountsData(transaction, ACCOUNTS_RESOURCE_LINK, REQUEST_ID));
+        assertNotNull(smallFullAccountsDataHandler.getSmallFullAccountsData(COMPANY_ACCOUNTS_RESOURCE_URI, REQUEST_ID));
     }
 
     private SmallFullAccountIxbrl createCurrentSmallFullAccounts() {
@@ -97,9 +109,29 @@ public class SmallFullAccountsDataHandlerTest {
 
         CompanyAccountsApi companyAccounts = new CompanyAccountsApi();
         Map<String, String> links = new HashMap<>();
-        links.put("abridged_accounts", COMPANY_ACCOUNTS_RESOURCE_LINK);
+        links.put("small_full_accounts", COMPANY_ACCOUNTS_RESOURCE_URI);
+        links.put("transaction", "/transactions/091174-913515-326060");
         companyAccounts.setLinks(links);
 
         return companyAccounts;
+    }
+
+    private Transaction createTransaction(String resourceUri) {
+        Map<String, Resources> resources = new HashMap<>();
+        resources.put(resourceUri, createResource(resourceUri));
+
+        Transaction transaction = new Transaction();
+        transaction.setResources(resources);
+
+        return transaction;
+    }
+
+    private Resources createResource(String resourceUri) {
+        Resources resource = new Resources();
+        resource.setKind("kind");
+        Map<String, String> links = new HashMap<>();
+        links.put("resource", resourceUri);
+        resource.setLinks(links);
+        return resource;
     }
 }
