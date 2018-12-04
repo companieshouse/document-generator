@@ -12,7 +12,7 @@ import uk.gov.companieshouse.document.generator.accounts.data.accounts.CompanyAc
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
-import uk.gov.companieshouse.document.generator.accounts.mapping.PeriodAware;
+import uk.gov.companieshouse.document.generator.accounts.mapping.PeriodAwareIxbrl;
 import uk.gov.companieshouse.document.generator.accounts.service.AccountsService;
 import uk.gov.companieshouse.document.generator.accounts.service.CompanyService;
 import uk.gov.companieshouse.document.generator.accounts.service.TransactionService;
@@ -65,7 +65,7 @@ public class CompanyAccountsDataHandler {
 
         CompanyAccounts companyAccounts = getCompanyAccounts(resourceUri, requestId);
 
-        String transactionId = getTransactionId(companyAccounts, requestId, resourceUri);
+        String transactionId = getTransactionId(companyAccounts, resourceUri);
 
         Transaction transaction = getTransaction(transactionId, requestId);;
 
@@ -98,7 +98,7 @@ public class CompanyAccountsDataHandler {
         }
     }
 
-    private String getTransactionId(CompanyAccounts companyAccounts, String requestId, String resourceUri)
+    private String getTransactionId(CompanyAccounts companyAccounts, String resourceUri)
             throws HandlerException {
 
         return companyAccounts.getLinks().entrySet()
@@ -133,7 +133,7 @@ public class CompanyAccountsDataHandler {
         }
     }
 
-    private <T extends PeriodAware> DocumentInfoResponse createResponse(AccountType accountType, T accountData)
+    private <T extends PeriodAwareIxbrl> DocumentInfoResponse createResponse(AccountType accountType, T accountData)
             throws IOException {
 
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
@@ -162,7 +162,7 @@ public class CompanyAccountsDataHandler {
         return mapper.writeValueAsString(accountData);
     }
 
-    private <T extends PeriodAware> LocalDate getCurrentPeriodEndOn(T accountData) {
+    private <T extends PeriodAwareIxbrl> LocalDate getCurrentPeriodEndOn(T accountData) {
         return formatDate(accountData.getPeriod().getCurrentPeriodEndsOn());
     }
 

@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.gson.Gson;
-import uk.gov.companieshouse.document.generator.accounts.mapping.PeriodAware;
+import uk.gov.companieshouse.document.generator.accounts.mapping.PeriodAwareIxbrl;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.BalanceSheet;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.company.Company;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.Notes;
@@ -19,7 +19,7 @@ import java.util.Objects;
 @JsonInclude(Include.NON_NULL)
 @JsonTypeName("small_full_accounts")
 @JsonTypeInfo(include = As.WRAPPER_OBJECT, use = Id.NAME)
-public class SmallFullAccountIxbrl implements PeriodAware {
+public class SmallFullAccountIxbrl implements PeriodAwareIxbrl {
 
     @JsonProperty("period")
     private Period period;
