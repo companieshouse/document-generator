@@ -14,6 +14,7 @@ public class DocumentRequest {
     /**
      * resource id will be removed
      */
+    @Deprecated
     @JsonProperty("resource_id")
     private String resourceId;
 
