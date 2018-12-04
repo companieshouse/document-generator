@@ -39,6 +39,7 @@ public class SmallFullAccountIxbrl implements PeriodAware {
     @JsonProperty("approval_name")
     private String approvalName;
 
+    @Override
     public Period getPeriod() {
         return period;
     }
