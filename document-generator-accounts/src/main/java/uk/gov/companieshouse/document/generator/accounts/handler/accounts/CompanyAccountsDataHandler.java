@@ -50,7 +50,7 @@ public class CompanyAccountsDataHandler {
 
     private static final String ACCOUNT_TYPE = "accountType";
 
-    private static final String TRANSACTION_ID = "transactionId";
+    private static final String TRANSACTION_LINK = "transactionLink";
 
     /**
      * Get a Company Accounts resource from the given resource link
@@ -65,9 +65,9 @@ public class CompanyAccountsDataHandler {
 
         CompanyAccounts companyAccounts = getCompanyAccounts(resourceUri, requestId);
 
-        String transactionId = getTransactionId(companyAccounts, resourceUri);
+        String transactionLink = getTransactionLink(companyAccounts, resourceUri);
 
-        Transaction transaction = getTransaction(transactionId, requestId);;
+        Transaction transaction = getTransaction(transactionLink, requestId);;
 
         AccountType accountType = getCompanyAccountType(companyAccounts);
 
@@ -84,21 +84,21 @@ public class CompanyAccountsDataHandler {
         }
     }
 
-    private Transaction getTransaction(String transactionId, String requestId)
+    private Transaction getTransaction(String transactionLink, String requestId)
             throws HandlerException {
 
         try {
-            return transactionService.getTransaction(transactionId, requestId);
+            return transactionService.getTransaction(transactionLink, requestId);
         } catch (ServiceException e) {
             Map<String, Object> logMap = new HashMap<>();
-            logMap.put(TRANSACTION_ID, transactionId);
-            LOG.errorContext(requestId,"An error occurred when calling the transaction service with transaction id: "
-                    + transactionId, e, logMap);
-            throw new HandlerException("Failed to get transaction with transaction id: " + transactionId, e);
+            logMap.put(TRANSACTION_LINK, transactionLink);
+            LOG.errorContext(requestId,"An error occurred when calling the transaction service with transaction link: "
+                    + transactionLink, e, logMap);
+            throw new HandlerException("Failed to get transaction with transaction link: " + transactionLink, e);
         }
     }
 
-    private String getTransactionId(CompanyAccounts companyAccounts, String resourceUri)
+    private String getTransactionLink(CompanyAccounts companyAccounts, String resourceUri)
             throws HandlerException {
 
         return companyAccounts.getLinks().entrySet()
@@ -106,7 +106,7 @@ public class CompanyAccountsDataHandler {
                 .filter(map -> map.getKey().equals("transaction"))
                 .map(Map.Entry::getValue)
                 .findFirst()
-                .orElseThrow(() -> new HandlerException("Failed to get transaction id for resource Uri: "
+                .orElseThrow(() -> new HandlerException("Failed to get transaction link for resource Uri: "
                         + resourceUri));
     }
 

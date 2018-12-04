@@ -62,6 +62,7 @@ public class AbridgedAccountsDataHandler {
 
         Accounts accounts = getAccounts(resourceLink, requestId);
 
+        //todo update to get transaction link from accounts resource and obtain transaction - SFA-961
         Transaction transaction = null;
 
         AccountType accountType = getAccountType(accounts);
