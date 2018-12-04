@@ -42,7 +42,7 @@ public class TransactionManager {
     /**
      * Get transaction if exists
      *
-     * @param transactionId - transaction id
+     * @param transactionLink - transaction link
      * @param requestId - the id of the request
      * @return transaction object along with the status or not found status.
      * @throws Exception - throws a generic exception to mimic the private sdk throwing an exception.
@@ -50,17 +50,17 @@ public class TransactionManager {
      *                     the private sdk  gets implemented - additionally the generic exception is
      *                     sufficient
      */
-    public Transaction getTransaction(String transactionId, String requestId) throws Exception {
+    public Transaction getTransaction(String transactionLink, String requestId) throws Exception {
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.set(AUTHORIZATION_HEADER, getApiKey());
 
         HttpEntity requestEntity = new HttpEntity(requestHeaders);
-        String url = getBaseUrl(transactionId);
+        String url = getBaseUrl(transactionLink);
 
         ResponseEntity<Transaction> transactionResponseEntity = restTemplate.exchange(getRootUri() + url, HttpMethod.GET, requestEntity, Transaction.class);
         if (transactionResponseEntity.getStatusCode() != HttpStatus.OK) {
             Map<String, Object> logMap = new HashMap<>();
-            logMap.put("transaction_id", transactionId);
+            logMap.put("transaction_link", transactionLink);
             logMap.put("uri_path", url);
             logMap.put("status", transactionResponseEntity.getStatusCode());
             LOG.infoContext(requestId,"Failed to retrieve data from API", logMap);
@@ -83,11 +83,11 @@ public class TransactionManager {
     /**
      * Builds the private transaction link with the transaction id
      *
-     * @param transactionId id of the transaction
+     * @param transactionLink link of the transaction
      * @return the private endpoint transaction url with the transaction id
      */
-    private String getBaseUrl(String transactionId) {
-        return new StringBuilder("/private").append(transactionId).toString();
+    private String getBaseUrl(String transactionLink) {
+        return new StringBuilder("/private").append(transactionLink).toString();
     }
 
     private String getRootUri() {
