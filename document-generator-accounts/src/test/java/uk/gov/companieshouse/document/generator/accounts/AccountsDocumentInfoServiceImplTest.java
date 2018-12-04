@@ -10,7 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.document.generator.accounts.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.accounts.handler.accounts.AbridgedAccountsDataHandler;
-import uk.gov.companieshouse.document.generator.accounts.handler.accounts.SmallFullAccountsDataHandler;
+import uk.gov.companieshouse.document.generator.accounts.handler.accounts.CompanyAccountsDataHandler;
 import uk.gov.companieshouse.document.generator.interfaces.exception.DocumentInfoException;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
@@ -31,7 +31,7 @@ public class AccountsDocumentInfoServiceImplTest {
     private AbridgedAccountsDataHandler abridgedAccountsDataHandler;
 
     @Mock
-    private SmallFullAccountsDataHandler smallFullAccountsDataHandler;
+    private CompanyAccountsDataHandler companyAccountsDataHandler;
 
     private static final String RESOURCE_URI_ABRIDGED = "/transactions/091174-913515-326060/accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
     private static final String RESOURCE_URI_SMALL_FULL = "/transactions/091174-913515-326060/company-accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
@@ -40,7 +40,7 @@ public class AccountsDocumentInfoServiceImplTest {
 
     @Test
     @DisplayName("Test DocumentInfoException thrown when no matching uri is located")
-    void testErrorThrownWhenWhenNoMatchingUriFound() {
+    void testErrorThrownWhenNoMatchingUriFound() {
         assertThrows(DocumentInfoException.class, () ->
                 accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest(INCORRECT_URI_NO_ACCOUNT)));
     }
@@ -76,7 +76,7 @@ public class AccountsDocumentInfoServiceImplTest {
     @Test
     @DisplayName("Test DocumentInfoException thrown when error returned from small full accounts handler")
     void testErrorThrownWhenFailedSmallFullAccountsHandler() throws HandlerException {
-        when(smallFullAccountsDataHandler.getSmallFullAccountsData(anyString(), anyString())).
+        when(companyAccountsDataHandler.getCompanyAccountsData(anyString(), anyString())).
                 thenThrow(new HandlerException("error"));
 
         assertThrows(DocumentInfoException.class, () ->
@@ -86,7 +86,7 @@ public class AccountsDocumentInfoServiceImplTest {
     @Test
     @DisplayName("Tests the successful retrieval of document data for small full")
     void testSuccessfulGetDocumentInfoForSmallFull() throws HandlerException, DocumentInfoException {
-        when(smallFullAccountsDataHandler.getSmallFullAccountsData(anyString(), anyString())).thenReturn(new DocumentInfoResponse());
+        when(companyAccountsDataHandler.getCompanyAccountsData(anyString(), anyString())).thenReturn(new DocumentInfoResponse());
 
         assertNotNull(accountsDocumentInfoService.getDocumentInfo(createDocumentInfoRequest(RESOURCE_URI_SMALL_FULL)));
     }
@@ -95,9 +95,9 @@ public class AccountsDocumentInfoServiceImplTest {
     @DisplayName("Tests the unsuccessful retrieval of document data due to error in small full accounts handler")
     void testUnsuccessfulGetDocumentInfoExceptionFromSmallAccountsHandler()
             throws HandlerException {
-        when(smallFullAccountsDataHandler.getSmallFullAccountsData(anyString(), anyString())).thenThrow(new HandlerException("error"));
+        when(companyAccountsDataHandler.getCompanyAccountsData(anyString(), anyString())).thenThrow(new HandlerException("error"));
 
-        assertThrows(HandlerException.class, () -> smallFullAccountsDataHandler.getSmallFullAccountsData("", REQUEST_ID));
+        assertThrows(HandlerException.class, () -> companyAccountsDataHandler.getCompanyAccountsData("", REQUEST_ID));
     }
 
 
