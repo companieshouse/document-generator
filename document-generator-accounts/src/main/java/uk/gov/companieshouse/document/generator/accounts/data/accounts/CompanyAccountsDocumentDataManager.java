@@ -14,7 +14,7 @@ public class CompanyAccountsDocumentDataManager {
     @Autowired
     private AccountsService accountsService;
 
-    public <T> T getCompanyAccountData(CompanyAccounts companyAccounts, AccountType accountType,
+    public <T> T getCompanyAccountDocumentData(CompanyAccounts companyAccounts, AccountType accountType,
                                        Transaction transaction, String resourceUri) throws ServiceException {
 
         String smallFullAccountLink = getCompanyAccountLink(companyAccounts, accountType);

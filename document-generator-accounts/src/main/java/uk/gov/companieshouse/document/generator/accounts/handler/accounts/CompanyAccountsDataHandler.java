@@ -72,7 +72,7 @@ public class CompanyAccountsDataHandler {
         AccountType accountType = getCompanyAccountType(companyAccounts);
 
         try {
-            return createResponse(accountType, companyAccountsDocumentDataManager.getCompanyAccountData(
+            return createResponse(accountType, companyAccountsDocumentDataManager.getCompanyAccountDocumentData(
                     companyAccounts, accountType, transaction, resourceUri));
         } catch (ServiceException | IOException e) {
             Map<String, Object> logMap = new HashMap<>();

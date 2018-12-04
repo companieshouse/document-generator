@@ -49,8 +49,8 @@ public class CompanyAccountsDocumentDataManagerTest {
         when(mockAccountsService.getSmallFullAccounts(anyString(), anyString(), any(Transaction.class)))
                 .thenReturn(createCurrentSmallFullAccounts());
 
-        assertNotNull(companyAccountsDocumentDataManager.getCompanyAccountData(createCompanyAccounts(), createAccountType(),
-                createTransaction(COMPANY_ACCOUNTS_RESOURCE_URI), COMPANY_ACCOUNTS_RESOURCE_URI));
+        assertNotNull(companyAccountsDocumentDataManager.getCompanyAccountDocumentData(createCompanyAccounts(),
+                createAccountType(), createTransaction(COMPANY_ACCOUNTS_RESOURCE_URI), COMPANY_ACCOUNTS_RESOURCE_URI));
     }
 
     @Test
@@ -60,7 +60,7 @@ public class CompanyAccountsDocumentDataManagerTest {
         when(mockAccountsService.getSmallFullAccounts(anyString(), anyString(), any(Transaction.class)))
                 .thenThrow(new ServiceException(SERVICE_EXCEPTION));
 
-        assertThrows(ServiceException.class, () -> companyAccountsDocumentDataManager.getCompanyAccountData(
+        assertThrows(ServiceException.class, () -> companyAccountsDocumentDataManager.getCompanyAccountDocumentData(
                 createCompanyAccounts(), createAccountType(), createTransaction(COMPANY_ACCOUNTS_RESOURCE_URI),
                 COMPANY_ACCOUNTS_RESOURCE_URI));
     }
