@@ -15,8 +15,7 @@ public class ManagerException extends Exception {
     public ManagerException(String message) {
         super(message);
     }
-
-
+    
     /**
      * Constructs a new ManagerException with a custom message and the specified
      * cause.
