@@ -9,9 +9,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.accounts.CompanyAccounts;
 import uk.gov.companieshouse.api.model.accounts.CompanyAccountsApi;
+import uk.gov.companieshouse.api.model.accounts.Links;
 import uk.gov.companieshouse.document.generator.accounts.AccountType;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Resources;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
+import uk.gov.companieshouse.document.generator.accounts.exception.ManagerException;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.SmallFullAccountIxbrl;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.BalanceSheet;
@@ -44,7 +46,7 @@ public class CompanyAccountsDocumentDataManagerTest {
 
     @Test
     @DisplayName("Tests successful return of accounts data for small full")
-    void testSuccessfullReturnOfAccountsDataForSmallFull() throws ServiceException {
+    void testSuccessfullReturnOfAccountsDataForSmallFull() throws ServiceException, ManagerException {
 
         when(mockAccountsService.getSmallFullAccounts(anyString(), anyString(), any(Transaction.class)))
                 .thenReturn(createCurrentSmallFullAccounts());
@@ -68,9 +70,10 @@ public class CompanyAccountsDocumentDataManagerTest {
     private CompanyAccounts createCompanyAccounts() {
 
         CompanyAccountsApi companyAccounts = new CompanyAccountsApi();
-        Map<String, String> links = new HashMap<>();
-        links.put("small_full_accounts", COMPANY_ACCOUNTS_RESOURCE_URI);
-        links.put("transaction", "/transactions/091174-913515-326060");
+        Links links = new Links();
+        links.setTransaction("/transactions/091174-913515-326060");
+        links.setSmallFullAccounts(COMPANY_ACCOUNTS_RESOURCE_URI);
+
         companyAccounts.setLinks(links);
 
         return companyAccounts;

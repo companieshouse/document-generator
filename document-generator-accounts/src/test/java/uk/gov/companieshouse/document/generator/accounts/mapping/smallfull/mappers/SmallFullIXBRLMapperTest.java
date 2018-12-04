@@ -95,7 +95,7 @@ public class SmallFullIXBRLMapperTest {
     private CurrentPeriodApi createCurrentPeriod() {
 
         CurrentPeriodApi currentPeriod = new CurrentPeriodApi();
-        currentPeriod.setBalanceSheetApi(createBalanceSheetValues());
+        currentPeriod.setBalanceSheet(createBalanceSheetValues());
 
         return currentPeriod;
     }
@@ -152,10 +152,10 @@ public class SmallFullIXBRLMapperTest {
     private BalanceSheetApi createBalanceSheetValues() {
 
         BalanceSheetApi balanceSheet = new BalanceSheetApi();
-        balanceSheet.setCapitalAndReservesApi(createCapitalAndReserve());
-        balanceSheet.setCurrentAssetsApi(createCurrentAssets());
-        balanceSheet.setFixedAssetsApi(createFixedAssets());
-        balanceSheet.setOtherLiabilitiesOrAssetsApi(createOtherLiabilitiesOrAssets());
+        balanceSheet.setCapitalAndReserves(createCapitalAndReserve());
+        balanceSheet.setCurrentAssets(createCurrentAssets());
+        balanceSheet.setFixedAssets(createFixedAssets());
+        balanceSheet.setOtherLiabilitiesOrAssets(createOtherLiabilitiesOrAssets());
         balanceSheet.setCalledUpShareCapitalNotPaid(VALUE_ONE);
 
         return balanceSheet;
