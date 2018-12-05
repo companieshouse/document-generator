@@ -69,46 +69,6 @@
     </dependencies>
 
     <profiles>
-        <!-- release-publish is the profile that is activated when the build server builds and
-             publishes a release project to the cloud artifactory -->
-        <profile>
-            <id>release-publish</id>
-            <activation>
-                <property>
-                    <name>publishRepo</name>
-                    <value>release</value>
-                </property>
-            </activation>
-            <properties>
-                <artifactoryReleasePublishRepo>libs-release-local</artifactoryReleasePublishRepo>
-            </properties>
-            <distributionManagement>
-                <repository>
-                    <id>ch-artifactory</id>
-                    <url>${MAVEN_REPOSITORY_URL}/${artifactoryReleasePublishRepo}</url>
-                </repository>
-            </distributionManagement>
-        </profile>
-        <!-- dev-publish is the profile that is activated when the build server builds and publishes
-             a dev snapshot project to the cloud artifactory -->
-        <profile>
-            <id>dev-publish</id>
-            <activation>
-                <property>
-                    <name>publishRepo</name>
-                    <value>dev</value>
-                </property>
-            </activation>
-            <properties>
-                <artifactoryDevPublishRepo>libs-snapshot-local</artifactoryDevPublishRepo>
-            </properties>
-            <distributionManagement>
-                <repository>
-                    <id>ch-artifactory</id>
-                    <url>${MAVEN_REPOSITORY_URL}/${artifactoryDevPublishRepo}</url>
-                </repository>
-            </distributionManagement>
-        </profile>
         <!-- dev is the profile that is activated by default. This is only for developers as it does
              not publish to any repository. It just downloads dependencies, compiles code and builds jar
              for running the application and then runs the tests. -->
@@ -185,15 +145,4 @@
         <module>document-generator-accounts</module>
         <module>document-generator-api</module>
     </modules>
-
-    <repositories>
-        <repository>
-            <id>ch-artifactory-release</id>
-            <url>${MAVEN_REPOSITORY_URL}/${artifactoryResolveReleaseRepo}</url>
-        </repository>
-        <repository>
-            <id>ch-artifactory-snapshot</id>
-            <url>${MAVEN_REPOSITORY_URL}/${artifactoryResolveSnapshotRepo}</url>
-        </repository>
-    </repositories>
 </project>
