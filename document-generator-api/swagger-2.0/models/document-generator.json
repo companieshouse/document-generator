@@ -4,17 +4,17 @@
       "title": "DocumentRequest",
       "required": [
         "resource_uri",
-        "resource_id",
         "mime_type"
       ],
       "properties": {
         "resource_uri": {
           "type": "string",
-          "description": "link to the resource (currently it is the link to the parent transaction)"
+          "description": "link to the resource"
         },
         "resource_id": {
           "type": "string",
-          "description": "id of the resource (currently denotes which resource within the transaction)"
+          "description": "id of the resource (currently denotes which resource within the transaction - Currently deprecated)",
+          "deprecated" : true
         },
         "mime_type": {
           "type": "string",
