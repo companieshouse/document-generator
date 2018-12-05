@@ -39,20 +39,20 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
 
         BalanceSheet balanceSheet = new BalanceSheet();
 
-        if (currentPeriod.getBalanceSheetApi() != null) {
-            if (currentPeriod.getBalanceSheetApi().getCalledUpShareCapitalNotPaid() != null) {
+        if (currentPeriod.getBalanceSheet() != null) {
+            if (currentPeriod.getBalanceSheet().getCalledUpShareCapitalNotPaid() != null) {
                 balanceSheet.setCalledUpSharedCapitalNotPaid(ApiToBalanceSheetMapper.INSTANCE.apiToCalledUpSharedCapitalNotPaid(currentPeriod, previousPeriod));
             }
-            if (currentPeriod.getBalanceSheetApi().getOtherLiabilitiesOrAssetsApi() != null) {
+            if (currentPeriod.getBalanceSheet().getOtherLiabilitiesOrAssets() != null) {
                 balanceSheet.setOtherLiabilitiesOrAssets(ApiToBalanceSheetMapper.INSTANCE.apiToOtherLiabilitiesOrAssets(currentPeriod, previousPeriod));
             }
-            if (currentPeriod.getBalanceSheetApi().getFixedAssetsApi() != null) {
+            if (currentPeriod.getBalanceSheet().getFixedAssets() != null) {
                 balanceSheet.setFixedAssets(ApiToBalanceSheetMapper.INSTANCE.apiToFixedAssets(currentPeriod, previousPeriod));
             }
-            if (currentPeriod.getBalanceSheetApi().getCurrentAssetsApi() != null) {
+            if (currentPeriod.getBalanceSheet().getCurrentAssets() != null) {
                 balanceSheet.setCurrentAssets(ApiToBalanceSheetMapper.INSTANCE.apiToCurrentAssets(currentPeriod,previousPeriod));
             }
-            if (currentPeriod.getBalanceSheetApi().getCapitalAndReservesApi() != null) {
+            if (currentPeriod.getBalanceSheet().getCapitalAndReserves() != null) {
                 balanceSheet.setCapitalAndReserve(ApiToBalanceSheetMapper.INSTANCE.apiToCapitalAndReserve(currentPeriod, previousPeriod));
             }
         }

@@ -7,10 +7,10 @@ import uk.gov.companieshouse.accountsdates.AccountsDatesHelper;
 import uk.gov.companieshouse.accountsdates.impl.AccountsDatesHelperImpl;
 import uk.gov.companieshouse.api.model.accounts.CompanyAccounts;
 import uk.gov.companieshouse.document.generator.accounts.AccountType;
-import uk.gov.companieshouse.document.generator.accounts.LinkType;
 import uk.gov.companieshouse.document.generator.accounts.data.accounts.CompanyAccountsDocumentDataManager;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.HandlerException;
+import uk.gov.companieshouse.document.generator.accounts.exception.AccountsLinkNotFoundException;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.accounts.mapping.PeriodAwareIxbrl;
 import uk.gov.companieshouse.document.generator.accounts.service.AccountsService;
@@ -74,7 +74,7 @@ public class CompanyAccountsDataHandler {
         try {
             return createResponse(accountType, companyAccountsDocumentDataManager.getCompanyAccountDocumentData(
                     companyAccounts, accountType, transaction, resourceUri));
-        } catch (ServiceException | IOException e) {
+        } catch (ServiceException | IOException | AccountsLinkNotFoundException e) {
             Map<String, Object> logMap = new HashMap<>();
             logMap.put(RESOURCE_URI, resourceUri);
             logMap.put(ACCOUNT_TYPE, accountType);
@@ -101,23 +101,22 @@ public class CompanyAccountsDataHandler {
     private String getTransactionLink(CompanyAccounts companyAccounts, String resourceUri)
             throws HandlerException {
 
-        return companyAccounts.getLinks().entrySet()
-                .stream()
-                .filter(map -> map.getKey().equals("transaction"))
-                .map(Map.Entry::getValue)
-                .findFirst()
-                .orElseThrow(() -> new HandlerException("Failed to get transaction link for resource Uri: "
-                        + resourceUri));
+        if (companyAccounts.getLinks().getTransaction() != null) {
+            return companyAccounts.getLinks().getTransaction();
+        } else {
+            throw new  HandlerException("Failed to get transaction link for resource Uri: "
+                    + resourceUri);
+        }
     }
 
-    private AccountType getCompanyAccountType(CompanyAccounts accountsData) throws HandlerException {
-        return accountsData.getLinks().keySet()
-                .stream()
-                .filter(e -> !e.equalsIgnoreCase(LinkType.SELF.getLink()))
-                .map(AccountType::getAccountType)
-                .findFirst()
-                .orElseThrow(() -> new HandlerException("Unable to find account type in account data" +
-                        accountsData.getKind()));
+    private AccountType getCompanyAccountType(CompanyAccounts companyAccounts) throws HandlerException {
+
+        if (companyAccounts.getLinks().getSmallFullAccounts() != null) {
+            return AccountType.getAccountType("small_full_accounts");
+        } else {
+            throw new HandlerException("Unable to find account type in account data" +
+                    companyAccounts.getKind());
+        }
     }
 
     private CompanyAccounts getCompanyAccounts(String resourceUri, String requestId) throws HandlerException {
