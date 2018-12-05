@@ -9,7 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.accounts.CompanyAccounts;
 import uk.gov.companieshouse.api.model.accounts.CompanyAccountsApi;
-import uk.gov.companieshouse.api.model.accounts.Links;
+import uk.gov.companieshouse.api.model.common.Links;
 import uk.gov.companieshouse.document.generator.accounts.AccountType;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Resources;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;

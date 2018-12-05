@@ -16,12 +16,12 @@ public class CompanyAccountsDocumentDataManager {
     private AccountsService accountsService;
 
     public <T> T getCompanyAccountDocumentData(CompanyAccounts companyAccounts, AccountType accountType,
-                                       Transaction transaction, String resourceUri)
+                                       Transaction transaction, String requestId)
             throws ServiceException, AccountsLinkNotFoundException {
 
         String smallFullAccountLink = getCompanyAccountLink(companyAccounts, accountType);
 
-        return (T) accountsService.getSmallFullAccounts(smallFullAccountLink, resourceUri, transaction);
+        return (T) accountsService.getSmallFullAccounts(smallFullAccountLink, requestId, transaction);
     }
 
     private String getCompanyAccountLink(CompanyAccounts accounts, AccountType accountsType) throws AccountsLinkNotFoundException {

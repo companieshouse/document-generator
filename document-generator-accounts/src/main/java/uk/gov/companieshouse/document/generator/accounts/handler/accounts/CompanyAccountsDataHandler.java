@@ -67,13 +67,13 @@ public class CompanyAccountsDataHandler {
 
         String transactionLink = getTransactionLink(companyAccounts, resourceUri);
 
-        Transaction transaction = getTransaction(transactionLink, requestId);;
+        Transaction transaction = getTransaction(transactionLink, requestId);
 
         AccountType accountType = getCompanyAccountType(companyAccounts);
 
         try {
             return createResponse(accountType, companyAccountsDocumentDataManager.getCompanyAccountDocumentData(
-                    companyAccounts, accountType, transaction, resourceUri));
+                    companyAccounts, accountType, transaction, requestId));
         } catch (ServiceException | IOException | AccountsLinkNotFoundException e) {
             Map<String, Object> logMap = new HashMap<>();
             logMap.put(RESOURCE_URI, resourceUri);
