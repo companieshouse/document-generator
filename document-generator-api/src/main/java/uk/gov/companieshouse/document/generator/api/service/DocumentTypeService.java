@@ -10,7 +10,7 @@ public interface DocumentTypeService {
     /**
      * get Document type from the resource uri
      *
-     * @param requestParameters Map containing requestId, resourceId and resourceUri as a key/value pair
+     * @param requestParameters Map containing requestId and resourceUri as a key/value pair
      * @return DocumentType type of document requested
      * @throws ServiceException
      */
