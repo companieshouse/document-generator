@@ -10,7 +10,7 @@ import uk.gov.companieshouse.document.generator.accounts.AccountType;
 import uk.gov.companieshouse.document.generator.accounts.data.accounts.CompanyAccountsDocumentDataManager;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.HandlerException;
-import uk.gov.companieshouse.document.generator.accounts.exception.ManagerException;
+import uk.gov.companieshouse.document.generator.accounts.exception.AccountsLinkNotFoundException;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.accounts.mapping.PeriodAwareIxbrl;
 import uk.gov.companieshouse.document.generator.accounts.service.AccountsService;
@@ -74,7 +74,7 @@ public class CompanyAccountsDataHandler {
         try {
             return createResponse(accountType, companyAccountsDocumentDataManager.getCompanyAccountDocumentData(
                     companyAccounts, accountType, transaction, resourceUri));
-        } catch (ServiceException | IOException | ManagerException e) {
+        } catch (ServiceException | IOException | AccountsLinkNotFoundException e) {
             Map<String, Object> logMap = new HashMap<>();
             logMap.put(RESOURCE_URI, resourceUri);
             logMap.put(ACCOUNT_TYPE, accountType);

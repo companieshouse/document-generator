@@ -13,7 +13,7 @@ import uk.gov.companieshouse.api.model.accounts.Links;
 import uk.gov.companieshouse.document.generator.accounts.AccountType;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Resources;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
-import uk.gov.companieshouse.document.generator.accounts.exception.ManagerException;
+import uk.gov.companieshouse.document.generator.accounts.exception.AccountsLinkNotFoundException;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.SmallFullAccountIxbrl;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.BalanceSheet;
@@ -46,13 +46,14 @@ public class CompanyAccountsDocumentDataManagerTest {
 
     @Test
     @DisplayName("Tests successful return of accounts data for small full")
-    void testSuccessfullReturnOfAccountsDataForSmallFull() throws ServiceException, ManagerException {
+    void testSuccessfullReturnOfAccountsDataForSmallFull() throws ServiceException, AccountsLinkNotFoundException {
 
         when(mockAccountsService.getSmallFullAccounts(anyString(), anyString(), any(Transaction.class)))
                 .thenReturn(createCurrentSmallFullAccounts());
 
-        assertNotNull(companyAccountsDocumentDataManager.getCompanyAccountDocumentData(createCompanyAccounts(),
-                createAccountType(), createTransaction(COMPANY_ACCOUNTS_RESOURCE_URI), COMPANY_ACCOUNTS_RESOURCE_URI));
+        assertNotNull(companyAccountsDocumentDataManager.getCompanyAccountDocumentData(createCompanyAccounts(true),
+                createAccountType(true), createTransaction(COMPANY_ACCOUNTS_RESOURCE_URI),
+                COMPANY_ACCOUNTS_RESOURCE_URI));
     }
 
     @Test
@@ -63,17 +64,38 @@ public class CompanyAccountsDocumentDataManagerTest {
                 .thenThrow(new ServiceException(SERVICE_EXCEPTION));
 
         assertThrows(ServiceException.class, () -> companyAccountsDocumentDataManager.getCompanyAccountDocumentData(
-                createCompanyAccounts(), createAccountType(), createTransaction(COMPANY_ACCOUNTS_RESOURCE_URI),
-                COMPANY_ACCOUNTS_RESOURCE_URI));
+                createCompanyAccounts(true), createAccountType(true),
+                createTransaction(COMPANY_ACCOUNTS_RESOURCE_URI), COMPANY_ACCOUNTS_RESOURCE_URI));
     }
 
-    private CompanyAccounts createCompanyAccounts() {
+    @Test
+    @DisplayName("Tests AccountsLinkNotFoundException thrown when no small full account link found")
+    void testErrorThrownWhenNoSmallFullAccountLinkFound() {
+
+        assertThrows(AccountsLinkNotFoundException.class, () -> companyAccountsDocumentDataManager.getCompanyAccountDocumentData(
+                createCompanyAccounts(false), createAccountType(true),
+                createTransaction(COMPANY_ACCOUNTS_RESOURCE_URI), COMPANY_ACCOUNTS_RESOURCE_URI));
+    }
+
+    @Test
+    @DisplayName("Tests AccountsLinkNotFoundException thrown when no account type link found")
+    void testErrorThrownWhenNoAccountTypeLinkFound() {
+
+        assertThrows(AccountsLinkNotFoundException.class, () -> companyAccountsDocumentDataManager.getCompanyAccountDocumentData(
+                createCompanyAccounts(false), createAccountType(false),
+                createTransaction(COMPANY_ACCOUNTS_RESOURCE_URI), COMPANY_ACCOUNTS_RESOURCE_URI));
+    }
+
+    private CompanyAccounts createCompanyAccounts(boolean validLink) {
 
         CompanyAccountsApi companyAccounts = new CompanyAccountsApi();
         Links links = new Links();
         links.setTransaction("/transactions/091174-913515-326060");
-        links.setSmallFullAccounts(COMPANY_ACCOUNTS_RESOURCE_URI);
-
+        if(validLink == true) {
+            links.setSmallFullAccounts(COMPANY_ACCOUNTS_RESOURCE_URI);
+        } else {
+            links.setSmallFullAccounts(null);
+        }
         companyAccounts.setLinks(links);
 
         return companyAccounts;
@@ -98,8 +120,12 @@ public class CompanyAccountsDocumentDataManagerTest {
         return resource;
     }
 
-    private AccountType createAccountType() {
-       return AccountType.getAccountType("small_full_accounts");
+    private AccountType createAccountType(boolean validAccountType) {
+        if (validAccountType == true) {
+            return AccountType.getAccountType("small_full_accounts");
+        } else {
+            return AccountType.getAccountType("abridged_accounts");
+        }
     }
 
     private SmallFullAccountIxbrl createCurrentSmallFullAccounts() {
