@@ -190,7 +190,7 @@ public class ApiToBalanceSheetMapperTest {
 
         CurrentPeriodApi currentPeriod = new CurrentPeriodApi();
 
-        currentPeriod.setBalanceSheetApi(createBalanceSheetValues());
+        currentPeriod.setBalanceSheet(createBalanceSheetValues());
 
         return currentPeriod;
     }
@@ -208,10 +208,10 @@ public class ApiToBalanceSheetMapperTest {
 
         BalanceSheetApi balanceSheet = new BalanceSheetApi();
 
-        balanceSheet.setCapitalAndReservesApi(createCapitalAndReservesApiData());
-        balanceSheet.setCurrentAssetsApi(createCurrentAssetsApiData());
-        balanceSheet.setFixedAssetsApi(createFixedAssetsApiData());
-        balanceSheet.setOtherLiabilitiesOrAssetsApi(createOtherLiabilitiesOrAssetsApiData());
+        balanceSheet.setCapitalAndReserves(createCapitalAndReservesApiData());
+        balanceSheet.setCurrentAssets(createCurrentAssetsApiData());
+        balanceSheet.setFixedAssets(createFixedAssetsApiData());
+        balanceSheet.setOtherLiabilitiesOrAssets(createOtherLiabilitiesOrAssetsApiData());
         balanceSheet.setCalledUpShareCapitalNotPaid(VALUE_ONE);
 
         return balanceSheet;
