@@ -114,8 +114,8 @@ public class AbridgedAccountsDataHandlerTest {
 
         currentPeriodApi.setBalanceSheetApi(new BalanceSheetApi());
         currentPeriodApi.setCurrentNotesApi(new CurrentNotesApi());
-        currentPeriodApi.setPeriodEndDate("2019-09-30T00:00:00.000Z");
-        currentPeriodApi.setPeriodStartDate("2018-10-01T00:00:00.000Z");
+        currentPeriodApi.setPeriodEndDate("2019-09-30");
+        currentPeriodApi.setPeriodStartDate("2018-10-01");
 
         return currentPeriodApi;
     }

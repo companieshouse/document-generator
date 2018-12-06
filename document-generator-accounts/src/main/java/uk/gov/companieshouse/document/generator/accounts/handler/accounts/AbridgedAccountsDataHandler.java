@@ -5,8 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.gov.companieshouse.accountsdates.AccountsDatesHelper;
-import uk.gov.companieshouse.accountsdates.impl.AccountsDatesHelperImpl;
 import uk.gov.companieshouse.api.model.accounts.Accounts;
 import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
@@ -23,8 +21,6 @@ import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,8 +39,6 @@ public class AbridgedAccountsDataHandler {
 
     @Autowired
     private TransactionService transactionService;
-
-    private AccountsDatesHelper accountsDatesHelper = new AccountsDatesHelperImpl();
 
     private static final String RESOURCE = "resource";
 
@@ -148,8 +142,7 @@ public class AbridgedAccountsDataHandler {
         documentInfoResponse.setPath(createPathString(accountType));
 
         Map<String, String> descriptionValues = new HashMap<>();
-        descriptionValues.put("period_end_on",accountsDatesHelper
-                .convertDateToString(getCurrentPeriodEndOn(accountData)));
+        descriptionValues.put("period_end_on", getCurrentPeriodEndOn(accountData));
 
         documentInfoResponse.setDescriptionValues(descriptionValues);
         documentInfoResponse.setDescriptionIdentifier(accountType.getEnumerationKey());
@@ -182,15 +175,11 @@ public class AbridgedAccountsDataHandler {
         return accounts.toString();
     }
 
-    private LocalDate getCurrentPeriodEndOn(AbridgedAccountsApi accountData) {
+    private String getCurrentPeriodEndOn(AbridgedAccountsApi accountData) {
 
         JSONObject account = new JSONObject(accountData);
         JSONObject currentPeriod = account.getJSONObject("currentPeriodApi");
         String periodEndOn = currentPeriod.get("periodEndDate").toString();
-        return formatDate(periodEndOn);
-    }
-
-    private LocalDate formatDate(String date) {
-         return accountsDatesHelper.getLocalDatefromDateTimeString(date, ZoneId.of("UTC"));
+        return periodEndOn;
     }
 }
