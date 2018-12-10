@@ -122,7 +122,7 @@ public class AbridgedAccountsDataHandler {
         if (accounts.getLinks().getAbridgedAccounts() != null) {
             return AccountType.getAccountType("abridged_accounts");
         } else {
-            throw new HandlerException("Unable to find account type in account data" +
+            throw new HandlerException("Unable to find account type in account data: " +
                     accounts.getKind());
         }
     }
