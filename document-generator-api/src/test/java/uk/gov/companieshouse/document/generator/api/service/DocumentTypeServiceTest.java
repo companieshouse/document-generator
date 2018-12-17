@@ -26,8 +26,6 @@ public class DocumentTypeServiceTest {
 
     private static final String COMPANY_ACCOUNTS_RESOURCE_URI = "/transactions/091174-913515-326060/company-accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
 
-    private static final String RESOURCE_ID = "/transactions/091174-913515-326060";
-
     private static final String REQUEST_ID = "requestId";
 
     private static final String RESOURCE_URI = "resource_uri";
@@ -40,7 +38,7 @@ public class DocumentTypeServiceTest {
 
         requestParameters = new HashMap<>();
         requestParameters.put("request_id", REQUEST_ID);
-        requestParameters.put("resource_id", RESOURCE_ID);
+        requestParameters.put("resource_uri", RESOURCE_URI);
     }
 
     @Test

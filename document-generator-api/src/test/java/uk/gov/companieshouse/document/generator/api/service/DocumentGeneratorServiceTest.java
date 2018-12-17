@@ -186,7 +186,6 @@ public class DocumentGeneratorServiceTest {
 
         DocumentRequest request = new DocumentRequest();
         request.setResourceUri("/transactions/091174-913515-326060/accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=");
-        request.setResourceId("/transactions/091174-913515-326060");
         request.setMimeType("text/html");
         request.setDocumentType("documentType");
 
