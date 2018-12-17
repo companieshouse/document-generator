@@ -32,6 +32,9 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
             smallFullAccountIxbrl.setApprovalDate(convertToDisplayDate(smallFullApiData.getApproval().getDate()));
         }
 
+        smallFullAccountIxbrl.setAccountingPolicies(
+                ApiToAccountingPoliciesMapper.INSTANCE.apiToAccountingPolicies(smallFullApiData.getAccountingPolicies()));
+
         return smallFullAccountIxbrl;
     }
 

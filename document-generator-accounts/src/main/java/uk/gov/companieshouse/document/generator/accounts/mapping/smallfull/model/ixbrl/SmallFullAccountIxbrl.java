@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.gson.Gson;
 import uk.gov.companieshouse.document.generator.accounts.mapping.PeriodAwareIxbrl;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.accountingpolicies.AccountingPolicies;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.BalanceSheet;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.company.Company;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.Notes;
@@ -38,6 +39,9 @@ public class SmallFullAccountIxbrl implements PeriodAwareIxbrl {
 
     @JsonProperty("approval_name")
     private String approvalName;
+
+    @JsonProperty("accounting_policies")
+    private AccountingPolicies accountingPolicies;
 
     @Override
     public Period getPeriod() {
@@ -88,6 +92,12 @@ public class SmallFullAccountIxbrl implements PeriodAwareIxbrl {
         this.approvalName = approvalName;
     }
 
+    public AccountingPolicies getAccountingPolicies() { return accountingPolicies; }
+
+    public void setAccountingPolicies(AccountingPolicies accountingPolicies) {
+        this.accountingPolicies = accountingPolicies;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -98,14 +108,15 @@ public class SmallFullAccountIxbrl implements PeriodAwareIxbrl {
                 Objects.equals(getNotes(), smallFullAccountIxbrl.getNotes()) &&
                 Objects.equals(getCompany(), smallFullAccountIxbrl.getCompany()) &&
                 Objects.equals(getApprovalDate(), smallFullAccountIxbrl.getApprovalDate()) &&
-                Objects.equals(getApprovalName(), smallFullAccountIxbrl.getApprovalName());
+                Objects.equals(getApprovalName(), smallFullAccountIxbrl.getApprovalName()) &&
+                Objects.equals(getAccountingPolicies(), smallFullAccountIxbrl.getAccountingPolicies());
     }
 
     @Override
     public int hashCode() {
 
         return Objects.hash(getPeriod(), getBalanceSheet(), getNotes(), getCompany(), getApprovalDate(),
-                getApprovalName());
+                getApprovalName(), getAccountingPolicies());
     }
 
     @Override

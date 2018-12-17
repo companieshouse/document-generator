@@ -123,6 +123,13 @@ public class AccountsManager {
             handleException(e, "approvals", link);
         }
 
+        try {
+            smallFullApiData.setAccountingPolicies(apiClient.smallFull().accountingPolicies()
+                    .get(new StringBuilder(link).append("/notes/accounting-policy").toString()).execute());
+        } catch (ApiErrorResponseException e) {
+            handleException(e, "accounting policies", link);
+        }
+
         smallFullApiData.setCompanyProfile(companyService.getCompanyProfile(transaction.getCompanyNumber()));
 
 
