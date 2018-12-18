@@ -8,11 +8,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.accounts.Accounts;
+import uk.gov.companieshouse.api.model.accounts.AccountsLinks;
 import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
 import uk.gov.companieshouse.api.model.accounts.abridged.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.abridged.balancesheet.BalanceSheetApi;
 import uk.gov.companieshouse.api.model.accounts.abridged.notes.CurrentNotesApi;
-import uk.gov.companieshouse.api.model.common.Links;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Resources;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
@@ -123,9 +123,10 @@ public class AbridgedAccountsDataHandlerTest {
     private Accounts createAccounts() {
         Accounts accounts = new Accounts();
 
-        Links links = new Links();
+        AccountsLinks links = new AccountsLinks();
         links.setTransaction("/transactions/091174-913515-326060");
         links.setAbridgedAccounts(ABRIDGED_ACCOUNTS_RESOURCE_URI);
+
         accounts.setLinks(links);
 
         return accounts;
