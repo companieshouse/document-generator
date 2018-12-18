@@ -1,17 +1,21 @@
 package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.mappers;
 
+import org.apache.http.cookie.SM;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetLegalStatementsApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CapitalAndReservesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentAssetsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.FixedAssetsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.OtherLiabilitiesOrAssetsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.BalanceSheetStatements;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.CalledUpSharedCapitalNotPaid;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.capitalandreserves.CapitalAndReserve;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.currentassets.CurrentAssets;
@@ -25,11 +29,19 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ApiToBalanceSheetMapperTest {
 
-    private static final  Long VALUE_ONE = 100L;
+    private static final Long VALUE_ONE = 100L;
 
-    private static final  Long VALUE_TWO = 200L;
+    private static final Long VALUE_TWO = 200L;
 
-    private static final  Long VALUE_THREE = 300L;
+    private static final Long VALUE_THREE = 300L;
+
+    private static final String SECTION_477 = "section477";
+
+    private static final String AUDIT_NOT_REQUIRED = "auditNotRequiredByMembers";
+
+    private static final String DIRECTORS_REPONSIBILITY = "directorsResponsibility";
+
+    private static final String SMALL_COMPANIES_REGIME = "smallCompaniesRegime";
 
     @Test
     @DisplayName("tests that both current and previous period values map to capital and reserve IXBRL model")
@@ -186,6 +198,20 @@ public class ApiToBalanceSheetMapperTest {
         assertEquals(new Long(VALUE_ONE), calledUpSharedCapitalNotPaid.getCurrentAmount());
     }
 
+    @Test
+    @DisplayName("tests that the balance sheet statements map to balance sheet statements IXBRL model")
+    void testApiToBalanceSheetStatementsMapsCorrectly() {
+
+        BalanceSheetStatements balanceSheetStatements =
+                ApiToBalanceSheetMapper.INSTANCE.apiToStatements(createBalanceSheetStatements());
+
+        assertNotNull(balanceSheetStatements);
+        assertEquals(SECTION_477, balanceSheetStatements.getSection477());
+        assertEquals(AUDIT_NOT_REQUIRED, balanceSheetStatements.getAuditNotRequiredByMembers());
+        assertEquals(DIRECTORS_REPONSIBILITY, balanceSheetStatements.getDirectorsResponsibility());
+        assertEquals(SMALL_COMPANIES_REGIME, balanceSheetStatements.getSmallCompaniesRegime());
+    }
+
     private CurrentPeriodApi createCurrentPeriod() {
 
         CurrentPeriodApi currentPeriod = new CurrentPeriodApi();
@@ -262,5 +288,19 @@ public class ApiToBalanceSheetMapperTest {
         capitalAndReserves.setTotalShareholdersFunds(new Long(VALUE_TWO));
 
         return capitalAndReserves;
+    }
+
+    private BalanceSheetStatementsApi createBalanceSheetStatements() {
+
+        BalanceSheetLegalStatementsApi legalStatements = new BalanceSheetLegalStatementsApi();
+        legalStatements.setSection477(SECTION_477);
+        legalStatements.setAuditNotRequiredByMembers(AUDIT_NOT_REQUIRED);
+        legalStatements.setDirectorsResponsibility(DIRECTORS_REPONSIBILITY);
+        legalStatements.setSmallCompaniesRegime(SMALL_COMPANIES_REGIME);
+
+        BalanceSheetStatementsApi balanceSheetStatements = new BalanceSheetStatementsApi();
+        balanceSheetStatements.setLegalStatements(legalStatements);
+
+        return balanceSheetStatements;
     }
 }

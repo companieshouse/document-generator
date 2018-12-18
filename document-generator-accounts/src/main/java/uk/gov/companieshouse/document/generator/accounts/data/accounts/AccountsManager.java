@@ -123,6 +123,13 @@ public class AccountsManager {
             handleException(e, "approvals", link);
         }
 
+        try {
+            smallFullApiData.setBalanceSheetStatements(apiClient.smallFull().balanceSheetStatements()
+                    .get(new StringBuilder(link).append("/statements").toString()).execute());
+        } catch (ApiErrorResponseException e) {
+            handleException(e, "statements", link);
+        }
+
         smallFullApiData.setCompanyProfile(companyService.getCompanyProfile(transaction.getCompanyNumber()));
 
 
