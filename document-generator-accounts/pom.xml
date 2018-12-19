@@ -34,7 +34,7 @@
         <junit-jupiter-engine.version>5.2.0</junit-jupiter-engine.version>
         <mockito-junit-jupiter.version>2.18.0</mockito-junit-jupiter.version>
 
-        <company-accounts-library.version>1.0.0-rc2</company-accounts-library.version>
+        <company-accounts-library.version>1.1.0-rc1</company-accounts-library.version>
     </properties>
 
     <dependencies>
