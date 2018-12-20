@@ -2,6 +2,7 @@ package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.mode
 
 import com.google.gson.Gson;
 import uk.gov.companieshouse.api.model.accounts.smallfull.ApprovalApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
@@ -17,6 +18,8 @@ public class SmallFullApiData {
     private CompanyProfileApi companyProfile;
 
     private ApprovalApi approval;
+
+    private BalanceSheetStatementsApi balanceSheetStatements;
 
     public CurrentPeriodApi getCurrentPeriod() {
         return currentPeriod;
@@ -50,6 +53,12 @@ public class SmallFullApiData {
         this.approval = approval;
     }
 
+    public BalanceSheetStatementsApi getBalanceSheetStatements() { return balanceSheetStatements; }
+
+    public void setBalanceSheetStatements(BalanceSheetStatementsApi balanceSheetStatements) {
+        this.balanceSheetStatements = balanceSheetStatements;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -58,13 +67,15 @@ public class SmallFullApiData {
         return Objects.equals(getCurrentPeriod(), that.getCurrentPeriod()) &&
                 Objects.equals(getPreviousPeriod(), that.getPreviousPeriod()) &&
                 Objects.equals(getCompanyProfile(), that.getCompanyProfile()) &&
-                Objects.equals(getApproval(), that.getApproval());
+                Objects.equals(getApproval(), that.getApproval()) &&
+                Objects.equals(getBalanceSheetStatements(), that.getBalanceSheetStatements());
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(getCurrentPeriod(), getPreviousPeriod(), getCompanyProfile(), getApproval());
+        return Objects.hash(getCurrentPeriod(), getPreviousPeriod(), getCompanyProfile(), getApproval(),
+                            getBalanceSheetStatements());
     }
 
     @Override
