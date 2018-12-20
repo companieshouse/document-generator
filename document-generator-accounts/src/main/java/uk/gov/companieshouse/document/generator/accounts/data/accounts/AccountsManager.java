@@ -124,6 +124,13 @@ public class AccountsManager {
         }
 
         try {
+            smallFullApiData.setBalanceSheetStatements(apiClient.smallFull().balanceSheetStatements()
+                    .get(new StringBuilder(link).append("/statements").toString()).execute());
+        } catch (ApiErrorResponseException e) {
+            handleException(e, "statements", link);
+        }
+
+        try {
             smallFullApiData.setAccountingPolicies(apiClient.smallFull().accountingPolicies()
                     .get(new StringBuilder(link).append("/notes/accounting-policy").toString()).execute());
         } catch (ApiErrorResponseException e) {

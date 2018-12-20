@@ -4,8 +4,10 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
+import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.BalanceSheetStatements;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.CalledUpSharedCapitalNotPaid;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.capitalandreserves.CapitalAndReserve;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.currentassets.CurrentAssets;
@@ -114,5 +116,17 @@ public interface ApiToBalanceSheetMapper {
             @Mapping(source = "previousPeriod.balanceSheet.calledUpShareCapitalNotPaid", target = "previousAmount")
     })
     CalledUpSharedCapitalNotPaid apiToCalledUpSharedCapitalNotPaid(CurrentPeriodApi currentPeriod, PreviousPeriodApi previousPeriod);
+
+    @Mappings({
+            @Mapping(source = "balanceSheetStatements.legalStatements.section477",
+                    target = "section477"),
+            @Mapping(source = "balanceSheetStatements.legalStatements.auditNotRequiredByMembers",
+                    target = "auditNotRequiredByMembers"),
+            @Mapping(source = "balanceSheetStatements.legalStatements.directorsResponsibility",
+                    target = "directorsResponsibility"),
+            @Mapping(source = "balanceSheetStatements.legalStatements.smallCompaniesRegime",
+                    target = "smallCompaniesRegime")
+    })
+    BalanceSheetStatements apiToStatements(BalanceSheetStatementsApi balanceSheetStatements);
 }
 
