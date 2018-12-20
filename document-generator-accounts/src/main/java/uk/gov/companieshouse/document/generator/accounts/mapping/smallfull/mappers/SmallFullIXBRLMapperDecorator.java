@@ -10,6 +10,7 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.BalanceSheet;
 
 import java.time.LocalDate;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.AdditionalNotes;
 
 public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMapper {
 
@@ -34,8 +35,16 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
             smallFullAccountIxbrl.setApprovalDate(convertToDisplayDate(smallFullApiData.getApproval().getDate()));
         }
 
-        smallFullAccountIxbrl.setAccountingPolicies(
-                ApiToAccountingPoliciesMapper.INSTANCE.apiToAccountingPolicies(smallFullApiData.getAccountingPolicies()));
+        if (smallFullApiData.getAccountingPolicies() != null) {
+
+            AdditionalNotes additionalNotes = new AdditionalNotes();
+
+            additionalNotes.setAccountingPolicies(
+                    ApiToAccountingPoliciesMapper.INSTANCE
+                            .apiToAccountingPolicies(smallFullApiData.getAccountingPolicies()));
+
+            smallFullAccountIxbrl.setAdditionalNotes(additionalNotes);
+        }
 
         return smallFullAccountIxbrl;
     }
