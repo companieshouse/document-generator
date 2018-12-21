@@ -37,7 +37,6 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
         }
 
         if (smallFullApiData.getAccountingPolicies() != null) {
-
             smallFullAccountIxbrl.setAdditionalNotes(setAdditionalNotes(smallFullApiData.getAccountingPolicies()));
         }
 
