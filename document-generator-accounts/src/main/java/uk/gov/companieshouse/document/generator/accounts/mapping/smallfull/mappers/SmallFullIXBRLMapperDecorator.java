@@ -2,6 +2,7 @@ package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.mapp
 
 import uk.gov.companieshouse.accountsdates.AccountsDatesHelper;
 import uk.gov.companieshouse.accountsdates.impl.AccountsDatesHelperImpl;
+import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
@@ -37,13 +38,7 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
 
         if (smallFullApiData.getAccountingPolicies() != null) {
 
-            AdditionalNotes additionalNotes = new AdditionalNotes();
-
-            additionalNotes.setAccountingPolicies(
-                    ApiToAccountingPoliciesMapper.INSTANCE
-                            .apiToAccountingPolicies(smallFullApiData.getAccountingPolicies()));
-
-            smallFullAccountIxbrl.setAdditionalNotes(additionalNotes);
+            smallFullAccountIxbrl.setAdditionalNotes(setAdditionalNotes(smallFullApiData.getAccountingPolicies()));
         }
 
         return smallFullAccountIxbrl;
@@ -76,6 +71,17 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
         }
 
         return balanceSheet;
+    }
+
+    private AdditionalNotes setAdditionalNotes(AccountingPoliciesApi accountingPolicies) {
+
+        AdditionalNotes additionalNotes = new AdditionalNotes();
+
+        additionalNotes.setAccountingPolicies(
+                ApiToAccountingPoliciesMapper.INSTANCE
+                        .apiToAccountingPolicies(accountingPolicies));
+
+        return additionalNotes;
     }
 
     private String convertToDisplayDate(LocalDate date) {
