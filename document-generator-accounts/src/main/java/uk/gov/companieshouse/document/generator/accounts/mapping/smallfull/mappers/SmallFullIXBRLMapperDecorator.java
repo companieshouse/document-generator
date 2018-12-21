@@ -2,6 +2,7 @@ package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.mapp
 
 import uk.gov.companieshouse.accountsdates.AccountsDatesHelper;
 import uk.gov.companieshouse.accountsdates.impl.AccountsDatesHelperImpl;
+import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
@@ -10,6 +11,7 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.BalanceSheet;
 
 import java.time.LocalDate;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.AdditionalNotes;
 
 public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMapper {
 
@@ -32,6 +34,10 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
 
         if (smallFullApiData.getApproval() != null && smallFullApiData.getApproval().getDate() != null) {
             smallFullAccountIxbrl.setApprovalDate(convertToDisplayDate(smallFullApiData.getApproval().getDate()));
+        }
+
+        if (smallFullApiData.getAccountingPolicies() != null) {
+            smallFullAccountIxbrl.setAdditionalNotes(setAdditionalNotes(smallFullApiData.getAccountingPolicies()));
         }
 
         return smallFullAccountIxbrl;
@@ -64,6 +70,17 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
         }
 
         return balanceSheet;
+    }
+
+    private AdditionalNotes setAdditionalNotes(AccountingPoliciesApi accountingPolicies) {
+
+        AdditionalNotes additionalNotes = new AdditionalNotes();
+
+        additionalNotes.setAccountingPolicies(
+                ApiToAccountingPoliciesMapper.INSTANCE
+                        .apiToAccountingPolicies(accountingPolicies));
+
+        return additionalNotes;
     }
 
     private String convertToDisplayDate(LocalDate date) {
