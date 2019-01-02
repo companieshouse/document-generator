@@ -9,7 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.accounts.CompanyAccounts;
 import uk.gov.companieshouse.api.model.accounts.CompanyAccountsApi;
-import uk.gov.companieshouse.api.model.accounts.Links;
+import uk.gov.companieshouse.api.model.accounts.CompanyAccountsLinks;
 import uk.gov.companieshouse.document.generator.accounts.AccountType;
 import uk.gov.companieshouse.document.generator.accounts.data.accounts.CompanyAccountsDocumentDataManager;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Resources;
@@ -115,11 +115,12 @@ public class CompanyAccountsDataHandlerTest {
     }
 
     private CompanyAccounts createCompanyAccounts() {
-
         CompanyAccountsApi companyAccounts = new CompanyAccountsApi();
-        Links links = new Links();
+
+        CompanyAccountsLinks links = new CompanyAccountsLinks();
         links.setTransaction("/transactions/091174-913515-326060");
         links.setSmallFullAccounts(COMPANY_ACCOUNTS_RESOURCE_URI);
+
         companyAccounts.setLinks(links);
 
         return companyAccounts;

@@ -1,6 +1,5 @@
 package uk.gov.companieshouse.document.generator.accounts.handler.accounts;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -9,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.accounts.Accounts;
+import uk.gov.companieshouse.api.model.accounts.AccountsLinks;
 import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
 import uk.gov.companieshouse.api.model.accounts.abridged.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.abridged.balancesheet.BalanceSheetApi;
@@ -51,7 +51,6 @@ public class AbridgedAccountsDataHandlerTest {
 
     private static final String ABRIDGED_ACCOUNTS_RESOURCE_URI = "/transactions/091174-913515-326060/accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
     private static final String REQUEST_ID = "requestId";
-    private static final String COMPANY_NUMBER = "000667733";
     private static final String COMPANY_NAME = "company_name";
     private static final String SERVICE_EXCEPTION = "Failure in service layer";
 
@@ -72,20 +71,24 @@ public class AbridgedAccountsDataHandlerTest {
         assertThrows(HandlerException.class, () -> abridgedAccountsDataHandler.getAbridgedAccountsData(ABRIDGED_ACCOUNTS_RESOURCE_URI, REQUEST_ID));
     }
 
-    /**
-     * Temporarily removed as only correcting transaction details for small-full
-     */
     @Test
-    @Disabled
     @DisplayName("Tests the successful return of Abridged accounts data")
     void testGetAbridgedAccountsData() throws ServiceException, HandlerException {
         when(accountsService.getAccounts(anyString(), anyString())).thenReturn(createAccounts());
         when(accountsService.getAbridgedAccounts(anyString(), anyString())).thenReturn(createCurrentAbridgedAccount());
         when(transactionService.getTransaction(anyString(), anyString())).thenReturn(createTransaction(ABRIDGED_ACCOUNTS_RESOURCE_URI));
         when(companyService.getCompanyProfile(anyString())).thenReturn(createCompanyProfile());
-        when(transaction.getCompanyNumber()).thenReturn(COMPANY_NUMBER);
 
         assertNotNull(abridgedAccountsDataHandler.getAbridgedAccountsData(ABRIDGED_ACCOUNTS_RESOURCE_URI, REQUEST_ID));
+    }
+
+    @Test
+    @DisplayName("Tests an error is thrown if transaction service fails ")
+    void testErrorThrownWhenTransactionServiceFails() throws ServiceException {
+        when(accountsService.getAccounts(anyString(), anyString())).thenReturn(createAccounts());
+        when(transactionService.getTransaction(anyString(), anyString())).thenThrow(new ServiceException(SERVICE_EXCEPTION));
+
+        assertThrows(HandlerException.class, () -> abridgedAccountsDataHandler.getAbridgedAccountsData(ABRIDGED_ACCOUNTS_RESOURCE_URI, REQUEST_ID));
     }
 
     private CompanyProfileApi createCompanyProfile() {
@@ -111,8 +114,8 @@ public class AbridgedAccountsDataHandlerTest {
 
         currentPeriodApi.setBalanceSheetApi(new BalanceSheetApi());
         currentPeriodApi.setCurrentNotesApi(new CurrentNotesApi());
-        currentPeriodApi.setPeriodEndDate("2019-09-30T00:00:00.000Z");
-        currentPeriodApi.setPeriodStartDate("2018-10-01T00:00:00.000Z");
+        currentPeriodApi.setPeriodEndDate("2019-09-30");
+        currentPeriodApi.setPeriodStartDate("2018-10-01");
 
         return currentPeriodApi;
     }
@@ -120,8 +123,10 @@ public class AbridgedAccountsDataHandlerTest {
     private Accounts createAccounts() {
         Accounts accounts = new Accounts();
 
-        Map<String, String> links = new HashMap<>();
-        links.put("abridged_accounts", ABRIDGED_ACCOUNTS_RESOURCE_URI);
+        AccountsLinks links = new AccountsLinks();
+        links.setTransaction("/transactions/091174-913515-326060");
+        links.setAbridgedAccounts(ABRIDGED_ACCOUNTS_RESOURCE_URI);
+
         accounts.setLinks(links);
 
         return accounts;
@@ -132,6 +137,7 @@ public class AbridgedAccountsDataHandlerTest {
         resources.put(resourceUri, createResource(resourceUri));
 
         Transaction transaction = new Transaction();
+        transaction.setCompanyNumber("00006400");
         transaction.setResources(resources);
 
         return transaction;
