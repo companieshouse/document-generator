@@ -36,13 +36,13 @@ public class TradeDebtors {
         if (!(o instanceof TradeDebtors)) return false;
 
         TradeDebtors that = (TradeDebtors) o;
-        return Objects.equals(currentAmount, that.currentAmount) &&
-            Objects.equals(previousAmount, that.previousAmount);
+        return Objects.equals(getCurrentAmount(), that.getCurrentAmount()) &&
+            Objects.equals(getPreviousAmount(), that.getPreviousAmount());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(currentAmount, previousAmount);
+        return Objects.hash(getCurrentAmount(), getPreviousAmount());
     }
 
     @Override

@@ -84,20 +84,20 @@ public class Debtors {
             return true;
         }
         if (!(o instanceof Debtors)) return false;
-        
+
         Debtors debtors = (Debtors) o;
-        return Objects.equals(Details, debtors.Details) &&
-            Objects.equals(greaterThanOneYear, debtors.greaterThanOneYear) &&
-            Objects.equals(otherDebtors, debtors.otherDebtors) &&
-            Objects.equals(prepaymentsAndAccruedIncome, debtors.prepaymentsAndAccruedIncome) &&
-            Objects.equals(tradeDebtors, debtors.tradeDebtors) &&
-            Objects.equals(total, debtors.total);
+        return Objects.equals(getDetails(), debtors.getDetails()) &&
+            Objects.equals(getGreaterThanOneYear(), debtors.getGreaterThanOneYear()) &&
+            Objects.equals(getOtherDebtors(), debtors.getOtherDebtors()) &&
+            Objects.equals(getPrepaymentsAndAccruedIncome(), debtors.getPrepaymentsAndAccruedIncome()) &&
+            Objects.equals(getTradeDebtors(), debtors.getTradeDebtors()) &&
+            Objects.equals(getTotal(), debtors.getTotal());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(Details, greaterThanOneYear, otherDebtors, prepaymentsAndAccruedIncome,
-            tradeDebtors, total);
+        return Objects.hash(getDetails(), getGreaterThanOneYear(), getOtherDebtors(), getPrepaymentsAndAccruedIncome(),
+            getTradeDebtors(), getTotal());
     }
 
     @Override

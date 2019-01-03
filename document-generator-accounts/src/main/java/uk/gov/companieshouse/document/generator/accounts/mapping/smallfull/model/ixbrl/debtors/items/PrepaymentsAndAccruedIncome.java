@@ -37,13 +37,13 @@ public class PrepaymentsAndAccruedIncome {
         if (!(o instanceof PrepaymentsAndAccruedIncome)) return false;
 
         PrepaymentsAndAccruedIncome that = (PrepaymentsAndAccruedIncome) o;
-        return Objects.equals(currentAmount, that.currentAmount) &&
-            Objects.equals(previousAmount, that.previousAmount);
+        return Objects.equals(getCurrentAmount(), that.getPreviousAmount()) &&
+            Objects.equals(getPreviousAmount(), that.getPreviousAmount());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(currentAmount, previousAmount);
+        return Objects.hash(getCurrentAmount(), getPreviousAmount());
     }
 
     @Override

@@ -90,7 +90,7 @@ public class SmallFullApiData {
                 Objects.equals(getApproval(), that.getApproval()) &&
                 Objects.equals(getBalanceSheetStatements(), that.getBalanceSheetStatements()) &&
                 Objects.equals(getAccountingPolicies(), that.getAccountingPolicies()) &&
-                Objects.equals(debtors, that.debtors);
+                Objects.equals(getDebtors(), that.getDebtors());
     }
 
     @Override

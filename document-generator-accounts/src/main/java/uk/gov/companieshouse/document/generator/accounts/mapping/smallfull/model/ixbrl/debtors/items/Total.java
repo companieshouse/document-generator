@@ -36,13 +36,13 @@ public class Total {
         if (!(o instanceof Total)) return false;
 
         Total total = (Total) o;
-        return Objects.equals(currentAmount, total.currentAmount) &&
-            Objects.equals(previousAmount, total.previousAmount);
+        return Objects.equals(getCurrentAmount(), total.getCurrentAmount()) &&
+            Objects.equals(getPreviousAmount(), total.getPreviousAmount());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(currentAmount, previousAmount);
+        return Objects.hash(getCurrentAmount(), getPreviousAmount());
     }
 
     @Override
