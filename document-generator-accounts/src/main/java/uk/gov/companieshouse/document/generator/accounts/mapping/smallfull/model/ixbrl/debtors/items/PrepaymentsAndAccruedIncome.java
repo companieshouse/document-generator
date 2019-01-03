@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.items;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.Gson;
 import java.util.Objects;
 
 public class PrepaymentsAndAccruedIncome {
@@ -47,7 +48,6 @@ public class PrepaymentsAndAccruedIncome {
 
     @Override
     public String toString() {
-        return "PrepaymentsAndAccruedIncome{" + "currentAmount=" + currentAmount +
-            ", previousAmount=" + previousAmount + '}';
+        return new Gson().toJson(this);
     }
 }

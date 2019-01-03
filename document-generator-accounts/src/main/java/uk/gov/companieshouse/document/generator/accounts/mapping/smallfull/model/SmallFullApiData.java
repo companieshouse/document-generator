@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model;
 
 import com.google.gson.Gson;
+import uk.gov.companieshouse.api.model.accounts.abridged.notes.DebtorsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.ApprovalApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
@@ -23,6 +24,8 @@ public class SmallFullApiData {
     private BalanceSheetStatementsApi balanceSheetStatements;
 
     private AccountingPoliciesApi accountingPolicies;
+
+    private DebtorsApi debtors;
 
     public CurrentPeriodApi getCurrentPeriod() {
         return currentPeriod;
@@ -68,24 +71,33 @@ public class SmallFullApiData {
         this.accountingPolicies = accountingPolicies;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof SmallFullApiData)) return false;
-        SmallFullApiData that = (SmallFullApiData) o;
-        return Objects.equals(getCurrentPeriod(), that.getCurrentPeriod()) &&
-                Objects.equals(getPreviousPeriod(), that.getPreviousPeriod()) &&
-                Objects.equals(getCompanyProfile(), that.getCompanyProfile()) &&
-                Objects.equals(getApproval(), that.getApproval()) &&
-                Objects.equals(getBalanceSheetStatements(), that.getBalanceSheetStatements()) &&
-                Objects.equals(getAccountingPolicies(), that.getAccountingPolicies());
+    public DebtorsApi getDebtors () {
+        return debtors;
+    }
+
+    public void setDebtors (DebtorsApi debtors) {
+        this.debtors = debtors;
     }
 
     @Override
-    public int hashCode() {
+    public boolean equals (Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        SmallFullApiData that = (SmallFullApiData) o;
+        return Objects.equals(currentPeriod, that.currentPeriod) &&
+                Objects.equals(previousPeriod, that.previousPeriod) &&
+                Objects.equals(companyProfile, that.companyProfile) &&
+                Objects.equals(approval, that.approval) &&
+                Objects.equals(balanceSheetStatements, that.balanceSheetStatements) &&
+                Objects.equals(accountingPolicies, that.accountingPolicies) &&
+                Objects.equals(debtors, that.debtors);
+    }
 
-        return Objects.hash(getCurrentPeriod(), getPreviousPeriod(), getCompanyProfile(), getApproval(),
-                            getBalanceSheetStatements(), getAccountingPolicies());
+    @Override
+    public int hashCode () {
+        return Objects.hash(currentPeriod, previousPeriod, companyProfile, approval, balanceSheetStatements, accountingPolicies, debtors);
     }
 
     @Override

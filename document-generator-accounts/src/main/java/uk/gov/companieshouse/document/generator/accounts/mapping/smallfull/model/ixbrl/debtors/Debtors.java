@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.Gson;
 import java.util.Objects;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.items.GreaterThanOneYear;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.items.OtherDebtors;
@@ -102,9 +103,6 @@ public class Debtors {
 
     @Override
     public String toString() {
-        return "Debtors{" + "Details='" + Details + '\'' + ", greaterThanOneYear=" +
-            greaterThanOneYear + ", otherDebtors=" + otherDebtors +
-            ", prepaymentsAndAccruedIncome=" + prepaymentsAndAccruedIncome + ", tradeDebtors=" +
-            tradeDebtors + ", total=" + total + '}';
+        return new Gson().toJson(this);
     }
 }
