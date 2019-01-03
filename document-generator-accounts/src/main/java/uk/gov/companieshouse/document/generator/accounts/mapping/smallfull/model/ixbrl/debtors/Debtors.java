@@ -83,9 +83,8 @@ public class Debtors {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (!(o instanceof Debtors)) return false;
+        
         Debtors debtors = (Debtors) o;
         return Objects.equals(Details, debtors.Details) &&
             Objects.equals(greaterThanOneYear, debtors.greaterThanOneYear) &&

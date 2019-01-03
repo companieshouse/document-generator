@@ -33,9 +33,8 @@ public class TradeDebtors {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (!(o instanceof TradeDebtors)) return false;
+
         TradeDebtors that = (TradeDebtors) o;
         return Objects.equals(currentAmount, that.currentAmount) &&
             Objects.equals(previousAmount, that.previousAmount);

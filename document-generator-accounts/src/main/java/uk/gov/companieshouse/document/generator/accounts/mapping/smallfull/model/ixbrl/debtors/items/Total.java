@@ -33,9 +33,8 @@ public class Total {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (!(o instanceof Total)) return false;
+
         Total total = (Total) o;
         return Objects.equals(currentAmount, total.currentAmount) &&
             Objects.equals(previousAmount, total.previousAmount);

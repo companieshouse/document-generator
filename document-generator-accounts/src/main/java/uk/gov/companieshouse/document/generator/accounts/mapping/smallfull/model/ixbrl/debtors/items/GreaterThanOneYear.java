@@ -33,9 +33,8 @@ public class GreaterThanOneYear {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (!(o instanceof GreaterThanOneYear)) return false;
+
         GreaterThanOneYear that = (GreaterThanOneYear) o;
         return Objects.equals(currentAmount, that.currentAmount) &&
             Objects.equals(previousAmount, that.previousAmount);

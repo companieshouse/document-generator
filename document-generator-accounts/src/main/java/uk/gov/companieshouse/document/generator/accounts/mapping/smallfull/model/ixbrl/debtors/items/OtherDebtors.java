@@ -33,9 +33,8 @@ public class OtherDebtors {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (!(o instanceof OtherDebtors)) return false;
+
         OtherDebtors that = (OtherDebtors) o;
         return Objects.equals(currentAmount, that.currentAmount) &&
             Objects.equals(previousAmount, that.previousAmount);

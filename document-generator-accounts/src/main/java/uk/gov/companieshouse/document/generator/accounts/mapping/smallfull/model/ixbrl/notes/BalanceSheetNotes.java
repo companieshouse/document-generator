@@ -26,9 +26,7 @@ public class BalanceSheetNotes {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (!(o instanceof BalanceSheetNotes)) return false;
         BalanceSheetNotes that = (BalanceSheetNotes) o;
         return Objects.equals(debtorsNote, that.debtorsNote);
     }

@@ -33,9 +33,9 @@ public class PrepaymentsAndAccruedIncome {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+
+        if (!(o instanceof PrepaymentsAndAccruedIncome)) return false;
+
         PrepaymentsAndAccruedIncome that = (PrepaymentsAndAccruedIncome) o;
         return Objects.equals(currentAmount, that.currentAmount) &&
             Objects.equals(previousAmount, that.previousAmount);
