@@ -14,7 +14,7 @@ public interface RenderDocumentRequestHandler {
      *
      * @param url a string formatted url
      * @param request the RenderDocumentRequest
-     * @param requestParameters Map containing requestId, resourceId and resourceUri as a key/value pair
+     * @param requestParameters Map containing requestId and resourceUri as a key/value pair
      * @return RenderDocumentResponse
      * @throws IOException
      */

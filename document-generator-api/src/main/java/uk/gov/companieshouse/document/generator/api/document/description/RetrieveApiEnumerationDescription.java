@@ -12,7 +12,7 @@ public interface RetrieveApiEnumerationDescription {
      * @param identifier The identifier/key used to select the description
      * @param accountType The type of account
      * @param descriptionValues A map of the description values used to obtain the description
-     * @param requestParameters Map containing requestId, resourceId and resourceUri as a key/value pair
+     * @param requestParameters Map containing requestId and resourceUri as a key/value pair
      * @return String containing the description
      * @throws IOException
      */

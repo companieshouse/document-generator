@@ -11,7 +11,10 @@ public class DocumentRequest {
     @JsonProperty("resource_uri")
     private String resourceUri;
 
-    @NotNull
+    /**
+     * resource id will be removed
+     */
+    @Deprecated
     @JsonProperty("resource_id")
     private String resourceId;
 

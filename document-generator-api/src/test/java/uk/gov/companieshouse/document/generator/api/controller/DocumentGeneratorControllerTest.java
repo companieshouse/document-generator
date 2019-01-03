@@ -175,7 +175,6 @@ public class DocumentGeneratorControllerTest {
         DocumentRequest request = new DocumentRequest();
         request.setDocumentType("documentType");
         request.setMimeType("mimeType");
-        request.setResourceId("resourceId");
         request.setResourceUri("resourceUri");
 
         return request;

@@ -14,9 +14,9 @@
     <url>http://maven.apache.org</url>
 
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.3.RELEASE</version>
+        <groupId>uk.gov.companieshouse</groupId>
+        <artifactId>companies-house-spring-boot-parent</artifactId>
+        <version>1.0.0-rc1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -70,46 +70,6 @@
     </dependencies>
 
     <profiles>
-        <!-- release-publish is the profile that is activated when the build server builds and
-             publishes a release project to the cloud artifactory -->
-        <profile>
-            <id>release-publish</id>
-            <activation>
-                <property>
-                    <name>publishRepo</name>
-                    <value>release</value>
-                </property>
-            </activation>
-            <properties>
-                <artifactoryReleasePublishRepo>libs-release-local</artifactoryReleasePublishRepo>
-            </properties>
-            <distributionManagement>
-                <repository>
-                    <id>ch-artifactory</id>
-                    <url>${MAVEN_REPOSITORY_URL}/${artifactoryReleasePublishRepo}</url>
-                </repository>
-            </distributionManagement>
-        </profile>
-        <!-- dev-publish is the profile that is activated when the build server builds and publishes
-             a dev snapshot project to the cloud artifactory -->
-        <profile>
-            <id>dev-publish</id>
-            <activation>
-                <property>
-                    <name>publishRepo</name>
-                    <value>dev</value>
-                </property>
-            </activation>
-            <properties>
-                <artifactoryDevPublishRepo>libs-snapshot-local</artifactoryDevPublishRepo>
-            </properties>
-            <distributionManagement>
-                <repository>
-                    <id>ch-artifactory</id>
-                    <url>${MAVEN_REPOSITORY_URL}/${artifactoryDevPublishRepo}</url>
-                </repository>
-            </distributionManagement>
-        </profile>
         <!-- dev is the profile that is activated by default. This is only for developers as it does
              not publish to any repository. It just downloads dependencies, compiles code and builds jar
              for running the application and then runs the tests. -->
@@ -192,15 +152,4 @@
         <module>document-generator-accounts</module>
         <module>document-generator-api</module>
     </modules>
-
-    <repositories>
-        <repository>
-            <id>ch-artifactory-release</id>
-            <url>${MAVEN_REPOSITORY_URL}/${artifactoryResolveReleaseRepo}</url>
-        </repository>
-        <repository>
-            <id>ch-artifactory-snapshot</id>
-            <url>${MAVEN_REPOSITORY_URL}/${artifactoryResolveSnapshotRepo}</url>
-        </repository>
-    </repositories>
 </project>

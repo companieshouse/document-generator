@@ -2,6 +2,8 @@ package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.mapp
 
 import uk.gov.companieshouse.accountsdates.AccountsDatesHelper;
 import uk.gov.companieshouse.accountsdates.impl.AccountsDatesHelperImpl;
+import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.SmallFullApiData;
@@ -9,6 +11,7 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.BalanceSheet;
 
 import java.time.LocalDate;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.AdditionalNotes;
 
 public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMapper {
 
@@ -24,7 +27,8 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
     public SmallFullAccountIxbrl mapSmallFullIXBRLModel(SmallFullApiData smallFullApiData) {
 
         SmallFullAccountIxbrl smallFullAccountIxbrl = smallFullIXBRLMapper.mapSmallFullIXBRLModel(smallFullApiData);
-        smallFullAccountIxbrl.setBalanceSheet(setBalanceSheet(smallFullApiData.getCurrentPeriod(), smallFullApiData.getPreviousPeriod()));
+        smallFullAccountIxbrl.setBalanceSheet(
+                setBalanceSheet(smallFullApiData.getCurrentPeriod(), smallFullApiData.getPreviousPeriod(), smallFullApiData.getBalanceSheetStatements()));
         smallFullAccountIxbrl.setCompany(ApiToCompanyMapper.INSTANCE.apiToCompany(smallFullApiData.getCompanyProfile()));
         smallFullAccountIxbrl.setPeriod(ApiToPeriodMapper.INSTANCE.apiToPeriod(smallFullApiData.getCompanyProfile()));
 
@@ -32,32 +36,51 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
             smallFullAccountIxbrl.setApprovalDate(convertToDisplayDate(smallFullApiData.getApproval().getDate()));
         }
 
+        if (smallFullApiData.getAccountingPolicies() != null) {
+            smallFullAccountIxbrl.setAdditionalNotes(setAdditionalNotes(smallFullApiData.getAccountingPolicies()));
+        }
+
         return smallFullAccountIxbrl;
     }
 
-    private BalanceSheet setBalanceSheet(CurrentPeriodApi currentPeriod, PreviousPeriodApi previousPeriod) {
+    private BalanceSheet setBalanceSheet(CurrentPeriodApi currentPeriod, PreviousPeriodApi previousPeriod, BalanceSheetStatementsApi balanceSheetStatements) {
 
         BalanceSheet balanceSheet = new BalanceSheet();
 
-        if (currentPeriod.getBalanceSheetApi() != null) {
-            if (currentPeriod.getBalanceSheetApi().getCalledUpShareCapitalNotPaid() != null) {
+        if (currentPeriod.getBalanceSheet() != null) {
+            if (currentPeriod.getBalanceSheet().getCalledUpShareCapitalNotPaid() != null) {
                 balanceSheet.setCalledUpSharedCapitalNotPaid(ApiToBalanceSheetMapper.INSTANCE.apiToCalledUpSharedCapitalNotPaid(currentPeriod, previousPeriod));
             }
-            if (currentPeriod.getBalanceSheetApi().getOtherLiabilitiesOrAssetsApi() != null) {
+            if (currentPeriod.getBalanceSheet().getOtherLiabilitiesOrAssets() != null) {
                 balanceSheet.setOtherLiabilitiesOrAssets(ApiToBalanceSheetMapper.INSTANCE.apiToOtherLiabilitiesOrAssets(currentPeriod, previousPeriod));
             }
-            if (currentPeriod.getBalanceSheetApi().getFixedAssetsApi() != null) {
+            if (currentPeriod.getBalanceSheet().getFixedAssets() != null) {
                 balanceSheet.setFixedAssets(ApiToBalanceSheetMapper.INSTANCE.apiToFixedAssets(currentPeriod, previousPeriod));
             }
-            if (currentPeriod.getBalanceSheetApi().getCurrentAssetsApi() != null) {
+            if (currentPeriod.getBalanceSheet().getCurrentAssets() != null) {
                 balanceSheet.setCurrentAssets(ApiToBalanceSheetMapper.INSTANCE.apiToCurrentAssets(currentPeriod,previousPeriod));
             }
-            if (currentPeriod.getBalanceSheetApi().getCapitalAndReservesApi() != null) {
+            if (currentPeriod.getBalanceSheet().getCapitalAndReserves() != null) {
                 balanceSheet.setCapitalAndReserve(ApiToBalanceSheetMapper.INSTANCE.apiToCapitalAndReserve(currentPeriod, previousPeriod));
             }
         }
 
+        if (balanceSheetStatements != null) {
+            balanceSheet.setBalanceSheetStatements(ApiToBalanceSheetMapper.INSTANCE.apiToStatements(balanceSheetStatements));
+        }
+
         return balanceSheet;
+    }
+
+    private AdditionalNotes setAdditionalNotes(AccountingPoliciesApi accountingPolicies) {
+
+        AdditionalNotes additionalNotes = new AdditionalNotes();
+
+        additionalNotes.setAccountingPolicies(
+                ApiToAccountingPoliciesMapper.INSTANCE
+                        .apiToAccountingPolicies(accountingPolicies));
+
+        return additionalNotes;
     }
 
     private String convertToDisplayDate(LocalDate date) {
