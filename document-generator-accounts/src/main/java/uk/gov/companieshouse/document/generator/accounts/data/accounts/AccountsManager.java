@@ -50,7 +50,8 @@ public class AccountsManager {
      * @throws ApiErrorResponseException
      * @throws URIValidationException
      */
-    public Accounts getAccounts(String link) throws ApiErrorResponseException, URIValidationException {
+    public Accounts getAccounts (String link) throws ApiErrorResponseException,
+            URIValidationException {
 
         ApiClient apiClient = apiClientService.getApiClient();
 
@@ -65,7 +66,8 @@ public class AccountsManager {
      * @throws ApiErrorResponseException
      * @throws URIValidationException
      */
-    public AbridgedAccountsApi getAbridgedAccounts(String link) throws ApiErrorResponseException, URIValidationException {
+    public AbridgedAccountsApi getAbridgedAccounts (String link) throws ApiErrorResponseException
+            , URIValidationException {
 
         ApiClient apiClient = apiClientService.getApiClient();
 
@@ -80,7 +82,8 @@ public class AccountsManager {
      * @throws ApiErrorResponseException
      * @throws URIValidationException
      */
-    public CompanyAccounts getCompanyAccounts(String link) throws ApiErrorResponseException, URIValidationException {
+    public CompanyAccounts getCompanyAccounts (String link) throws ApiErrorResponseException,
+            URIValidationException {
 
         ApiClient apiClient = apiClientService.getApiClient();
 
@@ -95,7 +98,7 @@ public class AccountsManager {
      * @throws ApiErrorResponseException
      * @throws URIValidationException
      */
-    public SmallFullAccountIxbrl getSmallFullAccounts(String link, Transaction transaction)
+    public SmallFullAccountIxbrl getSmallFullAccounts (String link, Transaction transaction)
             throws URIValidationException, ServiceException, ApiErrorResponseException {
 
         SmallFullApiData smallFullApiData = new SmallFullApiData();
@@ -105,7 +108,7 @@ public class AccountsManager {
         try {
             smallFullApiData.setPreviousPeriod(apiClient.smallFull().previousPeriod()
                     .get(new StringBuilder(link).append("/previous-period").toString()).execute());
-        } catch (ApiErrorResponseException e)  {
+        } catch (ApiErrorResponseException e) {
             handleException(e, "previous period", link);
         }
 
@@ -137,13 +140,21 @@ public class AccountsManager {
             handleException(e, "accounting policies", link);
         }
 
+        try {
+            smallFullApiData.setDebtors(apiClient.smallFull().debtors()
+                    .get(new StringBuilder(link).append("/notes/debtors").toString()).execute();
+
+        } catch (ApiErrorResponseException e) {
+            handleException(e, "debtors", link);
+        }
+
         smallFullApiData.setCompanyProfile(companyService.getCompanyProfile(transaction.getCompanyNumber()));
 
 
         return SmallFullIXBRLMapper.INSTANCE.mapSmallFullIXBRLModel(smallFullApiData);
     }
 
-    private void handleException(ApiErrorResponseException e, String text, String link)
+    private void handleException (ApiErrorResponseException e, String text, String link)
             throws ApiErrorResponseException {
 
         if (e.getStatusCode() == HttpStatus.NOT_FOUND.value()) {
@@ -153,7 +164,7 @@ public class AccountsManager {
         }
     }
 
-    private Map<String,Object> setDebugMap(String link) {
+    private Map<String, Object> setDebugMap (String link) {
         Map<String, Object> logMap = new HashMap<>();
         logMap.put("LINK", link);
 
