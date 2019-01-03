@@ -142,7 +142,7 @@ public class AccountsManager {
 
         try {
             smallFullApiData.setDebtors(apiClient.smallFull().debtors()
-                    .get(new StringBuilder(link).append("/notes/debtors").toString()).execute();
+                    .get(new StringBuilder(link).append("/notes/debtors").toString()).execute());
 
         } catch (ApiErrorResponseException e) {
             handleException(e, "debtors", link);

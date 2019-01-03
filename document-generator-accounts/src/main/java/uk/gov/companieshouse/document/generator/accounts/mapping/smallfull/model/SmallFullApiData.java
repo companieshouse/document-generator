@@ -1,11 +1,11 @@
 package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model;
 
 import com.google.gson.Gson;
-import uk.gov.companieshouse.api.model.accounts.abridged.notes.DebtorsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.ApprovalApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 
