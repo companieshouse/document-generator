@@ -20,7 +20,7 @@ Name                                      | Description                         
 ----------------------------------------- | ---------------------------------------------------------------------------- | --------- | ------- | ----------------------------------------
 DOCUMENT_RENDER_SERVICE_HOST              | Render service host                                                          | ✓         |         | localhost:valid_port_number
 DOCUMENT_BUCKET_NAME                      | Bucket name to store the document                                            | ✓         |         | dev-pdf-bucket/name_of_file
-API_URL                                   | Api url to go through eric                                                   | ✓         |         | http://api.orctel.internal:$ERIC_PORT
+API_URL                                   | Api url to go through eric                                                   | ✓         |         | api.orctel.internal:$ERIC_PORT
 CHS_API_KEY                               | Chs api key encoded and used to make APi calls                               | ✓         |         | valid Api key
 
 Modules
