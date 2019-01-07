@@ -42,19 +42,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class SmallFullIXBRLMapperTest {
 
     private static final  Long VALUE_ONE = 100L;
-
     private static final  Long VALUE_TWO = 200L;
-
     private static final  Long VALUE_THREE = 300L;
-
     private static final String JURISDICTION = "jurisdiction";
-
     private static final String COMPANY_NAME = "companyName";
-
     private static final String COMPANY_NUMBER = "companyNumber";
-
     private static final String NAME = "name";
-    public static final String DETAILS = "Details";
+    private static final String DETAILS = "details";
 
     @Test
     @DisplayName("tests the mapping of the smallFull IXBRL model with a current and previous period")
