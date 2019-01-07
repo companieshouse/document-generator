@@ -5,6 +5,9 @@ import uk.gov.companieshouse.accountsdates.impl.AccountsDatesHelperImpl;
 import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.CurrentPeriod;
+import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.PreviousPeriod;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.SmallFullApiData;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.SmallFullAccountIxbrl;
@@ -12,6 +15,7 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 
 import java.time.LocalDate;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.AdditionalNotes;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.BalanceSheetNotes;
 
 public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMapper {
 
@@ -26,9 +30,12 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
     @Override
     public SmallFullAccountIxbrl mapSmallFullIXBRLModel(SmallFullApiData smallFullApiData) {
 
-        SmallFullAccountIxbrl smallFullAccountIxbrl = smallFullIXBRLMapper.mapSmallFullIXBRLModel(smallFullApiData);
+        SmallFullAccountIxbrl smallFullAccountIxbrl =
+                smallFullIXBRLMapper.mapSmallFullIXBRLModel(smallFullApiData);
         smallFullAccountIxbrl.setBalanceSheet(
-                setBalanceSheet(smallFullApiData.getCurrentPeriod(), smallFullApiData.getPreviousPeriod(), smallFullApiData.getBalanceSheetStatements()));
+                setBalanceSheet(smallFullApiData.getCurrentPeriod(),
+                        smallFullApiData.getPreviousPeriod(),
+                        smallFullApiData.getBalanceSheetStatements()));
         smallFullAccountIxbrl.setCompany(ApiToCompanyMapper.INSTANCE.apiToCompany(smallFullApiData.getCompanyProfile()));
         smallFullAccountIxbrl.setPeriod(ApiToPeriodMapper.INSTANCE.apiToPeriod(smallFullApiData.getCompanyProfile()));
 
@@ -40,10 +47,14 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
             smallFullAccountIxbrl.setAdditionalNotes(setAdditionalNotes(smallFullApiData.getAccountingPolicies()));
         }
 
+        if (smallFullApiData.getDebtors() != null){
+            smallFullAccountIxbrl.setBalanceSheetNotes(setBalanceSheetNotes(smallFullApiData));
+        }
         return smallFullAccountIxbrl;
     }
 
-    private BalanceSheet setBalanceSheet(CurrentPeriodApi currentPeriod, PreviousPeriodApi previousPeriod, BalanceSheetStatementsApi balanceSheetStatements) {
+    private BalanceSheet setBalanceSheet(CurrentPeriodApi currentPeriod,
+            PreviousPeriodApi previousPeriod, BalanceSheetStatementsApi balanceSheetStatements) {
 
         BalanceSheet balanceSheet = new BalanceSheet();
 
@@ -58,7 +69,7 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
                 balanceSheet.setFixedAssets(ApiToBalanceSheetMapper.INSTANCE.apiToFixedAssets(currentPeriod, previousPeriod));
             }
             if (currentPeriod.getBalanceSheet().getCurrentAssets() != null) {
-                balanceSheet.setCurrentAssets(ApiToBalanceSheetMapper.INSTANCE.apiToCurrentAssets(currentPeriod,previousPeriod));
+                balanceSheet.setCurrentAssets(ApiToBalanceSheetMapper.INSTANCE.apiToCurrentAssets(currentPeriod, previousPeriod));
             }
             if (currentPeriod.getBalanceSheet().getCapitalAndReserves() != null) {
                 balanceSheet.setCapitalAndReserve(ApiToBalanceSheetMapper.INSTANCE.apiToCapitalAndReserve(currentPeriod, previousPeriod));
@@ -81,6 +92,19 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
                         .apiToAccountingPolicies(accountingPolicies));
 
         return additionalNotes;
+    }
+
+    private BalanceSheetNotes setBalanceSheetNotes(SmallFullApiData smallFullApiData) {
+
+        BalanceSheetNotes balanceSheetNotes = new BalanceSheetNotes();
+
+        if (smallFullApiData.getDebtors() != null) {
+            balanceSheetNotes.setDebtorsNote(ApiToDebtorsMapper.INSTANCE
+                    .apiToDebtors(smallFullApiData.getDebtors().getDebtorsCurrentPeriod(),
+                            smallFullApiData.getDebtors().getDebtorsPreviousPeriod()));
+        }
+
+        return balanceSheetNotes;
     }
 
     private String convertToDisplayDate(LocalDate date) {
