@@ -1,5 +1,7 @@
 package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.Gson;
 import java.util.Objects;
@@ -9,10 +11,11 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.items.Total;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.items.TradeDebtors;
 
+@JsonInclude(Include.NON_NULL)
 public class Debtors {
 
     @JsonProperty("details")
-    private String Details;
+    private String details;
 
     @JsonProperty("greater_than_one_year")
     private GreaterThanOneYear greaterThanOneYear;
@@ -30,11 +33,11 @@ public class Debtors {
     private Total total;
 
     public String getDetails() {
-        return Details;
+        return details;
     }
 
     public void setDetails(String details) {
-        Details = details;
+        this.details = details;
     }
 
     public GreaterThanOneYear getGreaterThanOneYear() {
@@ -57,8 +60,7 @@ public class Debtors {
         return prepaymentsAndAccruedIncome;
     }
 
-    public void setPrepaymentsAndAccruedIncome(
-        PrepaymentsAndAccruedIncome prepaymentsAndAccruedIncome) {
+    public void setPrepaymentsAndAccruedIncome(PrepaymentsAndAccruedIncome prepaymentsAndAccruedIncome) {
         this.prepaymentsAndAccruedIncome = prepaymentsAndAccruedIncome;
     }
 
@@ -80,24 +82,23 @@ public class Debtors {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
+        if (this == o)
             return true;
-        }
-        if (!(o instanceof Debtors)) return false;
-
+        if (! (o instanceof Debtors))
+            return false;
         Debtors debtors = (Debtors) o;
         return Objects.equals(getDetails(), debtors.getDetails()) &&
-            Objects.equals(getGreaterThanOneYear(), debtors.getGreaterThanOneYear()) &&
-            Objects.equals(getOtherDebtors(), debtors.getOtherDebtors()) &&
-            Objects.equals(getPrepaymentsAndAccruedIncome(), debtors.getPrepaymentsAndAccruedIncome()) &&
-            Objects.equals(getTradeDebtors(), debtors.getTradeDebtors()) &&
-            Objects.equals(getTotal(), debtors.getTotal());
+                Objects.equals(getGreaterThanOneYear(), debtors.getGreaterThanOneYear()) &&
+                Objects.equals(getOtherDebtors(), debtors.getOtherDebtors()) &&
+                Objects.equals(getPrepaymentsAndAccruedIncome(),
+                        debtors.getPrepaymentsAndAccruedIncome()) &&
+                Objects.equals(getTradeDebtors(), debtors.getTradeDebtors()) &&
+                Objects.equals(getTotal(), debtors.getTotal());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getDetails(), getGreaterThanOneYear(), getOtherDebtors(), getPrepaymentsAndAccruedIncome(),
-            getTradeDebtors(), getTotal());
+        return Objects.hash(getDetails(), getGreaterThanOneYear(), getOtherDebtors(), getPrepaymentsAndAccruedIncome(), getTradeDebtors(), getTotal());
     }
 
     @Override

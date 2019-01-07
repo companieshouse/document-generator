@@ -1,9 +1,12 @@
 package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.items;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.Gson;
 import java.util.Objects;
 
+@JsonInclude(Include.NON_NULL)
 public class OtherDebtors {
 
     @JsonProperty("current_amount")
