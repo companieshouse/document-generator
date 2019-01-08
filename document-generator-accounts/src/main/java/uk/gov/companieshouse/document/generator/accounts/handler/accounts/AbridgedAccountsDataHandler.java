@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.document.generator.accounts.handler.accounts;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
@@ -169,6 +170,7 @@ public class AbridgedAccountsDataHandler {
     private String writeAccountsValues(AbridgedAccountsApiData abridgedAccountsApiData) throws IOException {
 
         ObjectMapper mapper = new ObjectMapper();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         String accountsJSON = mapper.writeValueAsString(abridgedAccountsApiData);
         JsonNode accounts = mapper.readTree(accountsJSON);
 
