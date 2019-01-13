@@ -1,6 +1,5 @@
 package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.mappers;
 
-import javafx.geometry.BoundingBoxBuilder;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
