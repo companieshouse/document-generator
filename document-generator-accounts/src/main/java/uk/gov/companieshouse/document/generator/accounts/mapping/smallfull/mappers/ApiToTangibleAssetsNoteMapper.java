@@ -6,6 +6,7 @@ import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssets;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssetsColumns;
 
 @Mapper
 public interface ApiToTangibleAssetsNoteMapper {
@@ -13,178 +14,216 @@ public interface ApiToTangibleAssetsNoteMapper {
     ApiToTangibleAssetsNoteMapper INSTANCE = Mappers.getMapper(ApiToTangibleAssetsNoteMapper.class);
 
     @Mappings({
-        @Mapping(source = "tangible.fixturesAndFittings.cost.additions",
-                target = "cost.additions.fixturesAndFittings"),
-        @Mapping(source = "tangible.fixturesAndFittings.cost.atPeriodEnd",
-                target = "cost.atPeriodEnd.fixturesAndFittings"),
-        @Mapping(source = "tangible.fixturesAndFittings.cost.atPeriodStart",
-                target = "cost.atPeriodStart.fixturesAndFittings"),
-        @Mapping(source = "tangible.fixturesAndFittings.cost.disposals",
-                target = "cost.disposals.fixturesAndFittings"),
-        @Mapping(source = "tangible.fixturesAndFittings.cost.revaluations",
-                target = "cost.revaluations.fixturesAndFittings"),
-        @Mapping(source = "tangible.fixturesAndFittings.cost.transfers",
-                target = "cost.transfers.fixturesAndFittings"),
+            @Mapping(source = "tangible.fixturesAndFittings.cost.additions",
+                    target = "fixturesAndFittings"),
+            @Mapping(source = "tangible.landAndBuildings.cost.additions",
+                    target = "landAndBuildings"),
+            @Mapping(source = "tangible.motorVehicles.cost.additions",
+                    target = "motorVehicles"),
+            @Mapping(source = "tangible.officeEquipment.cost.additions",
+                    target = "officeEquipment"),
+            @Mapping(source = "tangible.plantAndMachinery.cost.additions",
+                    target = "plantAndMachinery"),
+            @Mapping(source = "tangible.total.cost.additions",
+                    target = "total")
+    })
+    TangibleAssetsColumns apiToTangibleAssetsCostAdditionsMapper(TangibleApi tangible);
 
-        @Mapping(source = "tangible.landAndBuildings.cost.additions",
-                target = "cost.additions.landAndBuildings"),
-        @Mapping(source = "tangible.landAndBuildings.cost.atPeriodEnd",
-                target = "cost.atPeriodEnd.landAndBuildings"),
-        @Mapping(source = "tangible.landAndBuildings.cost.atPeriodStart",
-                target = "cost.atPeriodStart.landAndBuildings"),
-        @Mapping(source = "tangible.landAndBuildings.cost.disposals",
-                target = "cost.disposals.landAndBuildings"),
-        @Mapping(source = "tangible.landAndBuildings.cost.revaluations",
-                target = "cost.revaluations.landAndBuildings"),
-        @Mapping(source = "tangible.landAndBuildings.cost.transfers",
-                target = "cost.transfers.landAndBuildings"),
+    @Mappings({
+            @Mapping(source = "tangible.fixturesAndFittings.cost.atPeriodEnd",
+                    target = "fixturesAndFittings"),
+            @Mapping(source = "tangible.landAndBuildings.cost.atPeriodEnd",
+                    target = "landAndBuildings"),
+            @Mapping(source = "tangible.motorVehicles.cost.atPeriodEnd",
+                    target = "motorVehicles"),
+            @Mapping(source = "tangible.officeEquipment.cost.atPeriodEnd",
+                    target = "officeEquipment"),
+            @Mapping(source = "tangible.plantAndMachinery.cost.atPeriodEnd",
+                    target = "plantAndMachinery"),
+            @Mapping(source = "tangible.total.cost.atPeriodEnd",
+                    target = "total")
+    })
+    TangibleAssetsColumns apiToTangibleAssetsCostAtPeriodEndMapper(TangibleApi tangible);
 
-        @Mapping(source = "tangible.motorVehicles.cost.additions",
-                target = "cost.additions.motorVehicles"),
-        @Mapping(source = "tangible.motorVehicles.cost.atPeriodEnd",
-                target = "cost.atPeriodEnd.motorVehicles"),
-        @Mapping(source = "tangible.motorVehicles.cost.atPeriodStart",
-                target = "cost.atPeriodStart.motorVehicles"),
-        @Mapping(source = "tangible.motorVehicles.cost.disposals",
-                target = "cost.disposals.motorVehicles"),
-        @Mapping(source = "tangible.motorVehicles.cost.revaluations",
-                target = "cost.revaluations.motorVehicles"),
-        @Mapping(source = "tangible.motorVehicles.cost.transfers",
-                target = "cost.transfers.motorVehicles"),
+    @Mappings({
+            @Mapping(source = "tangible.fixturesAndFittings.cost.atPeriodStart",
+                    target = "fixturesAndFittings"),
+            @Mapping(source = "tangible.landAndBuildings.cost.atPeriodStart",
+                    target = "landAndBuildings"),
+            @Mapping(source = "tangible.motorVehicles.cost.atPeriodStart",
+                    target = "motorVehicles"),
+            @Mapping(source = "tangible.officeEquipment.cost.atPeriodStart",
+                    target = "officeEquipment"),
+            @Mapping(source = "tangible.plantAndMachinery.cost.atPeriodStart",
+                    target = "plantAndMachinery"),
+            @Mapping(source = "tangible.total.cost.atPeriodStart",
+                    target = "total")
+    })
+    TangibleAssetsColumns apiToTangibleAssetsCostAtPeriodStartMapper(TangibleApi tangible);
 
-        @Mapping(source = "tangible.officeEquipment.cost.additions",
-                target = "cost.additions.officeEquipment"),
-        @Mapping(source = "tangible.officeEquipment.cost.atPeriodEnd",
-                target = "cost.atPeriodEnd.officeEquipment"),
-        @Mapping(source = "tangible.officeEquipment.cost.atPeriodStart",
-                target = "cost.atPeriodStart.officeEquipment"),
-        @Mapping(source = "tangible.officeEquipment.cost.disposals",
-                target = "cost.disposals.officeEquipment"),
-        @Mapping(source = "tangible.officeEquipment.cost.revaluations",
-                target = "cost.revaluations.officeEquipment"),
-        @Mapping(source = "tangible.officeEquipment.cost.transfers",
-                target = "cost.transfers.officeEquipment"),
+    @Mappings({
+            @Mapping(source = "tangible.fixturesAndFittings.cost.disposals",
+                    target = "fixturesAndFittings"),
+            @Mapping(source = "tangible.landAndBuildings.cost.disposals",
+                    target = "landAndBuildings"),
+            @Mapping(source = "tangible.motorVehicles.cost.disposals",
+                    target = "motorVehicles"),
+            @Mapping(source = "tangible.officeEquipment.cost.disposals",
+                    target = "officeEquipment"),
+            @Mapping(source = "tangible.plantAndMachinery.cost.disposals",
+                    target = "plantAndMachinery"),
+            @Mapping(source = "tangible.total.cost.disposals",
+                    target = "total")
+    })
+    TangibleAssetsColumns apiToTangibleAssetsCostDisposalsMapper(TangibleApi tangible);
 
-        @Mapping(source = "tangible.plantAndMachinery.cost.additions",
-                target = "cost.additions.plantAndMachinery"),
-        @Mapping(source = "tangible.plantAndMachinery.cost.atPeriodEnd",
-                target = "cost.atPeriodEnd.plantAndMachinery"),
-        @Mapping(source = "tangible.plantAndMachinery.cost.atPeriodStart",
-                target = "cost.atPeriodStart.plantAndMachinery"),
-        @Mapping(source = "tangible.plantAndMachinery.cost.disposals",
-                target = "cost.disposals.plantAndMachinery"),
-        @Mapping(source = "tangible.plantAndMachinery.cost.revaluations",
-                target = "cost.revaluations.plantAndMachinery"),
-        @Mapping(source = "tangible.plantAndMachinery.cost.transfers",
-                target = "cost.transfers.plantAndMachinery"),
+    @Mappings({
+            @Mapping(source = "tangible.fixturesAndFittings.cost.revaluations",
+                    target = "fixturesAndFittings"),
+            @Mapping(source = "tangible.landAndBuildings.cost.revaluations",
+                    target = "landAndBuildings"),
+            @Mapping(source = "tangible.motorVehicles.cost.revaluations",
+                    target = "motorVehicles"),
+            @Mapping(source = "tangible.officeEquipment.cost.revaluations",
+                    target = "officeEquipment"),
+            @Mapping(source = "tangible.plantAndMachinery.cost.revaluations",
+                    target = "plantAndMachinery"),
+            @Mapping(source = "tangible.total.cost.revaluations",
+                    target = "total")
+    })
+    TangibleAssetsColumns apiToTangibleAssetsCostRevaluationsMapper(TangibleApi tangible);
 
-        @Mapping(source = "tangible.total.cost.additions",
-                target = "cost.additions.total"),
-        @Mapping(source = "tangible.total.cost.atPeriodEnd",
-                target = "cost.atPeriodEnd.total"),
-        @Mapping(source = "tangible.total.cost.atPeriodStart",
-                target = "cost.atPeriodStart.total"),
-        @Mapping(source = "tangible.total.cost.disposals",
-                target = "cost.disposals.total"),
-        @Mapping(source = "tangible.total.cost.revaluations",
-                target = "cost.revaluations.total"),
-        @Mapping(source = "tangible.total.cost.transfers",
-                target = "cost.transfers.total"),
+    @Mappings({
+            @Mapping(source = "tangible.fixturesAndFittings.cost.transfers",
+                    target = "fixturesAndFittings"),
+            @Mapping(source = "tangible.landAndBuildings.cost.transfers",
+                    target = "landAndBuildings"),
+            @Mapping(source = "tangible.motorVehicles.cost.transfers",
+                    target = "motorVehicles"),
+            @Mapping(source = "tangible.officeEquipment.cost.transfers",
+                    target = "officeEquipment"),
+            @Mapping(source = "tangible.plantAndMachinery.cost.transfers",
+                    target = "plantAndMachinery"),
+            @Mapping(source = "tangible.total.cost.transfers",
+                    target = "total")
+    })
+    TangibleAssetsColumns apiToTangibleAssetsCostTransfersMapper(TangibleApi tangible);
 
-        @Mapping(source = "tangible.fixturesAndFittings.depreciation.atPeriodEnd",
-                target = "depreciation.atPeriodEnd.fixturesAndFittings"),
-        @Mapping(source = "tangible.fixturesAndFittings.depreciation.atPeriodStart",
-                target = "depreciation.atPeriodStart.fixturesAndFittings"),
-        @Mapping(source = "tangible.fixturesAndFittings.depreciation.chargeForYear",
-                target = "depreciation.chargeForYear.fixturesAndFittings"),
-        @Mapping(source = "tangible.fixturesAndFittings.depreciation.onDisposals",
-                target = "depreciation.onDisposals.fixturesAndFittings"),
-        @Mapping(source = "tangible.fixturesAndFittings.depreciation.otherAdjustments",
-                target = "depreciation.otherAdjustments.fixturesAndFittings"),
+    @Mappings({
+            @Mapping(source = "tangible.fixturesAndFittings.depreciation.atPeriodEnd",
+                    target = "fixturesAndFittings"),
+            @Mapping(source = "tangible.landAndBuildings.depreciation.atPeriodEnd",
+                    target = "landAndBuildings"),
+            @Mapping(source = "tangible.motorVehicles.depreciation.atPeriodEnd",
+                    target = "motorVehicles"),
+            @Mapping(source = "tangible.officeEquipment.depreciation.atPeriodEnd",
+                    target = "officeEquipment"),
+            @Mapping(source = "tangible.plantAndMachinery.depreciation.atPeriodEnd",
+                    target = "plantAndMachinery"),
+            @Mapping(source = "tangible.total.depreciation.atPeriodEnd",
+                    target = "total")
+    })
+    TangibleAssetsColumns apiToTangibleAssetsDepreciationAtPeriodEndMapper(TangibleApi tangible);
 
-        @Mapping(source = "tangible.landAndBuildings.depreciation.atPeriodEnd",
-                target = "depreciation.atPeriodEnd.landAndBuildings"),
-        @Mapping(source = "tangible.landAndBuildings.depreciation.atPeriodStart",
-                target = "depreciation.atPeriodStart.landAndBuildings"),
-        @Mapping(source = "tangible.landAndBuildings.depreciation.chargeForYear",
-                target = "depreciation.chargeForYear.landAndBuildings"),
-        @Mapping(source = "tangible.landAndBuildings.depreciation.onDisposals",
-                target = "depreciation.onDisposals.landAndBuildings"),
-        @Mapping(source = "tangible.landAndBuildings.depreciation.otherAdjustments",
-                target = "depreciation.otherAdjustments.landAndBuildings"),
+    @Mappings({
+            @Mapping(source = "tangible.fixturesAndFittings.depreciation.atPeriodStart",
+                    target = "fixturesAndFittings"),
+            @Mapping(source = "tangible.landAndBuildings.depreciation.atPeriodStart",
+                    target = "landAndBuildings"),
+            @Mapping(source = "tangible.motorVehicles.depreciation.atPeriodStart",
+                    target = "motorVehicles"),
+            @Mapping(source = "tangible.officeEquipment.depreciation.atPeriodStart",
+                    target = "officeEquipment"),
+            @Mapping(source = "tangible.plantAndMachinery.depreciation.atPeriodStart",
+                    target = "plantAndMachinery"),
+            @Mapping(source = "tangible.total.depreciation.atPeriodStart",
+                    target = "total")
+    })
+    TangibleAssetsColumns apiToTangibleAssetsDepreciationAtPeriodStartMapper(TangibleApi tangible);
 
-        @Mapping(source = "tangible.motorVehicles.depreciation.atPeriodEnd",
-                target = "depreciation.atPeriodEnd.motorVehicles"),
-        @Mapping(source = "tangible.motorVehicles.depreciation.atPeriodStart",
-                target = "depreciation.atPeriodStart.motorVehicles"),
-        @Mapping(source = "tangible.motorVehicles.depreciation.chargeForYear",
-                target = "depreciation.chargeForYear.motorVehicles"),
-        @Mapping(source = "tangible.motorVehicles.depreciation.onDisposals",
-                target = "depreciation.onDisposals.motorVehicles"),
-        @Mapping(source = "tangible.motorVehicles.depreciation.otherAdjustments",
-                target = "depreciation.otherAdjustments.motorVehicles"),
+    @Mappings({
+            @Mapping(source = "tangible.fixturesAndFittings.depreciation.chargeForYear",
+                    target = "fixturesAndFittings"),
+            @Mapping(source = "tangible.landAndBuildings.depreciation.chargeForYear",
+                    target = "landAndBuildings"),
+            @Mapping(source = "tangible.motorVehicles.depreciation.chargeForYear",
+                    target = "motorVehicles"),
+            @Mapping(source = "tangible.officeEquipment.depreciation.chargeForYear",
+                    target = "officeEquipment"),
+            @Mapping(source = "tangible.plantAndMachinery.depreciation.chargeForYear",
+                    target = "plantAndMachinery"),
+            @Mapping(source = "tangible.total.depreciation.chargeForYear",
+                    target = "total")
+    })
+    TangibleAssetsColumns apiToTangibleAssetsDepreciationChargeForYearMapper(TangibleApi tangible);
 
-        @Mapping(source = "tangible.officeEquipment.depreciation.atPeriodEnd",
-                target = "depreciation.atPeriodEnd.officeEquipment"),
-        @Mapping(source = "tangible.officeEquipment.depreciation.atPeriodStart",
-                target = "depreciation.atPeriodStart.officeEquipment"),
-        @Mapping(source = "tangible.officeEquipment.depreciation.chargeForYear",
-                target = "depreciation.chargeForYear.officeEquipment"),
-        @Mapping(source = "tangible.officeEquipment.depreciation.onDisposals",
-                target = "depreciation.onDisposals.officeEquipment"),
-        @Mapping(source = "tangible.officeEquipment.depreciation.otherAdjustments",
-                target = "depreciation.otherAdjustments.officeEquipment"),
+    @Mappings({
+            @Mapping(source = "tangible.fixturesAndFittings.depreciation.onDisposals",
+                    target = "fixturesAndFittings"),
+            @Mapping(source = "tangible.landAndBuildings.depreciation.onDisposals",
+                    target = "landAndBuildings"),
+            @Mapping(source = "tangible.motorVehicles.depreciation.onDisposals",
+                    target = "motorVehicles"),
+            @Mapping(source = "tangible.officeEquipment.depreciation.onDisposals",
+                    target = "officeEquipment"),
+            @Mapping(source = "tangible.plantAndMachinery.depreciation.onDisposals",
+                    target = "plantAndMachinery"),
+            @Mapping(source = "tangible.total.depreciation.onDisposals",
+                    target = "total")
+    })
+    TangibleAssetsColumns apiToTangibleAssetsDepreciationOnDisposalsMapper(TangibleApi tangible);
 
-        @Mapping(source = "tangible.plantAndMachinery.depreciation.atPeriodEnd",
-                target = "depreciation.atPeriodEnd.plantAndMachinery"),
-        @Mapping(source = "tangible.plantAndMachinery.depreciation.atPeriodStart",
-                target = "depreciation.atPeriodStart.plantAndMachinery"),
-        @Mapping(source = "tangible.plantAndMachinery.depreciation.chargeForYear",
-                target = "depreciation.chargeForYear.plantAndMachinery"),
-        @Mapping(source = "tangible.plantAndMachinery.depreciation.onDisposals",
-                target = "depreciation.onDisposals.plantAndMachinery"),
-        @Mapping(source = "tangible.plantAndMachinery.depreciation.otherAdjustments",
-                target = "depreciation.otherAdjustments.plantAndMachinery"),
+    @Mappings({
+            @Mapping(source = "tangible.fixturesAndFittings.depreciation.otherAdjustments",
+                    target = "fixturesAndFittings"),
+            @Mapping(source = "tangible.landAndBuildings.depreciation.otherAdjustments",
+                    target = "landAndBuildings"),
+            @Mapping(source = "tangible.motorVehicles.depreciation.otherAdjustments",
+                    target = "motorVehicles"),
+            @Mapping(source = "tangible.officeEquipment.depreciation.otherAdjustments",
+                    target = "officeEquipment"),
+            @Mapping(source = "tangible.plantAndMachinery.depreciation.otherAdjustments",
+                    target = "plantAndMachinery"),
+            @Mapping(source = "tangible.total.depreciation.otherAdjustments",
+                    target = "total")
+    })
+    TangibleAssetsColumns apiToTangibleAssetsDepreciationOtherAdjustmentsMapper(TangibleApi tangible);
 
-        @Mapping(source = "tangible.total.depreciation.atPeriodEnd",
-                target = "depreciation.atPeriodEnd.total"),
-        @Mapping(source = "tangible.total.depreciation.atPeriodStart",
-                target = "depreciation.atPeriodStart.total"),
-        @Mapping(source = "tangible.total.depreciation.chargeForYear",
-                target = "depreciation.chargeForYear.total"),
-        @Mapping(source = "tangible.total.depreciation.onDisposals",
-                target = "depreciation.onDisposals.total"),
-        @Mapping(source = "tangible.total.depreciation.otherAdjustments",
-                target = "depreciation.otherAdjustments.total"),
+    @Mappings({
+            @Mapping(source = "tangible.fixturesAndFittings.netBookValueAtEndOfCurrentPeriod",
+                    target = "fixturesAndFittings"),
+            @Mapping(source = "tangible.landAndBuildings.netBookValueAtEndOfCurrentPeriod",
+                    target = "landAndBuildings"),
+            @Mapping(source = "tangible.motorVehicles.netBookValueAtEndOfCurrentPeriod",
+                    target = "motorVehicles"),
+            @Mapping(source = "tangible.officeEquipment.netBookValueAtEndOfCurrentPeriod",
+                    target = "officeEquipment"),
+            @Mapping(source = "tangible.plantAndMachinery.netBookValueAtEndOfCurrentPeriod",
+                    target = "plantAndMachinery"),
+            @Mapping(source = "tangible.total.netBookValueAtEndOfCurrentPeriod",
+                    target = "total"),
+    })
+    TangibleAssetsColumns apiToTangibleAssetsNetBookValueCurrentPeriodMapper(TangibleApi tangible);
 
-        @Mapping(source = "tangible.fixturesAndFittings.netBookValueAtEndOfCurrentPeriod",
-                target = "netBookValue.currentPeriod.fixturesAndFittings"),
-        @Mapping(source = "tangible.landAndBuildings.netBookValueAtEndOfCurrentPeriod",
-                target = "netBookValue.currentPeriod.landAndBuildings"),
-        @Mapping(source = "tangible.motorVehicles.netBookValueAtEndOfCurrentPeriod",
-                target = "netBookValue.currentPeriod.motorVehicles"),
-        @Mapping(source = "tangible.officeEquipment.netBookValueAtEndOfCurrentPeriod",
-                target = "netBookValue.currentPeriod.officeEquipment"),
-        @Mapping(source = "tangible.plantAndMachinery.netBookValueAtEndOfCurrentPeriod",
-                target = "netBookValue.currentPeriod.plantAndMachinery"),
-        @Mapping(source = "tangible.total.netBookValueAtEndOfCurrentPeriod",
-                target = "netBookValue.currentPeriod.total"),
+    @Mappings({
+            @Mapping(source = "tangible.fixturesAndFittings.netBookValueAtEndOfPreviousPeriod",
+                    target = "fixturesAndFittings"),
+            @Mapping(source = "tangible.landAndBuildings.netBookValueAtEndOfPreviousPeriod",
+                    target = "landAndBuildings"),
+            @Mapping(source = "tangible.motorVehicles.netBookValueAtEndOfPreviousPeriod",
+                    target = "motorVehicles"),
+            @Mapping(source = "tangible.officeEquipment.netBookValueAtEndOfPreviousPeriod",
+                    target = "officeEquipment"),
+            @Mapping(source = "tangible.plantAndMachinery.netBookValueAtEndOfPreviousPeriod",
+                    target = "plantAndMachinery"),
+            @Mapping(source = "tangible.total.netBookValueAtEndOfPreviousPeriod",
+                    target = "total")
+    })
+    TangibleAssetsColumns apiToTangibleAssetsNetBookValuePreviousPeriodMapper(TangibleApi tangible);
 
-        @Mapping(source = "tangible.fixturesAndFittings.netBookValueAtEndOfPreviousPeriod",
-                target = "netBookValue.previousPeriod.fixturesAndFittings"),
-        @Mapping(source = "tangible.landAndBuildings.netBookValueAtEndOfPreviousPeriod",
-                target = "netBookValue.previousPeriod.landAndBuildings"),
-        @Mapping(source = "tangible.motorVehicles.netBookValueAtEndOfPreviousPeriod",
-                target = "netBookValue.previousPeriod.motorVehicles"),
-        @Mapping(source = "tangible.officeEquipment.netBookValueAtEndOfPreviousPeriod",
-                target = "netBookValue.previousPeriod.officeEquipment"),
-        @Mapping(source = "tangible.plantAndMachinery.netBookValueAtEndOfPreviousPeriod",
-                target = "netBookValue.previousPeriod.plantAndMachinery"),
-        @Mapping(source = "tangible.total.netBookValueAtEndOfPreviousPeriod",
-                target = "netBookValue.previousPeriod.total"),
-
+    @Mappings({
         @Mapping(source = "tangible.additionalInformation",
                 target = "additionalInformation")
     })
-    TangibleAssets apiToTangibleAssetsNote(TangibleApi tangible);
+    TangibleAssets apiToTangibleAssetsNoteAdditionalInformation(TangibleApi tangible);
 }

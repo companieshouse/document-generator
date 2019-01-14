@@ -15,6 +15,9 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 
 import java.time.LocalDate;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.AdditionalNotes;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssetsCost;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssetsDepreciation;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssetsNetBookValue;
 
 public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMapper {
 
@@ -101,7 +104,57 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
 
     private TangibleAssets mapTangibleAssets(TangibleApi tangible) {
 
-        return ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsNote(tangible);
+        TangibleAssets tangibleAssets = ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsNoteAdditionalInformation(tangible);
+
+        tangibleAssets.setCost(mapTangibleAssetsCost(tangible));
+        tangibleAssets.setDepreciation(mapTangibleAssetsDepreciation(tangible));
+        tangibleAssets.setNetBookValue(mapTangibleAssetsNetBookValue(tangible));
+
+        return tangibleAssets;
+    }
+
+    private TangibleAssetsCost mapTangibleAssetsCost(TangibleApi tangible) {
+
+        TangibleAssetsCost cost = new TangibleAssetsCost();
+
+        cost.setAdditions(ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsCostAdditionsMapper(tangible));
+        cost.setAtPeriodEnd(ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsCostAtPeriodEndMapper(tangible));
+        cost.setAtPeriodStart(ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsCostAtPeriodStartMapper(tangible));
+        cost.setDisposals(ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsCostDisposalsMapper(tangible));
+        cost.setRevaluations(ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsCostRevaluationsMapper(tangible));
+        cost.setTransfers(ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsCostTransfersMapper(tangible));
+
+        return cost;
+    }
+
+    private TangibleAssetsDepreciation mapTangibleAssetsDepreciation(TangibleApi tangible) {
+
+        TangibleAssetsDepreciation depreciation = new TangibleAssetsDepreciation();
+
+        depreciation.setAtPeriodEnd(ApiToTangibleAssetsNoteMapper.INSTANCE
+                .apiToTangibleAssetsDepreciationAtPeriodEndMapper(tangible));
+        depreciation.setAtPeriodStart(ApiToTangibleAssetsNoteMapper.INSTANCE
+                .apiToTangibleAssetsDepreciationAtPeriodStartMapper(tangible));
+        depreciation.setChargeForYear(ApiToTangibleAssetsNoteMapper.INSTANCE
+                .apiToTangibleAssetsDepreciationChargeForYearMapper(tangible));
+        depreciation.setOnDisposals(ApiToTangibleAssetsNoteMapper.INSTANCE
+                .apiToTangibleAssetsDepreciationOnDisposalsMapper(tangible));
+        depreciation.setOtherAdjustments(ApiToTangibleAssetsNoteMapper.INSTANCE
+                .apiToTangibleAssetsDepreciationOtherAdjustmentsMapper(tangible));
+
+        return depreciation;
+    }
+
+    private TangibleAssetsNetBookValue mapTangibleAssetsNetBookValue(TangibleApi tangible) {
+
+        TangibleAssetsNetBookValue netBookValue = new TangibleAssetsNetBookValue();
+
+        netBookValue.setCurrentPeriod(ApiToTangibleAssetsNoteMapper.INSTANCE
+                .apiToTangibleAssetsNetBookValueCurrentPeriodMapper(tangible));
+        netBookValue.setPreviousPeriod(ApiToTangibleAssetsNoteMapper.INSTANCE
+                .apiToTangibleAssetsNetBookValuePreviousPeriodMapper(tangible));
+
+        return netBookValue;
     }
 
     private String convertToDisplayDate(LocalDate date) {
