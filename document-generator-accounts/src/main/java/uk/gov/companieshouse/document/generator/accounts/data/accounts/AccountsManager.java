@@ -16,6 +16,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.ApprovalApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.mappers.SmallFullIXBRLMapper;
@@ -158,6 +159,16 @@ public class AccountsManager {
                 AccountingPoliciesApi policies = apiClient.smallFull().accountingPolicies()
                         .get(smallFull.getLinks().getAccountingPolicyNote()).execute();
                 smallFullApiData.setAccountingPolicies(policies);
+            }
+
+            if (!StringUtils.isEmpty(smallFull.getLinks().getTangibleAssetsNote())) {
+
+                errorString = "tangible assets";
+
+                TangibleApi tangible = apiClient.smallFull().tangible()
+                        .get(smallFull.getLinks().getTangibleAssetsNote()).execute();
+
+                smallFullApiData.setTangibleAssets(tangible);
             }
 
         } catch (ApiErrorResponseException e) {

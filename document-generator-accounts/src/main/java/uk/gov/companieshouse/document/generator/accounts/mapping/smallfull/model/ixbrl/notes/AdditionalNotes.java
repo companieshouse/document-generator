@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.Gson;
 import java.util.Objects;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.accountingpolicies.AccountingPolicies;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssets;
 
 @JsonInclude(Include.NON_NULL)
 public class AdditionalNotes {
@@ -13,10 +14,21 @@ public class AdditionalNotes {
     @JsonProperty("accounting_policies")
     private AccountingPolicies accountingPolicies;
 
+    @JsonProperty("tangible_assets")
+    private TangibleAssets tangibleAssets;
+
     public AccountingPolicies getAccountingPolicies() { return accountingPolicies; }
 
     public void setAccountingPolicies(AccountingPolicies accountingPolicies) {
         this.accountingPolicies = accountingPolicies;
+    }
+
+    public TangibleAssets getTangibleAssets() {
+        return tangibleAssets;
+    }
+
+    public void setTangibleAssets(TangibleAssets tangibleAssets) {
+        this.tangibleAssets = tangibleAssets;
     }
 
     @Override

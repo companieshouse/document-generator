@@ -6,6 +6,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.ApprovalApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 
 import java.util.Objects;
@@ -23,6 +24,8 @@ public class SmallFullApiData {
     private BalanceSheetStatementsApi balanceSheetStatements;
 
     private AccountingPoliciesApi accountingPolicies;
+
+    private TangibleApi tangibleAssets;
 
     public CurrentPeriodApi getCurrentPeriod() {
         return currentPeriod;
@@ -66,6 +69,14 @@ public class SmallFullApiData {
 
     public void setAccountingPolicies(AccountingPoliciesApi accountingPolicies) {
         this.accountingPolicies = accountingPolicies;
+    }
+
+    public TangibleApi getTangibleAssets() {
+        return tangibleAssets;
+    }
+
+    public void setTangibleAssets(TangibleApi tangibleAssets) {
+        this.tangibleAssets = tangibleAssets;
     }
 
     @Override

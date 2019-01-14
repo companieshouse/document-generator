@@ -6,9 +6,12 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.SmallFullApiData;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.SmallFullAccountIxbrl;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.BalanceSheet;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.accountingpolicies.AccountingPolicies;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssets;
 
 import java.time.LocalDate;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.AdditionalNotes;
@@ -36,8 +39,26 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
             smallFullAccountIxbrl.setApprovalDate(convertToDisplayDate(smallFullApiData.getApproval().getDate()));
         }
 
+        AdditionalNotes additionalNotes = new AdditionalNotes();
+        Boolean hasAdditionalNotes = false;
+
         if (smallFullApiData.getAccountingPolicies() != null) {
-            smallFullAccountIxbrl.setAdditionalNotes(setAdditionalNotes(smallFullApiData.getAccountingPolicies()));
+
+            additionalNotes.setAccountingPolicies(mapAccountingPolicies(smallFullApiData.getAccountingPolicies()));
+
+            hasAdditionalNotes = true;
+        }
+
+        if (smallFullApiData.getTangibleAssets() != null) {
+
+            additionalNotes.setTangibleAssets(mapTangibleAssets(smallFullApiData.getTangibleAssets()));
+
+            hasAdditionalNotes = true;
+        }
+
+        //We only want to set the additional notes if we have any
+        if (hasAdditionalNotes) {
+            smallFullAccountIxbrl.setAdditionalNotes(additionalNotes);
         }
 
         return smallFullAccountIxbrl;
@@ -72,15 +93,15 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
         return balanceSheet;
     }
 
-    private AdditionalNotes setAdditionalNotes(AccountingPoliciesApi accountingPolicies) {
+    private AccountingPolicies mapAccountingPolicies(AccountingPoliciesApi accountingPolicies) {
 
-        AdditionalNotes additionalNotes = new AdditionalNotes();
+        return ApiToAccountingPoliciesMapper.INSTANCE
+                .apiToAccountingPolicies(accountingPolicies);
+    }
 
-        additionalNotes.setAccountingPolicies(
-                ApiToAccountingPoliciesMapper.INSTANCE
-                        .apiToAccountingPolicies(accountingPolicies));
+    private TangibleAssets mapTangibleAssets(TangibleApi tangible) {
 
-        return additionalNotes;
+        return ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsNote(tangible);
     }
 
     private String convertToDisplayDate(LocalDate date) {
