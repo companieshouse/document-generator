@@ -21,6 +21,9 @@ public class BalanceSheetStatements {
     @JsonProperty("small_companies_regime")
     private String smallCompaniesRegime;
 
+    @JsonProperty("no_profit_and_loss")
+    private String noProfitAndLoss;
+
     public String getSection477() {
         return section477;
     }
@@ -51,6 +54,14 @@ public class BalanceSheetStatements {
 
     public void setSmallCompaniesRegime(String smallCompaniesRegime) {
         this.smallCompaniesRegime = smallCompaniesRegime;
+    }
+
+    public String getNoProfitAndLoss() {
+        return noProfitAndLoss;
+    }
+
+    public void setNoProfitAndLoss(String noProfitAndLoss) {
+        this.noProfitAndLoss = noProfitAndLoss;
     }
 
     @Override

@@ -10,6 +10,7 @@ import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.accounts.Accounts;
 import uk.gov.companieshouse.api.model.accounts.CompanyAccounts;
 import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.SmallFullApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
@@ -58,7 +59,8 @@ public class AccountsManager {
      * @throws ApiErrorResponseException
      * @throws URIValidationException
      */
-    public Accounts getAccounts(String link) throws ApiErrorResponseException, URIValidationException {
+    public Accounts getAccounts(String link) throws ApiErrorResponseException,
+            URIValidationException {
 
         ApiClient apiClient = apiClientService.getApiClient();
 
@@ -73,7 +75,8 @@ public class AccountsManager {
      * @throws ApiErrorResponseException
      * @throws URIValidationException
      */
-    public AbridgedAccountsApi getAbridgedAccounts(String link) throws ApiErrorResponseException, URIValidationException {
+    public AbridgedAccountsApi getAbridgedAccounts(String link) throws ApiErrorResponseException
+            , URIValidationException {
 
         ApiClient apiClient = apiClientService.getApiClient();
 
@@ -88,7 +91,8 @@ public class AccountsManager {
      * @throws ApiErrorResponseException
      * @throws URIValidationException
      */
-    public CompanyAccounts getCompanyAccounts(String link) throws ApiErrorResponseException, URIValidationException {
+    public CompanyAccounts getCompanyAccounts(String link) throws ApiErrorResponseException,
+            URIValidationException {
 
         ApiClient apiClient = apiClientService.getApiClient();
 
@@ -171,6 +175,14 @@ public class AccountsManager {
                 smallFullApiData.setTangibleAssets(tangible);
             }
 
+            if (!StringUtils.isEmpty(smallFull.getLinks().getDebtorsNote())) {
+
+                DebtorsApi debtors = apiClient.smallFull().debtors()
+                        .get(smallFull.getLinks().getDebtorsNote()).execute();
+
+                smallFullApiData.setDebtors(debtors);
+            }
+
         } catch (ApiErrorResponseException e) {
             handleException(e, errorString, link);
         }
@@ -191,7 +203,7 @@ public class AccountsManager {
         }
     }
 
-    private Map<String,Object> setDebugMap(String link) {
+    private Map<String, Object> setDebugMap(String link) {
         Map<String, Object> logMap = new HashMap<>();
         logMap.put("LINK", link);
 

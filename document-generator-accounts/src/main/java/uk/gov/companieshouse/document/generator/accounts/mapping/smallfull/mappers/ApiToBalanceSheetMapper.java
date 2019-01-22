@@ -125,7 +125,9 @@ public interface ApiToBalanceSheetMapper {
             @Mapping(source = "balanceSheetStatements.legalStatements.directorsResponsibility",
                     target = "directorsResponsibility"),
             @Mapping(source = "balanceSheetStatements.legalStatements.smallCompaniesRegime",
-                    target = "smallCompaniesRegime")
+                    target = "smallCompaniesRegime"),
+            @Mapping(source = "balanceSheetStatements.legalStatements.noProfitAndLoss",
+                    target = "noProfitAndLoss")
     })
     BalanceSheetStatements apiToStatements(BalanceSheetStatementsApi balanceSheetStatements);
 }

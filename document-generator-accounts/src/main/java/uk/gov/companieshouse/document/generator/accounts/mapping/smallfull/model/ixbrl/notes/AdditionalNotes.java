@@ -14,21 +14,10 @@ public class AdditionalNotes {
     @JsonProperty("accounting_policies")
     private AccountingPolicies accountingPolicies;
 
-    @JsonProperty("tangible_assets")
-    private TangibleAssets tangibleAssets;
-
     public AccountingPolicies getAccountingPolicies() { return accountingPolicies; }
 
     public void setAccountingPolicies(AccountingPolicies accountingPolicies) {
         this.accountingPolicies = accountingPolicies;
-    }
-
-    public TangibleAssets getTangibleAssets() {
-        return tangibleAssets;
-    }
-
-    public void setTangibleAssets(TangibleAssets tangibleAssets) {
-        this.tangibleAssets = tangibleAssets;
     }
 
     @Override
