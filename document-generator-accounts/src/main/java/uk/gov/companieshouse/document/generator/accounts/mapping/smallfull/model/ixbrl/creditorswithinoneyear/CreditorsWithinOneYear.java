@@ -22,7 +22,7 @@ public class CreditorsWithinOneYear {
     @JsonProperty("accruals_and_deferred_income")
     private AccrualsAndDeferredIncome accrualsAndDeferredIncome;
 
-    @JsonProperty("bank_loads_and_overdrafts")
+    @JsonProperty("bank_loans_and_overdrafts")
     private BankLoansAndOverdrafts bankLoansAndOverdrafts;
 
     @JsonProperty("finance_leases_and_hire_purchase_contracts")

@@ -15,7 +15,7 @@ public class BalanceSheetNotes {
     @JsonProperty("debtors")
     private Debtors debtorsNote;
     
-    @JsonProperty("creditors-within-one-year")
+    @JsonProperty("creditors_within_one_year")
     private CreditorsWithinOneYear creditorsWithinOneYearNote;
 
     public Debtors getDebtorsNote() {
