@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.Gson;
 import java.util.Objects;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorswithinoneyear.CreditorsWithinOneYear;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.Debtors;
 
 
@@ -13,6 +14,9 @@ public class BalanceSheetNotes {
 
     @JsonProperty("debtors")
     private Debtors debtorsNote;
+    
+    @JsonProperty("creditors-within-one-year")
+    private CreditorsWithinOneYear creditorsWithinOneYearNote;
 
     public Debtors getDebtorsNote() {
         return debtorsNote;
@@ -22,19 +26,30 @@ public class BalanceSheetNotes {
         this.debtorsNote = debtorsNote;
     }
 
+    public CreditorsWithinOneYear getCreditorsWithinOneYearNote() {
+      return creditorsWithinOneYearNote;
+    }
+
+    public void setCreditorsWithinOneYearNote(CreditorsWithinOneYear creditorsWithinOneYearNote) {
+      this.creditorsWithinOneYearNote = creditorsWithinOneYearNote;
+    }
+
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof BalanceSheetNotes)) return false;
-        BalanceSheetNotes that = (BalanceSheetNotes) o;
-        return Objects.equals(getDebtorsNote(), that.getDebtorsNote());
+    public boolean equals(Object obj) {
+      if (this == obj)
+        return true;
+      if (obj == null)
+        return false;
+      if (!(obj instanceof BalanceSheetNotes))
+        return false;
+      BalanceSheetNotes other = (BalanceSheetNotes) obj;
+      return Objects.equals(creditorsWithinOneYearNote, other.creditorsWithinOneYearNote)
+          && Objects.equals(debtorsNote, other.debtorsNote);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getDebtorsNote());
+      return Objects.hash(creditorsWithinOneYearNote, debtorsNote);
     }
 
     @Override

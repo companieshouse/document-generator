@@ -13,6 +13,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.CurrentPeriod;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.PreviousPeriod;
+import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.FixedAssetsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.OtherLiabilitiesOrAssetsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
@@ -29,7 +30,8 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.fixedassets.FixedAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.otherliabilitiesandassets.OtherLiabilitiesOrAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.company.Company;
-
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorswithinoneyear.CreditorsWithinOneYear;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.Debtors;
 import java.time.LocalDate;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.BalanceSheetNotes;
 
@@ -91,6 +93,7 @@ public class SmallFullIXBRLMapperTest {
         }
 
         smallFullApiData.setDebtors(createDebtors());
+        smallFullApiData.setCreditorsWithinOneYear(createCreditorsWithinOneYear());
 
         return smallFullApiData;
     }
@@ -320,23 +323,50 @@ public class SmallFullIXBRLMapperTest {
     }
 
     private void assertBalanceSheetNotesMapped(BalanceSheetNotes balanceSheetNotes, boolean isMultiYearFiling) {
-        assertEquals(DETAILS, balanceSheetNotes.getDebtorsNote().getDetails());
-        assertEquals(VALUE_ONE, balanceSheetNotes.getDebtorsNote().getGreaterThanOneYear().getCurrentAmount());
-        assertEquals(VALUE_TWO, balanceSheetNotes.getDebtorsNote().getOtherDebtors().getCurrentAmount());
-        assertEquals(VALUE_THREE, balanceSheetNotes.getDebtorsNote().getPrepaymentsAndAccruedIncome().getCurrentAmount());
-        assertEquals(VALUE_ONE, balanceSheetNotes.getDebtorsNote().getTradeDebtors().getCurrentAmount());
-        assertEquals(VALUE_TWO, balanceSheetNotes.getDebtorsNote().getTotal().getCurrentAmount());
+        assertDebtorsNoteMapped(balanceSheetNotes.getDebtorsNote(), isMultiYearFiling);
+        assertCreditorsWithinOneYearNoteMapped(balanceSheetNotes.getCreditorsWithinOneYearNote(), isMultiYearFiling);
+    }
+
+    private void assertDebtorsNoteMapped(Debtors debtorsNote, boolean isMultiYearFiling) {
+        assertEquals(DETAILS, debtorsNote.getDetails());
+        assertEquals(VALUE_ONE, debtorsNote.getGreaterThanOneYear().getCurrentAmount());
+        assertEquals(VALUE_TWO, debtorsNote.getOtherDebtors().getCurrentAmount());
+        assertEquals(VALUE_THREE, debtorsNote.getPrepaymentsAndAccruedIncome().getCurrentAmount());
+        assertEquals(VALUE_ONE, debtorsNote.getTradeDebtors().getCurrentAmount());
+        assertEquals(VALUE_TWO, debtorsNote.getTotal().getCurrentAmount());
 
         if (isMultiYearFiling == true) {
 
-            assertEquals(VALUE_ONE, balanceSheetNotes.getDebtorsNote().getGreaterThanOneYear().getPreviousAmount());
-            assertEquals(VALUE_TWO, balanceSheetNotes.getDebtorsNote().getOtherDebtors().getPreviousAmount());
-            assertEquals(VALUE_THREE, balanceSheetNotes.getDebtorsNote().getPrepaymentsAndAccruedIncome().getPreviousAmount());
-            assertEquals(VALUE_ONE, balanceSheetNotes.getDebtorsNote().getTradeDebtors().getPreviousAmount());
-            assertEquals(VALUE_TWO, balanceSheetNotes.getDebtorsNote().getTotal().getPreviousAmount());
+            assertEquals(VALUE_ONE, debtorsNote.getGreaterThanOneYear().getPreviousAmount());
+            assertEquals(VALUE_TWO, debtorsNote.getOtherDebtors().getPreviousAmount());
+            assertEquals(VALUE_THREE, debtorsNote.getPrepaymentsAndAccruedIncome().getPreviousAmount());
+            assertEquals(VALUE_ONE, debtorsNote.getTradeDebtors().getPreviousAmount());
+            assertEquals(VALUE_TWO, debtorsNote.getTotal().getPreviousAmount());
         }
     }
+    
+    private void assertCreditorsWithinOneYearNoteMapped(CreditorsWithinOneYear creditorsWithinOneYearNote, boolean isMultiYearFiling) {
+        assertEquals(DETAILS, creditorsWithinOneYearNote.getDetails());
+        assertEquals(VALUE_ONE, creditorsWithinOneYearNote.getAccrualsAndDeferredIncome().getCurrentAmount());
+        assertEquals(VALUE_TWO, creditorsWithinOneYearNote.getBankLoansAndOverdrafts().getCurrentAmount());
+        assertEquals(VALUE_THREE, creditorsWithinOneYearNote.getFinanceLeasesAndHirePurchaseContracts().getCurrentAmount());
+        assertEquals(VALUE_ONE, creditorsWithinOneYearNote.getOtherCreditors().getCurrentAmount());
+        assertEquals(VALUE_TWO, creditorsWithinOneYearNote.getTaxationAndSocialSecurity().getCurrentAmount());
+        assertEquals(VALUE_THREE, creditorsWithinOneYearNote.getTradeCreditors().getCurrentAmount());
+        assertEquals(VALUE_ONE, creditorsWithinOneYearNote.getTotal().getCurrentAmount());
 
+        if (isMultiYearFiling == true) {
+
+            assertEquals(VALUE_ONE, creditorsWithinOneYearNote.getAccrualsAndDeferredIncome().getPreviousAmount());
+            assertEquals(VALUE_TWO, creditorsWithinOneYearNote.getBankLoansAndOverdrafts().getPreviousAmount());
+            assertEquals(VALUE_THREE, creditorsWithinOneYearNote.getFinanceLeasesAndHirePurchaseContracts().getPreviousAmount());
+            assertEquals(VALUE_ONE, creditorsWithinOneYearNote.getOtherCreditors().getPreviousAmount());
+            assertEquals(VALUE_TWO, creditorsWithinOneYearNote.getTaxationAndSocialSecurity().getPreviousAmount());
+            assertEquals(VALUE_THREE, creditorsWithinOneYearNote.getTradeCreditors().getPreviousAmount());
+            assertEquals(VALUE_ONE, creditorsWithinOneYearNote.getTotal().getPreviousAmount());
+        }
+    }
+    
     private DebtorsApi createDebtors() {
 
         DebtorsApi debtors = new DebtorsApi();
@@ -359,6 +389,37 @@ public class SmallFullIXBRLMapperTest {
         debtors.setDebtorsPreviousPeriod(debtorsPreviousPeriod);
 
         return debtors;
-
     }
+    
+    private CreditorsWithinOneYearApi createCreditorsWithinOneYear() {
+
+      CreditorsWithinOneYearApi creditorsWithinOneYearApi = new CreditorsWithinOneYearApi();
+
+      uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CurrentPeriod creditorsWithinOneYearCurrentPeriod =
+          new uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CurrentPeriod();
+      
+      creditorsWithinOneYearCurrentPeriod.setDetails(DETAILS);
+      creditorsWithinOneYearCurrentPeriod.setAccrualsAndDeferredIncome(VALUE_ONE);
+      creditorsWithinOneYearCurrentPeriod.setBankLoansAndOverdrafts(VALUE_TWO);
+      creditorsWithinOneYearCurrentPeriod.setFinanceLeasesAndHirePurchaseContracts(VALUE_THREE);
+      creditorsWithinOneYearCurrentPeriod.setOtherCreditors(VALUE_ONE);
+      creditorsWithinOneYearCurrentPeriod.setTaxationAndSocialSecurity(VALUE_TWO);
+      creditorsWithinOneYearCurrentPeriod.setTradeCreditors(VALUE_THREE);
+      creditorsWithinOneYearCurrentPeriod.setTotal(VALUE_ONE);
+      creditorsWithinOneYearApi.setCreditorsWithinOneYearCurrentPeriod(creditorsWithinOneYearCurrentPeriod);
+
+      uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.PreviousPeriod creditorsWithinOneYearPreviousPeriod =
+          new uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.PreviousPeriod();
+      
+      creditorsWithinOneYearPreviousPeriod.setAccrualsAndDeferredIncome(VALUE_ONE);
+      creditorsWithinOneYearPreviousPeriod.setBankLoansAndOverdrafts(VALUE_TWO);
+      creditorsWithinOneYearPreviousPeriod.setFinanceLeasesAndHirePurchaseContracts(VALUE_THREE);
+      creditorsWithinOneYearPreviousPeriod.setOtherCreditors(VALUE_ONE);
+      creditorsWithinOneYearPreviousPeriod.setTaxationAndSocialSecurity(VALUE_TWO);
+      creditorsWithinOneYearPreviousPeriod.setTradeCreditors(VALUE_THREE);
+      creditorsWithinOneYearPreviousPeriod.setTotal(VALUE_ONE);
+      creditorsWithinOneYearApi.setCreditorsWithinOneYearPreviousPeriod(creditorsWithinOneYearPreviousPeriod);
+
+      return creditorsWithinOneYearApi;
+  }
 }

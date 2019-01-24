@@ -6,6 +6,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.ApprovalApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 
@@ -26,6 +27,8 @@ public class SmallFullApiData {
     private AccountingPoliciesApi accountingPolicies;
 
     private DebtorsApi debtors;
+    
+    private CreditorsWithinOneYearApi creditorsWithinOneYear;
 
     public CurrentPeriodApi getCurrentPeriod() {
         return currentPeriod;
@@ -78,28 +81,40 @@ public class SmallFullApiData {
     public void setDebtors (DebtorsApi debtors) {
         this.debtors = debtors;
     }
+    
+    public CreditorsWithinOneYearApi getCreditorsWithinOneYear() {
+      return creditorsWithinOneYear;
+    }
+
+    public void setCreditorsWithinOneYear(CreditorsWithinOneYearApi creditorsWithinOneYear) {
+      this.creditorsWithinOneYear = creditorsWithinOneYear;
+    }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof SmallFullApiData)) return false;
-        SmallFullApiData that = (SmallFullApiData) o;
-        return Objects.equals(getCurrentPeriod(), that.getCurrentPeriod()) &&
-                Objects.equals(getPreviousPeriod(), that.getPreviousPeriod()) &&
-                Objects.equals(getCompanyProfile(), that.getCompanyProfile()) &&
-                Objects.equals(getApproval(), that.getApproval()) &&
-                Objects.equals(getBalanceSheetStatements(), that.getBalanceSheetStatements()) &&
-                Objects.equals(getAccountingPolicies(), that.getAccountingPolicies()) &&
-                Objects.equals(getDebtors(), that.getDebtors());
+    public boolean equals(Object obj) {
+      if (this == obj)
+        return true;
+      if (obj == null)
+        return false;
+      if (!(obj instanceof SmallFullApiData))
+        return false;
+      SmallFullApiData other = (SmallFullApiData) obj;
+      return Objects.equals(accountingPolicies, other.accountingPolicies)
+          && Objects.equals(approval, other.approval)
+          && Objects.equals(balanceSheetStatements, other.balanceSheetStatements)
+          && Objects.equals(companyProfile, other.companyProfile)
+          && Objects.equals(creditorsWithinOneYear, other.creditorsWithinOneYear)
+          && Objects.equals(currentPeriod, other.currentPeriod)
+          && Objects.equals(debtors, other.debtors)
+          && Objects.equals(previousPeriod, other.previousPeriod);
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(getCurrentPeriod(), getPreviousPeriod(), getCompanyProfile(), getApproval(),
-                            getBalanceSheetStatements(), getAccountingPolicies(), getDebtors());
+      return Objects.hash(accountingPolicies, approval, balanceSheetStatements, companyProfile,
+          creditorsWithinOneYear, currentPeriod, debtors, previousPeriod);
     }
-
+    
     @Override
     public String toString() {
         return new Gson().toJson(this);

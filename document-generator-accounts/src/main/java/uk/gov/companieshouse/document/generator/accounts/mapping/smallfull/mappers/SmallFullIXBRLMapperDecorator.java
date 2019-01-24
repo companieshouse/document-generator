@@ -5,9 +5,6 @@ import uk.gov.companieshouse.accountsdates.impl.AccountsDatesHelperImpl;
 import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
-import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.CurrentPeriod;
-import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
-import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.PreviousPeriod;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.SmallFullApiData;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.SmallFullAccountIxbrl;
@@ -47,7 +44,7 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
             smallFullAccountIxbrl.setAdditionalNotes(setAdditionalNotes(smallFullApiData.getAccountingPolicies()));
         }
 
-        if (smallFullApiData.getDebtors() != null){
+        if (smallFullApiData.getDebtors() != null || smallFullApiData.getCreditorsWithinOneYear() != null){
             smallFullAccountIxbrl.setBalanceSheetNotes(setBalanceSheetNotes(smallFullApiData));
         }
         return smallFullAccountIxbrl;
@@ -103,6 +100,12 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
                     .apiToDebtors(smallFullApiData.getDebtors().getDebtorsCurrentPeriod(),
                             smallFullApiData.getDebtors().getDebtorsPreviousPeriod()));
         }
+        
+        if (smallFullApiData.getCreditorsWithinOneYear() != null) {
+          balanceSheetNotes.setCreditorsWithinOneYearNote(ApiToCreditorsWithinOneYearMapper.INSTANCE
+                  .apiToCreditorsWithinOneYear(smallFullApiData.getCreditorsWithinOneYear().getCreditorsWithinOneYearCurrentPeriod(),
+                          smallFullApiData.getCreditorsWithinOneYear().getCreditorsWithinOneYearPreviousPeriod()));
+      }
 
         return balanceSheetNotes;
     }
