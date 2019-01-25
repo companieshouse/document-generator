@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import java.util.Objects;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorswithinoneyear.CreditorsWithinOneYear;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.Debtors;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssets;
 
 
 @JsonInclude(Include.NON_NULL)
@@ -17,6 +18,9 @@ public class BalanceSheetNotes {
     
     @JsonProperty("creditors_within_one_year")
     private CreditorsWithinOneYear creditorsWithinOneYearNote;
+
+    @JsonProperty("tangible_assets")
+    private TangibleAssets tangibleAssets;
 
     public Debtors getDebtorsNote() {
         return debtorsNote;
@@ -34,22 +38,29 @@ public class BalanceSheetNotes {
       this.creditorsWithinOneYearNote = creditorsWithinOneYearNote;
     }
 
+    public TangibleAssets getTangibleAssets() {
+        return tangibleAssets;
+    }
+
+    public void setTangibleAssets(TangibleAssets tangibleAssets) {
+        this.tangibleAssets = tangibleAssets;
+    }
+
     @Override
-    public boolean equals(Object obj) {
-      if (this == obj)
-        return true;
-      if (obj == null)
-        return false;
-      if (!(obj instanceof BalanceSheetNotes))
-        return false;
-      BalanceSheetNotes other = (BalanceSheetNotes) obj;
-      return Objects.equals(creditorsWithinOneYearNote, other.creditorsWithinOneYearNote)
-          && Objects.equals(debtorsNote, other.debtorsNote);
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof BalanceSheetNotes)) return false;
+        BalanceSheetNotes that = (BalanceSheetNotes) o;
+        return (Objects.equals(getDebtorsNote(), that.getDebtorsNote()) &&
+                Objects.equals(getCreditorsWithinOneYearNote(), that.getCreditorsWithinOneYearNote()) &&
+                Objects.equals(getTangibleAssets(), that.tangibleAssets));
     }
 
     @Override
     public int hashCode() {
-      return Objects.hash(creditorsWithinOneYearNote, debtorsNote);
+      return Objects.hash(creditorsWithinOneYearNote, debtorsNote, tangibleAssets);
     }
 
     @Override

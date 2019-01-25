@@ -5,13 +5,23 @@ import uk.gov.companieshouse.accountsdates.impl.AccountsDatesHelperImpl;
 import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.SmallFullApiData;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.SmallFullAccountIxbrl;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.BalanceSheet;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorswithinoneyear.CreditorsWithinOneYear;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.accountingpolicies.AccountingPolicies;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.Debtors;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssets;
 
 import java.time.LocalDate;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.AdditionalNotes;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssetsCost;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssetsDepreciation;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssetsNetBookValue;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.BalanceSheetNotes;
 
 public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMapper {
@@ -40,13 +50,50 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
             smallFullAccountIxbrl.setApprovalDate(convertToDisplayDate(smallFullApiData.getApproval().getDate()));
         }
 
+        AdditionalNotes additionalNotes = new AdditionalNotes();
+        Boolean hasAdditionalNotes = false;
+
         if (smallFullApiData.getAccountingPolicies() != null) {
-            smallFullAccountIxbrl.setAdditionalNotes(setAdditionalNotes(smallFullApiData.getAccountingPolicies()));
+
+            additionalNotes.setAccountingPolicies(mapAccountingPolicies(smallFullApiData.getAccountingPolicies()));
+
+            hasAdditionalNotes = true;
         }
 
-        if (smallFullApiData.getDebtors() != null || smallFullApiData.getCreditorsWithinOneYear() != null){
-            smallFullAccountIxbrl.setBalanceSheetNotes(setBalanceSheetNotes(smallFullApiData));
+        BalanceSheetNotes balanceSheetNotes = new BalanceSheetNotes();
+        Boolean hasBalanceSheetNotes = false;
+
+        if (smallFullApiData.getTangibleAssets() != null) {
+
+            balanceSheetNotes.setTangibleAssets(mapTangibleAssets(smallFullApiData.getTangibleAssets()));
+
+            hasBalanceSheetNotes = true;
         }
+
+        if (smallFullApiData.getDebtors() != null) {
+
+            balanceSheetNotes.setDebtorsNote(mapDebtors(smallFullApiData.getDebtors()));
+
+            hasBalanceSheetNotes = true;
+        }
+        
+        if (smallFullApiData.getCreditorsWithinOneYear() != null) {
+
+            balanceSheetNotes.setCreditorsWithinOneYearNote(mapCreditorsWithinOneYear(smallFullApiData.getCreditorsWithinOneYear()));
+
+            hasBalanceSheetNotes = true;
+        }
+
+        //We only want to set the additional notes if we have any
+        if (hasAdditionalNotes) {
+            smallFullAccountIxbrl.setAdditionalNotes(additionalNotes);
+        }
+
+        //We only want to set the balance sheet notes if we have any
+        if (hasBalanceSheetNotes) {
+            smallFullAccountIxbrl.setBalanceSheetNotes(balanceSheetNotes);
+        }
+
         return smallFullAccountIxbrl;
     }
 
@@ -80,34 +127,79 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
         return balanceSheet;
     }
 
-    private AdditionalNotes setAdditionalNotes(AccountingPoliciesApi accountingPolicies) {
+    private AccountingPolicies mapAccountingPolicies(AccountingPoliciesApi accountingPolicies) {
 
-        AdditionalNotes additionalNotes = new AdditionalNotes();
-
-        additionalNotes.setAccountingPolicies(
-                ApiToAccountingPoliciesMapper.INSTANCE
-                        .apiToAccountingPolicies(accountingPolicies));
-
-        return additionalNotes;
+        return ApiToAccountingPoliciesMapper.INSTANCE
+                .apiToAccountingPolicies(accountingPolicies);
     }
 
-    private BalanceSheetNotes setBalanceSheetNotes(SmallFullApiData smallFullApiData) {
+    private Debtors mapDebtors(DebtorsApi debtors) {
 
-        BalanceSheetNotes balanceSheetNotes = new BalanceSheetNotes();
+        return ApiToDebtorsMapper.INSTANCE
+                .apiToDebtors(debtors.getDebtorsCurrentPeriod(),
+                        debtors.getDebtorsPreviousPeriod());
+    }
+    
+    private CreditorsWithinOneYear mapCreditorsWithinOneYear(CreditorsWithinOneYearApi creditorsWithinOneYearApi) {
 
-        if (smallFullApiData.getDebtors() != null) {
-            balanceSheetNotes.setDebtorsNote(ApiToDebtorsMapper.INSTANCE
-                    .apiToDebtors(smallFullApiData.getDebtors().getDebtorsCurrentPeriod(),
-                            smallFullApiData.getDebtors().getDebtorsPreviousPeriod()));
-        }
-        
-        if (smallFullApiData.getCreditorsWithinOneYear() != null) {
-          balanceSheetNotes.setCreditorsWithinOneYearNote(ApiToCreditorsWithinOneYearMapper.INSTANCE
-                  .apiToCreditorsWithinOneYear(smallFullApiData.getCreditorsWithinOneYear().getCreditorsWithinOneYearCurrentPeriod(),
-                          smallFullApiData.getCreditorsWithinOneYear().getCreditorsWithinOneYearPreviousPeriod()));
-      }
+        return ApiToCreditorsWithinOneYearMapper.INSTANCE
+                .apiToCreditorsWithinOneYear(creditorsWithinOneYearApi.getCreditorsWithinOneYearCurrentPeriod(),
+                        creditorsWithinOneYearApi.getCreditorsWithinOneYearPreviousPeriod());
+    }
 
-        return balanceSheetNotes;
+    private TangibleAssets mapTangibleAssets(TangibleApi tangible) {
+
+        TangibleAssets tangibleAssets = ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsNoteAdditionalInformation(tangible);
+
+        tangibleAssets.setCost(mapTangibleAssetsCost(tangible));
+        tangibleAssets.setDepreciation(mapTangibleAssetsDepreciation(tangible));
+        tangibleAssets.setNetBookValue(mapTangibleAssetsNetBookValue(tangible));
+
+        return tangibleAssets;
+    }
+
+    private TangibleAssetsCost mapTangibleAssetsCost(TangibleApi tangible) {
+
+        TangibleAssetsCost cost = new TangibleAssetsCost();
+
+        cost.setAdditions(ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsCostAdditionsMapper(tangible));
+        cost.setAtPeriodEnd(ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsCostAtPeriodEndMapper(tangible));
+        cost.setAtPeriodStart(ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsCostAtPeriodStartMapper(tangible));
+        cost.setDisposals(ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsCostDisposalsMapper(tangible));
+        cost.setRevaluations(ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsCostRevaluationsMapper(tangible));
+        cost.setTransfers(ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsCostTransfersMapper(tangible));
+
+        return cost;
+    }
+
+    private TangibleAssetsDepreciation mapTangibleAssetsDepreciation(TangibleApi tangible) {
+
+        TangibleAssetsDepreciation depreciation = new TangibleAssetsDepreciation();
+
+        depreciation.setAtPeriodEnd(ApiToTangibleAssetsNoteMapper.INSTANCE
+                .apiToTangibleAssetsDepreciationAtPeriodEndMapper(tangible));
+        depreciation.setAtPeriodStart(ApiToTangibleAssetsNoteMapper.INSTANCE
+                .apiToTangibleAssetsDepreciationAtPeriodStartMapper(tangible));
+        depreciation.setChargeForYear(ApiToTangibleAssetsNoteMapper.INSTANCE
+                .apiToTangibleAssetsDepreciationChargeForYearMapper(tangible));
+        depreciation.setOnDisposals(ApiToTangibleAssetsNoteMapper.INSTANCE
+                .apiToTangibleAssetsDepreciationOnDisposalsMapper(tangible));
+        depreciation.setOtherAdjustments(ApiToTangibleAssetsNoteMapper.INSTANCE
+                .apiToTangibleAssetsDepreciationOtherAdjustmentsMapper(tangible));
+
+        return depreciation;
+    }
+
+    private TangibleAssetsNetBookValue mapTangibleAssetsNetBookValue(TangibleApi tangible) {
+
+        TangibleAssetsNetBookValue netBookValue = new TangibleAssetsNetBookValue();
+
+        netBookValue.setCurrentPeriod(ApiToTangibleAssetsNoteMapper.INSTANCE
+                .apiToTangibleAssetsNetBookValueCurrentPeriodMapper(tangible));
+        netBookValue.setPreviousPeriod(ApiToTangibleAssetsNoteMapper.INSTANCE
+                .apiToTangibleAssetsNetBookValuePreviousPeriodMapper(tangible));
+
+        return netBookValue;
     }
 
     private String convertToDisplayDate(LocalDate date) {
