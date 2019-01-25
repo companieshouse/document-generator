@@ -148,6 +148,14 @@ public class AccountsManager {
             handleException(e, "debtors", link);
         }
 
+        try {
+            smallFullApiData.setCreditorsWithinOneYear(apiClient.smallFull().creditorsWithinOneYear()
+                    .get(new StringBuilder(link).append("/notes/creditors-within-one-year").toString()).execute());
+
+        } catch (ApiErrorResponseException e) {
+            handleException(e, "creditors-within-one-year", link);
+        }
+        
         smallFullApiData.setCompanyProfile(companyService.getCompanyProfile(transaction.getCompanyNumber()));
 
 
