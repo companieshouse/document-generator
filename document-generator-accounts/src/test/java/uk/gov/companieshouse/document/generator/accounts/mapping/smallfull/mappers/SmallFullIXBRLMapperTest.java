@@ -13,6 +13,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.CurrentPeriod;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.PreviousPeriod;
+import uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.CreditorsAfterOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.FixedAssetsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.OtherLiabilitiesOrAssetsApi;
@@ -30,6 +31,7 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.fixedassets.FixedAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.otherliabilitiesandassets.OtherLiabilitiesOrAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.company.Company;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorsafteroneyear.CreditorsAfterOneYear;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorswithinoneyear.CreditorsWithinOneYear;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.Debtors;
 import java.time.LocalDate;
@@ -53,7 +55,7 @@ public class SmallFullIXBRLMapperTest {
 
     @Test
     @DisplayName("tests the mapping of the smallFull IXBRL model with a current and previous period")
-    void testSmallFullMapperCurrentAndPreious() {
+    void testSmallFullMapperCurrentAndPrevious() {
 
         SmallFullApiData smallFullApiData = createSmallFullData(true);
 
@@ -94,6 +96,7 @@ public class SmallFullIXBRLMapperTest {
 
         smallFullApiData.setDebtors(createDebtors());
         smallFullApiData.setCreditorsWithinOneYear(createCreditorsWithinOneYear());
+        smallFullApiData.setCreditorsAfterOneYear(createCreditorsAfterOneYear());
 
         return smallFullApiData;
     }
@@ -325,6 +328,7 @@ public class SmallFullIXBRLMapperTest {
     private void assertBalanceSheetNotesMapped(BalanceSheetNotes balanceSheetNotes, boolean isMultiYearFiling) {
         assertDebtorsNoteMapped(balanceSheetNotes.getDebtorsNote(), isMultiYearFiling);
         assertCreditorsWithinOneYearNoteMapped(balanceSheetNotes.getCreditorsWithinOneYearNote(), isMultiYearFiling);
+        assertCreditorsAfterOneYearNoteMapped(balanceSheetNotes.getCreditorsAfterOneYearNote(), isMultiYearFiling);
     }
 
     private void assertDebtorsNoteMapped(Debtors debtorsNote, boolean isMultiYearFiling) {
@@ -364,6 +368,22 @@ public class SmallFullIXBRLMapperTest {
             assertEquals(VALUE_TWO, creditorsWithinOneYearNote.getTaxationAndSocialSecurity().getPreviousAmount());
             assertEquals(VALUE_THREE, creditorsWithinOneYearNote.getTradeCreditors().getPreviousAmount());
             assertEquals(VALUE_ONE, creditorsWithinOneYearNote.getTotal().getPreviousAmount());
+        }
+    }
+
+    private void assertCreditorsAfterOneYearNoteMapped(CreditorsAfterOneYear creditorsAfterOneYearNote, boolean isMultiYearFiling) {
+        assertEquals(DETAILS, creditorsAfterOneYearNote.getDetails());
+        assertEquals(VALUE_ONE, creditorsAfterOneYearNote.getBankLoansAndOverdrafts().getCurrentAmount());
+        assertEquals(VALUE_TWO, creditorsAfterOneYearNote.getFinanceLeasesAndHirePurchaseContracts().getCurrentAmount());
+        assertEquals(VALUE_THREE, creditorsAfterOneYearNote.getOtherCreditors().getCurrentAmount());
+        assertEquals(VALUE_ONE, creditorsAfterOneYearNote.getTotal().getCurrentAmount());
+
+        if (isMultiYearFiling == true) {
+
+            assertEquals(VALUE_ONE, creditorsAfterOneYearNote.getBankLoansAndOverdrafts().getPreviousAmount());
+            assertEquals(VALUE_TWO, creditorsAfterOneYearNote.getFinanceLeasesAndHirePurchaseContracts().getPreviousAmount());
+            assertEquals(VALUE_THREE, creditorsAfterOneYearNote.getOtherCreditors().getPreviousAmount());
+            assertEquals(VALUE_ONE, creditorsAfterOneYearNote.getTotal().getPreviousAmount());
         }
     }
     
@@ -422,4 +442,33 @@ public class SmallFullIXBRLMapperTest {
 
       return creditorsWithinOneYearApi;
   }
+    
+    private CreditorsAfterOneYearApi createCreditorsAfterOneYear() {
+
+        CreditorsAfterOneYearApi creditorsAfterOneYearApi = new CreditorsAfterOneYearApi();
+
+        uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.CurrentPeriod creditorsAfterOneYearCurrentPeriod =
+            new uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.CurrentPeriod();
+        
+        creditorsAfterOneYearCurrentPeriod.setDetails(DETAILS);
+        creditorsAfterOneYearCurrentPeriod.setBankLoansAndOverdrafts(VALUE_ONE);
+        creditorsAfterOneYearCurrentPeriod.setFinanceLeasesAndHirePurchaseContracts(VALUE_TWO);
+        creditorsAfterOneYearCurrentPeriod.setOtherCreditors(VALUE_THREE);
+        creditorsAfterOneYearCurrentPeriod.setTotal(VALUE_ONE);
+        
+        creditorsAfterOneYearApi.setCurrentPeriod(creditorsAfterOneYearCurrentPeriod);
+
+
+        uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.PreviousPeriod creditorsAfterOneYearPreviousPeriod =
+            new uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.PreviousPeriod();
+        
+        creditorsAfterOneYearPreviousPeriod.setBankLoansAndOverdrafts(VALUE_ONE);
+        creditorsAfterOneYearPreviousPeriod.setFinanceLeasesAndHirePurchaseContracts(VALUE_TWO);
+        creditorsAfterOneYearPreviousPeriod.setOtherCreditors(VALUE_THREE);
+        creditorsAfterOneYearPreviousPeriod.setTotal(VALUE_ONE);
+        
+        creditorsAfterOneYearApi.setPreviousPeriod(creditorsAfterOneYearPreviousPeriod);
+
+        return creditorsAfterOneYearApi;
+    }    
 }
