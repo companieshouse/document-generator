@@ -7,6 +7,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatements
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 
 import java.util.Objects;
@@ -24,6 +25,8 @@ public class SmallFullApiData {
     private BalanceSheetStatementsApi balanceSheetStatements;
 
     private AccountingPoliciesApi accountingPolicies;
+
+    private TangibleApi tangibleAssets;
 
     private DebtorsApi debtors;
 
@@ -71,6 +74,14 @@ public class SmallFullApiData {
         this.accountingPolicies = accountingPolicies;
     }
 
+    public TangibleApi getTangibleAssets() {
+        return tangibleAssets;
+    }
+
+    public void setTangibleAssets(TangibleApi tangibleAssets) {
+        this.tangibleAssets = tangibleAssets;
+    }
+
     public DebtorsApi getDebtors () {
         return debtors;
     }
@@ -90,7 +101,8 @@ public class SmallFullApiData {
                 Objects.equals(getApproval(), that.getApproval()) &&
                 Objects.equals(getBalanceSheetStatements(), that.getBalanceSheetStatements()) &&
                 Objects.equals(getAccountingPolicies(), that.getAccountingPolicies()) &&
-                Objects.equals(getDebtors(), that.getDebtors());
+                Objects.equals(getDebtors(), that.getDebtors()) &&
+                Objects.equals(getTangibleAssets(), that.getTangibleAssets());
     }
 
     @Override
