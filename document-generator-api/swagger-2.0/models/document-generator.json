@@ -23,6 +23,10 @@
         "document_type": {
           "type": "string",
           "description": "indicates the document or report type to be generated from the resource data. Currently not implemented"
+        },
+        "is_public_location_required": {
+          "type": "boolean",
+          "description": "indicates that a public location is needed when informing where the document has been stored"
         }
 
       }
@@ -72,7 +76,7 @@
       "properties": {
         "location": {
           "type": "string",
-          "description": "location that the document has been stored"
+          "description": "location where the document has been stored, which can be private (default) or public. To request a public location, the is_public_location_required flag needs to be passed as true"
         }
       }
     }
