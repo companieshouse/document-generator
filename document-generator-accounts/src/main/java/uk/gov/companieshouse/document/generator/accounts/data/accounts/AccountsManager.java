@@ -197,7 +197,7 @@ public class AccountsManager {
             
             if (!StringUtils.isEmpty(smallFull.getLinks().getCreditorsAfterMoreThanOneYearNote())) {
 
-                CreditorsAfterOneYearApi creditorsAfterOneYearApi = apiClient.smallFull().creditorsAfterOnerYear()
+                CreditorsAfterOneYearApi creditorsAfterOneYearApi = apiClient.smallFull().creditorsAfterOneYear()
                         .get(smallFull.getLinks().getCreditorsAfterMoreThanOneYearNote()).execute();
 
                 smallFullApiData.setCreditorsAfterOneYear(creditorsAfterOneYearApi);
