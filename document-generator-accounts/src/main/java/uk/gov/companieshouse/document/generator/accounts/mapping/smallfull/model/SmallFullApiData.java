@@ -8,6 +8,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.CreditorsAfterOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
@@ -29,6 +30,8 @@ public class SmallFullApiData {
     private AccountingPoliciesApi accountingPolicies;
 
     private TangibleApi tangibleAssets;
+
+    private StocksApi stocks;
 
     private DebtorsApi debtors;
     
@@ -87,7 +90,15 @@ public class SmallFullApiData {
     public void setTangibleAssets(TangibleApi tangibleAssets) {
         this.tangibleAssets = tangibleAssets;
     }
+    
+    public StocksApi getStocks() {
+        return stocks;
+    }
 
+    public void setStocks(StocksApi stocks) {
+        this.stocks = stocks;
+    }
+    
     public DebtorsApi getDebtors () {
         return debtors;
     }
@@ -123,6 +134,7 @@ public class SmallFullApiData {
                 Objects.equals(getApproval(), that.getApproval()) &&
                 Objects.equals(getBalanceSheetStatements(), that.getBalanceSheetStatements()) &&
                 Objects.equals(getAccountingPolicies(), that.getAccountingPolicies()) &&
+                Objects.equals(getStocks(), that.getStocks()) &&
                 Objects.equals(getDebtors(), that.getDebtors()) &&
                 Objects.equals(getCreditorsWithinOneYear(), that.getCreditorsWithinOneYear()) &&
                 Objects.equals(getCreditorsAfterOneYear(), that.getCreditorsAfterOneYear()) &&
@@ -132,7 +144,7 @@ public class SmallFullApiData {
     @Override
     public int hashCode() {
       return Objects.hash(accountingPolicies, approval, balanceSheetStatements, companyProfile,
-          creditorsWithinOneYear, creditorsWithinOneYear, currentPeriod, debtors, previousPeriod, 
+          creditorsWithinOneYear, creditorsWithinOneYear, currentPeriod, stocks, debtors, previousPeriod, 
           tangibleAssets);
     }
     

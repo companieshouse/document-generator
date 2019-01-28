@@ -15,6 +15,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.PreviousPeriod;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.CreditorsAfterOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.FixedAssetsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.OtherLiabilitiesOrAssetsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
@@ -36,7 +37,7 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.Debtors;
 import java.time.LocalDate;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.BalanceSheetNotes;
-
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.stocks.StocksNote;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -94,6 +95,7 @@ public class SmallFullIXBRLMapperTest {
             smallFullApiData.setPreviousPeriod(createPreviousPeriod());
         }
 
+        smallFullApiData.setStocks(createStocks());
         smallFullApiData.setDebtors(createDebtors());
         smallFullApiData.setCreditorsWithinOneYear(createCreditorsWithinOneYear());
         smallFullApiData.setCreditorsAfterOneYear(createCreditorsAfterOneYear());
@@ -326,6 +328,7 @@ public class SmallFullIXBRLMapperTest {
     }
 
     private void assertBalanceSheetNotesMapped(BalanceSheetNotes balanceSheetNotes, boolean isMultiYearFiling) {
+        assertStocksNoteMapped(balanceSheetNotes.getStocksNote(), isMultiYearFiling);
         assertDebtorsNoteMapped(balanceSheetNotes.getDebtorsNote(), isMultiYearFiling);
         assertCreditorsWithinOneYearNoteMapped(balanceSheetNotes.getCreditorsWithinOneYearNote(), isMultiYearFiling);
         assertCreditorsAfterOneYearNoteMapped(balanceSheetNotes.getCreditorsAfterOneYearNote(), isMultiYearFiling);
@@ -346,6 +349,19 @@ public class SmallFullIXBRLMapperTest {
             assertEquals(VALUE_THREE, debtorsNote.getPrepaymentsAndAccruedIncome().getPreviousAmount());
             assertEquals(VALUE_ONE, debtorsNote.getTradeDebtors().getPreviousAmount());
             assertEquals(VALUE_TWO, debtorsNote.getTotal().getPreviousAmount());
+        }
+    }
+    
+    private void assertStocksNoteMapped(StocksNote stocksNote, boolean isMultiYearFiling) {
+        assertEquals(VALUE_ONE, stocksNote.getStocks().getCurrentAmount());
+        assertEquals(VALUE_TWO, stocksNote.getPaymentsOnAccount().getCurrentAmount());
+        assertEquals(VALUE_THREE, stocksNote.getTotal().getCurrentAmount());
+
+        if (isMultiYearFiling == true) {
+
+            assertEquals(VALUE_ONE, stocksNote.getStocks().getPreviousAmount());
+            assertEquals(VALUE_TWO, stocksNote.getPaymentsOnAccount().getPreviousAmount());
+            assertEquals(VALUE_THREE, stocksNote.getTotal().getPreviousAmount());
         }
     }
     
@@ -410,6 +426,29 @@ public class SmallFullIXBRLMapperTest {
 
         return debtors;
     }
+    
+    private StocksApi createStocks() {
+
+        StocksApi stocks = new StocksApi();
+
+        uk.gov.companieshouse.api.model.accounts.smallfull.stocks.CurrentPeriod stocksCurrentPeriod = 
+                new uk.gov.companieshouse.api.model.accounts.smallfull.stocks.CurrentPeriod();
+        
+        stocksCurrentPeriod.setStocks(VALUE_ONE);
+        stocksCurrentPeriod.setPaymentsOnAccount(VALUE_TWO);
+        stocksCurrentPeriod.setTotal(VALUE_THREE);
+        stocks.setCurrentPeriod(stocksCurrentPeriod);
+
+        uk.gov.companieshouse.api.model.accounts.smallfull.stocks.PreviousPeriod stocksPreviousPeriod
+        = new uk.gov.companieshouse.api.model.accounts.smallfull.stocks.PreviousPeriod();
+        
+        stocksPreviousPeriod.setStocks(VALUE_ONE);
+        stocksPreviousPeriod.setPaymentsOnAccount(VALUE_TWO);
+        stocksPreviousPeriod.setTotal(VALUE_THREE);
+        stocks.setPreviousPeriod(stocksPreviousPeriod);
+
+        return stocks;
+    }    
     
     private CreditorsWithinOneYearApi createCreditorsWithinOneYear() {
 

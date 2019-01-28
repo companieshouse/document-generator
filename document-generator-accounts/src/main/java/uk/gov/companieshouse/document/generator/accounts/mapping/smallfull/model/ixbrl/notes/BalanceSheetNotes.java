@@ -9,11 +9,15 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorswithinoneyear.CreditorsWithinOneYear;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.Debtors;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssets;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.stocks.StocksNote;
 
 
 @JsonInclude(Include.NON_NULL)
 public class BalanceSheetNotes {
 
+    @JsonProperty("stocks")
+    private StocksNote stocksNote;
+    
     @JsonProperty("debtors")
     private Debtors debtorsNote;
     
@@ -26,6 +30,14 @@ public class BalanceSheetNotes {
     @JsonProperty("tangible_assets")
     private TangibleAssets tangibleAssets;
 
+    public StocksNote getStocksNote() {
+        return stocksNote;
+    }
+
+    public void setStocksNote(StocksNote stocksNote) {
+        this.stocksNote = stocksNote;
+    }
+    
     public Debtors getDebtorsNote() {
         return debtorsNote;
     }
@@ -65,14 +77,15 @@ public class BalanceSheetNotes {
         }
         if (!(o instanceof BalanceSheetNotes)) return false;
         BalanceSheetNotes that = (BalanceSheetNotes) o;
-        return (Objects.equals(getDebtorsNote(), that.getDebtorsNote()) &&
+        return (Objects.equals(getStocksNote(), that.getStocksNote()) &&
+                Objects.equals(getDebtorsNote(), that.getDebtorsNote()) &&
                 Objects.equals(getCreditorsWithinOneYearNote(), that.getCreditorsWithinOneYearNote()) &&
                 Objects.equals(getTangibleAssets(), that.tangibleAssets));
     }
 
     @Override
     public int hashCode() {
-      return Objects.hash(creditorsWithinOneYearNote, debtorsNote, tangibleAssets);
+      return Objects.hash(creditorsWithinOneYearNote, stocksNote, debtorsNote, tangibleAssets);
     }
 
     @Override
