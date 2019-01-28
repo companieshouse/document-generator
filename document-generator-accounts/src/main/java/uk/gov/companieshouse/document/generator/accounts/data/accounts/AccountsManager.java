@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.document.generator.accounts.data.accounts;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -9,6 +10,14 @@ import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.accounts.Accounts;
 import uk.gov.companieshouse.api.model.accounts.CompanyAccounts;
 import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.SmallFullApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.ApprovalApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.mappers.SmallFullIXBRLMapper;
@@ -50,7 +59,8 @@ public class AccountsManager {
      * @throws ApiErrorResponseException
      * @throws URIValidationException
      */
-    public Accounts getAccounts(String link) throws ApiErrorResponseException, URIValidationException {
+    public Accounts getAccounts(String link) throws ApiErrorResponseException,
+            URIValidationException {
 
         ApiClient apiClient = apiClientService.getApiClient();
 
@@ -65,7 +75,8 @@ public class AccountsManager {
      * @throws ApiErrorResponseException
      * @throws URIValidationException
      */
-    public AbridgedAccountsApi getAbridgedAccounts(String link) throws ApiErrorResponseException, URIValidationException {
+    public AbridgedAccountsApi getAbridgedAccounts(String link) throws ApiErrorResponseException
+            , URIValidationException {
 
         ApiClient apiClient = apiClientService.getApiClient();
 
@@ -80,7 +91,8 @@ public class AccountsManager {
      * @throws ApiErrorResponseException
      * @throws URIValidationException
      */
-    public CompanyAccounts getCompanyAccounts(String link) throws ApiErrorResponseException, URIValidationException {
+    public CompanyAccounts getCompanyAccounts(String link) throws ApiErrorResponseException,
+            URIValidationException {
 
         ApiClient apiClient = apiClientService.getApiClient();
 
@@ -102,39 +114,77 @@ public class AccountsManager {
 
         ApiClient apiClient = apiClientService.getApiClient();
 
-        try {
-            smallFullApiData.setPreviousPeriod(apiClient.smallFull().previousPeriod()
-                    .get(new StringBuilder(link).append("/previous-period").toString()).execute());
-        } catch (ApiErrorResponseException e)  {
-            handleException(e, "previous period", link);
-        }
+        String errorString = "small full";
 
         try {
-            smallFullApiData.setCurrentPeriod(apiClient.smallFull().currentPeriod()
-                    .get(new StringBuilder(link).append("/current-period").toString()).execute());
-        } catch (ApiErrorResponseException e) {
-            handleException(e, "current period", link);
-        }
 
-        try {
-            smallFullApiData.setApproval(apiClient.smallFull().approval()
-                    .get(new StringBuilder(link).append("/approval").toString()).execute());
-        } catch (ApiErrorResponseException e) {
-            handleException(e, "approvals", link);
-        }
+            SmallFullApi smallFull = apiClient.smallFull().get(link).execute();
 
-        try {
-            smallFullApiData.setBalanceSheetStatements(apiClient.smallFull().balanceSheetStatements()
-                    .get(new StringBuilder(link).append("/statements").toString()).execute());
-        } catch (ApiErrorResponseException e) {
-            handleException(e, "statements", link);
-        }
+            if (!StringUtils.isEmpty(smallFull.getLinks().getPreviousPeriod())) {
 
-        try {
-            smallFullApiData.setAccountingPolicies(apiClient.smallFull().accountingPolicies()
-                    .get(new StringBuilder(link).append("/notes/accounting-policy").toString()).execute());
+                errorString = "previous period";
+
+                PreviousPeriodApi previousPeriod = apiClient.smallFull().previousPeriod()
+                        .get(smallFull.getLinks().getPreviousPeriod()).execute();
+                smallFullApiData.setPreviousPeriod(previousPeriod);
+            }
+
+            if (!StringUtils.isEmpty(smallFull.getLinks().getCurrentPeriod())) {
+
+                errorString = "current period";
+
+                CurrentPeriodApi currentPeriod = apiClient.smallFull().currentPeriod()
+                        .get(smallFull.getLinks().getCurrentPeriod()).execute();
+                smallFullApiData.setCurrentPeriod(currentPeriod);
+            }
+
+            if (!StringUtils.isEmpty(smallFull.getLinks().getApproval())) {
+
+                errorString = "approvals";
+
+                ApprovalApi approvals = apiClient.smallFull().approval()
+                        .get(smallFull.getLinks().getApproval()).execute();
+                smallFullApiData.setApproval(approvals);
+            }
+
+            if (!StringUtils.isEmpty(smallFull.getLinks().getStatements())) {
+
+                errorString = "statements";
+
+                BalanceSheetStatementsApi statements = apiClient.smallFull().balanceSheetStatements()
+                        .get(smallFull.getLinks().getStatements()).execute();
+                smallFullApiData.setBalanceSheetStatements(statements);
+            }
+
+            if (!StringUtils.isEmpty(smallFull.getLinks().getAccountingPolicyNote())) {
+
+                errorString = "accounting policies";
+
+                AccountingPoliciesApi policies = apiClient.smallFull().accountingPolicies()
+                        .get(smallFull.getLinks().getAccountingPolicyNote()).execute();
+                smallFullApiData.setAccountingPolicies(policies);
+            }
+
+            if (!StringUtils.isEmpty(smallFull.getLinks().getTangibleAssetsNote())) {
+
+                errorString = "tangible assets";
+
+                TangibleApi tangible = apiClient.smallFull().tangible()
+                        .get(smallFull.getLinks().getTangibleAssetsNote()).execute();
+
+                smallFullApiData.setTangibleAssets(tangible);
+            }
+
+            if (!StringUtils.isEmpty(smallFull.getLinks().getDebtorsNote())) {
+
+                DebtorsApi debtors = apiClient.smallFull().debtors()
+                        .get(smallFull.getLinks().getDebtorsNote()).execute();
+
+                smallFullApiData.setDebtors(debtors);
+            }
+
         } catch (ApiErrorResponseException e) {
-            handleException(e, "accounting policies", link);
+            handleException(e, errorString, link);
         }
 
         smallFullApiData.setCompanyProfile(companyService.getCompanyProfile(transaction.getCompanyNumber()));
@@ -153,7 +203,7 @@ public class AccountsManager {
         }
     }
 
-    private Map<String,Object> setDebugMap(String link) {
+    private Map<String, Object> setDebugMap(String link) {
         Map<String, Object> logMap = new HashMap<>();
         logMap.put("LINK", link);
 
