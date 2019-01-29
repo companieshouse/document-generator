@@ -10,6 +10,9 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CapitalAndReservesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentAssetsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.CurrentPeriod;
+import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.PreviousPeriod;
 import uk.gov.companieshouse.api.model.accounts.smallfull.FixedAssetsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.OtherLiabilitiesOrAssetsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
@@ -28,6 +31,7 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.company.Company;
 
 import java.time.LocalDate;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.BalanceSheetNotes;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -37,18 +41,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class SmallFullIXBRLMapperTest {
 
     private static final  Long VALUE_ONE = 100L;
-
     private static final  Long VALUE_TWO = 200L;
-
     private static final  Long VALUE_THREE = 300L;
-
     private static final String JURISDICTION = "jurisdiction";
-
     private static final String COMPANY_NAME = "companyName";
-
     private static final String COMPANY_NUMBER = "companyNumber";
-
     private static final String NAME = "name";
+    private static final String DETAILS = "details";
 
     @Test
     @DisplayName("tests the mapping of the smallFull IXBRL model with a current and previous period")
@@ -62,6 +61,7 @@ public class SmallFullIXBRLMapperTest {
         assertApprovalsMapped(smallFullAccountIxbrl.getApprovalDate(), smallFullAccountIxbrl.getApprovalName());
         assertBalanceSheetMapped(smallFullAccountIxbrl.getBalanceSheet(), true);
         assertCompanyProfileMapped(smallFullAccountIxbrl.getCompany());
+        assertBalanceSheetNotesMapped(smallFullAccountIxbrl.getBalanceSheetNotes(), true );
     }
 
     @Test
@@ -76,6 +76,7 @@ public class SmallFullIXBRLMapperTest {
         assertApprovalsMapped(smallFullAccountIxbrl.getApprovalDate(), smallFullAccountIxbrl.getApprovalName());
         assertBalanceSheetMapped(smallFullAccountIxbrl.getBalanceSheet(), false);
         assertCompanyProfileMapped(smallFullAccountIxbrl.getCompany());
+        assertBalanceSheetNotesMapped(smallFullAccountIxbrl.getBalanceSheetNotes(),false);
     }
 
     private SmallFullApiData createSmallFullData(boolean isSameYearFiling) {
@@ -89,13 +90,15 @@ public class SmallFullIXBRLMapperTest {
             smallFullApiData.setPreviousPeriod(createPreviousPeriod());
         }
 
+        smallFullApiData.setDebtors(createDebtors());
+
         return smallFullApiData;
     }
 
     private CurrentPeriodApi createCurrentPeriod() {
 
         CurrentPeriodApi currentPeriod = new CurrentPeriodApi();
-        currentPeriod.setBalanceSheetApi(createBalanceSheetValues());
+        currentPeriod.setBalanceSheet(createBalanceSheetValues());
 
         return currentPeriod;
     }
@@ -152,10 +155,10 @@ public class SmallFullIXBRLMapperTest {
     private BalanceSheetApi createBalanceSheetValues() {
 
         BalanceSheetApi balanceSheet = new BalanceSheetApi();
-        balanceSheet.setCapitalAndReservesApi(createCapitalAndReserve());
-        balanceSheet.setCurrentAssetsApi(createCurrentAssets());
-        balanceSheet.setFixedAssetsApi(createFixedAssets());
-        balanceSheet.setOtherLiabilitiesOrAssetsApi(createOtherLiabilitiesOrAssets());
+        balanceSheet.setCapitalAndReserves(createCapitalAndReserve());
+        balanceSheet.setCurrentAssets(createCurrentAssets());
+        balanceSheet.setFixedAssets(createFixedAssets());
+        balanceSheet.setOtherLiabilitiesOrAssets(createOtherLiabilitiesOrAssets());
         balanceSheet.setCalledUpShareCapitalNotPaid(VALUE_ONE);
 
         return balanceSheet;
@@ -207,6 +210,7 @@ public class SmallFullIXBRLMapperTest {
 
         return capitalAndReserves;
     }
+
 
     private void assertBalanceSheetMapped(BalanceSheet balanceSheet, boolean isMultiYearFiling) {
 
@@ -315,5 +319,46 @@ public class SmallFullIXBRLMapperTest {
         assertEquals(NAME, approvalName);
     }
 
+    private void assertBalanceSheetNotesMapped(BalanceSheetNotes balanceSheetNotes, boolean isMultiYearFiling) {
+        assertEquals(DETAILS, balanceSheetNotes.getDebtorsNote().getDetails());
+        assertEquals(VALUE_ONE, balanceSheetNotes.getDebtorsNote().getGreaterThanOneYear().getCurrentAmount());
+        assertEquals(VALUE_TWO, balanceSheetNotes.getDebtorsNote().getOtherDebtors().getCurrentAmount());
+        assertEquals(VALUE_THREE, balanceSheetNotes.getDebtorsNote().getPrepaymentsAndAccruedIncome().getCurrentAmount());
+        assertEquals(VALUE_ONE, balanceSheetNotes.getDebtorsNote().getTradeDebtors().getCurrentAmount());
+        assertEquals(VALUE_TWO, balanceSheetNotes.getDebtorsNote().getTotal().getCurrentAmount());
 
+        if (isMultiYearFiling == true) {
+
+            assertEquals(VALUE_ONE, balanceSheetNotes.getDebtorsNote().getGreaterThanOneYear().getPreviousAmount());
+            assertEquals(VALUE_TWO, balanceSheetNotes.getDebtorsNote().getOtherDebtors().getPreviousAmount());
+            assertEquals(VALUE_THREE, balanceSheetNotes.getDebtorsNote().getPrepaymentsAndAccruedIncome().getPreviousAmount());
+            assertEquals(VALUE_ONE, balanceSheetNotes.getDebtorsNote().getTradeDebtors().getPreviousAmount());
+            assertEquals(VALUE_TWO, balanceSheetNotes.getDebtorsNote().getTotal().getPreviousAmount());
+        }
+    }
+
+    private DebtorsApi createDebtors() {
+
+        DebtorsApi debtors = new DebtorsApi();
+
+        CurrentPeriod debtorsCurrentPeriod = new CurrentPeriod();
+        debtorsCurrentPeriod.setDetails(DETAILS);
+        debtorsCurrentPeriod.setGreaterThanOneYear(VALUE_ONE);
+        debtorsCurrentPeriod.setOtherDebtors(VALUE_TWO);
+        debtorsCurrentPeriod.setPrepaymentsAndAccruedIncome(VALUE_THREE);
+        debtorsCurrentPeriod.setTradeDebtors(VALUE_ONE);
+        debtorsCurrentPeriod.setTotal(VALUE_TWO);
+        debtors.setDebtorsCurrentPeriod(debtorsCurrentPeriod);
+
+        PreviousPeriod debtorsPreviousPeriod = new PreviousPeriod();
+        debtorsPreviousPeriod.setGreaterThanOneYear(VALUE_ONE);
+        debtorsPreviousPeriod.setOtherDebtors(VALUE_TWO);
+        debtorsPreviousPeriod.setPrepaymentsAndAccruedIncome(VALUE_THREE);
+        debtorsPreviousPeriod.setTradeDebtors(VALUE_ONE);
+        debtorsPreviousPeriod.setTotal(VALUE_TWO);
+        debtors.setDebtorsPreviousPeriod(debtorsPreviousPeriod);
+
+        return debtors;
+
+    }
 }

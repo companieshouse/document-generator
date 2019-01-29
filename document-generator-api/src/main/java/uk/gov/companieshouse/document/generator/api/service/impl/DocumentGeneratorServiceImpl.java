@@ -1,5 +1,10 @@
 package uk.gov.companieshouse.document.generator.api.service.impl;
 
+import static uk.gov.companieshouse.document.generator.api.DocumentGeneratorApplication.APPLICATION_NAME_SPACE;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.http.HttpStatus;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +31,6 @@ import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import static uk.gov.companieshouse.document.generator.api.DocumentGeneratorApplication.APPLICATION_NAME_SPACE;
-
 @Service
 public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
 
@@ -51,7 +50,9 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
 
     private static final String S3 = "s3://";
 
-    private static final String CONTEXT_PATH = "/document-render/store?is_public=true";
+    private static final String CONTEXT_PATH = "/document-render/store";
+
+    private static final String PUBLIC_LOCATION_PARAM = "?is_public=true";
 
     private static final Logger LOG = LoggerFactory.getLogger(APPLICATION_NAME_SPACE);
 
@@ -62,8 +63,6 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
     private static final String TEXT_HTML = "text/html";
 
     private static final String RESOURCE_URI = "resource_uri";
-
-    private static final String RESOURCE_ID = "resource_id";
 
     private static final String REQUEST_ID = "request_id";
 
@@ -91,7 +90,6 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
 
         Map<String, String> requestParameters = new HashMap<>();
         requestParameters.put(RESOURCE_URI, documentRequest.getResourceUri());
-        requestParameters.put(RESOURCE_ID, documentRequest.getResourceId());
         requestParameters.put(REQUEST_ID, requestId);
 
         createAndLogInfoMessage("Generation of document for resource: "
@@ -170,7 +168,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
      *
      * @param documentRequest object that contains the request details from the Api call
      * @param documentInfoResponse object that contain the Response from documentInfoService
-     * @param requestParameters Map containing requestId, resourceId and resourceUri as a key/value pair
+     * @param requestParameters Map containing requestId and resourceUri as a key/value pair
      * @return A populated RenderDocumentResponse model or Null
      * @throws IOException
      */
@@ -180,7 +178,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
             throws IOException, RenderServiceException {
 
         String host = environmentReader.getMandatoryString(DOCUMENT_RENDER_SERVICE_HOST_ENV_VAR);
-        String url = new StringBuilder(host).append(CONTEXT_PATH).toString();
+        String url = host + getContextPath(documentRequest.isPublicLocationRequired());
 
         RenderDocumentRequest requestData = new RenderDocumentRequest();
         requestData.setAssetId(documentInfoResponse.getAssetId());
@@ -194,14 +192,30 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
         return requestHandler.sendDataToDocumentRenderService(url, requestData, requestParameters);
     }
 
-
     /**
+     * Builds the correct context path to obtain a public or private location.
+     *
+     * @param isPublicLocationRequired - flag to specify if a public location is required.
+     * @return
+     */
+    private String getContextPath(boolean isPublicLocationRequired) {
+
+        String contextPath = CONTEXT_PATH;
+
+        if (isPublicLocationRequired) {
+            contextPath = contextPath + PUBLIC_LOCATION_PARAM;
+        }
+
+        return contextPath;
+    }
+
+     /**
      * Sets the content and document type required in render document request.
      *
      * @param mimeType The content type of the document, also the document type if no document type set
      * @param documentType The document type
      * @param requestData The object containing the populated request data for the render service
-     * @param requestParameters Map containing requestId, resourceId and resourceUri as a key/value pair
+     * @param requestParameters Map containing requestId and resourceUri as a key/value pair
      * @throws IOException
      */
     private void setContentAndDocumentType(String mimeType, String documentType, RenderDocumentRequest requestData,
@@ -239,7 +253,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
      *
      * @param renderResponse object that contains the RenderDocumentResponse details
      * @param documentInfoResponse object that contains the Response from documentInfoService
-     * @param requestParameters Map containing requestId, resourceId and resourceUri as a key/value pair
+     * @param requestParameters Map containing requestId and resourceUri as a key/value pair
      * @return a Document Response
      * @return
      */
@@ -267,7 +281,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
      * Get the document description from an api enumeration file
      *
      * @param documentInfoResponse object that contains the Response from documentInfoService
-     * @param requestParameters Map containing requestId, resourceId and resourceUri as a key/value pair
+     * @param requestParameters Map containing requestId and resourceUri as a key/value pair
      * @return String containing the description
      */
     private String getDescription(DocumentInfoResponse documentInfoResponse, Map<String, String> requestParameters) {
@@ -291,7 +305,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
      *
      * @param message The message to be logged
      * @param <T> generic exception parameter to be stored in message
-     * @param requestParameters Map containing requestId, resourceId and resourceUri as a key/value pair
+     * @param requestParameters Map containing requestId and resourceUri as a key/value pair
      */
     private <T extends Exception> void createAndLogErrorMessage(String message, T exception,
                                                                 Map<String, String> requestParameters) {
@@ -315,7 +329,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
      * Create and log Info Message
      *
      * @param message message to be logged
-     * @param requestParameters Map containing requestId, resourceId and resourceUri as a key/value pair
+     * @param requestParameters Map containing requestId and resourceUri as a key/value pair
      */
     private void createAndLogInfoMessage(String message, Map<String, String> requestParameters) {
         LOG.infoContext(requestParameters.get(REQUEST_ID), message, setDebugMap(requestParameters));
@@ -325,7 +339,6 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
 
         Map <String, Object> debugMap = new HashMap <>();
         debugMap.put(RESOURCE_URI, requestParameters.get(RESOURCE_URI));
-        debugMap.put(RESOURCE_ID, requestParameters.get(RESOURCE_ID));
 
         return debugMap;
     }

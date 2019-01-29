@@ -24,8 +24,6 @@ public class RetrieveApiEnumerationDescriptionImpl implements RetrieveApiEnumera
 
     private static final String RESOURCE_URI = "resource_uri";
 
-    private static final String RESOURCE_ID = "resource_id";
-
     private static final String REQUEST_ID = "request_id";
 
     /**
@@ -77,7 +75,7 @@ public class RetrieveApiEnumerationDescriptionImpl implements RetrieveApiEnumera
         LOG.infoContext(requestParameters.get(REQUEST_ID),"getting value from the file descriptions file: "
                 + fileName + " using key: " + key, setDebugMap(requestParameters));
         return descriptions.entrySet().stream()
-                .filter(map -> descriptions.containsKey(key))
+                .filter(descriptionsEntrySet -> descriptionsEntrySet.getKey().equals(key))
                 .map(Map.Entry::getValue)
                 .findFirst()
                 .orElseGet(() -> {
@@ -104,7 +102,6 @@ public class RetrieveApiEnumerationDescriptionImpl implements RetrieveApiEnumera
 
         Map <String, Object> debugMap = new HashMap <>();
         debugMap.put(RESOURCE_URI, requestParameters.get(RESOURCE_URI));
-        debugMap.put(RESOURCE_ID,requestParameters.get(RESOURCE_ID));
 
         return debugMap;
     }

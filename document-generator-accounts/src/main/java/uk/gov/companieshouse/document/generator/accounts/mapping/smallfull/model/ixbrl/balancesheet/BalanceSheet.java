@@ -29,6 +29,9 @@ public class BalanceSheet {
     @JsonProperty("capital_and_reserve")
     private CapitalAndReserve capitalAndReserve;
 
+    @JsonProperty("balance_sheet_statements")
+    private BalanceSheetStatements balanceSheetStatements;
+
     public CalledUpSharedCapitalNotPaid getCalledUpSharedCapitalNotPaid() {
         return calledUpSharedCapitalNotPaid;
     }
@@ -69,6 +72,15 @@ public class BalanceSheet {
         this.capitalAndReserve = capitalAndReserve;
     }
 
+    public BalanceSheetStatements getBalanceSheetStatements() {
+        return balanceSheetStatements;
+    }
+
+    public void setBalanceSheetStatements(
+            BalanceSheetStatements balanceSheetStatements) {
+        this.balanceSheetStatements = balanceSheetStatements;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -78,13 +90,15 @@ public class BalanceSheet {
                 Objects.equals(getFixedAssets(), that.getFixedAssets()) &&
                 Objects.equals(getCurrentAssets(), that.getCurrentAssets()) &&
                 Objects.equals(getOtherLiabilitiesOrAssets(), that.getOtherLiabilitiesOrAssets()) &&
-                Objects.equals(getCapitalAndReserve(), that.getCapitalAndReserve());
+                Objects.equals(getCapitalAndReserve(), that.getCapitalAndReserve()) &&
+                Objects.equals(getBalanceSheetStatements(), that.getBalanceSheetStatements());
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(getCalledUpSharedCapitalNotPaid(), getFixedAssets(), getCurrentAssets(), getOtherLiabilitiesOrAssets(), getCapitalAndReserve());
+        return Objects.hash(getCalledUpSharedCapitalNotPaid(), getFixedAssets(), getCurrentAssets(),
+                            getOtherLiabilitiesOrAssets(), getCapitalAndReserve(), getBalanceSheetStatements());
     }
 
     @Override

@@ -26,7 +26,6 @@ public class RetrieveApiEnumerationDescriptionTest {
 
     private static final String EMPTY_RESPONSE = "";
 
-    private static final String RESOURCE_ID = "/transactions/091174-913515-326060";
 
     private static final String RESOURCE_URI = "/transactions/091174-913515-326060/accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
 
@@ -47,7 +46,6 @@ public class RetrieveApiEnumerationDescriptionTest {
 
         requestParameters = new HashMap<>();
         requestParameters.put("resource_uri", RESOURCE_URI);
-        requestParameters.put("resource_id", RESOURCE_ID);
         requestParameters.put("request_id", REQUEST_ID);
     }
 
