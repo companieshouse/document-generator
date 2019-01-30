@@ -24,7 +24,7 @@
         <!-- JDK Version -->
         <jdk.version>1.8</jdk.version>
 
-        <!--Dependencies-->
+        <!-- Dependencies -->
         <spring-boot-start-web.version>2.0.4.RELEASE</spring-boot-start-web.version>
         <api-sdk-java.version>3.13.17</api-sdk-java.version>
         <environment-reader-library.version>1.2.0-rc1</environment-reader-library.version>
