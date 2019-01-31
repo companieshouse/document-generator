@@ -11,6 +11,7 @@ import uk.gov.companieshouse.api.model.accounts.Accounts;
 import uk.gov.companieshouse.api.model.accounts.CompanyAccounts;
 import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.SmallFullApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
@@ -182,11 +183,19 @@ public class AccountsManager {
 
                 smallFullApiData.setDebtors(debtors);
             }
+            
+            if (!StringUtils.isEmpty(smallFull.getLinks().getCreditorsWithinOneYearNote())) {
+
+                CreditorsWithinOneYearApi creditorsWithinOneYearApi = apiClient.smallFull().creditorsWithinOneYear()
+                        .get(smallFull.getLinks().getCreditorsWithinOneYearNote()).execute();
+
+                smallFullApiData.setCreditorsWithinOneYear(creditorsWithinOneYearApi);
+            }
 
         } catch (ApiErrorResponseException e) {
             handleException(e, errorString, link);
         }
-
+        
         smallFullApiData.setCompanyProfile(companyService.getCompanyProfile(transaction.getCompanyNumber()));
 
 

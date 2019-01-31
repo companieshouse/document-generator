@@ -6,6 +6,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.ApprovalApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
@@ -29,6 +30,8 @@ public class SmallFullApiData {
     private TangibleApi tangibleAssets;
 
     private DebtorsApi debtors;
+    
+    private CreditorsWithinOneYearApi creditorsWithinOneYear;
 
     public CurrentPeriodApi getCurrentPeriod() {
         return currentPeriod;
@@ -89,6 +92,14 @@ public class SmallFullApiData {
     public void setDebtors (DebtorsApi debtors) {
         this.debtors = debtors;
     }
+    
+    public CreditorsWithinOneYearApi getCreditorsWithinOneYear() {
+      return creditorsWithinOneYear;
+    }
+
+    public void setCreditorsWithinOneYear(CreditorsWithinOneYearApi creditorsWithinOneYear) {
+      this.creditorsWithinOneYear = creditorsWithinOneYear;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -102,16 +113,16 @@ public class SmallFullApiData {
                 Objects.equals(getBalanceSheetStatements(), that.getBalanceSheetStatements()) &&
                 Objects.equals(getAccountingPolicies(), that.getAccountingPolicies()) &&
                 Objects.equals(getDebtors(), that.getDebtors()) &&
+                Objects.equals(getCreditorsWithinOneYear(), that.getCreditorsWithinOneYear()) &&
                 Objects.equals(getTangibleAssets(), that.getTangibleAssets());
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(getCurrentPeriod(), getPreviousPeriod(), getCompanyProfile(), getApproval(),
-                            getBalanceSheetStatements(), getAccountingPolicies(), getDebtors());
+      return Objects.hash(accountingPolicies, approval, balanceSheetStatements, companyProfile,
+          creditorsWithinOneYear, currentPeriod, debtors, previousPeriod, tangibleAssets);
     }
-
+    
     @Override
     public String toString() {
         return new Gson().toJson(this);
