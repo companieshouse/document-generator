@@ -17,6 +17,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear
 import uk.gov.companieshouse.api.model.accounts.smallfull.FixedAssetsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.OtherLiabilitiesOrAssetsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.employees.EmployeesApi;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.company.account.CompanyAccountApi;
 import uk.gov.companieshouse.api.model.company.account.LastAccountsApi;
@@ -33,6 +34,8 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorswithinoneyear.CreditorsWithinOneYear;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.Debtors;
 import java.time.LocalDate;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.employees.Employees;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.AdditionalNotes;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.BalanceSheetNotes;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -64,6 +67,7 @@ public class SmallFullIXBRLMapperTest {
         assertBalanceSheetMapped(smallFullAccountIxbrl.getBalanceSheet(), true);
         assertCompanyProfileMapped(smallFullAccountIxbrl.getCompany());
         assertBalanceSheetNotesMapped(smallFullAccountIxbrl.getBalanceSheetNotes(), true );
+        assertAdditionalNotesMapped(smallFullAccountIxbrl.getAdditionalNotes(), true);
     }
 
     @Test
@@ -94,6 +98,7 @@ public class SmallFullIXBRLMapperTest {
 
         smallFullApiData.setDebtors(createDebtors());
         smallFullApiData.setCreditorsWithinOneYear(createCreditorsWithinOneYear());
+        smallFullApiData.setEmployees(createEmployees());
 
         return smallFullApiData;
     }
@@ -327,6 +332,19 @@ public class SmallFullIXBRLMapperTest {
         assertCreditorsWithinOneYearNoteMapped(balanceSheetNotes.getCreditorsWithinOneYearNote(), isMultiYearFiling);
     }
 
+    private void assertAdditionalNotesMapped(AdditionalNotes additionalNotes, boolean isMultiYearFiling) {
+        assertEmployeesNoteMapped(additionalNotes.getEmployees(), isMultiYearFiling);
+    }
+
+    private void assertEmployeesNoteMapped(Employees employees, boolean isMultiYearFiling){
+        assertEquals(DETAILS, employees.getDetails());
+        assertEquals(VALUE_ONE, employees.getAverageNumberOfEmployees().getCurrentAmount());
+
+        if (isMultiYearFiling == true) {
+            assertEquals(VALUE_TWO, employees.getAverageNumberOfEmployees().getPreviousAmount());
+        }
+    }
+
     private void assertDebtorsNoteMapped(Debtors debtorsNote, boolean isMultiYearFiling) {
         assertEquals(DETAILS, debtorsNote.getDetails());
         assertEquals(VALUE_ONE, debtorsNote.getGreaterThanOneYear().getCurrentAmount());
@@ -389,6 +407,22 @@ public class SmallFullIXBRLMapperTest {
         debtors.setDebtorsPreviousPeriod(debtorsPreviousPeriod);
 
         return debtors;
+    }
+
+    private EmployeesApi createEmployees() {
+
+        EmployeesApi employees = new EmployeesApi();
+
+        uk.gov.companieshouse.api.model.accounts.smallfull.employees.CurrentPeriod employeesCurrentPeriod = new uk.gov.companieshouse.api.model.accounts.smallfull.employees.CurrentPeriod();
+        employeesCurrentPeriod.setAverageNumberOfEmployees(VALUE_ONE);
+        employeesCurrentPeriod.setDetails(DETAILS);
+        employees.setCurrentPeriod(employeesCurrentPeriod);
+
+        uk.gov.companieshouse.api.model.accounts.smallfull.employees.PreviousPeriod employeesPreviousPeriod = new uk.gov.companieshouse.api.model.accounts.smallfull.employees.PreviousPeriod();
+        employeesPreviousPeriod.setAverageNumberOfEmployees(VALUE_TWO);
+        employees.setPreviousPeriod(employeesPreviousPeriod);
+
+        return employees;
     }
     
     private CreditorsWithinOneYearApi createCreditorsWithinOneYear() {
