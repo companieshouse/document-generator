@@ -8,6 +8,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.employees.EmployeesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.SmallFullApiData;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.SmallFullAccountIxbrl;
@@ -15,6 +16,7 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorswithinoneyear.CreditorsWithinOneYear;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.accountingpolicies.AccountingPolicies;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.Debtors;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.employees.Employees;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssets;
 
 import java.time.LocalDate;
@@ -60,6 +62,13 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
             hasAdditionalNotes = true;
         }
 
+        if (smallFullApiData.getEmployees() != null) {
+
+            additionalNotes.setEmployees(mapEmployees(smallFullApiData.getEmployees()));
+
+            hasAdditionalNotes = true;
+        }
+
         BalanceSheetNotes balanceSheetNotes = new BalanceSheetNotes();
         Boolean hasBalanceSheetNotes = false;
 
@@ -76,7 +85,7 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
 
             hasBalanceSheetNotes = true;
         }
-        
+
         if (smallFullApiData.getCreditorsWithinOneYear() != null) {
 
             balanceSheetNotes.setCreditorsWithinOneYearNote(mapCreditorsWithinOneYear(smallFullApiData.getCreditorsWithinOneYear()));
@@ -139,7 +148,13 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
                 .apiToDebtors(debtors.getDebtorsCurrentPeriod(),
                         debtors.getDebtorsPreviousPeriod());
     }
-    
+
+    private Employees mapEmployees(EmployeesApi employees) {
+
+        return ApiToEmployeesMapper.INSTANCE.apiToEmployees(employees.getCurrentPeriod(),
+                employees.getPreviousPeriod());
+    }
+
     private CreditorsWithinOneYear mapCreditorsWithinOneYear(CreditorsWithinOneYearApi creditorsWithinOneYearApi) {
 
         return ApiToCreditorsWithinOneYearMapper.INSTANCE
@@ -149,7 +164,8 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
 
     private TangibleAssets mapTangibleAssets(TangibleApi tangible) {
 
-        TangibleAssets tangibleAssets = ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsNoteAdditionalInformation(tangible);
+        TangibleAssets tangibleAssets =
+                ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsNoteAdditionalInformation(tangible);
 
         tangibleAssets.setCost(mapTangibleAssetsCost(tangible));
         tangibleAssets.setDepreciation(mapTangibleAssetsDepreciation(tangible));

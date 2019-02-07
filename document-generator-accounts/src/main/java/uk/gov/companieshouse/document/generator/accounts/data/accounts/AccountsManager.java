@@ -18,6 +18,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.ApprovalApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.employees.EmployeesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
@@ -174,6 +175,14 @@ public class AccountsManager {
                         .get(smallFull.getLinks().getTangibleAssetsNote()).execute();
 
                 smallFullApiData.setTangibleAssets(tangible);
+            }
+
+            if (!StringUtils.isEmpty(smallFull.getLinks().getEmployeesNote())) {
+
+                EmployeesApi employees = apiClient.smallFull().employees()
+                        .get(smallFull.getLinks().getDebtorsNote()).execute();
+
+                smallFullApiData.setEmployees(employees);
             }
 
             if (!StringUtils.isEmpty(smallFull.getLinks().getDebtorsNote())) {
