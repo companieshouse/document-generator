@@ -25,6 +25,9 @@ public class DocumentRequest {
     @JsonProperty("document_type")
     private String documentType;
 
+    @JsonProperty("is_public_location_required")
+    private boolean isPublicLocationRequired;
+
     public String getResourceUri() {
         return resourceUri;
     }
@@ -55,6 +58,14 @@ public class DocumentRequest {
 
     public void setDocumentType(String documentType) {
         this.documentType = documentType;
+    }
+
+    public boolean isPublicLocationRequired() {
+        return isPublicLocationRequired;
+    }
+
+    public void setPublicLocationRequired(boolean publicLocationRequired) {
+        isPublicLocationRequired = publicLocationRequired;
     }
 
     @Override

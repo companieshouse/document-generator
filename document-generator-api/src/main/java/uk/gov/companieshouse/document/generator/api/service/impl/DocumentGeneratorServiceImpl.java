@@ -1,5 +1,10 @@
 package uk.gov.companieshouse.document.generator.api.service.impl;
 
+import static uk.gov.companieshouse.document.generator.api.DocumentGeneratorApplication.APPLICATION_NAME_SPACE;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.http.HttpStatus;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +31,6 @@ import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import static uk.gov.companieshouse.document.generator.api.DocumentGeneratorApplication.APPLICATION_NAME_SPACE;
-
 @Service
 public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
 
@@ -51,7 +50,9 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
 
     private static final String S3 = "s3://";
 
-    private static final String CONTEXT_PATH = "/document-render/store?is_public=true";
+    private static final String CONTEXT_PATH = "/document-render/store";
+
+    private static final String PUBLIC_LOCATION_PARAM = "?is_public=true";
 
     private static final Logger LOG = LoggerFactory.getLogger(APPLICATION_NAME_SPACE);
 
@@ -177,7 +178,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
             throws IOException, RenderServiceException {
 
         String host = environmentReader.getMandatoryString(DOCUMENT_RENDER_SERVICE_HOST_ENV_VAR);
-        String url = new StringBuilder(host).append(CONTEXT_PATH).toString();
+        String url = host + getContextPath(documentRequest.isPublicLocationRequired());
 
         RenderDocumentRequest requestData = new RenderDocumentRequest();
         requestData.setAssetId(documentInfoResponse.getAssetId());
@@ -191,8 +192,24 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
         return requestHandler.sendDataToDocumentRenderService(url, requestData, requestParameters);
     }
 
-
     /**
+     * Builds the correct context path to obtain a public or private location.
+     *
+     * @param isPublicLocationRequired - flag to specify if a public location is required.
+     * @return
+     */
+    private String getContextPath(boolean isPublicLocationRequired) {
+
+        String contextPath = CONTEXT_PATH;
+
+        if (isPublicLocationRequired) {
+            contextPath = contextPath + PUBLIC_LOCATION_PARAM;
+        }
+
+        return contextPath;
+    }
+
+     /**
      * Sets the content and document type required in render document request.
      *
      * @param mimeType The content type of the document, also the document type if no document type set

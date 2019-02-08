@@ -188,6 +188,7 @@ public class DocumentGeneratorServiceTest {
         request.setResourceUri("/transactions/091174-913515-326060/accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=");
         request.setMimeType("text/html");
         request.setDocumentType("documentType");
+        request.setPublicLocationRequired(true);
 
         return request;
     }

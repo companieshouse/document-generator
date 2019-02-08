@@ -5,7 +5,9 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.ApprovalApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 
 import java.util.Objects;
@@ -23,6 +25,10 @@ public class SmallFullApiData {
     private BalanceSheetStatementsApi balanceSheetStatements;
 
     private AccountingPoliciesApi accountingPolicies;
+
+    private TangibleApi tangibleAssets;
+
+    private DebtorsApi debtors;
 
     public CurrentPeriodApi getCurrentPeriod() {
         return currentPeriod;
@@ -68,6 +74,22 @@ public class SmallFullApiData {
         this.accountingPolicies = accountingPolicies;
     }
 
+    public TangibleApi getTangibleAssets() {
+        return tangibleAssets;
+    }
+
+    public void setTangibleAssets(TangibleApi tangibleAssets) {
+        this.tangibleAssets = tangibleAssets;
+    }
+
+    public DebtorsApi getDebtors () {
+        return debtors;
+    }
+
+    public void setDebtors (DebtorsApi debtors) {
+        this.debtors = debtors;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -78,14 +100,16 @@ public class SmallFullApiData {
                 Objects.equals(getCompanyProfile(), that.getCompanyProfile()) &&
                 Objects.equals(getApproval(), that.getApproval()) &&
                 Objects.equals(getBalanceSheetStatements(), that.getBalanceSheetStatements()) &&
-                Objects.equals(getAccountingPolicies(), that.getAccountingPolicies());
+                Objects.equals(getAccountingPolicies(), that.getAccountingPolicies()) &&
+                Objects.equals(getDebtors(), that.getDebtors()) &&
+                Objects.equals(getTangibleAssets(), that.getTangibleAssets());
     }
 
     @Override
     public int hashCode() {
 
         return Objects.hash(getCurrentPeriod(), getPreviousPeriod(), getCompanyProfile(), getApproval(),
-                            getBalanceSheetStatements(), getAccountingPolicies());
+                            getBalanceSheetStatements(), getAccountingPolicies(), getDebtors());
     }
 
     @Override
