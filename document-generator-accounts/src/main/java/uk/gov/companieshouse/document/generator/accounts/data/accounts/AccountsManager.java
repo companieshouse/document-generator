@@ -179,6 +179,8 @@ public class AccountsManager {
 
             if (!StringUtils.isEmpty(smallFull.getLinks().getEmployeesNote())) {
 
+                errorString = "employees";
+
                 EmployeesApi employees = apiClient.smallFull().employees()
                         .get(smallFull.getLinks().getEmployeesNote()).execute();
 
