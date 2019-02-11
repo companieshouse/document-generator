@@ -180,7 +180,7 @@ public class AccountsManager {
             if (!StringUtils.isEmpty(smallFull.getLinks().getEmployeesNote())) {
 
                 EmployeesApi employees = apiClient.smallFull().employees()
-                        .get(smallFull.getLinks().getDebtorsNote()).execute();
+                        .get(smallFull.getLinks().getEmployeesNote()).execute();
 
                 smallFullApiData.setEmployees(employees);
             }
