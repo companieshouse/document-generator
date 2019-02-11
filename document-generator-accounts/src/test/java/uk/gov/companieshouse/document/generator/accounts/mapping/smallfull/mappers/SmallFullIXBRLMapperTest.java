@@ -340,7 +340,7 @@ public class SmallFullIXBRLMapperTest {
         assertEquals(DETAILS, employees.getDetails());
         assertEquals(VALUE_ONE, employees.getAverageNumberOfEmployees().getCurrentAmount());
 
-        if (isMultiYearFiling == true) {
+        if (isMultiYearFiling) {
             assertEquals(VALUE_TWO, employees.getAverageNumberOfEmployees().getPreviousAmount());
         }
     }
