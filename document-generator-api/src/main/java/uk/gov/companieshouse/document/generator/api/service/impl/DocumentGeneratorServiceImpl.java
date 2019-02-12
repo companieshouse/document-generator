@@ -1,14 +1,10 @@
 package uk.gov.companieshouse.document.generator.api.service.impl;
 
-import static uk.gov.companieshouse.document.generator.api.DocumentGeneratorApplication.APPLICATION_NAME_SPACE;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import org.apache.http.HttpStatus;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.gov.companieshouse.document.generator.api.DocumentGeneratorApplication;
 import uk.gov.companieshouse.document.generator.api.document.DocumentType;
 import uk.gov.companieshouse.document.generator.api.document.description.RetrieveApiEnumerationDescription;
 import uk.gov.companieshouse.document.generator.api.document.render.RenderDocumentRequestHandler;
@@ -31,6 +27,12 @@ import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import static uk.gov.companieshouse.document.generator.api.DocumentGeneratorApplication.APPLICATION_NAME_SPACE;
+
 @Service
 public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
 
@@ -43,10 +45,6 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
     private DocumentInfoServiceFactory documentInfoServiceFactory;
 
     private RetrieveApiEnumerationDescription retrieveApiEnumerationDescription;
-
-    private static final String DOCUMENT_RENDER_SERVICE_HOST_ENV_VAR = "DOCUMENT_RENDER_SERVICE_HOST";
-
-    private static final String DOCUMENT_BUCKET_NAME_ENV_VAR = "DOCUMENT_BUCKET_NAME";
 
     private static final String S3 = "s3://";
 
@@ -177,7 +175,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
                                                                Map<String, String> requestParameters)
             throws IOException, RenderServiceException {
 
-        String host = environmentReader.getMandatoryString(DOCUMENT_RENDER_SERVICE_HOST_ENV_VAR);
+        String host = environmentReader.getMandatoryString(DocumentGeneratorApplication.DOCUMENT_RENDER_SERVICE_HOST_ENV_VAR);
         String url = host + getContextPath(documentRequest.isPublicLocationRequired());
 
         RenderDocumentRequest requestData = new RenderDocumentRequest();
@@ -243,7 +241,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
      */
     private String buildLocation(String path) {
 
-        String bucketName = environmentReader.getMandatoryString(DOCUMENT_BUCKET_NAME_ENV_VAR);
+        String bucketName = environmentReader.getMandatoryString(DocumentGeneratorApplication.DOCUMENT_BUCKET_NAME_ENV_VAR);
 
         return new StringBuilder(S3).append(bucketName).append(path).toString();
     }
