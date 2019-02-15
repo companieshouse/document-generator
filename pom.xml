@@ -143,6 +143,7 @@
     <modules>
         <module>document-generator-interfaces</module>
         <module>document-generator-accounts</module>
+        <module>document-generator-sjp</module>
         <module>document-generator-api</module>
     </modules>
 </project>
