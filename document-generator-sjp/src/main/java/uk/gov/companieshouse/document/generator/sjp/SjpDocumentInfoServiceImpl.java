@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
 //import uk.gov.companieshouse.document.generator.accounts.exception.HandlerException;
 //import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
 //import uk.gov.companieshouse.document.generator.accounts.handler.accounts.AccountsHandler;
@@ -16,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
+import uk.gov.companieshouse.document.generator.sjp.prosecution.ProsecutionCase;
 import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.environment.impl.EnvironmentReaderImpl;
 import uk.gov.companieshouse.logging.Logger;
