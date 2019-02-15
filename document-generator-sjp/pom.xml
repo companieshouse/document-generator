@@ -8,11 +8,11 @@
     <parent>
         <artifactId>document-generator</artifactId>
         <groupId>uk.gov.companieshouse</groupId>
-        <version>c27531d</version>
+        <version>unversioned</version>
     </parent>
 
     <artifactId>document-generator-sjp</artifactId>
-    <version>c27531d</version>
+    <version>unversioned</version>
 
     <name>document-generator-sjp</name>
     <description>Module for retrieving SJP data for document generation</description>
@@ -26,7 +26,7 @@
 
         <!--Dependencies-->
         <spring-boot-start-web.version>2.0.4.RELEASE</spring-boot-start-web.version>
-        <api-sdk-java.version>2.0.0-rc1</api-sdk-java.version>
+        <api-sdk-java.version>3.13.12</api-sdk-java.version>
         <environment-reader-library.version>1.2.0-rc1</environment-reader-library.version>
         <structured-logging.version>1.3.0-rc1</structured-logging.version>
 
@@ -54,7 +54,7 @@
         <dependency>
             <groupId>uk.gov.companieshouse</groupId>
             <artifactId>document-generator-interfaces</artifactId>
-            <version>c27531d</version>
+            <version>unversioned</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -98,6 +98,10 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
