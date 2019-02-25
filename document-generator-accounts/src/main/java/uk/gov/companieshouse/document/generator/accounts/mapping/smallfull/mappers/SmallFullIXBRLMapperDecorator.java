@@ -1,28 +1,31 @@
 package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.mappers;
 
+import java.time.LocalDate;
 import uk.gov.companieshouse.accountsdates.AccountsDatesHelper;
 import uk.gov.companieshouse.accountsdates.impl.AccountsDatesHelperImpl;
 import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
-import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
-import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.CreditorsAfterOneYearApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.SmallFullApiData;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.SmallFullAccountIxbrl;
-import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.BalanceSheet;
-import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorswithinoneyear.CreditorsWithinOneYear;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.accountingpolicies.AccountingPolicies;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.BalanceSheet;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorsafteroneyear.CreditorsAfterOneYear;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorswithinoneyear.CreditorsWithinOneYear;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.Debtors;
-import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssets;
-
-import java.time.LocalDate;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.AdditionalNotes;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.BalanceSheetNotes;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssetsCost;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssetsDepreciation;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssetsNetBookValue;
-import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.BalanceSheetNotes;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.stocks.StocksNote;
 
 public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMapper {
 
@@ -70,6 +73,13 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
             hasBalanceSheetNotes = true;
         }
 
+        if (smallFullApiData.getStocks() != null) {
+
+            balanceSheetNotes.setStocksNote(mapStocks(smallFullApiData.getStocks()));
+
+            hasBalanceSheetNotes = true;
+        }
+        
         if (smallFullApiData.getDebtors() != null) {
 
             balanceSheetNotes.setDebtorsNote(mapDebtors(smallFullApiData.getDebtors()));
@@ -83,6 +93,13 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
 
             hasBalanceSheetNotes = true;
         }
+        
+        if (smallFullApiData.getCreditorsAfterOneYear() != null) {
+
+            balanceSheetNotes.setCreditorsAfterOneYearNote(mapCreditorsAfterOneYear(smallFullApiData.getCreditorsAfterOneYear()));
+
+            hasBalanceSheetNotes = true;
+        }        
 
         //We only want to set the additional notes if we have any
         if (hasAdditionalNotes) {
@@ -133,6 +150,13 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
                 .apiToAccountingPolicies(accountingPolicies);
     }
 
+    private StocksNote mapStocks(StocksApi stocks) {
+
+        return ApiToStocksMapper.INSTANCE
+                .apiToStocks(stocks.getCurrentPeriod(),
+                        stocks.getPreviousPeriod());
+    }
+    
     private Debtors mapDebtors(DebtorsApi debtors) {
 
         return ApiToDebtorsMapper.INSTANCE
@@ -145,6 +169,13 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
         return ApiToCreditorsWithinOneYearMapper.INSTANCE
                 .apiToCreditorsWithinOneYear(creditorsWithinOneYearApi.getCreditorsWithinOneYearCurrentPeriod(),
                         creditorsWithinOneYearApi.getCreditorsWithinOneYearPreviousPeriod());
+    }
+    
+    private CreditorsAfterOneYear mapCreditorsAfterOneYear(CreditorsAfterOneYearApi creditorsAfterOneYearApi) {
+
+        return ApiToCreditorsAfterOneYearMapper.INSTANCE
+                .apiToCreditorsAfterOneYear(creditorsAfterOneYearApi.getCurrentPeriod(),
+                        creditorsAfterOneYearApi.getPreviousPeriod());
     }
 
     private TangibleAssets mapTangibleAssets(TangibleApi tangible) {

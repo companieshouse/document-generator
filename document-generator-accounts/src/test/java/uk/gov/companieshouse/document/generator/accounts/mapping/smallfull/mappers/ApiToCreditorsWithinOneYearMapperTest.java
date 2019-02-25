@@ -61,7 +61,7 @@ public class ApiToCreditorsWithinOneYearMapperTest {
     }
     
     @Test
-    @DisplayName("tests creditors within one year API with null previous period maps to null creditors within one year IXBRL model")
+    @DisplayName("tests creditors within one year API with null previous period maps to creditors within one year IXBRL model")
     void testApiToCreditorsMapsWhenPreviousPeriodsNull() {
 
         CreditorsWithinOneYear creditorsWithinOneYear = ApiToCreditorsWithinOneYearMapper.INSTANCE.apiToCreditorsWithinOneYear(createCurrentPeriodCreditorsWithinOneYear(),
@@ -87,7 +87,7 @@ public class ApiToCreditorsWithinOneYearMapperTest {
     }
     
     @Test
-    @DisplayName("tests creditors within one year API with null current period maps to null creditors within one year IXBRL model")
+    @DisplayName("tests creditors within one year API with null current period maps to creditors within one year IXBRL model")
     void testApiToCreditorsMapsWhenCurrentPeriodsNull() {
 
         CreditorsWithinOneYear creditorsWithinOneYear = ApiToCreditorsWithinOneYearMapper.INSTANCE.apiToCreditorsWithinOneYear(null,

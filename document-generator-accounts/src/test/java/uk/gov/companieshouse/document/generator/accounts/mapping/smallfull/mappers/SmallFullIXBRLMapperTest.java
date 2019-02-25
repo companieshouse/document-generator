@@ -13,7 +13,9 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.CurrentPeriod;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.PreviousPeriod;
+import uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.CreditorsAfterOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.FixedAssetsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.OtherLiabilitiesOrAssetsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
@@ -30,11 +32,12 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.fixedassets.FixedAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.otherliabilitiesandassets.OtherLiabilitiesOrAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.company.Company;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorsafteroneyear.CreditorsAfterOneYear;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorswithinoneyear.CreditorsWithinOneYear;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.Debtors;
 import java.time.LocalDate;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.BalanceSheetNotes;
-
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.stocks.StocksNote;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -53,7 +56,7 @@ public class SmallFullIXBRLMapperTest {
 
     @Test
     @DisplayName("tests the mapping of the smallFull IXBRL model with a current and previous period")
-    void testSmallFullMapperCurrentAndPreious() {
+    void testSmallFullMapperCurrentAndPrevious() {
 
         SmallFullApiData smallFullApiData = createSmallFullData(true);
 
@@ -92,8 +95,10 @@ public class SmallFullIXBRLMapperTest {
             smallFullApiData.setPreviousPeriod(createPreviousPeriod());
         }
 
+        smallFullApiData.setStocks(createStocks());
         smallFullApiData.setDebtors(createDebtors());
         smallFullApiData.setCreditorsWithinOneYear(createCreditorsWithinOneYear());
+        smallFullApiData.setCreditorsAfterOneYear(createCreditorsAfterOneYear());
 
         return smallFullApiData;
     }
@@ -323,8 +328,10 @@ public class SmallFullIXBRLMapperTest {
     }
 
     private void assertBalanceSheetNotesMapped(BalanceSheetNotes balanceSheetNotes, boolean isMultiYearFiling) {
+        assertStocksNoteMapped(balanceSheetNotes.getStocksNote(), isMultiYearFiling);
         assertDebtorsNoteMapped(balanceSheetNotes.getDebtorsNote(), isMultiYearFiling);
         assertCreditorsWithinOneYearNoteMapped(balanceSheetNotes.getCreditorsWithinOneYearNote(), isMultiYearFiling);
+        assertCreditorsAfterOneYearNoteMapped(balanceSheetNotes.getCreditorsAfterOneYearNote(), isMultiYearFiling);
     }
 
     private void assertDebtorsNoteMapped(Debtors debtorsNote, boolean isMultiYearFiling) {
@@ -342,6 +349,19 @@ public class SmallFullIXBRLMapperTest {
             assertEquals(VALUE_THREE, debtorsNote.getPrepaymentsAndAccruedIncome().getPreviousAmount());
             assertEquals(VALUE_ONE, debtorsNote.getTradeDebtors().getPreviousAmount());
             assertEquals(VALUE_TWO, debtorsNote.getTotal().getPreviousAmount());
+        }
+    }
+    
+    private void assertStocksNoteMapped(StocksNote stocksNote, boolean isMultiYearFiling) {
+        assertEquals(VALUE_ONE, stocksNote.getStocks().getCurrentAmount());
+        assertEquals(VALUE_TWO, stocksNote.getPaymentsOnAccount().getCurrentAmount());
+        assertEquals(VALUE_THREE, stocksNote.getTotal().getCurrentAmount());
+
+        if (isMultiYearFiling == true) {
+
+            assertEquals(VALUE_ONE, stocksNote.getStocks().getPreviousAmount());
+            assertEquals(VALUE_TWO, stocksNote.getPaymentsOnAccount().getPreviousAmount());
+            assertEquals(VALUE_THREE, stocksNote.getTotal().getPreviousAmount());
         }
     }
     
@@ -364,6 +384,22 @@ public class SmallFullIXBRLMapperTest {
             assertEquals(VALUE_TWO, creditorsWithinOneYearNote.getTaxationAndSocialSecurity().getPreviousAmount());
             assertEquals(VALUE_THREE, creditorsWithinOneYearNote.getTradeCreditors().getPreviousAmount());
             assertEquals(VALUE_ONE, creditorsWithinOneYearNote.getTotal().getPreviousAmount());
+        }
+    }
+
+    private void assertCreditorsAfterOneYearNoteMapped(CreditorsAfterOneYear creditorsAfterOneYearNote, boolean isMultiYearFiling) {
+        assertEquals(DETAILS, creditorsAfterOneYearNote.getDetails());
+        assertEquals(VALUE_ONE, creditorsAfterOneYearNote.getBankLoansAndOverdrafts().getCurrentAmount());
+        assertEquals(VALUE_TWO, creditorsAfterOneYearNote.getFinanceLeasesAndHirePurchaseContracts().getCurrentAmount());
+        assertEquals(VALUE_THREE, creditorsAfterOneYearNote.getOtherCreditors().getCurrentAmount());
+        assertEquals(VALUE_ONE, creditorsAfterOneYearNote.getTotal().getCurrentAmount());
+
+        if (isMultiYearFiling == true) {
+
+            assertEquals(VALUE_ONE, creditorsAfterOneYearNote.getBankLoansAndOverdrafts().getPreviousAmount());
+            assertEquals(VALUE_TWO, creditorsAfterOneYearNote.getFinanceLeasesAndHirePurchaseContracts().getPreviousAmount());
+            assertEquals(VALUE_THREE, creditorsAfterOneYearNote.getOtherCreditors().getPreviousAmount());
+            assertEquals(VALUE_ONE, creditorsAfterOneYearNote.getTotal().getPreviousAmount());
         }
     }
     
@@ -390,6 +426,29 @@ public class SmallFullIXBRLMapperTest {
 
         return debtors;
     }
+    
+    private StocksApi createStocks() {
+
+        StocksApi stocks = new StocksApi();
+
+        uk.gov.companieshouse.api.model.accounts.smallfull.stocks.CurrentPeriod stocksCurrentPeriod = 
+                new uk.gov.companieshouse.api.model.accounts.smallfull.stocks.CurrentPeriod();
+        
+        stocksCurrentPeriod.setStocks(VALUE_ONE);
+        stocksCurrentPeriod.setPaymentsOnAccount(VALUE_TWO);
+        stocksCurrentPeriod.setTotal(VALUE_THREE);
+        stocks.setCurrentPeriod(stocksCurrentPeriod);
+
+        uk.gov.companieshouse.api.model.accounts.smallfull.stocks.PreviousPeriod stocksPreviousPeriod
+        = new uk.gov.companieshouse.api.model.accounts.smallfull.stocks.PreviousPeriod();
+        
+        stocksPreviousPeriod.setStocks(VALUE_ONE);
+        stocksPreviousPeriod.setPaymentsOnAccount(VALUE_TWO);
+        stocksPreviousPeriod.setTotal(VALUE_THREE);
+        stocks.setPreviousPeriod(stocksPreviousPeriod);
+
+        return stocks;
+    }    
     
     private CreditorsWithinOneYearApi createCreditorsWithinOneYear() {
 
@@ -422,4 +481,33 @@ public class SmallFullIXBRLMapperTest {
 
       return creditorsWithinOneYearApi;
   }
+    
+    private CreditorsAfterOneYearApi createCreditorsAfterOneYear() {
+
+        CreditorsAfterOneYearApi creditorsAfterOneYearApi = new CreditorsAfterOneYearApi();
+
+        uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.CurrentPeriod creditorsAfterOneYearCurrentPeriod =
+            new uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.CurrentPeriod();
+        
+        creditorsAfterOneYearCurrentPeriod.setDetails(DETAILS);
+        creditorsAfterOneYearCurrentPeriod.setBankLoansAndOverdrafts(VALUE_ONE);
+        creditorsAfterOneYearCurrentPeriod.setFinanceLeasesAndHirePurchaseContracts(VALUE_TWO);
+        creditorsAfterOneYearCurrentPeriod.setOtherCreditors(VALUE_THREE);
+        creditorsAfterOneYearCurrentPeriod.setTotal(VALUE_ONE);
+        
+        creditorsAfterOneYearApi.setCurrentPeriod(creditorsAfterOneYearCurrentPeriod);
+
+
+        uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.PreviousPeriod creditorsAfterOneYearPreviousPeriod =
+            new uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.PreviousPeriod();
+        
+        creditorsAfterOneYearPreviousPeriod.setBankLoansAndOverdrafts(VALUE_ONE);
+        creditorsAfterOneYearPreviousPeriod.setFinanceLeasesAndHirePurchaseContracts(VALUE_TWO);
+        creditorsAfterOneYearPreviousPeriod.setOtherCreditors(VALUE_THREE);
+        creditorsAfterOneYearPreviousPeriod.setTotal(VALUE_ONE);
+        
+        creditorsAfterOneYearApi.setPreviousPeriod(creditorsAfterOneYearPreviousPeriod);
+
+        return creditorsAfterOneYearApi;
+    }    
 }
