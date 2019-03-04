@@ -1,21 +1,8 @@
 package uk.gov.companieshouse.document.generator.sjp;
 
-//import static uk.gov.companieshouse.document.generator.accounts.AccountsDocumentInfoServiceImpl.MODULE_NAME_SPACE;
-
-import java.util.HashMap;
-import java.util.Map;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.gov.companieshouse.api.model.accounts.Accounts;
-import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
 import uk.gov.companieshouse.api.model.transaction.Transaction;
-//import uk.gov.companieshouse.document.generator.accounts.AccountType;
-//import uk.gov.companieshouse.document.generator.accounts.LinkType;
-//import uk.gov.companieshouse.document.generator.accounts.service.AccountsService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
-import uk.gov.companieshouse.logging.Logger;
-import uk.gov.companieshouse.logging.LoggerFactory;
 
 @Component
 public class SjpHandlerImpl implements SjpHandler  {
@@ -25,13 +12,14 @@ public class SjpHandlerImpl implements SjpHandler  {
 //    @Autowired
 //    private AccountsService accountsService;
 
-    private static final String DOC_GEN_ACC_BUCKET_NAME_ENV_VAR = "DOC_GEN_ACC_BUCKET_NAME";
+//    private static final String DOC_GEN_ACC_BUCKET_NAME_ENV_VAR = "DOC_GEN_ACC_BUCKET_NAME";
 
-	@Override
-	public DocumentInfoResponse getProsecutionData(Transaction transaction, String resourceLink) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public DocumentInfoResponse getProsecutionData(Transaction transaction, String resourceLink)
+            throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 //    /**
 //     * {@inheritDoc}

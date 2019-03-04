@@ -21,14 +21,13 @@ import uk.gov.companieshouse.environment.impl.EnvironmentReaderImpl;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
-
 @Service
 public class SjpDocumentInfoServiceImpl implements DocumentInfoService {
 
-	private static final String PROSECTION_SERVICE = "http://chs-dev:4084";
+    private static final String PROSECTION_SERVICE = "http://chs-dev:4084";
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final EnvironmentReader READER = new EnvironmentReaderImpl();
-	
+
     public static final String MODULE_NAME_SPACE = "document-generator-sjp";
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
@@ -37,7 +36,7 @@ public class SjpDocumentInfoServiceImpl implements DocumentInfoService {
     public DocumentInfoResponse getDocumentInfo(DocumentInfoRequest documentInfoRequest) {
         LOG.info("Started getting document");
 
-        String resourceId = documentInfoRequest.getResourceId();
+//        String resourceId = documentInfoRequest.getResourceId();
         String resourceUri = documentInfoRequest.getResourceUri();
 
         HttpHeaders requestHeaders = new HttpHeaders();
@@ -49,9 +48,8 @@ public class SjpDocumentInfoServiceImpl implements DocumentInfoService {
         HttpEntity<ProsecutionCase> requestEntity = new HttpEntity<>(requestHeaders);
 
         ResponseEntity<ProsecutionCase> prosecutionCaseResponse = restTemplate.exchange(PROSECTION_SERVICE + resourceUri, HttpMethod.GET, requestEntity, ProsecutionCase.class);
-
         ProsecutionCase prosCase = prosecutionCaseResponse.getBody();
-        
+
         System.out.println("Prosecution Case Company Name: " + prosCase.getCompanyName());
 
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
