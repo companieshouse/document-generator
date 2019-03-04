@@ -143,7 +143,7 @@ public class CompanyAccountsDataHandler {
 
         Map<String, String> descriptionValues = new HashMap<>();
         descriptionValues.put("period_end_on", accountsDatesHelper
-                .convertDateToString(getCurrentPeriodEndOn(accountData)));
+                .convertLocalDateToDisplayDate(getCurrentPeriodEndOn(accountData)));
 
         documentInfoResponse.setDescriptionValues(descriptionValues);
         documentInfoResponse.setDescriptionIdentifier(accountType.getEnumerationKey());
