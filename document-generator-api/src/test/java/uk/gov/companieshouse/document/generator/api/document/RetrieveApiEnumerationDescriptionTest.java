@@ -22,7 +22,7 @@ public class RetrieveApiEnumerationDescriptionTest {
 
     private static final String DESCRIPTION_IDENTIFIERS_KEY_INVALID = "desc";
 
-    private static final String POPULATED_RESPONSE = "Abridged accounts made up to 01 October 2018";
+    private static final String POPULATED_RESPONSE = "Abridged accounts made up to {period_end_on}";
 
     private static final String EMPTY_RESPONSE = "";
 
