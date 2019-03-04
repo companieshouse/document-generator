@@ -3,14 +3,13 @@ package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.mapp
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.mapstruct.factory.Mappers;
+import org.springframework.web.context.annotation.RequestScope;
 import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.accountingpolicies.AccountingPolicies;
 
-@Mapper
+@RequestScope
+@Mapper(componentModel = "spring")
 public interface ApiToAccountingPoliciesMapper {
-
-    ApiToAccountingPoliciesMapper INSTANCE = Mappers.getMapper(ApiToAccountingPoliciesMapper.class);
 
     @Mappings({
             @Mapping(source = "accountingPolicies.basisOfMeasurementAndPreparation", target = "basisOfMeasurementAndPreparation"),

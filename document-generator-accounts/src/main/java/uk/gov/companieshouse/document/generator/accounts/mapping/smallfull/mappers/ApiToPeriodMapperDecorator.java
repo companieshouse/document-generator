@@ -1,5 +1,7 @@
 package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.mappers;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.companieshouse.accountsdates.AccountsDatesHelper;
 import uk.gov.companieshouse.accountsdates.impl.AccountsDatesHelperImpl;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
@@ -12,13 +14,11 @@ import java.time.LocalDate;
 
 public abstract class ApiToPeriodMapperDecorator implements ApiToPeriodMapper {
 
-    private final ApiToPeriodMapper apiToPeriodMapper;
+    @Autowired
+    @Qualifier("delegate")
+    private ApiToPeriodMapper apiToPeriodMapper;
 
     private AccountsDatesHelper accountsDatesHelper = new AccountsDatesHelperImpl();
-
-    public ApiToPeriodMapperDecorator(ApiToPeriodMapper apiToPeriodMapper) {
-        this.apiToPeriodMapper = apiToPeriodMapper;
-    }
 
     @Override
     public Period apiToPeriod(CompanyProfileApi companyProfile) {

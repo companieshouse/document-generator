@@ -3,15 +3,14 @@ package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.mapp
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.mapstruct.factory.Mappers;
+import org.springframework.web.context.annotation.RequestScope;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CurrentPeriod;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.PreviousPeriod;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorswithinoneyear.CreditorsWithinOneYear;
 
-@Mapper
+@RequestScope
+@Mapper(componentModel = "spring")
 public interface ApiToCreditorsWithinOneYearMapper {
-
-    ApiToCreditorsWithinOneYearMapper INSTANCE = Mappers.getMapper(ApiToCreditorsWithinOneYearMapper.class);
 
     @Mappings({
             @Mapping(source = "creditorsWithinOneYearCurrentPeriod.accrualsAndDeferredIncome",

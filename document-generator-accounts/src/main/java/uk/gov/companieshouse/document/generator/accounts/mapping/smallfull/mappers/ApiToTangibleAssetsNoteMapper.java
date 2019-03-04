@@ -3,15 +3,14 @@ package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.mapp
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.mapstruct.factory.Mappers;
+import org.springframework.web.context.annotation.RequestScope;
 import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssetsColumns;
 
-@Mapper
+@RequestScope
+@Mapper(componentModel = "spring")
 public interface ApiToTangibleAssetsNoteMapper {
-
-    ApiToTangibleAssetsNoteMapper INSTANCE = Mappers.getMapper(ApiToTangibleAssetsNoteMapper.class);
 
     @Mappings({
             @Mapping(source = "tangible.fixturesAndFittings.cost.additions",

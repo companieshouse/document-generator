@@ -3,15 +3,14 @@ package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.mapp
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.mapstruct.factory.Mappers;
+import org.springframework.web.context.annotation.RequestScope;
 import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.CurrentPeriod;
 import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.PreviousPeriod;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.stocks.StocksNote;
 
-@Mapper
+@RequestScope
+@Mapper(componentModel = "spring")
 public interface ApiToStocksMapper {
-
-    ApiToStocksMapper INSTANCE = Mappers.getMapper(ApiToStocksMapper.class);
 
     @Mappings({
             @Mapping(source = "stocksCurrentPeriod.stocks",

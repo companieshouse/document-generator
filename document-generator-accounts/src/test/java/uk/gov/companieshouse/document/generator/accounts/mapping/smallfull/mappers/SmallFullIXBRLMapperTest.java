@@ -1,6 +1,6 @@
 package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.mappers;
 
-import org.junit.jupiter.api.DisplayName;
+/*import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -510,4 +510,4 @@ public class SmallFullIXBRLMapperTest {
 
         return creditorsAfterOneYearApi;
     }    
-}
+}*/
