@@ -30,7 +30,7 @@ public class RetrieveApiEnumerationDescriptionImpl implements RetrieveApiEnumera
      */
     @Override
     public String getApiEnumerationDescription(String fileName, String identifier, String accountType,
-                                               Map<String, String> parameters, Map<String, String> requestParameters)
+                                               Map<String, String> requestParameters)
             throws IOException {
 
 

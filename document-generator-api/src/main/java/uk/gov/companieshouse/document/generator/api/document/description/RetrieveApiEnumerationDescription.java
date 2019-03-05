@@ -17,5 +17,5 @@ public interface RetrieveApiEnumerationDescription {
      * @throws IOException
      */
     String getApiEnumerationDescription(String fileName, String identifier, String accountType,
-                                        Map<String, String> descriptionValues, Map<String, String> requestParameters) throws IOException;
+                                        Map<String, String> requestParameters) throws IOException;
 }
