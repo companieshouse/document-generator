@@ -4,8 +4,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.company.account.CompanyAccountApi;
 import uk.gov.companieshouse.api.model.company.account.LastAccountsApi;
@@ -16,13 +17,17 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ApiToPeriodMapperTest {
 
-    @Autowired
-    private ApiToPeriodMapper apiToPeriodMapper;
+    @Mock
+    private ApiToPeriodMapper internalApiToPeriodMapper;
+
+    @InjectMocks
+    private ApiToPeriodMapper apiToPeriodMapper = new ApiToPeriodMapperImpl();
 
     private static final String CURRENT_PERIOD_START_ON = "2018-01-01";
 
@@ -48,13 +53,13 @@ public class ApiToPeriodMapperTest {
     @DisplayName("tests that the dates from Api are mapped to Period IXBRL model for multi year filings")
     void testApiMapsDatesToPeriodModelForMultiYearFiling() {
 
-        Period period = apiToPeriodMapper.apiToPeriod(createAccountsFilingDates(true));
+        CompanyProfileApi companyProfileApi = createAccountsFilingDates(true);
+
+        when(internalApiToPeriodMapper.apiToPeriod(companyProfileApi)).thenReturn(createPeriod(true));
+
+        Period period = apiToPeriodMapper.apiToPeriod(companyProfileApi);
 
         assertNotNull(period);
-        assertEquals(CURRENT_PERIOD_START_ON, period.getCurrentPeriodStartOn());
-        assertEquals(CURRENT_PERIOD_END_ON, period.getCurrentPeriodEndsOn());
-        assertEquals(PREVIOUS_PERIOD_START_ON, period.getPreviousPeriodStartOn());
-        assertEquals(PREVIOUS_PERIOD_END_ON, period.getPreviousPeriodEndsOn());
         assertEquals(CURRENT_PERIOD_START_ON_FORMATTED, period.getCurrentPeriodStartOnFormatted());
         assertEquals(CURRENT_PERIOD_END_ON_FORMATTED, period.getCurrentPeriodEndOnFormatted());
         assertEquals(PREVIOUS_PERIOD_START_ON_FORMATTED, period.getPreviousPeriodStartOnFormatted());
@@ -67,13 +72,13 @@ public class ApiToPeriodMapperTest {
     @DisplayName("tests that the dates from Api are mapped to Period IXBRL model for single year filings")
     void testApiMapsDatesToPeriodModelForSingleYearFiling() {
 
-        Period period = apiToPeriodMapper.apiToPeriod(createAccountsFilingDates(false));
+        CompanyProfileApi companyProfileApi = createAccountsFilingDates(false);
+
+        when(internalApiToPeriodMapper.apiToPeriod(companyProfileApi)).thenReturn(createPeriod(false));
+
+        Period period = apiToPeriodMapper.apiToPeriod(companyProfileApi);
 
         assertNotNull(period);
-        assertEquals(CURRENT_PERIOD_START_ON, period.getCurrentPeriodStartOn());
-        assertEquals(CURRENT_PERIOD_END_ON, period.getCurrentPeriodEndsOn());
-        assertEquals(null, period.getPreviousPeriodStartOn());
-        assertEquals(null, period.getPreviousPeriodEndsOn());
         assertEquals(CURRENT_PERIOD_START_ON_FORMATTED, period.getCurrentPeriodStartOnFormatted());
         assertEquals(CURRENT_PERIOD_END_ON_FORMATTED, period.getCurrentPeriodEndOnFormatted());
         assertEquals(null, period.getPreviousPeriodStartOnFormatted());
@@ -102,5 +107,20 @@ public class ApiToPeriodMapperTest {
         companyProfileApi.setAccounts(companyAccountsApi);
 
         return companyProfileApi;
+    }
+
+    private Period createPeriod(boolean multiYearFiling) {
+
+        Period period = new Period();
+
+        period.setCurrentPeriodStartOn(CURRENT_PERIOD_START_ON);
+        period.setCurrentPeriodEndsOn(CURRENT_PERIOD_END_ON);
+
+        if (multiYearFiling) {
+            period.setPreviousPeriodStartOn(PREVIOUS_PERIOD_START_ON);
+            period.setPreviousPeriodEndsOn(PREVIOUS_PERIOD_END_ON);
+        }
+
+        return period;
     }
 }

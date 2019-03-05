@@ -11,11 +11,10 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 
 import java.time.LocalDate;
 
-
 public abstract class ApiToPeriodMapperDecorator implements ApiToPeriodMapper {
 
     @Autowired
-    @Qualifier("delegate")
+    @Qualifier("apiToPeriodMapper")
     private ApiToPeriodMapper apiToPeriodMapper;
 
     private AccountsDatesHelper accountsDatesHelper = new AccountsDatesHelperImpl();
