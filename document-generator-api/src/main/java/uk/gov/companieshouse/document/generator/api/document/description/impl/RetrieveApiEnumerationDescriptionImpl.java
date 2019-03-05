@@ -1,6 +1,5 @@
 package uk.gov.companieshouse.document.generator.api.document.description.impl;
 
-import org.apache.commons.lang.text.StrSubstitutor;
 import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.Yaml;
 import uk.gov.companieshouse.document.generator.api.document.description.RetrieveApiEnumerationDescription;
@@ -58,7 +57,7 @@ public class RetrieveApiEnumerationDescriptionImpl implements RetrieveApiEnumera
                     "descriptions for file name: " + descriptionsFile, e, setDebugMap(requestParameters));
         }
 
-        return populateParameters(description, parameters);
+        return description;
     }
 
     /**
@@ -84,18 +83,6 @@ public class RetrieveApiEnumerationDescriptionImpl implements RetrieveApiEnumera
                             setDebugMap(requestParameters));
                     return null;
                 });
-    }
-
-    /**
-     * Populate the parameters in the description
-     *
-     * @param description
-     * @param parameters
-     * @return description
-     */
-    private static String populateParameters(Object description, Map<String, String> parameters) {
-        StrSubstitutor sub = new StrSubstitutor(parameters, "{", "}");
-        return sub.replace(description);
     }
 
     private Map<String, Object> setDebugMap(Map<String, String> requestParameters) {
