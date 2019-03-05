@@ -32,7 +32,7 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMapper {
 
     @Autowired
-    @Qualifier("smallFullIXBRLMapper")
+    @Qualifier("delegate")
     private SmallFullIXBRLMapper smallFullIXBRLMapper;
 
     @Autowired

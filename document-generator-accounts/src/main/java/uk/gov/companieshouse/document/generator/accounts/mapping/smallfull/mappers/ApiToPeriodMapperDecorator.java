@@ -14,7 +14,7 @@ import java.time.LocalDate;
 public abstract class ApiToPeriodMapperDecorator implements ApiToPeriodMapper {
 
     @Autowired
-    @Qualifier("apiToPeriodMapper")
+    @Qualifier("delegate")
     private ApiToPeriodMapper apiToPeriodMapper;
 
     private AccountsDatesHelper accountsDatesHelper = new AccountsDatesHelperImpl();
