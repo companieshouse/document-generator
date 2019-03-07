@@ -1,6 +1,8 @@
 package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.mappers;
 
 import java.time.LocalDate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.companieshouse.accountsdates.AccountsDatesHelper;
 import uk.gov.companieshouse.accountsdates.impl.AccountsDatesHelperImpl;
 import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
@@ -29,13 +31,38 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 
 public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMapper {
 
-    private final SmallFullIXBRLMapper smallFullIXBRLMapper;
+    @Autowired
+    @Qualifier("delegate")
+    private SmallFullIXBRLMapper smallFullIXBRLMapper;
+
+    @Autowired
+    private ApiToCompanyMapper apiToCompanyMapper;
+
+    @Autowired
+    private ApiToPeriodMapper apiToPeriodMapper;
+
+    @Autowired
+    private ApiToBalanceSheetMapper apiToBalanceSheetMapper;
+
+    @Autowired
+    private ApiToAccountingPoliciesMapper apiToAccountingPoliciesMapper;
+
+    @Autowired
+    private ApiToStocksMapper apiToStocksMapper;
+
+    @Autowired
+    private ApiToDebtorsMapper apiToDebtorsMapper;
+
+    @Autowired
+    private ApiToCreditorsWithinOneYearMapper apiToCreditorsWithinOneYearMapper;
+
+    @Autowired
+    private ApiToCreditorsAfterOneYearMapper apiToCreditorsAfterOneYearMapper;
+
+    @Autowired
+    private ApiToTangibleAssetsNoteMapper apiToTangibleAssetsNoteMapper;
 
     private AccountsDatesHelper accountsDatesHelper = new AccountsDatesHelperImpl();
-
-    public SmallFullIXBRLMapperDecorator(SmallFullIXBRLMapper smallFullIXBRLMapper) {
-        this.smallFullIXBRLMapper = smallFullIXBRLMapper;
-    }
 
     @Override
     public SmallFullAccountIxbrl mapSmallFullIXBRLModel(SmallFullApiData smallFullApiData) {
@@ -46,8 +73,8 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
                 setBalanceSheet(smallFullApiData.getCurrentPeriod(),
                         smallFullApiData.getPreviousPeriod(),
                         smallFullApiData.getBalanceSheetStatements()));
-        smallFullAccountIxbrl.setCompany(ApiToCompanyMapper.INSTANCE.apiToCompany(smallFullApiData.getCompanyProfile()));
-        smallFullAccountIxbrl.setPeriod(ApiToPeriodMapper.INSTANCE.apiToPeriod(smallFullApiData.getCompanyProfile()));
+        smallFullAccountIxbrl.setCompany(apiToCompanyMapper.apiToCompany(smallFullApiData.getCompanyProfile()));
+        smallFullAccountIxbrl.setPeriod(apiToPeriodMapper.apiToPeriod(smallFullApiData.getCompanyProfile()));
 
         if (smallFullApiData.getApproval() != null && smallFullApiData.getApproval().getDate() != null) {
             smallFullAccountIxbrl.setApprovalDate(convertToDisplayDate(smallFullApiData.getApproval().getDate()));
@@ -121,24 +148,24 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
 
         if (currentPeriod.getBalanceSheet() != null) {
             if (currentPeriod.getBalanceSheet().getCalledUpShareCapitalNotPaid() != null) {
-                balanceSheet.setCalledUpSharedCapitalNotPaid(ApiToBalanceSheetMapper.INSTANCE.apiToCalledUpSharedCapitalNotPaid(currentPeriod, previousPeriod));
+                balanceSheet.setCalledUpSharedCapitalNotPaid(apiToBalanceSheetMapper.apiToCalledUpSharedCapitalNotPaid(currentPeriod, previousPeriod));
             }
             if (currentPeriod.getBalanceSheet().getOtherLiabilitiesOrAssets() != null) {
-                balanceSheet.setOtherLiabilitiesOrAssets(ApiToBalanceSheetMapper.INSTANCE.apiToOtherLiabilitiesOrAssets(currentPeriod, previousPeriod));
+                balanceSheet.setOtherLiabilitiesOrAssets(apiToBalanceSheetMapper.apiToOtherLiabilitiesOrAssets(currentPeriod, previousPeriod));
             }
             if (currentPeriod.getBalanceSheet().getFixedAssets() != null) {
-                balanceSheet.setFixedAssets(ApiToBalanceSheetMapper.INSTANCE.apiToFixedAssets(currentPeriod, previousPeriod));
+                balanceSheet.setFixedAssets(apiToBalanceSheetMapper.apiToFixedAssets(currentPeriod, previousPeriod));
             }
             if (currentPeriod.getBalanceSheet().getCurrentAssets() != null) {
-                balanceSheet.setCurrentAssets(ApiToBalanceSheetMapper.INSTANCE.apiToCurrentAssets(currentPeriod, previousPeriod));
+                balanceSheet.setCurrentAssets(apiToBalanceSheetMapper.apiToCurrentAssets(currentPeriod, previousPeriod));
             }
             if (currentPeriod.getBalanceSheet().getCapitalAndReserves() != null) {
-                balanceSheet.setCapitalAndReserve(ApiToBalanceSheetMapper.INSTANCE.apiToCapitalAndReserve(currentPeriod, previousPeriod));
+                balanceSheet.setCapitalAndReserve(apiToBalanceSheetMapper.apiToCapitalAndReserve(currentPeriod, previousPeriod));
             }
         }
 
         if (balanceSheetStatements != null) {
-            balanceSheet.setBalanceSheetStatements(ApiToBalanceSheetMapper.INSTANCE.apiToStatements(balanceSheetStatements));
+            balanceSheet.setBalanceSheetStatements(apiToBalanceSheetMapper.apiToStatements(balanceSheetStatements));
         }
 
         return balanceSheet;
@@ -146,41 +173,41 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
 
     private AccountingPolicies mapAccountingPolicies(AccountingPoliciesApi accountingPolicies) {
 
-        return ApiToAccountingPoliciesMapper.INSTANCE
+        return apiToAccountingPoliciesMapper
                 .apiToAccountingPolicies(accountingPolicies);
     }
 
     private StocksNote mapStocks(StocksApi stocks) {
 
-        return ApiToStocksMapper.INSTANCE
+        return apiToStocksMapper
                 .apiToStocks(stocks.getCurrentPeriod(),
                         stocks.getPreviousPeriod());
     }
     
     private Debtors mapDebtors(DebtorsApi debtors) {
 
-        return ApiToDebtorsMapper.INSTANCE
+        return apiToDebtorsMapper
                 .apiToDebtors(debtors.getDebtorsCurrentPeriod(),
                         debtors.getDebtorsPreviousPeriod());
     }
     
     private CreditorsWithinOneYear mapCreditorsWithinOneYear(CreditorsWithinOneYearApi creditorsWithinOneYearApi) {
 
-        return ApiToCreditorsWithinOneYearMapper.INSTANCE
+        return apiToCreditorsWithinOneYearMapper
                 .apiToCreditorsWithinOneYear(creditorsWithinOneYearApi.getCreditorsWithinOneYearCurrentPeriod(),
                         creditorsWithinOneYearApi.getCreditorsWithinOneYearPreviousPeriod());
     }
     
     private CreditorsAfterOneYear mapCreditorsAfterOneYear(CreditorsAfterOneYearApi creditorsAfterOneYearApi) {
 
-        return ApiToCreditorsAfterOneYearMapper.INSTANCE
+        return apiToCreditorsAfterOneYearMapper
                 .apiToCreditorsAfterOneYear(creditorsAfterOneYearApi.getCurrentPeriod(),
                         creditorsAfterOneYearApi.getPreviousPeriod());
     }
 
     private TangibleAssets mapTangibleAssets(TangibleApi tangible) {
 
-        TangibleAssets tangibleAssets = ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsNoteAdditionalInformation(tangible);
+        TangibleAssets tangibleAssets = apiToTangibleAssetsNoteMapper.apiToTangibleAssetsNoteAdditionalInformation(tangible);
 
         tangibleAssets.setCost(mapTangibleAssetsCost(tangible));
         tangibleAssets.setDepreciation(mapTangibleAssetsDepreciation(tangible));
@@ -193,12 +220,12 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
 
         TangibleAssetsCost cost = new TangibleAssetsCost();
 
-        cost.setAdditions(ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsCostAdditionsMapper(tangible));
-        cost.setAtPeriodEnd(ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsCostAtPeriodEndMapper(tangible));
-        cost.setAtPeriodStart(ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsCostAtPeriodStartMapper(tangible));
-        cost.setDisposals(ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsCostDisposalsMapper(tangible));
-        cost.setRevaluations(ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsCostRevaluationsMapper(tangible));
-        cost.setTransfers(ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsCostTransfersMapper(tangible));
+        cost.setAdditions(apiToTangibleAssetsNoteMapper.apiToTangibleAssetsCostAdditionsMapper(tangible));
+        cost.setAtPeriodEnd(apiToTangibleAssetsNoteMapper.apiToTangibleAssetsCostAtPeriodEndMapper(tangible));
+        cost.setAtPeriodStart(apiToTangibleAssetsNoteMapper.apiToTangibleAssetsCostAtPeriodStartMapper(tangible));
+        cost.setDisposals(apiToTangibleAssetsNoteMapper.apiToTangibleAssetsCostDisposalsMapper(tangible));
+        cost.setRevaluations(apiToTangibleAssetsNoteMapper.apiToTangibleAssetsCostRevaluationsMapper(tangible));
+        cost.setTransfers(apiToTangibleAssetsNoteMapper.apiToTangibleAssetsCostTransfersMapper(tangible));
 
         return cost;
     }
@@ -207,15 +234,15 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
 
         TangibleAssetsDepreciation depreciation = new TangibleAssetsDepreciation();
 
-        depreciation.setAtPeriodEnd(ApiToTangibleAssetsNoteMapper.INSTANCE
+        depreciation.setAtPeriodEnd(apiToTangibleAssetsNoteMapper
                 .apiToTangibleAssetsDepreciationAtPeriodEndMapper(tangible));
-        depreciation.setAtPeriodStart(ApiToTangibleAssetsNoteMapper.INSTANCE
+        depreciation.setAtPeriodStart(apiToTangibleAssetsNoteMapper
                 .apiToTangibleAssetsDepreciationAtPeriodStartMapper(tangible));
-        depreciation.setChargeForYear(ApiToTangibleAssetsNoteMapper.INSTANCE
+        depreciation.setChargeForYear(apiToTangibleAssetsNoteMapper
                 .apiToTangibleAssetsDepreciationChargeForYearMapper(tangible));
-        depreciation.setOnDisposals(ApiToTangibleAssetsNoteMapper.INSTANCE
+        depreciation.setOnDisposals(apiToTangibleAssetsNoteMapper
                 .apiToTangibleAssetsDepreciationOnDisposalsMapper(tangible));
-        depreciation.setOtherAdjustments(ApiToTangibleAssetsNoteMapper.INSTANCE
+        depreciation.setOtherAdjustments(apiToTangibleAssetsNoteMapper
                 .apiToTangibleAssetsDepreciationOtherAdjustmentsMapper(tangible));
 
         return depreciation;
@@ -225,9 +252,9 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
 
         TangibleAssetsNetBookValue netBookValue = new TangibleAssetsNetBookValue();
 
-        netBookValue.setCurrentPeriod(ApiToTangibleAssetsNoteMapper.INSTANCE
+        netBookValue.setCurrentPeriod(apiToTangibleAssetsNoteMapper
                 .apiToTangibleAssetsNetBookValueCurrentPeriodMapper(tangible));
-        netBookValue.setPreviousPeriod(ApiToTangibleAssetsNoteMapper.INSTANCE
+        netBookValue.setPreviousPeriod(apiToTangibleAssetsNoteMapper
                 .apiToTangibleAssetsNetBookValuePreviousPeriodMapper(tangible));
 
         return netBookValue;

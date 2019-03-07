@@ -52,6 +52,9 @@ public class AccountsManager {
     @Autowired
     private CompanyService companyService;
 
+    @Autowired
+    private SmallFullIXBRLMapper smallFullIXBRLMapper;
+
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
     private static final String NOT_FOUND_API_DATA = "No data found in %s api for link: ";
@@ -219,7 +222,7 @@ public class AccountsManager {
         smallFullApiData.setCompanyProfile(companyService.getCompanyProfile(transaction.getCompanyNumber()));
 
 
-        return SmallFullIXBRLMapper.INSTANCE.mapSmallFullIXBRLModel(smallFullApiData);
+        return smallFullIXBRLMapper.mapSmallFullIXBRLModel(smallFullApiData);
     }
 
     private void handleException(ApiErrorResponseException e, String text, String link)

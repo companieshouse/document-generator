@@ -10,14 +10,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.CurrentPeriod;
 import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.PreviousPeriod;
-import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorswithinoneyear.CreditorsWithinOneYear;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.stocks.StocksNote;
-
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ApiToStocksMapperTest {
 
+    private ApiToStocksMapper apiToStocksMapper = new ApiToStocksMapperImpl();
 
     private static final Long STOCKS_CURRENT = 1L;
     private static final Long STOCKS_PREVIOUS = 10L;
@@ -30,7 +29,7 @@ public class ApiToStocksMapperTest {
     @DisplayName("tests stocks API values map to stocks IXBRL model")
     void testApiToCompanyMaps() {
 
-        StocksNote stocks = ApiToStocksMapper.INSTANCE.apiToStocks(createCurrentPeriodStocks(),
+        StocksNote stocks = apiToStocksMapper.apiToStocks(createCurrentPeriodStocks(),
                 createPreviousPeriodStocks());
 
         assertNotNull(stocks);
@@ -47,7 +46,7 @@ public class ApiToStocksMapperTest {
     @DisplayName("tests stocks API with null previous period maps to stocks IXBRL model")
     void testApiToCreditorsMapsWhenPreviousPeriodsNull() {
 
-        StocksNote stocks = ApiToStocksMapper.INSTANCE.apiToStocks(createCurrentPeriodStocks(), null);
+        StocksNote stocks = apiToStocksMapper.apiToStocks(createCurrentPeriodStocks(), null);
 
         assertNotNull(stocks);
         
@@ -63,7 +62,7 @@ public class ApiToStocksMapperTest {
     @DisplayName("tests stocks API with null current period maps to stocks IXBRL model")
     void testApiToCreditorsMapsWhenCurrentPeriodsNull() {
 
-        StocksNote stocks = ApiToStocksMapper.INSTANCE.apiToStocks(null, createPreviousPeriodStocks());
+        StocksNote stocks = apiToStocksMapper.apiToStocks(null, createPreviousPeriodStocks());
 
         assertNotNull(stocks);
         assertEquals(null, stocks.getStocks().getCurrentAmount());
@@ -100,7 +99,7 @@ public class ApiToStocksMapperTest {
     @DisplayName("tests stocks API with null periods maps to null stocks IXBRL model")
     void testApiToCreditorsMapsWhenBothPeriodsNull() {
 
-        StocksNote stocksNote = ApiToStocksMapper.INSTANCE.apiToStocks(null, null);
+        StocksNote stocksNote = apiToStocksMapper.apiToStocks(null, null);
 
         assertNull(stocksNote);
     }
