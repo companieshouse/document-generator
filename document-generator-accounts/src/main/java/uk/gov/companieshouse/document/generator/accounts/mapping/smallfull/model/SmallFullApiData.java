@@ -8,6 +8,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.CreditorsAfterOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.fixedassetsinvestments.FixedAssetsInvestmentsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
@@ -38,6 +39,8 @@ public class SmallFullApiData {
     private CreditorsWithinOneYearApi creditorsWithinOneYear;
     
     private CreditorsAfterOneYearApi creditorsAfterOneYear;
+    
+    private FixedAssetsInvestmentsApi fixedAssetsInvestments;
 
     public CurrentPeriodApi getCurrentPeriod() {
         return currentPeriod;
@@ -123,6 +126,14 @@ public class SmallFullApiData {
       this.creditorsAfterOneYear = creditorsAfterOneYear;
     }
 
+    public FixedAssetsInvestmentsApi getFixedAssetsInvestments() {
+        return fixedAssetsInvestments;
+    }
+
+    public void setFixedAssetsInvestments(FixedAssetsInvestmentsApi fixedAssetsInvestments) {
+        this.fixedAssetsInvestments = fixedAssetsInvestments;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -138,14 +149,15 @@ public class SmallFullApiData {
                 Objects.equals(getDebtors(), that.getDebtors()) &&
                 Objects.equals(getCreditorsWithinOneYear(), that.getCreditorsWithinOneYear()) &&
                 Objects.equals(getCreditorsAfterOneYear(), that.getCreditorsAfterOneYear()) &&
-                Objects.equals(getTangibleAssets(), that.getTangibleAssets());
+                Objects.equals(getTangibleAssets(), that.getTangibleAssets()) &&
+                Objects.equals(getFixedAssetsInvestments(), that.getFixedAssetsInvestments());
     }
 
     @Override
     public int hashCode() {
       return Objects.hash(accountingPolicies, approval, balanceSheetStatements, companyProfile,
           creditorsWithinOneYear, creditorsWithinOneYear, currentPeriod, stocks, debtors, previousPeriod, 
-          tangibleAssets);
+          tangibleAssets, fixedAssetsInvestments);
     }
     
     @Override

@@ -13,6 +13,7 @@ import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.CreditorsAfterOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.fixedassetsinvestments.FixedAssetsInvestmentsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.SmallFullApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
@@ -26,8 +27,6 @@ import uk.gov.companieshouse.document.generator.accounts.exception.ServiceExcept
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.mappers.SmallFullIXBRLMapper;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.SmallFullApiData;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.SmallFullAccountIxbrl;
-import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorsafteroneyear.CreditorsAfterOneYear;
-import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorswithinoneyear.CreditorsWithinOneYear;
 import uk.gov.companieshouse.document.generator.accounts.service.ApiClientService;
 import uk.gov.companieshouse.document.generator.accounts.service.CompanyService;
 import uk.gov.companieshouse.logging.Logger;
@@ -185,6 +184,8 @@ public class AccountsManager {
 
             if (!StringUtils.isEmpty(smallFull.getLinks().getStocksNote())) {
 
+                errorString = "stocks";
+                
                 StocksApi stocks = apiClient.smallFull().stocks()
                         .get(smallFull.getLinks().getStocksNote()).execute();
 
@@ -193,6 +194,8 @@ public class AccountsManager {
             
             if (!StringUtils.isEmpty(smallFull.getLinks().getDebtorsNote())) {
 
+                errorString = "debtors";
+                
                 DebtorsApi debtors = apiClient.smallFull().debtors()
                         .get(smallFull.getLinks().getDebtorsNote()).execute();
 
@@ -201,6 +204,8 @@ public class AccountsManager {
             
             if (!StringUtils.isEmpty(smallFull.getLinks().getCreditorsWithinOneYearNote())) {
 
+                errorString = "creditors within one year";
+                
                 CreditorsWithinOneYearApi creditorsWithinOneYearApi = apiClient.smallFull().creditorsWithinOneYear()
                         .get(smallFull.getLinks().getCreditorsWithinOneYearNote()).execute();
 
@@ -209,10 +214,22 @@ public class AccountsManager {
             
             if (!StringUtils.isEmpty(smallFull.getLinks().getCreditorsAfterMoreThanOneYearNote())) {
 
+                errorString = "creditors after one year";
+                
                 CreditorsAfterOneYearApi creditorsAfterOneYearApi = apiClient.smallFull().creditorsAfterOneYear()
                         .get(smallFull.getLinks().getCreditorsAfterMoreThanOneYearNote()).execute();
 
                 smallFullApiData.setCreditorsAfterOneYear(creditorsAfterOneYearApi);
+            }
+            
+            if (!StringUtils.isEmpty(smallFull.getLinks().getFixedAssetsInvestmentsNote())) {
+
+                errorString = "fixed assets investments";
+                
+                FixedAssetsInvestmentsApi fixedAssetsInvestmentsApi = apiClient.smallFull().fixedAssetsInvestments()
+                        .get(smallFull.getLinks().getFixedAssetsInvestmentsNote()).execute();
+
+                smallFullApiData.setFixedAssetsInvestments(fixedAssetsInvestmentsApi);
             }
 
         } catch (ApiErrorResponseException e) {

@@ -8,6 +8,7 @@ import java.util.Objects;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorsafteroneyear.CreditorsAfterOneYear;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorswithinoneyear.CreditorsWithinOneYear;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.Debtors;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.fixedassetsinvestments.FixedAssetsInvestments;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.stocks.StocksNote;
 
@@ -29,6 +30,9 @@ public class BalanceSheetNotes {
 
     @JsonProperty("tangible_assets")
     private TangibleAssets tangibleAssets;
+    
+    @JsonProperty("fixed_assets_investments")
+    private FixedAssetsInvestments fixedAssetsInvestments;
 
     public StocksNote getStocksNote() {
         return stocksNote;
@@ -70,6 +74,14 @@ public class BalanceSheetNotes {
         this.tangibleAssets = tangibleAssets;
     }
 
+    public FixedAssetsInvestments getFixedAssetsInvestments() {
+        return fixedAssetsInvestments;
+    }
+
+    public void setFixedAssetsInvestments(FixedAssetsInvestments fixedAssetsInvestments) {
+        this.fixedAssetsInvestments = fixedAssetsInvestments;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -80,12 +92,15 @@ public class BalanceSheetNotes {
         return (Objects.equals(getStocksNote(), that.getStocksNote()) &&
                 Objects.equals(getDebtorsNote(), that.getDebtorsNote()) &&
                 Objects.equals(getCreditorsWithinOneYearNote(), that.getCreditorsWithinOneYearNote()) &&
-                Objects.equals(getTangibleAssets(), that.tangibleAssets));
+                Objects.equals(getCreditorsAfterOneYearNote(), that.getCreditorsAfterOneYearNote()) &&
+                Objects.equals(getTangibleAssets(), that.tangibleAssets) &&
+                Objects.equals(getFixedAssetsInvestments(), that.fixedAssetsInvestments));
     }
 
     @Override
     public int hashCode() {
-      return Objects.hash(creditorsWithinOneYearNote, stocksNote, debtorsNote, tangibleAssets);
+      return Objects.hash(creditorsWithinOneYearNote, creditorsAfterOneYearNote, stocksNote, 
+          debtorsNote, tangibleAssets, fixedAssetsInvestments);
     }
 
     @Override
