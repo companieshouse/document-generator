@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.document.generator.sjp.prosecution;
+package uk.gov.companieshouse.document.generator.prosecution.tmpclient;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -7,9 +7,6 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 public class ProsecutionCase {
-    @JsonProperty("id")
-    private String id;
-
     @JsonProperty("kind")
     private String kind;
 
@@ -28,16 +25,8 @@ public class ProsecutionCase {
     @JsonProperty("submitted_at")
     private LocalDateTime submittedAt;
 
-    @JsonProperty("_links")
+    @JsonProperty("links")
     private Map<String, String> links;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getKind() {
         return kind;
