@@ -5,7 +5,9 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.ApprovalApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.CreditorsAfterOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.employees.EmployeesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
@@ -29,11 +31,15 @@ public class SmallFullApiData {
 
     private TangibleApi tangibleAssets;
 
+    private StocksApi stocks;
+
     private DebtorsApi debtors;
 
     private EmployeesApi employees;
     
     private CreditorsWithinOneYearApi creditorsWithinOneYear;
+    
+    private CreditorsAfterOneYearApi creditorsAfterOneYear;
 
     public CurrentPeriodApi getCurrentPeriod() {
         return currentPeriod;
@@ -86,7 +92,15 @@ public class SmallFullApiData {
     public void setTangibleAssets(TangibleApi tangibleAssets) {
         this.tangibleAssets = tangibleAssets;
     }
+    
+    public StocksApi getStocks() {
+        return stocks;
+    }
 
+    public void setStocks(StocksApi stocks) {
+        this.stocks = stocks;
+    }
+    
     public DebtorsApi getDebtors () {
         return debtors;
     }
@@ -111,6 +125,14 @@ public class SmallFullApiData {
         this.employees = employees;
     }
 
+    public CreditorsAfterOneYearApi getCreditorsAfterOneYear() {
+      return creditorsAfterOneYear;
+    }
+
+    public void setCreditorsAfterOneYear(CreditorsAfterOneYearApi creditorsAfterOneYear) {
+      this.creditorsAfterOneYear = creditorsAfterOneYear;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -125,15 +147,18 @@ public class SmallFullApiData {
                 Objects.equals(getBalanceSheetStatements(), that.getBalanceSheetStatements()) &&
                 Objects.equals(getAccountingPolicies(), that.getAccountingPolicies()) &&
                 Objects.equals(getTangibleAssets(), that.getTangibleAssets()) &&
+                Objects.equals(getStocks(), that.getStocks()) &&
                 Objects.equals(getDebtors(), that.getDebtors()) &&
                 Objects.equals(getEmployees(), that.getEmployees()) &&
-                Objects.equals(getCreditorsWithinOneYear(), that.getCreditorsWithinOneYear());
+                Objects.equals(getCreditorsWithinOneYear(), that.getCreditorsWithinOneYear()) &&
+                Objects.equals(getCreditorsAfterOneYear(), that.getCreditorsAfterOneYear());
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(getCurrentPeriod(), getPreviousPeriod(), getCompanyProfile(),
-                getApproval(), getBalanceSheetStatements(), getAccountingPolicies(), getTangibleAssets(), getDebtors(), getEmployees(), getCreditorsWithinOneYear());
+                getApproval(), getBalanceSheetStatements(), getAccountingPolicies(),
+                getTangibleAssets(), getStocks(), getDebtors(), getEmployees(), getCreditorsWithinOneYear(), getCreditorsAfterOneYear());
     }
 
     @Override
@@ -146,9 +171,11 @@ public class SmallFullApiData {
                 ", balanceSheetStatements=" + balanceSheetStatements +
                 ", accountingPolicies=" + accountingPolicies +
                 ", tangibleAssets=" + tangibleAssets +
+                ", stocks=" + stocks +
                 ", debtors=" + debtors +
                 ", employees=" + employees +
                 ", creditorsWithinOneYear=" + creditorsWithinOneYear +
+                ", creditorsAfterOneYear=" + creditorsAfterOneYear +
                 '}';
     }
 }
