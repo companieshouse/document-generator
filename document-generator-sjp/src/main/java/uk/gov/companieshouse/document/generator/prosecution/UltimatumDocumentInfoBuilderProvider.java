@@ -11,7 +11,6 @@ import uk.gov.companieshouse.environment.EnvironmentReader;
  * Provides an instance of its contained {@link UltimatumDocumentInfoBuilder} to any caller of the
  * {@link #builder()} method. The builder is then used to create a {@link DocumentInfoResponse} for
  * a Prosecution Ultimatum.
- * 
  */
 @Component
 public class UltimatumDocumentInfoBuilderProvider {
@@ -21,7 +20,7 @@ public class UltimatumDocumentInfoBuilderProvider {
     private final String templateRegistryAddress;
 
     public UltimatumDocumentInfoBuilderProvider(EnvironmentReader environmentReader) {
-        // TODO: make these configurable:
+        // TODO: make these configurable: https://companieshouse.atlassian.net/browse/SJP-599
         // assetId = environmentReader.getMandatoryString(EnvironmentReaderKeys.ULTIMATUM_ASSET_ID);
         // renderedDocDir =
         // environmentReader.getMandatoryString(EnvironmentReaderKeys.ULTIMATUM_RENDERED_DOC_DIR);

@@ -132,8 +132,8 @@ public class ProsecutionDocumentInfoService implements DocumentInfoService {
     }
 
     /**
-     * Returns the necessary metadata to contact the document renderer and ask it to render a
-     * document.
+     * Returns the necessary metadata to contact the document renderer and ask it to render an
+     * ultimatum.
      * 
      * @param docGenUri The URI asking Document Generator to create an Ultimatum.
      * @param requestId The request ID, used in logging.
