@@ -11,6 +11,9 @@ import uk.gov.companieshouse.api.model.accounts.Accounts;
 import uk.gov.companieshouse.api.model.accounts.CompanyAccounts;
 import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.CreditorsAfterOneYearApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.SmallFullApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
@@ -23,6 +26,8 @@ import uk.gov.companieshouse.document.generator.accounts.exception.ServiceExcept
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.mappers.SmallFullIXBRLMapper;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.SmallFullApiData;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.SmallFullAccountIxbrl;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorsafteroneyear.CreditorsAfterOneYear;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorswithinoneyear.CreditorsWithinOneYear;
 import uk.gov.companieshouse.document.generator.accounts.service.ApiClientService;
 import uk.gov.companieshouse.document.generator.accounts.service.CompanyService;
 import uk.gov.companieshouse.logging.Logger;
@@ -46,6 +51,9 @@ public class AccountsManager {
 
     @Autowired
     private CompanyService companyService;
+
+    @Autowired
+    private SmallFullIXBRLMapper smallFullIXBRLMapper;
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
@@ -175,6 +183,14 @@ public class AccountsManager {
                 smallFullApiData.setTangibleAssets(tangible);
             }
 
+            if (!StringUtils.isEmpty(smallFull.getLinks().getStocksNote())) {
+
+                StocksApi stocks = apiClient.smallFull().stocks()
+                        .get(smallFull.getLinks().getStocksNote()).execute();
+
+                smallFullApiData.setStocks(stocks);
+            }
+            
             if (!StringUtils.isEmpty(smallFull.getLinks().getDebtorsNote())) {
 
                 DebtorsApi debtors = apiClient.smallFull().debtors()
@@ -182,15 +198,31 @@ public class AccountsManager {
 
                 smallFullApiData.setDebtors(debtors);
             }
+            
+            if (!StringUtils.isEmpty(smallFull.getLinks().getCreditorsWithinOneYearNote())) {
+
+                CreditorsWithinOneYearApi creditorsWithinOneYearApi = apiClient.smallFull().creditorsWithinOneYear()
+                        .get(smallFull.getLinks().getCreditorsWithinOneYearNote()).execute();
+
+                smallFullApiData.setCreditorsWithinOneYear(creditorsWithinOneYearApi);
+            }
+            
+            if (!StringUtils.isEmpty(smallFull.getLinks().getCreditorsAfterMoreThanOneYearNote())) {
+
+                CreditorsAfterOneYearApi creditorsAfterOneYearApi = apiClient.smallFull().creditorsAfterOneYear()
+                        .get(smallFull.getLinks().getCreditorsAfterMoreThanOneYearNote()).execute();
+
+                smallFullApiData.setCreditorsAfterOneYear(creditorsAfterOneYearApi);
+            }
 
         } catch (ApiErrorResponseException e) {
             handleException(e, errorString, link);
         }
-
+        
         smallFullApiData.setCompanyProfile(companyService.getCompanyProfile(transaction.getCompanyNumber()));
 
 
-        return SmallFullIXBRLMapper.INSTANCE.mapSmallFullIXBRLModel(smallFullApiData);
+        return smallFullIXBRLMapper.mapSmallFullIXBRLModel(smallFullApiData);
     }
 
     private void handleException(ApiErrorResponseException e, String text, String link)
