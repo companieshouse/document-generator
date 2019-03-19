@@ -15,6 +15,10 @@ import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
+/**
+ * Temporary component that stands in for the missing Prosecution SDK. No unit
+ * tests written, as this is throwaway code.
+ */
 @Component
 public class ProsecutionClient {
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);

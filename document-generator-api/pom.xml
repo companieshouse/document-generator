@@ -94,7 +94,7 @@
         </dependency>
         <dependency>
             <groupId>uk.gov.companieshouse</groupId>
-            <artifactId>document-generator-sjp</artifactId>
+            <artifactId>document-generator-prosecution</artifactId>
             <version>unversioned</version>
         </dependency>
         <dependency>

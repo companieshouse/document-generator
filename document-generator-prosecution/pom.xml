@@ -11,11 +11,11 @@
         <version>unversioned</version>
     </parent>
 
-    <artifactId>document-generator-sjp</artifactId>
+    <artifactId>document-generator-prosecution</artifactId>
     <version>unversioned</version>
 
-    <name>document-generator-sjp</name>
-    <description>Module for retrieving SJP data for document generation</description>
+    <name>document-generator-prosecution</name>
+    <description>Module for retrieving prosecution data for document generation</description>
 
     <properties>
         <!-- Encoding -->

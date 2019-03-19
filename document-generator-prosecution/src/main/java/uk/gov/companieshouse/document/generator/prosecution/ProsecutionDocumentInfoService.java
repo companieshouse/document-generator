@@ -16,8 +16,8 @@ import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
 /**
- * The Prosecution module of Document Generator. When a request with a matching URL is received by
- * Document Generator, it is forwarded to this module (see matching, below). The URL is further
+ * The Prosecution module of Document Generator. When a request with a matching URI is received by
+ * Document Generator, it is forwarded to this module (see matching, below). The URI is further
  * processed by DocumentGenerator to see which kind of document is to be generated. Different
  * documents require different template variables and so have different methods to fill in those
  * template values and other metadata in a {@link DocumentInfoResponse} that is returned to Document
@@ -28,9 +28,9 @@ import uk.gov.companieshouse.logging.LoggerFactory;
  *
  * <h3>Matching</h3> The enum uk.gov.companieshouse.document.generator.api.document.DocumentType,
  * within the document generator api project, is used to determine whether or not to steer a request
- * to this service, based on whether the URL matches the regex in
+ * to this service, based on whether the URI matches the regex in
  * uk.gov.companieshouse.document.generator.api.document.DocumentType.PROSECUTION. </br>
- * Matching URLs must take the form:
+ * Matching URIs must take the form:
  * <ul>
  * <li>Ultimatum: <code>/prosecution/ultimatum{urlOfProsecutionCase}</code></br>
  * e.g.
@@ -41,23 +41,27 @@ import uk.gov.companieshouse.logging.LoggerFactory;
  * <code>/prosecution/sjp/company/00066516/prosecution-cases/dd908afef2b8529aab3c680239f5d06717113634</code>
  * </li>
  * </ul>
- * This service will be matched on the base of this URL, will use the base to further determine
- * exactly which document type to produce, and then will use the rest of the URL to get the data
+ * This service will be matched on the base of this URI, will use the base to further determine
+ * exactly which document type to produce, and then will use the rest of the URI to get the data
  * that it needs.
  */
 @Service
 public class ProsecutionDocumentInfoService implements DocumentInfoService {
     public static final String MODULE_NAME_SPACE = "document-generator-prosecution";
+
     private static final String LOGGING_RESOURCE_KEY = "resource";
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
     private static final String MATCH_START_OF_SJP_URI = "/prosecution/sjp/";
+
     private static final String MATCH_START_OF_ULTIMATUM_URI = "/prosecution/ultimatum/";
 
     private static final int ULTIMATUM_INDEX_TO_TRIM_FROM =
                     MATCH_START_OF_ULTIMATUM_URI.length() - 1;
+
     private static final int SJP_INDEX_TO_TRIM_FROM = MATCH_START_OF_SJP_URI.length() - 1;
+
     private final UltimatumDocumentInfoBuilderProvider docInfoBuilderProvider;
 
     private final ProsecutionClient prosecutionClient;
@@ -76,9 +80,9 @@ public class ProsecutionDocumentInfoService implements DocumentInfoService {
     }
 
     /**
-     * Entry point from Document Generator, in which it asks delegates a request for a
-     * DocumentInfoRespoonse to this class.
-     * 
+     * Entry point from Document Generator, asking for a DocumentInfoResponse that contains info to
+     * build a document, such info will include the location of any template, any variables that are
+     * needed by the template, etc - see DocumentInfoResponse for more info.
      */
     @Override
     public DocumentInfoResponse getDocumentInfo(DocumentInfoRequest documentInfoRequest)
@@ -93,7 +97,7 @@ public class ProsecutionDocumentInfoService implements DocumentInfoService {
         } else {
             Map<String, Object> logMap = new HashMap<>();
             logMap.put(LOGGING_RESOURCE_KEY, docGenUri);
-            // TODO: Jo: I am not sure that this is the right way of logging this in doc getn
+            // TODO: Bruce: I am not sure that this is the right way of logging this
             LOG.error("Unmatchable resourceUri inside prosecution: " + docGenUri);
             throw new DocumentInfoException(
                             "Unmatchable resourceUri inside prosecution: " + docGenUri);

@@ -10,6 +10,9 @@ public class ProsecutionCase {
     @JsonProperty("kind")
     private String kind;
 
+    @JsonProperty("status")
+    private ProsecutionCaseStatus status;
+
     @JsonProperty("company_incorporation_number")
     private String companyIncorporationNumber;
 
@@ -34,6 +37,14 @@ public class ProsecutionCase {
 
     public void setKind(String kind) {
         this.kind = kind;
+    }
+
+    public ProsecutionCaseStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ProsecutionCaseStatus status) {
+        this.status = status;
     }
 
     public String getCompanyIncorporationNumber() {
