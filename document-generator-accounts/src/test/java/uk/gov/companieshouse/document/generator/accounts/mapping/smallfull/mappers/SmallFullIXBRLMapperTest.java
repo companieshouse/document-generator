@@ -4,361 +4,545 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.ApprovalApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CapitalAndReservesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentAssetsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.CurrentPeriod;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.PreviousPeriod;
+import uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.CreditorsAfterOneYearApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.FixedAssetsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.OtherLiabilitiesOrAssetsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
-import uk.gov.companieshouse.api.model.company.account.CompanyAccountApi;
-import uk.gov.companieshouse.api.model.company.account.LastAccountsApi;
-import uk.gov.companieshouse.api.model.company.account.NextAccountsApi;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.SmallFullApiData;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.SmallFullAccountIxbrl;
-import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.BalanceSheet;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.accountingpolicies.AccountingPolicies;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.BalanceSheetStatements;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.CalledUpSharedCapitalNotPaid;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.capitalandreserves.CapitalAndReserve;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.currentassets.CurrentAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.fixedassets.FixedAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.otherliabilitiesandassets.OtherLiabilitiesOrAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.company.Company;
-
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorsafteroneyear.CreditorsAfterOneYear;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorswithinoneyear.CreditorsWithinOneYear;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.Debtors;
 import java.time.LocalDate;
-import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.BalanceSheetNotes;
-
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssets;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssetsColumns;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.period.Period;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.stocks.StocksNote;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class SmallFullIXBRLMapperTest {
 
-    private static final  Long VALUE_ONE = 100L;
-    private static final  Long VALUE_TWO = 200L;
-    private static final  Long VALUE_THREE = 300L;
-    private static final String JURISDICTION = "jurisdiction";
-    private static final String COMPANY_NAME = "companyName";
-    private static final String COMPANY_NUMBER = "companyNumber";
     private static final String NAME = "name";
-    private static final String DETAILS = "details";
+
+    @Mock
+    private SmallFullIXBRLMapper internalSmallFullIXBRLMapper;
+
+    @Mock
+    private ApiToCompanyMapper apiToCompanyMapper;
+
+    @Mock
+    private ApiToPeriodMapper apiToPeriodMapper;
+
+    @Mock
+    private ApiToBalanceSheetMapper apiToBalanceSheetMapper;
+
+    @Mock
+    private ApiToAccountingPoliciesMapper apiToAccountingPoliciesMapper;
+
+    @Mock
+    private ApiToStocksMapper apiToStocksMapper;
+
+    @Mock
+    private ApiToDebtorsMapper apiToDebtorsMapper;
+
+    @Mock
+    private ApiToCreditorsWithinOneYearMapper apiToCreditorsWithinOneYearMapper;
+
+    @Mock
+    private ApiToCreditorsAfterOneYearMapper apiToCreditorsAfterOneYearMapper;
+
+    @Mock
+    private ApiToTangibleAssetsNoteMapper apiToTangibleAssetsNoteMapper;
+
+    @Mock
+    private CalledUpSharedCapitalNotPaid calledUpSharedCapitalNotPaid;
+
+    @Mock
+    private OtherLiabilitiesOrAssets otherLiabilitiesOrAssets;
+
+    @Mock
+    private FixedAssets fixedAssets;
+
+    @Mock
+    private CurrentAssets currentAssets;
+
+    @Mock
+    private CapitalAndReserve capitalAndReserve;
+
+    @Mock
+    private BalanceSheetStatements balanceSheetStatements;
+
+    @Mock
+    private Company company;
+
+    @Mock
+    private Period period;
+
+    @Mock
+    private AccountingPolicies accountingPolicies;
+
+    @Mock
+    private StocksNote stocksNote;
+
+    @Mock
+    private Debtors debtors;
+
+    @Mock
+    private CreditorsWithinOneYear creditorsWithinOneYear;
+
+    @Mock
+    private CreditorsAfterOneYear creditorsAfterOneYear;
+
+    @Mock
+    private TangibleAssets tangibleAssets;
+
+    @Mock
+    private TangibleAssetsColumns column;
+
+    @InjectMocks
+    private SmallFullIXBRLMapper smallFullIXBRLMapper = new SmallFullIXBRLMapperImpl();
 
     @Test
-    @DisplayName("tests the mapping of the smallFull IXBRL model with a current and previous period")
-    void testSmallFullMapperCurrentAndPreious() {
+    @DisplayName("Tests the mapping of the smallFull IXBRL model with optional resources")
+    void testMapperWithOptionalResources() {
 
         SmallFullApiData smallFullApiData = createSmallFullData(true);
 
-        SmallFullAccountIxbrl smallFullAccountIxbrl = SmallFullIXBRLMapper.INSTANCE.mapSmallFullIXBRLModel(smallFullApiData);
+        mockMandatoryFieldMappers(smallFullApiData);
+        mockOptionalFieldMappers(smallFullApiData);
+
+        SmallFullAccountIxbrl smallFullAccountIxbrl = smallFullIXBRLMapper.mapSmallFullIXBRLModel(smallFullApiData);
+
+        verifyMandatoryFieldMappersExecuted(smallFullApiData);
+        verifyOptionalFieldMappersExecuted(smallFullApiData);
 
         assertNotNull(smallFullAccountIxbrl);
-        assertApprovalsMapped(smallFullAccountIxbrl.getApprovalDate(), smallFullAccountIxbrl.getApprovalName());
-        assertBalanceSheetMapped(smallFullAccountIxbrl.getBalanceSheet(), true);
-        assertCompanyProfileMapped(smallFullAccountIxbrl.getCompany());
-        assertBalanceSheetNotesMapped(smallFullAccountIxbrl.getBalanceSheetNotes(), true );
+        assertIxbrlMandatoryDataMapped(smallFullAccountIxbrl);
+        assertIbxrlOptionalDataMapped(smallFullAccountIxbrl);
     }
 
     @Test
-    @DisplayName("tests the mapping of the smallFull IXBRL model with a current period Only")
-    void testSmallFullMapperCurrentOny() {
+    @DisplayName("Tests the mapping of the smallFull IXBRL model without optional resources")
+    void testMapperWithoutOptionalResources() {
 
         SmallFullApiData smallFullApiData = createSmallFullData(false);
 
-        SmallFullAccountIxbrl smallFullAccountIxbrl = SmallFullIXBRLMapper.INSTANCE.mapSmallFullIXBRLModel(smallFullApiData);
+        mockMandatoryFieldMappers(smallFullApiData);
+
+        SmallFullAccountIxbrl smallFullAccountIxbrl = smallFullIXBRLMapper.mapSmallFullIXBRLModel(smallFullApiData);
+
+        verifyMandatoryFieldMappersExecuted(smallFullApiData);
 
         assertNotNull(smallFullAccountIxbrl);
-        assertApprovalsMapped(smallFullAccountIxbrl.getApprovalDate(), smallFullAccountIxbrl.getApprovalName());
-        assertBalanceSheetMapped(smallFullAccountIxbrl.getBalanceSheet(), false);
-        assertCompanyProfileMapped(smallFullAccountIxbrl.getCompany());
-        assertBalanceSheetNotesMapped(smallFullAccountIxbrl.getBalanceSheetNotes(),false);
+        assertIxbrlMandatoryDataMapped(smallFullAccountIxbrl);
     }
 
-    private SmallFullApiData createSmallFullData(boolean isSameYearFiling) {
+    private void mockMandatoryFieldMappers(SmallFullApiData smallFullApiData) {
+
+        when(internalSmallFullIXBRLMapper.mapSmallFullIXBRLModel(smallFullApiData))
+                .thenReturn(createSmallFullAccountIxbrl());
+
+        when(apiToBalanceSheetMapper.apiToCalledUpSharedCapitalNotPaid(
+                smallFullApiData.getCurrentPeriod(), smallFullApiData.getPreviousPeriod()))
+                .thenReturn(calledUpSharedCapitalNotPaid);
+
+        when(apiToBalanceSheetMapper.apiToOtherLiabilitiesOrAssets(
+                smallFullApiData.getCurrentPeriod(), smallFullApiData.getPreviousPeriod()))
+                .thenReturn(otherLiabilitiesOrAssets);
+
+        when(apiToBalanceSheetMapper.apiToFixedAssets(
+                smallFullApiData.getCurrentPeriod(), smallFullApiData.getPreviousPeriod()))
+                .thenReturn(fixedAssets);
+
+        when(apiToBalanceSheetMapper.apiToCurrentAssets(
+                smallFullApiData.getCurrentPeriod(), smallFullApiData.getPreviousPeriod()))
+                .thenReturn(currentAssets);
+
+        when(apiToBalanceSheetMapper.apiToCapitalAndReserve(
+                smallFullApiData.getCurrentPeriod(), smallFullApiData.getPreviousPeriod()))
+                .thenReturn(capitalAndReserve);
+
+        when(apiToBalanceSheetMapper.apiToStatements(smallFullApiData.getBalanceSheetStatements()))
+                .thenReturn(balanceSheetStatements);
+
+        when(apiToCompanyMapper.apiToCompany(smallFullApiData.getCompanyProfile()))
+                .thenReturn(company);
+
+        when(apiToPeriodMapper.apiToPeriod(smallFullApiData.getCompanyProfile()))
+                .thenReturn(period);
+    }
+
+    private void verifyMandatoryFieldMappersExecuted(SmallFullApiData smallFullApiData) {
+
+        verify(internalSmallFullIXBRLMapper, times(1)).mapSmallFullIXBRLModel(smallFullApiData);
+
+        verify(apiToBalanceSheetMapper, times(1)).apiToCalledUpSharedCapitalNotPaid(
+                smallFullApiData.getCurrentPeriod(), smallFullApiData.getPreviousPeriod());
+
+        verify(apiToBalanceSheetMapper, times(1)).apiToOtherLiabilitiesOrAssets(
+                smallFullApiData.getCurrentPeriod(), smallFullApiData.getPreviousPeriod());
+
+        verify(apiToBalanceSheetMapper, times(1)).apiToFixedAssets(
+                smallFullApiData.getCurrentPeriod(), smallFullApiData.getPreviousPeriod());
+
+        verify(apiToBalanceSheetMapper, times(1)).apiToCurrentAssets(
+                smallFullApiData.getCurrentPeriod(), smallFullApiData.getPreviousPeriod());
+
+        verify(apiToBalanceSheetMapper, times(1)).apiToCapitalAndReserve(
+                smallFullApiData.getCurrentPeriod(), smallFullApiData.getPreviousPeriod());
+
+        verify(apiToBalanceSheetMapper, times(1))
+                .apiToStatements(smallFullApiData.getBalanceSheetStatements());
+
+        verify(apiToCompanyMapper, times(1))
+                .apiToCompany(smallFullApiData.getCompanyProfile());
+
+        verify(apiToPeriodMapper, times(1))
+                .apiToPeriod(smallFullApiData.getCompanyProfile());
+    }
+
+    private void assertIxbrlMandatoryDataMapped(SmallFullAccountIxbrl smallFullAccountIxbrl) {
+
+        assertEquals(NAME, smallFullAccountIxbrl.getApprovalName());
+
+        assertNotNull(smallFullAccountIxbrl.getBalanceSheet());
+        assertEquals(calledUpSharedCapitalNotPaid,
+                smallFullAccountIxbrl.getBalanceSheet().getCalledUpSharedCapitalNotPaid());
+        assertEquals(otherLiabilitiesOrAssets,
+                smallFullAccountIxbrl.getBalanceSheet().getOtherLiabilitiesOrAssets());
+        assertEquals(fixedAssets,
+                smallFullAccountIxbrl.getBalanceSheet().getFixedAssets());
+        assertEquals(currentAssets,
+                smallFullAccountIxbrl.getBalanceSheet().getCurrentAssets());
+        assertEquals(capitalAndReserve,
+                smallFullAccountIxbrl.getBalanceSheet().getCapitalAndReserve());
+        assertEquals(balanceSheetStatements,
+                smallFullAccountIxbrl.getBalanceSheet().getBalanceSheetStatements());
+
+        assertEquals(company, smallFullAccountIxbrl.getCompany());
+        assertEquals(period, smallFullAccountIxbrl.getPeriod());
+    }
+
+    private void mockOptionalFieldMappers(SmallFullApiData smallFullApiData) {
+
+        when(apiToAccountingPoliciesMapper.apiToAccountingPolicies(smallFullApiData.getAccountingPolicies()))
+                .thenReturn(accountingPolicies);
+
+        when(apiToStocksMapper.apiToStocks(
+                smallFullApiData.getStocks().getCurrentPeriod(),
+                smallFullApiData.getStocks().getPreviousPeriod()))
+                .thenReturn(stocksNote);
+
+        when(apiToDebtorsMapper.apiToDebtors(
+                smallFullApiData.getDebtors().getDebtorsCurrentPeriod(),
+                smallFullApiData.getDebtors().getDebtorsPreviousPeriod()))
+                .thenReturn(debtors);
+
+        when(apiToCreditorsWithinOneYearMapper.apiToCreditorsWithinOneYear(
+                smallFullApiData.getCreditorsWithinOneYear().getCreditorsWithinOneYearCurrentPeriod(),
+                smallFullApiData.getCreditorsWithinOneYear().getCreditorsWithinOneYearPreviousPeriod()))
+                .thenReturn(creditorsWithinOneYear);
+
+        when(apiToCreditorsAfterOneYearMapper.apiToCreditorsAfterOneYear(
+                smallFullApiData.getCreditorsAfterOneYear().getCurrentPeriod(),
+                smallFullApiData.getCreditorsAfterOneYear().getPreviousPeriod()))
+                .thenReturn(creditorsAfterOneYear);
+
+        when(apiToTangibleAssetsNoteMapper.apiToTangibleAssetsNoteAdditionalInformation(
+                smallFullApiData.getTangibleAssets()))
+                .thenReturn(tangibleAssets);
+
+        when(apiToTangibleAssetsNoteMapper.apiToTangibleAssetsCostAtPeriodStartMapper(
+                smallFullApiData.getTangibleAssets()))
+                .thenReturn(column);
+
+        when(apiToTangibleAssetsNoteMapper.apiToTangibleAssetsCostAdditionsMapper(
+                smallFullApiData.getTangibleAssets()))
+                .thenReturn(column);
+
+        when(apiToTangibleAssetsNoteMapper.apiToTangibleAssetsCostDisposalsMapper(
+                smallFullApiData.getTangibleAssets()))
+                .thenReturn(column);
+
+        when(apiToTangibleAssetsNoteMapper.apiToTangibleAssetsCostRevaluationsMapper(
+                smallFullApiData.getTangibleAssets()))
+                .thenReturn(column);
+
+        when(apiToTangibleAssetsNoteMapper.apiToTangibleAssetsCostTransfersMapper(
+                smallFullApiData.getTangibleAssets()))
+                .thenReturn(column);
+
+        when(apiToTangibleAssetsNoteMapper.apiToTangibleAssetsCostAtPeriodEndMapper(
+                smallFullApiData.getTangibleAssets()))
+                .thenReturn(column);
+
+        when(apiToTangibleAssetsNoteMapper.apiToTangibleAssetsDepreciationAtPeriodStartMapper(
+                smallFullApiData.getTangibleAssets()))
+                .thenReturn(column);
+
+        when(apiToTangibleAssetsNoteMapper.apiToTangibleAssetsDepreciationChargeForYearMapper(
+                smallFullApiData.getTangibleAssets()))
+                .thenReturn(column);
+
+        when(apiToTangibleAssetsNoteMapper.apiToTangibleAssetsDepreciationOnDisposalsMapper(
+                smallFullApiData.getTangibleAssets()))
+                .thenReturn(column);
+
+        when(apiToTangibleAssetsNoteMapper.apiToTangibleAssetsDepreciationOtherAdjustmentsMapper(
+                smallFullApiData.getTangibleAssets()))
+                .thenReturn(column);
+
+        when(apiToTangibleAssetsNoteMapper.apiToTangibleAssetsDepreciationAtPeriodEndMapper(
+                smallFullApiData.getTangibleAssets()))
+                .thenReturn(column);
+
+        when(apiToTangibleAssetsNoteMapper.apiToTangibleAssetsNetBookValueCurrentPeriodMapper(
+                smallFullApiData.getTangibleAssets()))
+                .thenReturn(column);
+
+        when(apiToTangibleAssetsNoteMapper.apiToTangibleAssetsNetBookValuePreviousPeriodMapper(
+                smallFullApiData.getTangibleAssets()))
+                .thenReturn(column);
+    }
+
+    private void verifyOptionalFieldMappersExecuted(SmallFullApiData smallFullApiData) {
+
+        verify(apiToAccountingPoliciesMapper, times(1))
+                .apiToAccountingPolicies(smallFullApiData.getAccountingPolicies());
+
+        verify(apiToStocksMapper, times(1)).apiToStocks(
+                smallFullApiData.getStocks().getCurrentPeriod(),
+                smallFullApiData.getStocks().getPreviousPeriod());
+
+        verify(apiToDebtorsMapper, times(1)).apiToDebtors(
+                smallFullApiData.getDebtors().getDebtorsCurrentPeriod(),
+                smallFullApiData.getDebtors().getDebtorsPreviousPeriod());
+
+        verify(apiToCreditorsWithinOneYearMapper, times(1)).apiToCreditorsWithinOneYear(
+                smallFullApiData.getCreditorsWithinOneYear().getCreditorsWithinOneYearCurrentPeriod(),
+                smallFullApiData.getCreditorsWithinOneYear().getCreditorsWithinOneYearPreviousPeriod());
+
+        verify(apiToCreditorsAfterOneYearMapper, times(1)).apiToCreditorsAfterOneYear(
+                smallFullApiData.getCreditorsAfterOneYear().getCurrentPeriod(),
+                smallFullApiData.getCreditorsAfterOneYear().getPreviousPeriod());
+
+        verify(apiToTangibleAssetsNoteMapper, times(1)).apiToTangibleAssetsNoteAdditionalInformation(
+                smallFullApiData.getTangibleAssets());
+
+        verify(apiToTangibleAssetsNoteMapper, times(1)).apiToTangibleAssetsCostAtPeriodStartMapper(
+                smallFullApiData.getTangibleAssets());
+
+        verify(apiToTangibleAssetsNoteMapper, times(1)).apiToTangibleAssetsCostAdditionsMapper(
+                smallFullApiData.getTangibleAssets());
+
+        verify(apiToTangibleAssetsNoteMapper, times(1)).apiToTangibleAssetsCostDisposalsMapper(
+                smallFullApiData.getTangibleAssets());
+
+        verify(apiToTangibleAssetsNoteMapper, times(1)).apiToTangibleAssetsCostRevaluationsMapper(
+                smallFullApiData.getTangibleAssets());
+
+        verify(apiToTangibleAssetsNoteMapper, times(1)).apiToTangibleAssetsCostTransfersMapper(
+                smallFullApiData.getTangibleAssets());
+
+        verify(apiToTangibleAssetsNoteMapper, times(1)).apiToTangibleAssetsCostAtPeriodEndMapper(
+                smallFullApiData.getTangibleAssets());
+
+        verify(apiToTangibleAssetsNoteMapper, times(1)).apiToTangibleAssetsDepreciationAtPeriodStartMapper(
+                smallFullApiData.getTangibleAssets());
+
+        verify(apiToTangibleAssetsNoteMapper, times(1)).apiToTangibleAssetsDepreciationChargeForYearMapper(
+                smallFullApiData.getTangibleAssets());
+
+        verify(apiToTangibleAssetsNoteMapper, times(1)).apiToTangibleAssetsDepreciationOnDisposalsMapper(
+                smallFullApiData.getTangibleAssets());
+
+        verify(apiToTangibleAssetsNoteMapper, times(1)).apiToTangibleAssetsDepreciationOtherAdjustmentsMapper(
+                smallFullApiData.getTangibleAssets());
+
+        verify(apiToTangibleAssetsNoteMapper, times(1)).apiToTangibleAssetsDepreciationAtPeriodEndMapper(
+                smallFullApiData.getTangibleAssets());
+
+        verify(apiToTangibleAssetsNoteMapper, times(1)).apiToTangibleAssetsNetBookValueCurrentPeriodMapper(
+                smallFullApiData.getTangibleAssets());
+
+        verify(apiToTangibleAssetsNoteMapper, times(1)).apiToTangibleAssetsNetBookValuePreviousPeriodMapper(
+                smallFullApiData.getTangibleAssets());
+    }
+
+    private void assertIbxrlOptionalDataMapped(SmallFullAccountIxbrl smallFullAccountIxbrl) {
+
+        assertNotNull(smallFullAccountIxbrl.getAdditionalNotes());
+        assertEquals(accountingPolicies,
+                smallFullAccountIxbrl.getAdditionalNotes().getAccountingPolicies());
+
+        assertNotNull(smallFullAccountIxbrl.getBalanceSheetNotes());
+        assertEquals(stocksNote,
+                smallFullAccountIxbrl.getBalanceSheetNotes().getStocksNote());
+        assertEquals(debtors,
+                smallFullAccountIxbrl.getBalanceSheetNotes().getDebtorsNote());
+        assertEquals(creditorsWithinOneYear,
+                smallFullAccountIxbrl.getBalanceSheetNotes().getCreditorsWithinOneYearNote());
+        assertEquals(creditorsAfterOneYear,
+                smallFullAccountIxbrl.getBalanceSheetNotes().getCreditorsAfterOneYearNote());
+        assertEquals(tangibleAssets,
+                smallFullAccountIxbrl.getBalanceSheetNotes().getTangibleAssets());
+    }
+
+    private SmallFullAccountIxbrl createSmallFullAccountIxbrl() {
+
+        SmallFullAccountIxbrl smallFullAccountIxbrl = new SmallFullAccountIxbrl();
+        smallFullAccountIxbrl.setApprovalName(NAME);
+        return smallFullAccountIxbrl;
+    }
+
+    private SmallFullApiData createSmallFullData(boolean hasOptionalResources) {
 
         SmallFullApiData smallFullApiData = new SmallFullApiData();
 
         smallFullApiData.setApproval(createApproval());
-        smallFullApiData.setCompanyProfile(createCompanyProfile(isSameYearFiling));
+        smallFullApiData.setCompanyProfile(createCompanyProfile());
         smallFullApiData.setCurrentPeriod(createCurrentPeriod());
-        if(isSameYearFiling == true) {
-            smallFullApiData.setPreviousPeriod(createPreviousPeriod());
-        }
+        smallFullApiData.setPreviousPeriod(createPreviousPeriod());
+        smallFullApiData.setBalanceSheetStatements(createBalanceSheetStatements());
 
-        smallFullApiData.setDebtors(createDebtors());
+        if (hasOptionalResources) {
+            smallFullApiData.setAccountingPolicies(createAccountingPolicies());
+            smallFullApiData.setStocks(createStocks());
+            smallFullApiData.setDebtors(createDebtors());
+            smallFullApiData.setCreditorsWithinOneYear(createCreditorsWithinOneYear());
+            smallFullApiData.setCreditorsAfterOneYear(createCreditorsAfterOneYear());
+            smallFullApiData.setTangibleAssets(createTangible());
+        }
 
         return smallFullApiData;
     }
 
     private CurrentPeriodApi createCurrentPeriod() {
 
-        CurrentPeriodApi currentPeriod = new CurrentPeriodApi();
-        currentPeriod.setBalanceSheet(createBalanceSheetValues());
+        CurrentPeriodApi currentPeriodApi = new CurrentPeriodApi();
+        currentPeriodApi.setBalanceSheet(createBalanceSheet());
 
-        return currentPeriod;
+        return currentPeriodApi;
     }
 
     private PreviousPeriodApi  createPreviousPeriod() {
 
-        PreviousPeriodApi previousPeriod = new PreviousPeriodApi();
-        previousPeriod.setBalanceSheet(createBalanceSheetValues());
+        PreviousPeriodApi previousPeriodApi = new PreviousPeriodApi();
+        previousPeriodApi.setBalanceSheet(createBalanceSheet());
 
-        return previousPeriod;
+        return previousPeriodApi;
+    }
+
+    private BalanceSheetApi createBalanceSheet() {
+
+        BalanceSheetApi balanceSheetApi = new BalanceSheetApi();
+        balanceSheetApi.setCalledUpShareCapitalNotPaid(1L);
+        balanceSheetApi.setOtherLiabilitiesOrAssets(new OtherLiabilitiesOrAssetsApi());
+        balanceSheetApi.setFixedAssets(new FixedAssetsApi());
+        balanceSheetApi.setCurrentAssets(new CurrentAssetsApi());
+        balanceSheetApi.setCapitalAndReserves(new CapitalAndReservesApi());
+
+        return balanceSheetApi;
+    }
+
+    private BalanceSheetStatementsApi createBalanceSheetStatements() {
+
+        return new BalanceSheetStatementsApi();
     }
 
     private ApprovalApi createApproval() {
 
-        ApprovalApi approval = new ApprovalApi();
-        approval.setDate(LocalDate.of(2018, 12, 31));
-        approval.setName(NAME);
+        ApprovalApi approvalApi = new ApprovalApi();
+        approvalApi.setDate(LocalDate.of(2018, 1, 1));
 
-        return approval;
+        return approvalApi;
     }
 
-    private CompanyProfileApi createCompanyProfile(boolean isMultiYearFiling) {
+    private CompanyProfileApi createCompanyProfile() {
 
-        CompanyProfileApi companyProfile = new CompanyProfileApi();
-        companyProfile.setCompanyName(COMPANY_NAME);
-        companyProfile.setCompanyNumber(COMPANY_NUMBER);
-        companyProfile.setJurisdiction(JURISDICTION);
-        createAccountsFilingDates(isMultiYearFiling, companyProfile);
-
-        return companyProfile;
+        return new CompanyProfileApi();
     }
 
-    private CompanyProfileApi createAccountsFilingDates(boolean isMultiYearFiling, CompanyProfileApi companyProfileApi ) {
+    private AccountingPoliciesApi createAccountingPolicies() {
 
-        CompanyAccountApi companyAccountsApi = new CompanyAccountApi();
-        LastAccountsApi lastAccountsApi = new LastAccountsApi();
-        NextAccountsApi nextAccountsApi = new NextAccountsApi();
-
-        if (isMultiYearFiling == true) {
-            lastAccountsApi.setPeriodEndOn(LocalDate.of(2017,12,31));
-            lastAccountsApi.setPeriodStartOn(LocalDate.of(2017, 01, 01));
-        }
-
-        nextAccountsApi.setPeriodEndOn(LocalDate.of(2018,12,31));
-        nextAccountsApi.setPeriodStartOn(LocalDate.of(2018,01,01));
-
-        companyAccountsApi.setLastAccounts(lastAccountsApi);
-        companyAccountsApi.setNextAccounts(nextAccountsApi);
-        companyProfileApi.setAccounts(companyAccountsApi);
-
-        return companyProfileApi;
+        return new AccountingPoliciesApi();
     }
-
-    private BalanceSheetApi createBalanceSheetValues() {
-
-        BalanceSheetApi balanceSheet = new BalanceSheetApi();
-        balanceSheet.setCapitalAndReserves(createCapitalAndReserve());
-        balanceSheet.setCurrentAssets(createCurrentAssets());
-        balanceSheet.setFixedAssets(createFixedAssets());
-        balanceSheet.setOtherLiabilitiesOrAssets(createOtherLiabilitiesOrAssets());
-        balanceSheet.setCalledUpShareCapitalNotPaid(VALUE_ONE);
-
-        return balanceSheet;
-    }
-
-    private OtherLiabilitiesOrAssetsApi createOtherLiabilitiesOrAssets() {
-
-        OtherLiabilitiesOrAssetsApi otherLiabilitiesOrAssets = new OtherLiabilitiesOrAssetsApi();
-        otherLiabilitiesOrAssets.setTotalNetAssets(new Long(VALUE_ONE));
-        otherLiabilitiesOrAssets.setAccrualsAndDeferredIncome(new Long(VALUE_TWO));
-        otherLiabilitiesOrAssets.setCreditorsAfterOneYear(new Long(VALUE_THREE));
-        otherLiabilitiesOrAssets.setCreditorsDueWithinOneYear(new Long(VALUE_ONE));
-        otherLiabilitiesOrAssets.setNetCurrentAssets(new Long(VALUE_TWO));
-        otherLiabilitiesOrAssets.setPrepaymentsAndAccruedIncome(new Long(VALUE_THREE));
-        otherLiabilitiesOrAssets.setTotalAssetsLessCurrentLiabilities(new Long(VALUE_ONE));
-        otherLiabilitiesOrAssets.setProvisionForLiabilities(new Long(VALUE_TWO));
-
-        return otherLiabilitiesOrAssets;
-    }
-
-    private FixedAssetsApi createFixedAssets() {
-
-        FixedAssetsApi fixedAssets = new FixedAssetsApi();
-        fixedAssets.setTangible(new Long(VALUE_ONE));
-        fixedAssets.setTotal(new Long(VALUE_TWO));
-
-        return fixedAssets;
-    }
-
-    private CurrentAssetsApi createCurrentAssets() {
-
-        CurrentAssetsApi currentAssets = new CurrentAssetsApi();
-        currentAssets.setCashInBankAndInHand(new Long(VALUE_ONE));
-        currentAssets.setDebtors(new Long(VALUE_TWO));
-        currentAssets.setStocks(new Long(VALUE_THREE));
-        currentAssets.setTotal(new Long(VALUE_ONE));
-
-        return currentAssets;
-    }
-
-    private CapitalAndReservesApi createCapitalAndReserve() {
-
-        CapitalAndReservesApi capitalAndReserves = new CapitalAndReservesApi();
-        capitalAndReserves.setCalledUpShareCapital(new Long(VALUE_ONE));
-        capitalAndReserves.setOtherReserves(new Long(VALUE_TWO));
-        capitalAndReserves.setProfitAndLoss(new Long(VALUE_THREE));
-        capitalAndReserves.setSharePremiumAccount(new Long(VALUE_ONE));
-        capitalAndReserves.setTotalShareholdersFunds(new Long(VALUE_TWO));
-
-        return capitalAndReserves;
-    }
-
-
-    private void assertBalanceSheetMapped(BalanceSheet balanceSheet, boolean isMultiYearFiling) {
-
-        assertCapitalAndReserve(balanceSheet.getCapitalAndReserve(), isMultiYearFiling);
-        assertCurrentAssets(balanceSheet.getCurrentAssets(), isMultiYearFiling);
-        assertFixedAssets(balanceSheet.getFixedAssets(), isMultiYearFiling);
-        assertOtherLiabilitiesOrAssets(balanceSheet.getOtherLiabilitiesOrAssets(), isMultiYearFiling);
-        assertCalledUpSharedCapitalNotPaid(balanceSheet.getCalledUpSharedCapitalNotPaid(), isMultiYearFiling);
-    }
-
-    private void assertCalledUpSharedCapitalNotPaid(CalledUpSharedCapitalNotPaid calledUpSharedCapitalNotPaid, boolean isMultiYearFiling) {
-
-        assertNotNull(calledUpSharedCapitalNotPaid);
-        assertEquals(new Long(VALUE_ONE), calledUpSharedCapitalNotPaid.getCurrentAmount());
-
-        if (isMultiYearFiling == true) {
-            assertEquals(new Long(VALUE_ONE), calledUpSharedCapitalNotPaid.getPreviousAmount());
-        }
-    }
-
-    private void assertOtherLiabilitiesOrAssets(OtherLiabilitiesOrAssets otherLiabilitiesOrAssets, boolean isMultiYearFiling) {
-
-        assertNotNull(otherLiabilitiesOrAssets);
-        assertEquals(new Long(VALUE_ONE), otherLiabilitiesOrAssets.getCurrentTotalNetAssets());
-        assertEquals(new Long(VALUE_TWO), otherLiabilitiesOrAssets.getAccrualsAndDeferredIncome().getCurrentAmount());
-        assertEquals(new Long(VALUE_THREE), otherLiabilitiesOrAssets.getCreditorsAmountsFallingDueAfterMoreThanOneYear().getCurrentAmount());
-        assertEquals(new Long(VALUE_ONE), otherLiabilitiesOrAssets.getCreditorsAmountsFallingDueWithinOneYear().getCurrentAmount());
-        assertEquals(new Long(VALUE_TWO), otherLiabilitiesOrAssets.getNetCurrentAssets().getCurrentAmount());
-        assertEquals(new Long(VALUE_THREE), otherLiabilitiesOrAssets.getPrepaymentsAndAccruedIncome().getCurrentAmount());
-        assertEquals(new Long(VALUE_ONE), otherLiabilitiesOrAssets.getTotalAssetsLessCurrentLiabilities().getCurrentAmount());
-        assertEquals(new Long(VALUE_TWO), otherLiabilitiesOrAssets.getProvisionForLiabilities().getCurrentAmount());
-
-        if (isMultiYearFiling == true) {
-
-            assertEquals(new Long(VALUE_ONE), otherLiabilitiesOrAssets.getPreviousTotalNetAssets());
-            assertEquals(new Long(VALUE_TWO), otherLiabilitiesOrAssets.getAccrualsAndDeferredIncome().getPreviousAmount());
-            assertEquals(new Long(VALUE_THREE), otherLiabilitiesOrAssets.getCreditorsAmountsFallingDueAfterMoreThanOneYear().getPreviousAmount());
-            assertEquals(new Long(VALUE_ONE), otherLiabilitiesOrAssets.getCreditorsAmountsFallingDueWithinOneYear().getPreviousAmount());
-            assertEquals(new Long(VALUE_TWO), otherLiabilitiesOrAssets.getNetCurrentAssets().getPreviousAmount());
-            assertEquals(new Long(VALUE_THREE),otherLiabilitiesOrAssets.getPrepaymentsAndAccruedIncome().getPreviousAmount());
-            assertEquals(new Long(VALUE_ONE), otherLiabilitiesOrAssets.getTotalAssetsLessCurrentLiabilities().getPreviousAmount());
-            assertEquals(new Long(VALUE_TWO), otherLiabilitiesOrAssets.getProvisionForLiabilities().getPreviousAmount());
-        }
-    }
-
-    private void assertFixedAssets(FixedAssets fixedAssets, boolean isMultiYearFiling) {
-
-        assertNotNull(fixedAssets);
-        assertEquals(new Long(VALUE_ONE), fixedAssets.getTangibleAssets().getCurrentAmount());
-        assertEquals(new Long(VALUE_TWO), fixedAssets.getTotalFixedAssetsCurrent());
-
-        if (isMultiYearFiling == true) {
-
-            assertEquals(new Long(VALUE_ONE), fixedAssets.getTangibleAssets().getPreviousAmount());
-            assertEquals(new Long(VALUE_TWO), fixedAssets.getTotalFixedAssetsPrevious());
-        }
-    }
-
-    private void assertCurrentAssets(CurrentAssets currentAssets, boolean isMultiYearFiling) {
-
-        assertNotNull(currentAssets);
-        assertEquals(new Long(VALUE_ONE), currentAssets.getCashAtBankAndInHand().getCurrentAmount());
-        assertEquals(new Long(VALUE_TWO), currentAssets.getDebtors().getCurrentAmount());
-        assertEquals(new Long(VALUE_THREE), currentAssets.getStocks().getCurrentAmount());
-        assertEquals(new Long(VALUE_ONE), currentAssets.getCurrentTotal());
-
-        if (isMultiYearFiling == true) {
-
-            assertEquals(new Long(VALUE_ONE), currentAssets.getCashAtBankAndInHand().getPreviousAmount());
-            assertEquals(new Long(VALUE_TWO), currentAssets.getDebtors().getPreviousAmount());
-            assertEquals(new Long(VALUE_THREE), currentAssets.getStocks().getPreviousAmount());
-            assertEquals(new Long(VALUE_ONE), currentAssets.getPreviousTotal());
-        }
-    }
-
-    private void assertCapitalAndReserve(CapitalAndReserve capitalAndReserve, boolean isMultiYearFiling) {
-
-        assertNotNull(capitalAndReserve);
-        assertEquals(new Long(VALUE_ONE), capitalAndReserve.getCalledUpShareCapital().getCurrentAmount());
-        assertEquals(new Long(VALUE_TWO), capitalAndReserve.getOtherReserves().getCurrentAmount());
-        assertEquals(new Long(VALUE_THREE), capitalAndReserve.getProfitAndLoss().getCurrentAmount());
-        assertEquals(new Long(VALUE_ONE), capitalAndReserve.getSharePremiumAccount().getCurrentAmount());
-        assertEquals(new Long(VALUE_TWO), capitalAndReserve.getTotalShareHoldersFunds().getCurrentAmount());
-
-        if (isMultiYearFiling == true) {
-
-            assertEquals(new Long(VALUE_ONE),capitalAndReserve.getCalledUpShareCapital().getPreviousAmount());
-            assertEquals(new Long(VALUE_TWO), capitalAndReserve.getOtherReserves().getPreviousAmount());
-            assertEquals(new Long(VALUE_THREE), capitalAndReserve.getProfitAndLoss().getPreviousAmount());
-            assertEquals(new Long(VALUE_ONE), capitalAndReserve.getSharePremiumAccount().getPreviousAmount());
-            assertEquals(new Long(VALUE_TWO), capitalAndReserve.getTotalShareHoldersFunds().getPreviousAmount());
-        }
-    }
-
-    private void assertCompanyProfileMapped(Company company) {
-
-        assertNotNull(company);
-        assertEquals(COMPANY_NAME, company.getCompanyName());
-        assertEquals(COMPANY_NUMBER, company.getCompanyNumber());
-        assertEquals(JURISDICTION, company.getJurisdiction());
-    }
-
-    private void assertApprovalsMapped(String approvalDate, String approvalName) {
-
-        assertEquals("31 December 2018", approvalDate);
-        assertEquals(NAME, approvalName);
-    }
-
-    private void assertBalanceSheetNotesMapped(BalanceSheetNotes balanceSheetNotes, boolean isMultiYearFiling) {
-        assertEquals(DETAILS, balanceSheetNotes.getDebtorsNote().getDetails());
-        assertEquals(VALUE_ONE, balanceSheetNotes.getDebtorsNote().getGreaterThanOneYear().getCurrentAmount());
-        assertEquals(VALUE_TWO, balanceSheetNotes.getDebtorsNote().getOtherDebtors().getCurrentAmount());
-        assertEquals(VALUE_THREE, balanceSheetNotes.getDebtorsNote().getPrepaymentsAndAccruedIncome().getCurrentAmount());
-        assertEquals(VALUE_ONE, balanceSheetNotes.getDebtorsNote().getTradeDebtors().getCurrentAmount());
-        assertEquals(VALUE_TWO, balanceSheetNotes.getDebtorsNote().getTotal().getCurrentAmount());
-
-        if (isMultiYearFiling == true) {
-
-            assertEquals(VALUE_ONE, balanceSheetNotes.getDebtorsNote().getGreaterThanOneYear().getPreviousAmount());
-            assertEquals(VALUE_TWO, balanceSheetNotes.getDebtorsNote().getOtherDebtors().getPreviousAmount());
-            assertEquals(VALUE_THREE, balanceSheetNotes.getDebtorsNote().getPrepaymentsAndAccruedIncome().getPreviousAmount());
-            assertEquals(VALUE_ONE, balanceSheetNotes.getDebtorsNote().getTradeDebtors().getPreviousAmount());
-            assertEquals(VALUE_TWO, balanceSheetNotes.getDebtorsNote().getTotal().getPreviousAmount());
-        }
-    }
-
+    
     private DebtorsApi createDebtors() {
 
-        DebtorsApi debtors = new DebtorsApi();
+        DebtorsApi debtorsApi = new DebtorsApi();
+        debtorsApi.setDebtorsCurrentPeriod(new CurrentPeriod());
+        debtorsApi.setDebtorsPreviousPeriod(new PreviousPeriod());
 
-        CurrentPeriod debtorsCurrentPeriod = new CurrentPeriod();
-        debtorsCurrentPeriod.setDetails(DETAILS);
-        debtorsCurrentPeriod.setGreaterThanOneYear(VALUE_ONE);
-        debtorsCurrentPeriod.setOtherDebtors(VALUE_TWO);
-        debtorsCurrentPeriod.setPrepaymentsAndAccruedIncome(VALUE_THREE);
-        debtorsCurrentPeriod.setTradeDebtors(VALUE_ONE);
-        debtorsCurrentPeriod.setTotal(VALUE_TWO);
-        debtors.setDebtorsCurrentPeriod(debtorsCurrentPeriod);
+        return debtorsApi;
+    }
+    
+    private StocksApi createStocks() {
 
-        PreviousPeriod debtorsPreviousPeriod = new PreviousPeriod();
-        debtorsPreviousPeriod.setGreaterThanOneYear(VALUE_ONE);
-        debtorsPreviousPeriod.setOtherDebtors(VALUE_TWO);
-        debtorsPreviousPeriod.setPrepaymentsAndAccruedIncome(VALUE_THREE);
-        debtorsPreviousPeriod.setTradeDebtors(VALUE_ONE);
-        debtorsPreviousPeriod.setTotal(VALUE_TWO);
-        debtors.setDebtorsPreviousPeriod(debtorsPreviousPeriod);
+        StocksApi stocksApi = new StocksApi();
+        stocksApi.setCurrentPeriod(
+                new uk.gov.companieshouse.api.model.accounts.smallfull.stocks.CurrentPeriod());
+        stocksApi.setPreviousPeriod(
+                new uk.gov.companieshouse.api.model.accounts.smallfull.stocks.PreviousPeriod());
 
-        return debtors;
+        return stocksApi;
+    }    
+    
+    private CreditorsWithinOneYearApi createCreditorsWithinOneYear() {
 
+      CreditorsWithinOneYearApi creditorsWithinOneYearApi = new CreditorsWithinOneYearApi();
+      creditorsWithinOneYearApi.setCreditorsWithinOneYearCurrentPeriod(
+              new uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CurrentPeriod());
+      creditorsWithinOneYearApi.setCreditorsWithinOneYearPreviousPeriod(
+              new uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.PreviousPeriod());
+
+      return creditorsWithinOneYearApi;
+  }
+    
+    private CreditorsAfterOneYearApi createCreditorsAfterOneYear() {
+
+        CreditorsAfterOneYearApi creditorsAfterOneYearApi = new CreditorsAfterOneYearApi();
+        creditorsAfterOneYearApi.setCurrentPeriod(
+                new uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.CurrentPeriod());
+        creditorsAfterOneYearApi.setPreviousPeriod(
+                new uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.PreviousPeriod());
+
+        return creditorsAfterOneYearApi;
+    }
+
+    private TangibleApi createTangible() {
+
+        return new TangibleApi();
     }
 }

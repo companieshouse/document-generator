@@ -12,10 +12,11 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.CurrentPeriod;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.PreviousPeriod;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.Debtors;
 
-
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ApiToDebtorsMapperTest {
+
+    private ApiToDebtorsMapper apiToDebtorsMapper = new ApiToDebtorsMapperImpl();
 
     private static final String DETAILS = "Details";
     private static final Long GREATER_THAN_ONE_YEAR_CURRENT = 1L;
@@ -33,7 +34,7 @@ public class ApiToDebtorsMapperTest {
     @DisplayName("tests debtors API values map to debtors IXBRL model")
     void testApiToCompanyMaps() {
 
-        Debtors debtors = ApiToDebtorsMapper.INSTANCE.apiToDebtors(createCurrentPeriodDebtors(),
+        Debtors debtors = apiToDebtorsMapper.apiToDebtors(createCurrentPeriodDebtors(),
                 createPreviousPeriodDebtors());
 
         assertNotNull(debtors);

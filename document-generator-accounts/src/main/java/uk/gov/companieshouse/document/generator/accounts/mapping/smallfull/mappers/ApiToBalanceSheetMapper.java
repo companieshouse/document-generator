@@ -3,7 +3,7 @@ package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.mapp
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.mapstruct.factory.Mappers;
+import org.springframework.web.context.annotation.RequestScope;
 import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
@@ -14,10 +14,9 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.fixedassets.FixedAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.otherliabilitiesandassets.OtherLiabilitiesOrAssets;
 
-@Mapper
+@RequestScope
+@Mapper(componentModel = "spring")
 public interface ApiToBalanceSheetMapper {
-
-    ApiToBalanceSheetMapper INSTANCE = Mappers.getMapper(ApiToBalanceSheetMapper.class);
 
     @Mappings({
             @Mapping(source = "currentPeriod.balanceSheet.capitalAndReserves.calledUpShareCapital",

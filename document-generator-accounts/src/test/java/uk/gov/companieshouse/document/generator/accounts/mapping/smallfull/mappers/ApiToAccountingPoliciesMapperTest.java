@@ -15,6 +15,8 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ApiToAccountingPoliciesMapperTest {
 
+    private ApiToAccountingPoliciesMapper apiToAccountingPoliciesMapper = new ApiToAccountingPoliciesMapperImpl();
+
     private static final String BASIS_OF_PREPARATION = "basisOfPreparation";
 
     private static final String TURNOVER_POLICY = "turnoverPolicy";
@@ -31,7 +33,7 @@ public class ApiToAccountingPoliciesMapperTest {
     @DisplayName("tests accounting policies API values map to accounting policies IXBRL model")
     void testApiToCompanyMaps() {
 
-        AccountingPolicies accountingPolicies = ApiToAccountingPoliciesMapper.INSTANCE.apiToAccountingPolicies(createAccountingPolicies());
+        AccountingPolicies accountingPolicies = apiToAccountingPoliciesMapper.apiToAccountingPolicies(createAccountingPolicies());
 
         assertNotNull(accountingPolicies);
         assertEquals(BASIS_OF_PREPARATION, accountingPolicies.getBasisOfMeasurementAndPreparation());
