@@ -7,12 +7,12 @@
     <parent>
         <groupId>uk.gov.companieshouse</groupId>
         <artifactId>document-generator</artifactId>
-        <version>unversioned</version>
+        <version>9694b39</version>
     </parent>
 
     <groupId>uk.gov.companieshouse</groupId>
     <artifactId>document-generator-api</artifactId>
-    <version>unversioned</version>
+    <version>9694b39</version>
     <name>document-generator-api</name>
     <url>http://maven.apache.org</url>
     
@@ -85,12 +85,12 @@
         <dependency>
             <groupId>uk.gov.companieshouse</groupId>
             <artifactId>document-generator-interfaces</artifactId>
-            <version>unversioned</version>
+            <version>9694b39</version>
         </dependency>
         <dependency>
             <groupId>uk.gov.companieshouse</groupId>
             <artifactId>document-generator-accounts</artifactId>
-            <version>unversioned</version>
+            <version>9694b39</version>
         </dependency>
         <dependency>
             <groupId>org.yaml</groupId>

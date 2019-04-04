@@ -115,9 +115,11 @@ public class ApiToBalanceSheetMapperTest {
 
         assertNotNull(fixedAssets);
         assertEquals(new Long(VALUE_ONE), fixedAssets.getTangibleAssets().getCurrentAmount());
-        assertEquals(new Long(VALUE_TWO), fixedAssets.getTotalFixedAssetsCurrent());
+        assertEquals(new Long(VALUE_TWO), fixedAssets.getInvestments().getCurrentAmount());
+        assertEquals(new Long(VALUE_THREE), fixedAssets.getTotalFixedAssetsCurrent());
         assertEquals(new Long(VALUE_ONE), fixedAssets.getTangibleAssets().getPreviousAmount());
-        assertEquals(new Long(VALUE_TWO), fixedAssets.getTotalFixedAssetsPrevious());
+        assertEquals(new Long(VALUE_TWO), fixedAssets.getInvestments().getPreviousAmount());
+        assertEquals(new Long(VALUE_THREE), fixedAssets.getTotalFixedAssetsPrevious());
     }
 
     @Test
@@ -128,7 +130,8 @@ public class ApiToBalanceSheetMapperTest {
 
         assertNotNull(fixedAssets);
         assertEquals(new Long(VALUE_ONE), fixedAssets.getTangibleAssets().getCurrentAmount());
-        assertEquals(new Long(VALUE_TWO), fixedAssets.getTotalFixedAssetsCurrent());
+        assertEquals(new Long(VALUE_TWO), fixedAssets.getInvestments().getCurrentAmount());
+        assertEquals(new Long(VALUE_THREE), fixedAssets.getTotalFixedAssetsCurrent());
     }
 
     @Test
@@ -263,7 +266,8 @@ public class ApiToBalanceSheetMapperTest {
 
         FixedAssetsApi fixedAssets = new FixedAssetsApi();
         fixedAssets.setTangible(new Long(VALUE_ONE));
-        fixedAssets.setTotal(new Long(VALUE_TWO));
+        fixedAssets.setInvestments(new Long(VALUE_TWO));
+        fixedAssets.setTotal(new Long(VALUE_THREE));
 
         return fixedAssets;
     }
@@ -271,7 +275,7 @@ public class ApiToBalanceSheetMapperTest {
     private CurrentAssetsApi createCurrentAssetsApiData() {
 
         CurrentAssetsApi currentAssets = new CurrentAssetsApi();
-        currentAssets.setCashInBankAndInHand(new Long(VALUE_ONE));
+        currentAssets.setCashAtBankAndInHand(new Long(VALUE_ONE));
         currentAssets.setDebtors(new Long(VALUE_TWO));
         currentAssets.setStocks(new Long(VALUE_THREE));
         currentAssets.setTotal(new Long(VALUE_ONE));
