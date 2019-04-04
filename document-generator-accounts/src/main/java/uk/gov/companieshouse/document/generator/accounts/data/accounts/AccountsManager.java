@@ -20,6 +20,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.ApprovalApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.employees.EmployeesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
@@ -183,6 +184,18 @@ public class AccountsManager {
                 smallFullApiData.setTangibleAssets(tangible);
             }
 
+
+            if (!StringUtils.isEmpty(smallFull.getLinks().getEmployeesNote())) {
+
+                errorString = "employees";
+
+                EmployeesApi employees = apiClient.smallFull().employees()
+                        .get(smallFull.getLinks().getEmployeesNote()).execute();
+
+                smallFullApiData.setEmployees(employees);
+            }
+
+
             if (!StringUtils.isEmpty(smallFull.getLinks().getStocksNote())) {
 
                 StocksApi stocks = apiClient.smallFull().stocks()
@@ -190,7 +203,7 @@ public class AccountsManager {
 
                 smallFullApiData.setStocks(stocks);
             }
-            
+
             if (!StringUtils.isEmpty(smallFull.getLinks().getDebtorsNote())) {
 
                 DebtorsApi debtors = apiClient.smallFull().debtors()
