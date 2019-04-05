@@ -1,6 +1,5 @@
 package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model;
 
-import com.google.gson.Gson;
 import uk.gov.companieshouse.api.model.accounts.CompanyAccountsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.ApprovalApi;
@@ -11,6 +10,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.employees.EmployeesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 
@@ -37,6 +37,8 @@ public class SmallFullApiData {
     private StocksApi stocks;
 
     private DebtorsApi debtors;
+
+    private EmployeesApi employees;
     
     private CreditorsWithinOneYearApi creditorsWithinOneYear;
     
@@ -124,6 +126,14 @@ public class SmallFullApiData {
       this.creditorsWithinOneYear = creditorsWithinOneYear;
     }
 
+    public EmployeesApi getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(EmployeesApi employees) {
+        this.employees = employees;
+    }
+
     public CreditorsAfterOneYearApi getCreditorsAfterOneYear() {
       return creditorsAfterOneYear;
     }
@@ -134,8 +144,10 @@ public class SmallFullApiData {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof SmallFullApiData)) return false;
+        if (this == o)
+            return true;
+        if (! (o instanceof SmallFullApiData))
+            return false;
         SmallFullApiData that = (SmallFullApiData) o;
         return Objects.equals(getCurrentPeriod(), that.getCurrentPeriod()) &&
                 Objects.equals(getPreviousPeriod(), that.getPreviousPeriod()) &&
@@ -143,22 +155,36 @@ public class SmallFullApiData {
                 Objects.equals(getApproval(), that.getApproval()) &&
                 Objects.equals(getBalanceSheetStatements(), that.getBalanceSheetStatements()) &&
                 Objects.equals(getAccountingPolicies(), that.getAccountingPolicies()) &&
+                Objects.equals(getTangibleAssets(), that.getTangibleAssets()) &&
                 Objects.equals(getStocks(), that.getStocks()) &&
                 Objects.equals(getDebtors(), that.getDebtors()) &&
+                Objects.equals(getEmployees(), that.getEmployees()) &&
                 Objects.equals(getCreditorsWithinOneYear(), that.getCreditorsWithinOneYear()) &&
-                Objects.equals(getCreditorsAfterOneYear(), that.getCreditorsAfterOneYear()) &&
-                Objects.equals(getTangibleAssets(), that.getTangibleAssets());
+                Objects.equals(getCreditorsAfterOneYear(), that.getCreditorsAfterOneYear());
     }
 
     @Override
     public int hashCode() {
-      return Objects.hash(accountingPolicies, approval, balanceSheetStatements, companyProfile,
-          creditorsWithinOneYear, creditorsWithinOneYear, currentPeriod, stocks, debtors, previousPeriod, 
-          tangibleAssets);
+        return Objects.hash(getCurrentPeriod(), getPreviousPeriod(), getCompanyProfile(),
+                getApproval(), getBalanceSheetStatements(), getAccountingPolicies(),
+                getTangibleAssets(), getStocks(), getDebtors(), getEmployees(), getCreditorsWithinOneYear(), getCreditorsAfterOneYear());
     }
-    
+
     @Override
     public String toString() {
-        return new Gson().toJson(this);
+        return "SmallFullApiData{" +
+                "currentPeriod=" + currentPeriod +
+                ", previousPeriod=" + previousPeriod +
+                ", companyProfile=" + companyProfile +
+                ", approval=" + approval +
+                ", balanceSheetStatements=" + balanceSheetStatements +
+                ", accountingPolicies=" + accountingPolicies +
+                ", tangibleAssets=" + tangibleAssets +
+                ", stocks=" + stocks +
+                ", debtors=" + debtors +
+                ", employees=" + employees +
+                ", creditorsWithinOneYear=" + creditorsWithinOneYear +
+                ", creditorsAfterOneYear=" + creditorsAfterOneYear +
+                '}';
     }
 }

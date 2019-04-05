@@ -23,7 +23,9 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.FixedAssetsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.OtherLiabilitiesOrAssetsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.employees.EmployeesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
+
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.SmallFullApiData;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.SmallFullAccountIxbrl;
@@ -39,10 +41,13 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorswithinoneyear.CreditorsWithinOneYear;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.Debtors;
 import java.time.LocalDate;
+
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.employees.Employees;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssetsColumns;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.period.Period;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.stocks.StocksNote;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.times;
@@ -75,6 +80,9 @@ public class SmallFullIXBRLMapperTest {
 
     @Mock
     private ApiToDebtorsMapper apiToDebtorsMapper;
+
+    @Mock
+    private ApiToEmployeesMapper apiToEmployeesMapper;
 
     @Mock
     private ApiToCreditorsWithinOneYearMapper apiToCreditorsWithinOneYearMapper;
@@ -125,6 +133,9 @@ public class SmallFullIXBRLMapperTest {
     private CreditorsAfterOneYear creditorsAfterOneYear;
 
     @Mock
+    private Employees employees;
+
+    @Mock
     private TangibleAssets tangibleAssets;
 
     @Mock
@@ -142,7 +153,8 @@ public class SmallFullIXBRLMapperTest {
         mockMandatoryFieldMappers(smallFullApiData);
         mockOptionalFieldMappers(smallFullApiData);
 
-        SmallFullAccountIxbrl smallFullAccountIxbrl = smallFullIXBRLMapper.mapSmallFullIXBRLModel(smallFullApiData);
+        SmallFullAccountIxbrl smallFullAccountIxbrl =
+                smallFullIXBRLMapper.mapSmallFullIXBRLModel(smallFullApiData);
 
         verifyMandatoryFieldMappersExecuted(smallFullApiData);
         verifyOptionalFieldMappersExecuted(smallFullApiData);
@@ -160,7 +172,8 @@ public class SmallFullIXBRLMapperTest {
 
         mockMandatoryFieldMappers(smallFullApiData);
 
-        SmallFullAccountIxbrl smallFullAccountIxbrl = smallFullIXBRLMapper.mapSmallFullIXBRLModel(smallFullApiData);
+        SmallFullAccountIxbrl smallFullAccountIxbrl =
+                smallFullIXBRLMapper.mapSmallFullIXBRLModel(smallFullApiData);
 
         verifyMandatoryFieldMappersExecuted(smallFullApiData);
 
@@ -269,6 +282,9 @@ public class SmallFullIXBRLMapperTest {
                 smallFullApiData.getDebtors().getDebtorsPreviousPeriod()))
                 .thenReturn(debtors);
 
+        when(apiToEmployeesMapper.apiToEmployees(smallFullApiData.getEmployees().getCurrentPeriod(),
+                smallFullApiData.getEmployees().getPreviousPeriod())).thenReturn(employees);
+
         when(apiToCreditorsWithinOneYearMapper.apiToCreditorsWithinOneYear(
                 smallFullApiData.getCreditorsWithinOneYear().getCreditorsWithinOneYearCurrentPeriod(),
                 smallFullApiData.getCreditorsWithinOneYear().getCreditorsWithinOneYearPreviousPeriod()))
@@ -349,6 +365,10 @@ public class SmallFullIXBRLMapperTest {
                 smallFullApiData.getDebtors().getDebtorsCurrentPeriod(),
                 smallFullApiData.getDebtors().getDebtorsPreviousPeriod());
 
+        verify(apiToEmployeesMapper, times(1)).apiToEmployees(
+                smallFullApiData.getEmployees().getCurrentPeriod(),
+                smallFullApiData.getEmployees().getPreviousPeriod());
+
         verify(apiToCreditorsWithinOneYearMapper, times(1)).apiToCreditorsWithinOneYear(
                 smallFullApiData.getCreditorsWithinOneYear().getCreditorsWithinOneYearCurrentPeriod(),
                 smallFullApiData.getCreditorsWithinOneYear().getCreditorsWithinOneYearPreviousPeriod());
@@ -417,6 +437,7 @@ public class SmallFullIXBRLMapperTest {
                 smallFullAccountIxbrl.getBalanceSheetNotes().getCreditorsAfterOneYearNote());
         assertEquals(tangibleAssets,
                 smallFullAccountIxbrl.getBalanceSheetNotes().getTangibleAssets());
+        assertEquals(employees, smallFullAccountIxbrl.getAdditionalNotes().getEmployees());
     }
 
     private SmallFullAccountIxbrl createSmallFullAccountIxbrl() {
@@ -443,6 +464,7 @@ public class SmallFullIXBRLMapperTest {
             smallFullApiData.setCreditorsWithinOneYear(createCreditorsWithinOneYear());
             smallFullApiData.setCreditorsAfterOneYear(createCreditorsAfterOneYear());
             smallFullApiData.setTangibleAssets(createTangible());
+            smallFullApiData.setEmployees(createEmployees());
         }
 
         return smallFullApiData;
@@ -456,7 +478,7 @@ public class SmallFullIXBRLMapperTest {
         return currentPeriodApi;
     }
 
-    private PreviousPeriodApi  createPreviousPeriod() {
+    private PreviousPeriodApi createPreviousPeriod() {
 
         PreviousPeriodApi previousPeriodApi = new PreviousPeriodApi();
         previousPeriodApi.setBalanceSheet(createBalanceSheet());
@@ -492,13 +514,14 @@ public class SmallFullIXBRLMapperTest {
     private CompanyProfileApi createCompanyProfile() {
 
         return new CompanyProfileApi();
+
     }
 
     private AccountingPoliciesApi createAccountingPolicies() {
 
         return new AccountingPoliciesApi();
     }
-    
+
     private DebtorsApi createDebtors() {
 
         DebtorsApi debtorsApi = new DebtorsApi();
@@ -507,7 +530,17 @@ public class SmallFullIXBRLMapperTest {
 
         return debtorsApi;
     }
-    
+
+    private EmployeesApi createEmployees() {
+
+        EmployeesApi employees = new EmployeesApi();
+
+        employees.setCurrentPeriod(new uk.gov.companieshouse.api.model.accounts.smallfull.employees.CurrentPeriod());
+        employees.setPreviousPeriod(new uk.gov.companieshouse.api.model.accounts.smallfull.employees.PreviousPeriod());
+
+        return employees;
+    }
+
     private StocksApi createStocks() {
 
         StocksApi stocksApi = new StocksApi();
@@ -517,19 +550,19 @@ public class SmallFullIXBRLMapperTest {
                 new uk.gov.companieshouse.api.model.accounts.smallfull.stocks.PreviousPeriod());
 
         return stocksApi;
-    }    
-    
+    }
+
     private CreditorsWithinOneYearApi createCreditorsWithinOneYear() {
 
-      CreditorsWithinOneYearApi creditorsWithinOneYearApi = new CreditorsWithinOneYearApi();
-      creditorsWithinOneYearApi.setCreditorsWithinOneYearCurrentPeriod(
-              new uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CurrentPeriod());
-      creditorsWithinOneYearApi.setCreditorsWithinOneYearPreviousPeriod(
-              new uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.PreviousPeriod());
+        CreditorsWithinOneYearApi creditorsWithinOneYearApi = new CreditorsWithinOneYearApi();
+        creditorsWithinOneYearApi.setCreditorsWithinOneYearCurrentPeriod(
+                new uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CurrentPeriod());
+        creditorsWithinOneYearApi.setCreditorsWithinOneYearPreviousPeriod(
+                new uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.PreviousPeriod());
 
-      return creditorsWithinOneYearApi;
-  }
-    
+        return creditorsWithinOneYearApi;
+    }
+
     private CreditorsAfterOneYearApi createCreditorsAfterOneYear() {
 
         CreditorsAfterOneYearApi creditorsAfterOneYearApi = new CreditorsAfterOneYearApi();
