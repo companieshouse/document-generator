@@ -19,13 +19,13 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ApiToAccountingPeriodMapperTest {
+public class ApiToPeriodMapperTest {
 
     @Mock
-    private ApiToAccountingPeriodMapper internalApiToAccountingPeriodMapper;
+    private ApiToPeriodMapper internalApiToPeriodMapper;
 
     @InjectMocks
-    private ApiToAccountingPeriodMapper apiToAccountingPeriodMapper = new ApiToAccountingPeriodMapperImpl();
+    private ApiToPeriodMapper apiToPeriodMapper = new ApiToPeriodMapperImpl();
 
     private static final String CURRENT_PERIOD_START_ON = "2018-01-01";
 
@@ -53,10 +53,10 @@ public class ApiToAccountingPeriodMapperTest {
 
         CompanyAccountsApi companyAccountsApi = createAccountsFilingDates(true);
 
-        when(internalApiToAccountingPeriodMapper
-                .apiToAccountingPeriod(companyAccountsApi)).thenReturn(createPeriod(true));
+        when(internalApiToPeriodMapper
+                .apiToPeriod(companyAccountsApi)).thenReturn(createPeriod(true));
 
-        Period period = apiToAccountingPeriodMapper.apiToAccountingPeriod(companyAccountsApi);
+        Period period = apiToPeriodMapper.apiToPeriod(companyAccountsApi);
 
         assertNotNull(period);
         assertEquals(CURRENT_PERIOD_START_ON_FORMATTED, period.getCurrentPeriodStartOnFormatted());
@@ -73,10 +73,10 @@ public class ApiToAccountingPeriodMapperTest {
 
         CompanyAccountsApi companyAccountsApi = createAccountsFilingDates(false);
 
-        when(internalApiToAccountingPeriodMapper
-                .apiToAccountingPeriod(companyAccountsApi)).thenReturn(createPeriod(false));
+        when(internalApiToPeriodMapper
+                .apiToPeriod(companyAccountsApi)).thenReturn(createPeriod(false));
 
-        Period period = apiToAccountingPeriodMapper.apiToAccountingPeriod(companyAccountsApi);
+        Period period = apiToPeriodMapper.apiToPeriod(companyAccountsApi);
 
         assertNotNull(period);
         assertEquals(CURRENT_PERIOD_START_ON_FORMATTED, period.getCurrentPeriodStartOnFormatted());

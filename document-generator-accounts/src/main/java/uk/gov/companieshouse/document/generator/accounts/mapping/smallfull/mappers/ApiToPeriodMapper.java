@@ -10,8 +10,8 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 
 @RequestScope
 @Mapper(componentModel = "spring")
-@DecoratedWith(ApiToAccountingPeriodMapperDecorator.class)
-public interface ApiToAccountingPeriodMapper {
+@DecoratedWith(ApiToPeriodMapperDecorator.class)
+public interface ApiToPeriodMapper {
 
     @Mappings({
             @Mapping(source = "nextAccounts.periodStartOn", target = "currentPeriodStartOn"),
@@ -19,6 +19,6 @@ public interface ApiToAccountingPeriodMapper {
             @Mapping(source = "lastAccounts.periodStartOn", target = "previousPeriodStartOn"),
             @Mapping(source = "lastAccounts.periodEndOn", target = "previousPeriodEndsOn"),
     })
-    Period apiToAccountingPeriod(CompanyAccountsApi companyAccountsApi);
+    Period apiToPeriod(CompanyAccountsApi companyAccountsApi);
 }
 

@@ -42,7 +42,7 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
     private ApiToCompanyMapper apiToCompanyMapper;
 
     @Autowired
-    private ApiToAccountingPeriodMapper apiToAccountingPeriodMapper;
+    private ApiToPeriodMapper apiToPeriodMapper;
 
     @Autowired
     private ApiToBalanceSheetMapper apiToBalanceSheetMapper;
@@ -80,7 +80,7 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
                         smallFullApiData.getPreviousPeriod(),
                         smallFullApiData.getBalanceSheetStatements()));
         smallFullAccountIxbrl.setCompany(apiToCompanyMapper.apiToCompany(smallFullApiData.getCompanyProfile()));
-        smallFullAccountIxbrl.setPeriod(apiToAccountingPeriodMapper.apiToAccountingPeriod(smallFullApiData.getCompanyAccounts()));
+        smallFullAccountIxbrl.setPeriod(apiToPeriodMapper.apiToPeriod(smallFullApiData.getCompanyAccounts()));
 
         if (smallFullApiData.getApproval() != null && smallFullApiData.getApproval().getDate() != null) {
             smallFullAccountIxbrl.setApprovalDate(convertToDisplayDate(smallFullApiData.getApproval().getDate()));

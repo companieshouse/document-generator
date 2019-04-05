@@ -10,18 +10,18 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 
 import java.time.LocalDate;
 
-public abstract class ApiToAccountingPeriodMapperDecorator implements ApiToAccountingPeriodMapper {
+public abstract class ApiToPeriodMapperDecorator implements ApiToPeriodMapper {
 
     @Autowired
     @Qualifier("delegate")
-    private ApiToAccountingPeriodMapper apiToAccountingPeriodMapper;
+    private ApiToPeriodMapper apiToPeriodMapper;
 
     private AccountsDatesHelper accountsDatesHelper = new AccountsDatesHelperImpl();
 
     @Override
-    public Period apiToAccountingPeriod(CompanyAccountsApi companyAccountsApi) {
+    public Period apiToPeriod(CompanyAccountsApi companyAccountsApi) {
 
-        Period period = apiToAccountingPeriodMapper.apiToAccountingPeriod(companyAccountsApi);
+        Period period = apiToPeriodMapper.apiToPeriod(companyAccountsApi);
 
         boolean isSameYear = isSameYearFiler(companyAccountsApi);
 
