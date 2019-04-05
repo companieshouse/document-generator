@@ -62,7 +62,7 @@ public class SmallFullIXBRLMapperTest {
     private ApiToCompanyMapper apiToCompanyMapper;
 
     @Mock
-    private ApiToPeriodMapper apiToPeriodMapper;
+    private ApiToAccountingPeriodMapper apiToAccountingPeriodMapper;
 
     @Mock
     private ApiToBalanceSheetMapper apiToBalanceSheetMapper;
@@ -199,7 +199,7 @@ public class SmallFullIXBRLMapperTest {
         when(apiToCompanyMapper.apiToCompany(smallFullApiData.getCompanyProfile()))
                 .thenReturn(company);
 
-        when(apiToPeriodMapper.apiToPeriod(smallFullApiData.getCompanyProfile()))
+        when(apiToAccountingPeriodMapper.apiToAccountingPeriod(smallFullApiData.getCompanyAccounts()))
                 .thenReturn(period);
     }
 
@@ -228,8 +228,8 @@ public class SmallFullIXBRLMapperTest {
         verify(apiToCompanyMapper, times(1))
                 .apiToCompany(smallFullApiData.getCompanyProfile());
 
-        verify(apiToPeriodMapper, times(1))
-                .apiToPeriod(smallFullApiData.getCompanyProfile());
+        verify(apiToAccountingPeriodMapper, times(1))
+                .apiToAccountingPeriod(smallFullApiData.getCompanyAccounts());
     }
 
     private void assertIxbrlMandatoryDataMapped(SmallFullAccountIxbrl smallFullAccountIxbrl) {
