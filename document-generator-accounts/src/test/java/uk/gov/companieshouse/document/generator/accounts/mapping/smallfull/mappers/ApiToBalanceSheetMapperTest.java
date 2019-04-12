@@ -87,10 +87,12 @@ public class ApiToBalanceSheetMapperTest {
         assertEquals(new Long(VALUE_ONE), currentAssets.getCashAtBankAndInHand().getCurrentAmount());
         assertEquals(new Long(VALUE_TWO), currentAssets.getDebtors().getCurrentAmount());
         assertEquals(new Long(VALUE_THREE), currentAssets.getStocks().getCurrentAmount());
+        assertEquals(new Long(VALUE_TWO), currentAssets.getInvestments().getCurrentAmount());
         assertEquals(new Long(VALUE_ONE), currentAssets.getCurrentTotal());
         assertEquals(new Long(VALUE_ONE), currentAssets.getCashAtBankAndInHand().getPreviousAmount());
         assertEquals(new Long(VALUE_TWO), currentAssets.getDebtors().getPreviousAmount());
         assertEquals(new Long(VALUE_THREE), currentAssets.getStocks().getPreviousAmount());
+        assertEquals(new Long(VALUE_TWO), currentAssets.getInvestments().getPreviousAmount());
         assertEquals(new Long(VALUE_ONE), currentAssets.getPreviousTotal());
     }
 
@@ -274,6 +276,7 @@ public class ApiToBalanceSheetMapperTest {
         currentAssets.setCashAtBankAndInHand(new Long(VALUE_ONE));
         currentAssets.setDebtors(new Long(VALUE_TWO));
         currentAssets.setStocks(new Long(VALUE_THREE));
+        currentAssets.setInvestments(new Long (VALUE_TWO));
         currentAssets.setTotal(new Long(VALUE_ONE));
 
         return currentAssets;
