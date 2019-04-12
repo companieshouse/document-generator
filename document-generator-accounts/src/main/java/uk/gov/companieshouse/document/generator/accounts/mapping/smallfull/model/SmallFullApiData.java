@@ -8,6 +8,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.CreditorsAfterOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.currentassetsinvestments.CurrentAssetsInvestmentsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.employees.EmployeesApi;
@@ -39,6 +40,8 @@ public class SmallFullApiData {
     private DebtorsApi debtors;
 
     private EmployeesApi employees;
+
+    private CurrentAssetsInvestmentsApi currentAssetsInvestments;
     
     private CreditorsWithinOneYearApi creditorsWithinOneYear;
     
@@ -134,6 +137,14 @@ public class SmallFullApiData {
         this.employees = employees;
     }
 
+    public CurrentAssetsInvestmentsApi getCurrentAssetsInvestments() {
+        return currentAssetsInvestments;
+    }
+
+    public void setCurrentAssetsInvestments(CurrentAssetsInvestmentsApi currentAssetsInvestments) {
+        this.currentAssetsInvestments = currentAssetsInvestments;
+    }
+
     public CreditorsAfterOneYearApi getCreditorsAfterOneYear() {
       return creditorsAfterOneYear;
     }
@@ -152,6 +163,7 @@ public class SmallFullApiData {
         return Objects.equals(getCurrentPeriod(), that.getCurrentPeriod()) &&
                 Objects.equals(getPreviousPeriod(), that.getPreviousPeriod()) &&
                 Objects.equals(getCompanyProfile(), that.getCompanyProfile()) &&
+                Objects.equals(getCompanyAccounts(), that.getCompanyAccounts()) &&
                 Objects.equals(getApproval(), that.getApproval()) &&
                 Objects.equals(getBalanceSheetStatements(), that.getBalanceSheetStatements()) &&
                 Objects.equals(getAccountingPolicies(), that.getAccountingPolicies()) &&
@@ -159,6 +171,7 @@ public class SmallFullApiData {
                 Objects.equals(getStocks(), that.getStocks()) &&
                 Objects.equals(getDebtors(), that.getDebtors()) &&
                 Objects.equals(getEmployees(), that.getEmployees()) &&
+                Objects.equals(getCurrentAssetsInvestments(), that.getCurrentAssetsInvestments()) &&
                 Objects.equals(getCreditorsWithinOneYear(), that.getCreditorsWithinOneYear()) &&
                 Objects.equals(getCreditorsAfterOneYear(), that.getCreditorsAfterOneYear());
     }
@@ -166,8 +179,8 @@ public class SmallFullApiData {
     @Override
     public int hashCode() {
         return Objects.hash(getCurrentPeriod(), getPreviousPeriod(), getCompanyProfile(),
-                getApproval(), getBalanceSheetStatements(), getAccountingPolicies(),
-                getTangibleAssets(), getStocks(), getDebtors(), getEmployees(), getCreditorsWithinOneYear(), getCreditorsAfterOneYear());
+                getCompanyAccounts(), getApproval(), getBalanceSheetStatements(),
+                getAccountingPolicies(), getTangibleAssets(), getStocks(), getDebtors(), getEmployees(), getCurrentAssetsInvestments(), getCreditorsWithinOneYear(), getCreditorsAfterOneYear());
     }
 
     @Override
@@ -176,6 +189,7 @@ public class SmallFullApiData {
                 "currentPeriod=" + currentPeriod +
                 ", previousPeriod=" + previousPeriod +
                 ", companyProfile=" + companyProfile +
+                ", companyAccounts=" + companyAccounts +
                 ", approval=" + approval +
                 ", balanceSheetStatements=" + balanceSheetStatements +
                 ", accountingPolicies=" + accountingPolicies +
@@ -183,6 +197,7 @@ public class SmallFullApiData {
                 ", stocks=" + stocks +
                 ", debtors=" + debtors +
                 ", employees=" + employees +
+                ", currentAssetsInvestments=" + currentAssetsInvestments +
                 ", creditorsWithinOneYear=" + creditorsWithinOneYear +
                 ", creditorsAfterOneYear=" + creditorsAfterOneYear +
                 '}';

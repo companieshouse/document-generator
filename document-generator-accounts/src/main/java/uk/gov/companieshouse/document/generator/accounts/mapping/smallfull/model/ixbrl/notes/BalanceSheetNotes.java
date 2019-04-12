@@ -3,10 +3,10 @@ package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.mode
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.Gson;
 import java.util.Objects;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorsafteroneyear.CreditorsAfterOneYear;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorswithinoneyear.CreditorsWithinOneYear;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.currentassetsinvestments.CurrentAssetsInvestments;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.Debtors;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.stocks.StocksNote;
@@ -29,6 +29,10 @@ public class BalanceSheetNotes {
 
     @JsonProperty("tangible_assets")
     private TangibleAssets tangibleAssets;
+
+    @JsonProperty("current_assets_investments")
+    private CurrentAssetsInvestments currentAssetsInvestments;
+
 
     public StocksNote getStocksNote() {
         return stocksNote;
@@ -70,26 +74,45 @@ public class BalanceSheetNotes {
         this.tangibleAssets = tangibleAssets;
     }
 
+    public CurrentAssetsInvestments getCurrentAssetsInvestments() {
+        return currentAssetsInvestments;
+    }
+
+    public void setCurrentAssetsInvestments(CurrentAssetsInvestments currentAssetsInvestments) {
+        this.currentAssetsInvestments = currentAssetsInvestments;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
+        if (this == o)
             return true;
-        }
-        if (!(o instanceof BalanceSheetNotes)) return false;
+        if (! (o instanceof BalanceSheetNotes))
+            return false;
         BalanceSheetNotes that = (BalanceSheetNotes) o;
-        return (Objects.equals(getStocksNote(), that.getStocksNote()) &&
+        return Objects.equals(getStocksNote(), that.getStocksNote()) &&
                 Objects.equals(getDebtorsNote(), that.getDebtorsNote()) &&
-                Objects.equals(getCreditorsWithinOneYearNote(), that.getCreditorsWithinOneYearNote()) &&
-                Objects.equals(getTangibleAssets(), that.tangibleAssets));
+                Objects.equals(getCreditorsWithinOneYearNote(),
+                        that.getCreditorsWithinOneYearNote()) &&
+                Objects.equals(getCreditorsAfterOneYearNote(),
+                        that.getCreditorsAfterOneYearNote()) &&
+                Objects.equals(getTangibleAssets(), that.getTangibleAssets()) &&
+                Objects.equals(getCurrentAssetsInvestments(), that.getCurrentAssetsInvestments());
     }
 
     @Override
     public int hashCode() {
-      return Objects.hash(creditorsWithinOneYearNote, stocksNote, debtorsNote, tangibleAssets);
+        return Objects.hash(getStocksNote(), getDebtorsNote(), getCreditorsWithinOneYearNote(), getCreditorsAfterOneYearNote(), getTangibleAssets(), getCurrentAssetsInvestments());
     }
 
     @Override
     public String toString() {
-        return new Gson().toJson(this);
+        return "BalanceSheetNotes{" +
+                "stocksNote=" + stocksNote +
+                ", debtorsNote=" + debtorsNote +
+                ", creditorsWithinOneYearNote=" + creditorsWithinOneYearNote +
+                ", creditorsAfterOneYearNote=" + creditorsAfterOneYearNote +
+                ", tangibleAssets=" + tangibleAssets +
+                ", currentAssetsInvestments=" + currentAssetsInvestments +
+                '}';
     }
 }

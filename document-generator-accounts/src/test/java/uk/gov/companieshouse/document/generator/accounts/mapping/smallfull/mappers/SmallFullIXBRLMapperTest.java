@@ -19,6 +19,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.PreviousPeriod;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.CreditorsAfterOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.currentassetsinvestments.CurrentAssetsInvestmentsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.FixedAssetsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.OtherLiabilitiesOrAssetsApi;
@@ -39,6 +40,7 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.company.Company;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorsafteroneyear.CreditorsAfterOneYear;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorswithinoneyear.CreditorsWithinOneYear;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.currentassetsinvestments.CurrentAssetsInvestments;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.Debtors;
 import java.time.LocalDate;
 
@@ -94,6 +96,9 @@ public class SmallFullIXBRLMapperTest {
     private ApiToTangibleAssetsNoteMapper apiToTangibleAssetsNoteMapper;
 
     @Mock
+    private ApiToCurrentAssetsInvestmentsMapper apiToCurrentAssetsInvestmentsMapper;
+
+    @Mock
     private CalledUpSharedCapitalNotPaid calledUpSharedCapitalNotPaid;
 
     @Mock
@@ -140,6 +145,9 @@ public class SmallFullIXBRLMapperTest {
 
     @Mock
     private TangibleAssetsColumns column;
+
+    @Mock
+    private CurrentAssetsInvestments currentAssetsInvestments;
 
     @InjectMocks
     private SmallFullIXBRLMapper smallFullIXBRLMapper = new SmallFullIXBRLMapperImpl();
@@ -350,6 +358,10 @@ public class SmallFullIXBRLMapperTest {
         when(apiToTangibleAssetsNoteMapper.apiToTangibleAssetsNetBookValuePreviousPeriodMapper(
                 smallFullApiData.getTangibleAssets()))
                 .thenReturn(column);
+
+        when(apiToCurrentAssetsInvestmentsMapper.apiToCurrentAssetsInvestments(
+                smallFullApiData.getCurrentAssetsInvestments()))
+                .thenReturn(currentAssetsInvestments);
     }
 
     private void verifyOptionalFieldMappersExecuted(SmallFullApiData smallFullApiData) {
@@ -437,6 +449,7 @@ public class SmallFullIXBRLMapperTest {
                 smallFullAccountIxbrl.getBalanceSheetNotes().getCreditorsAfterOneYearNote());
         assertEquals(tangibleAssets,
                 smallFullAccountIxbrl.getBalanceSheetNotes().getTangibleAssets());
+        assertEquals(currentAssetsInvestments, smallFullAccountIxbrl.getBalanceSheetNotes().getCurrentAssetsInvestments());
         assertEquals(employees, smallFullAccountIxbrl.getAdditionalNotes().getEmployees());
     }
 
@@ -456,6 +469,7 @@ public class SmallFullIXBRLMapperTest {
         smallFullApiData.setCurrentPeriod(createCurrentPeriod());
         smallFullApiData.setPreviousPeriod(createPreviousPeriod());
         smallFullApiData.setBalanceSheetStatements(createBalanceSheetStatements());
+        smallFullApiData.setCurrentAssetsInvestments(createCurrentAssetsInvestments());
 
         if (hasOptionalResources) {
             smallFullApiData.setAccountingPolicies(createAccountingPolicies());
@@ -539,6 +553,14 @@ public class SmallFullIXBRLMapperTest {
         employees.setPreviousPeriod(new uk.gov.companieshouse.api.model.accounts.smallfull.employees.PreviousPeriod());
 
         return employees;
+    }
+
+    private CurrentAssetsInvestmentsApi createCurrentAssetsInvestments() {
+
+        CurrentAssetsInvestmentsApi currentAssetsInvestmentsApi = new CurrentAssetsInvestmentsApi();
+        currentAssetsInvestmentsApi.setDetails("details");
+
+        return currentAssetsInvestmentsApi;
     }
 
     private StocksApi createStocks() {
