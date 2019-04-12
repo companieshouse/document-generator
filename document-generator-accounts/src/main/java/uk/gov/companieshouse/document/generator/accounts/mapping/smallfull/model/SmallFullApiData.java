@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model;
 
+import uk.gov.companieshouse.api.model.accounts.CompanyAccountsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.ApprovalApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
@@ -23,6 +24,8 @@ public class SmallFullApiData {
     private PreviousPeriodApi previousPeriod;
 
     private CompanyProfileApi companyProfile;
+
+    private CompanyAccountsApi companyAccounts;
 
     private ApprovalApi approval;
 
@@ -66,6 +69,12 @@ public class SmallFullApiData {
 
     public void setCompanyProfile(CompanyProfileApi companyProfile) {
         this.companyProfile = companyProfile;
+    }
+
+    public CompanyAccountsApi getCompanyAccounts() { return companyAccounts; }
+
+    public void setCompanyAccounts(CompanyAccountsApi companyAccounts) {
+        this.companyAccounts = companyAccounts;
     }
 
     public ApprovalApi getApproval() {

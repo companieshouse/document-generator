@@ -1,7 +1,7 @@
 package uk.gov.companieshouse.document.generator.accounts.service;
 
 import uk.gov.companieshouse.api.model.accounts.Accounts;
-import uk.gov.companieshouse.api.model.accounts.CompanyAccounts;
+import uk.gov.companieshouse.api.model.accounts.CompanyAccountsApi;
 import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
@@ -49,7 +49,7 @@ public interface AccountsService {
      * @return base {@link Accounts} resource
      * @throws ServiceException throws a service exception
      */
-    CompanyAccounts getCompanyAccounts(String resource, String requestId) throws ServiceException;
+    CompanyAccountsApi getCompanyAccounts(String resource, String requestId) throws ServiceException;
 
     /**
      * Call to private-sdk to get the smallFull accounts resource data and map it to the smallFullAccountsIXBRL model
