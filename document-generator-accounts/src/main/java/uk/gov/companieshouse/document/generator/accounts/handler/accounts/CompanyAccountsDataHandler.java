@@ -3,7 +3,7 @@ package uk.gov.companieshouse.document.generator.accounts.handler.accounts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.gov.companieshouse.api.model.accounts.CompanyAccounts;
+import uk.gov.companieshouse.api.model.accounts.CompanyAccountsApi;
 import uk.gov.companieshouse.document.generator.accounts.AccountType;
 import uk.gov.companieshouse.document.generator.accounts.data.accounts.CompanyAccountsDocumentDataManager;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
@@ -54,7 +54,7 @@ public class CompanyAccountsDataHandler {
     public DocumentInfoResponse getCompanyAccountsData(String resourceUri, String requestId)
             throws HandlerException {
 
-        CompanyAccounts companyAccounts = getCompanyAccounts(resourceUri, requestId);
+        CompanyAccountsApi companyAccounts = getCompanyAccounts(resourceUri, requestId);
 
         String transactionLink = getTransactionLink(companyAccounts, resourceUri);
 
@@ -89,7 +89,7 @@ public class CompanyAccountsDataHandler {
         }
     }
 
-    private String getTransactionLink(CompanyAccounts companyAccounts, String resourceUri)
+    private String getTransactionLink(CompanyAccountsApi companyAccounts, String resourceUri)
             throws HandlerException {
 
         if (companyAccounts.getLinks().getTransaction() != null) {
@@ -100,7 +100,7 @@ public class CompanyAccountsDataHandler {
         }
     }
 
-    private AccountType getCompanyAccountType(CompanyAccounts companyAccounts) throws HandlerException {
+    private AccountType getCompanyAccountType(CompanyAccountsApi companyAccounts) throws HandlerException {
 
         if (companyAccounts.getLinks().getSmallFullAccounts() != null) {
             return AccountType.getAccountType("small_full_accounts");
@@ -110,7 +110,7 @@ public class CompanyAccountsDataHandler {
         }
     }
 
-    private CompanyAccounts getCompanyAccounts(String resourceUri, String requestId) throws HandlerException {
+    private CompanyAccountsApi getCompanyAccounts(String resourceUri, String requestId) throws HandlerException {
 
         try {
             return accountsService.getCompanyAccounts(resourceUri, requestId);

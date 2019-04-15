@@ -2,7 +2,7 @@ package uk.gov.companieshouse.document.generator.accounts.data.accounts;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.gov.companieshouse.api.model.accounts.CompanyAccounts;
+import uk.gov.companieshouse.api.model.accounts.CompanyAccountsApi;
 import uk.gov.companieshouse.document.generator.accounts.AccountType;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.AccountsLinkNotFoundException;
@@ -15,8 +15,8 @@ public class CompanyAccountsDocumentDataManager {
     @Autowired
     private AccountsService accountsService;
 
-    public <T> T getCompanyAccountDocumentData(CompanyAccounts companyAccounts, AccountType accountType,
-                                       Transaction transaction, String requestId)
+    public <T> T getCompanyAccountDocumentData(CompanyAccountsApi companyAccounts, AccountType accountType,
+                                               Transaction transaction, String requestId)
             throws ServiceException, AccountsLinkNotFoundException {
 
         String smallFullAccountLink = getCompanyAccountLink(companyAccounts, accountType);
@@ -24,7 +24,7 @@ public class CompanyAccountsDocumentDataManager {
         return (T) accountsService.getSmallFullAccounts(smallFullAccountLink, requestId, transaction);
     }
 
-    private String getCompanyAccountLink(CompanyAccounts accounts, AccountType accountsType) throws AccountsLinkNotFoundException {
+    private String getCompanyAccountLink(CompanyAccountsApi accounts, AccountType accountsType) throws AccountsLinkNotFoundException {
 
         switch(accountsType.getResourceKey()) {
             case "small_full_accounts":
