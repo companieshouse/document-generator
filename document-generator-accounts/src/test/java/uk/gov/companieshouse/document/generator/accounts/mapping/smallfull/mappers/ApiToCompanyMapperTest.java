@@ -15,6 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ApiToCompanyMapperTest {
 
+    private ApiToCompanyMapper apiToCompanyMapper = new ApiToCompanyMapperImpl();
+
     private static final String JURISDICTION = "jurisdiction";
 
     private static final String COMPANY_NAME = "companyName";
@@ -25,7 +27,7 @@ public class ApiToCompanyMapperTest {
     @DisplayName("tests company values map to company IXBRL model")
     void testApiToCompanyMaps() {
 
-        Company company = ApiToCompanyMapper.INSTANCE.apiToCompany(createCompanyProfile());
+        Company company = apiToCompanyMapper.apiToCompany(createCompanyProfile());
 
         assertNotNull(company);
         assertEquals(COMPANY_NAME, company.getCompanyName());

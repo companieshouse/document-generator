@@ -22,7 +22,7 @@ public class RetrieveApiEnumerationDescriptionTest {
 
     private static final String DESCRIPTION_IDENTIFIERS_KEY_INVALID = "desc";
 
-    private static final String POPULATED_RESPONSE = "Abridged accounts made up to 01 October 2018";
+    private static final String RESPONSE_WITH_PLACEHOLDER = "Abridged accounts made up to {period_end_on}";
 
     private static final String EMPTY_RESPONSE = "";
 
@@ -54,10 +54,9 @@ public class RetrieveApiEnumerationDescriptionTest {
     public void testValidReturnValue() throws IOException {
 
         String result = retrieveApiEnumerationDescription.getApiEnumerationDescription(FILING_DESCRIPTIONS_FILE_NAME_VALID,
-                DESCRIPTION_IDENTIFIERS_KEY_VALID,"abridged-accounts", descriptionValues,
-                requestParameters);
+                DESCRIPTION_IDENTIFIERS_KEY_VALID,"abridged-accounts", requestParameters);
 
-        assertEquals(POPULATED_RESPONSE, result);
+        assertEquals(RESPONSE_WITH_PLACEHOLDER, result);
     }
 
     @Test
@@ -65,8 +64,7 @@ public class RetrieveApiEnumerationDescriptionTest {
     public void testNullReturnedWhenFileNotFound() throws IOException {
 
         String result = retrieveApiEnumerationDescription.getApiEnumerationDescription(FILING_DESCRIPTIONS_FILE_NAME_INVALID,
-                DESCRIPTION_IDENTIFIERS_KEY_VALID,"abridged-accounts", descriptionValues,
-                requestParameters);
+                DESCRIPTION_IDENTIFIERS_KEY_VALID,"abridged-accounts", requestParameters);
 
         assertEquals(EMPTY_RESPONSE, result);
     }
@@ -76,8 +74,7 @@ public class RetrieveApiEnumerationDescriptionTest {
     public void testNullReturnedWhenDescriptionNotFound() throws IOException {
 
         String result = retrieveApiEnumerationDescription.getApiEnumerationDescription(FILING_DESCRIPTIONS_FILE_NAME_VALID,
-                DESCRIPTION_IDENTIFIERS_KEY_INVALID,"abridged-accounts", descriptionValues,
-               requestParameters);
+                DESCRIPTION_IDENTIFIERS_KEY_INVALID,"abridged-accounts", requestParameters);
 
         assertEquals(EMPTY_RESPONSE, result);
     }

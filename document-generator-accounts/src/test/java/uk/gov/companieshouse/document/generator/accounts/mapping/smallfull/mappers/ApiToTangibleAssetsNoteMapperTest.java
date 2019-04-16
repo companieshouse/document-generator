@@ -16,6 +16,9 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 
 public class ApiToTangibleAssetsNoteMapperTest {
 
+    private ApiToTangibleAssetsNoteMapper apiToTangibleAssetsNoteMapper =
+            new ApiToTangibleAssetsNoteMapperImpl();
+
     @Test
     @DisplayName("test cost additions API values map to iXBRL model")
     public void testCostAdditionsAPIToIXBRL() {
@@ -24,7 +27,7 @@ public class ApiToTangibleAssetsNoteMapperTest {
         TangibleAssets tangible = new TangibleAssets();
         TangibleAssetsCost cost = new TangibleAssetsCost();
 
-        cost.setAdditions(ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsCostAdditionsMapper(tangibleApi));
+        cost.setAdditions(apiToTangibleAssetsNoteMapper.apiToTangibleAssetsCostAdditionsMapper(tangibleApi));
 
         tangible.setCost(cost);
 
@@ -55,7 +58,7 @@ public class ApiToTangibleAssetsNoteMapperTest {
         TangibleAssets tangible = new TangibleAssets();
         TangibleAssetsCost cost = new TangibleAssetsCost();
 
-        cost.setAtPeriodEnd(ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsCostAtPeriodEndMapper(tangibleApi));
+        cost.setAtPeriodEnd(apiToTangibleAssetsNoteMapper.apiToTangibleAssetsCostAtPeriodEndMapper(tangibleApi));
         tangible.setCost(cost);
 
         assertNotNull(tangible);
@@ -85,7 +88,7 @@ public class ApiToTangibleAssetsNoteMapperTest {
         TangibleAssets tangible = new TangibleAssets();
         TangibleAssetsCost cost = new TangibleAssetsCost();
 
-        cost.setAtPeriodStart(ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsCostAtPeriodStartMapper(tangibleApi));
+        cost.setAtPeriodStart(apiToTangibleAssetsNoteMapper.apiToTangibleAssetsCostAtPeriodStartMapper(tangibleApi));
         tangible.setCost(cost);
 
         assertNotNull(tangible);
@@ -115,7 +118,7 @@ public class ApiToTangibleAssetsNoteMapperTest {
         TangibleAssets tangible = new TangibleAssets();
         TangibleAssetsCost cost = new TangibleAssetsCost();
 
-        cost.setDisposals(ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsCostDisposalsMapper(tangibleApi));
+        cost.setDisposals(apiToTangibleAssetsNoteMapper.apiToTangibleAssetsCostDisposalsMapper(tangibleApi));
         tangible.setCost(cost);
 
         assertNotNull(tangible);
@@ -145,7 +148,7 @@ public class ApiToTangibleAssetsNoteMapperTest {
         TangibleAssets tangible = new TangibleAssets();
         TangibleAssetsCost cost = new TangibleAssetsCost();
 
-        cost.setRevaluations(ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsCostRevaluationsMapper(tangibleApi));
+        cost.setRevaluations(apiToTangibleAssetsNoteMapper.apiToTangibleAssetsCostRevaluationsMapper(tangibleApi));
         tangible.setCost(cost);
 
         assertNotNull(tangible);
@@ -175,7 +178,7 @@ public class ApiToTangibleAssetsNoteMapperTest {
         TangibleAssets tangible = new TangibleAssets();
         TangibleAssetsCost cost = new TangibleAssetsCost();
 
-        cost.setTransfers(ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsCostTransfersMapper(tangibleApi));
+        cost.setTransfers(apiToTangibleAssetsNoteMapper.apiToTangibleAssetsCostTransfersMapper(tangibleApi));
         tangible.setCost(cost);
 
         assertNotNull(tangible);
@@ -205,7 +208,7 @@ public class ApiToTangibleAssetsNoteMapperTest {
         TangibleAssets tangible = new TangibleAssets();
         TangibleAssetsDepreciation depreciation = new TangibleAssetsDepreciation();
 
-        depreciation.setAtPeriodEnd(ApiToTangibleAssetsNoteMapper.INSTANCE
+        depreciation.setAtPeriodEnd(apiToTangibleAssetsNoteMapper
                 .apiToTangibleAssetsDepreciationAtPeriodEndMapper(tangibleApi));
         tangible.setDepreciation(depreciation);
 
@@ -236,7 +239,7 @@ public class ApiToTangibleAssetsNoteMapperTest {
         TangibleAssets tangible = new TangibleAssets();
         TangibleAssetsDepreciation depreciation = new TangibleAssetsDepreciation();
 
-        depreciation.setAtPeriodStart(ApiToTangibleAssetsNoteMapper.INSTANCE
+        depreciation.setAtPeriodStart(apiToTangibleAssetsNoteMapper
                 .apiToTangibleAssetsDepreciationAtPeriodStartMapper(tangibleApi));
         tangible.setDepreciation(depreciation);
 
@@ -267,7 +270,7 @@ public class ApiToTangibleAssetsNoteMapperTest {
         TangibleAssets tangible = new TangibleAssets();
         TangibleAssetsDepreciation depreciation = new TangibleAssetsDepreciation();
 
-        depreciation.setChargeForYear(ApiToTangibleAssetsNoteMapper.INSTANCE
+        depreciation.setChargeForYear(apiToTangibleAssetsNoteMapper
                 .apiToTangibleAssetsDepreciationChargeForYearMapper(tangibleApi));
         tangible.setDepreciation(depreciation);
 
@@ -298,7 +301,7 @@ public class ApiToTangibleAssetsNoteMapperTest {
         TangibleAssets tangible = new TangibleAssets();
         TangibleAssetsDepreciation depreciation = new TangibleAssetsDepreciation();
 
-        depreciation.setOnDisposals(ApiToTangibleAssetsNoteMapper.INSTANCE
+        depreciation.setOnDisposals(apiToTangibleAssetsNoteMapper
                 .apiToTangibleAssetsDepreciationOnDisposalsMapper(tangibleApi));
         tangible.setDepreciation(depreciation);
 
@@ -329,7 +332,7 @@ public class ApiToTangibleAssetsNoteMapperTest {
         TangibleAssets tangible = new TangibleAssets();
         TangibleAssetsDepreciation depreciation = new TangibleAssetsDepreciation();
 
-        depreciation.setOtherAdjustments(ApiToTangibleAssetsNoteMapper.INSTANCE
+        depreciation.setOtherAdjustments(apiToTangibleAssetsNoteMapper
                 .apiToTangibleAssetsDepreciationOtherAdjustmentsMapper(tangibleApi));
         tangible.setDepreciation(depreciation);
 
@@ -360,7 +363,7 @@ public class ApiToTangibleAssetsNoteMapperTest {
         TangibleAssets tangible = new TangibleAssets();
         TangibleAssetsNetBookValue netBookValue = new TangibleAssetsNetBookValue();
 
-        netBookValue.setCurrentPeriod(ApiToTangibleAssetsNoteMapper.INSTANCE
+        netBookValue.setCurrentPeriod(apiToTangibleAssetsNoteMapper
                 .apiToTangibleAssetsNetBookValueCurrentPeriodMapper(tangibleApi));
         tangible.setNetBookValue(netBookValue);
 
@@ -391,7 +394,7 @@ public class ApiToTangibleAssetsNoteMapperTest {
         TangibleAssets tangible = new TangibleAssets();
         TangibleAssetsNetBookValue netBookValue = new TangibleAssetsNetBookValue();
 
-        netBookValue.setPreviousPeriod(ApiToTangibleAssetsNoteMapper.INSTANCE
+        netBookValue.setPreviousPeriod(apiToTangibleAssetsNoteMapper
                 .apiToTangibleAssetsNetBookValuePreviousPeriodMapper(tangibleApi));
         tangible.setNetBookValue(netBookValue);
 
@@ -420,7 +423,7 @@ public class ApiToTangibleAssetsNoteMapperTest {
     public void testAdditionalInformationAPIToIXBRL() {
 
         TangibleApi tangibleApi = createTangibleAssets();
-        TangibleAssets tangible = ApiToTangibleAssetsNoteMapper.INSTANCE.apiToTangibleAssetsNoteAdditionalInformation(tangibleApi);
+        TangibleAssets tangible = apiToTangibleAssetsNoteMapper.apiToTangibleAssetsNoteAdditionalInformation(tangibleApi);
 
         assertNotNull(tangible);
 

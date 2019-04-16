@@ -3,14 +3,13 @@ package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.mapp
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.mapstruct.factory.Mappers;
+import org.springframework.web.context.annotation.RequestScope;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.company.Company;
 
-@Mapper
+@RequestScope
+@Mapper(componentModel = "spring")
 public interface ApiToCompanyMapper {
-
-    ApiToCompanyMapper INSTANCE = Mappers.getMapper(ApiToCompanyMapper.class);
 
     @Mappings({
             @Mapping(source = "companyProfile.companyNumber", target = "companyNumber"),

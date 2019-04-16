@@ -290,7 +290,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
         try {
             description = retrieveApiEnumerationDescription.getApiEnumerationDescription(
                     FILING_DESCRIPTIONS_FILE_NAME, DESCRIPTION_IDENTIFIERS_KEY,
-                    documentInfoResponse.getDescriptionIdentifier(), documentInfoResponse.getDescriptionValues(), requestParameters);
+                    documentInfoResponse.getDescriptionIdentifier(), requestParameters);
         } catch (IOException ioe) {
             createAndLogErrorMessage("Error retrieving description from api-enumeration from: "
                     + FILING_DESCRIPTIONS_FILE_NAME, ioe, requestParameters);

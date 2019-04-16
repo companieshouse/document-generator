@@ -8,16 +8,19 @@ import uk.gov.companieshouse.api.ApiClient;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.accounts.Accounts;
-import uk.gov.companieshouse.api.model.accounts.CompanyAccounts;
+import uk.gov.companieshouse.api.model.accounts.CompanyAccountsApi;
 import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.CreditorsAfterOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.SmallFullApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.ApprovalApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.employees.EmployeesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
@@ -48,9 +51,14 @@ public class AccountsManager {
     @Autowired
     private CompanyService companyService;
 
+    @Autowired
+    private SmallFullIXBRLMapper smallFullIXBRLMapper;
+
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
     private static final String NOT_FOUND_API_DATA = "No data found in %s api for link: ";
+
+    private static final String SMALL_FULL_LINK_SUFFIX = "small-full";
 
     /**
      * Get accounts resource if exists
@@ -88,11 +96,11 @@ public class AccountsManager {
      * Get company-accounts resource if exists
      *
      * @param link - self link for the accounts resource
-     * @return CompanyAccounts object along with the status or not found status.
+     * @return CompanyAccountsApi object along with the status or not found status.
      * @throws ApiErrorResponseException
      * @throws URIValidationException
      */
-    public CompanyAccounts getCompanyAccounts(String link) throws ApiErrorResponseException,
+    public CompanyAccountsApi getCompanyAccounts(String link) throws ApiErrorResponseException,
             URIValidationException {
 
         ApiClient apiClient = apiClientService.getApiClient();
@@ -120,6 +128,12 @@ public class AccountsManager {
         try {
 
             SmallFullApi smallFull = apiClient.smallFull().get(link).execute();
+
+            errorString = "company accounts";
+
+            String companyAccountsLink = StringUtils.stripEnd(link, "/" + SMALL_FULL_LINK_SUFFIX);
+            CompanyAccountsApi companyAccountsApi = apiClient.companyAccounts().get(companyAccountsLink).execute();
+            smallFullApiData.setCompanyAccounts(companyAccountsApi);
 
             if (!StringUtils.isEmpty(smallFull.getLinks().getPreviousPeriod())) {
 
@@ -176,7 +190,31 @@ public class AccountsManager {
                 smallFullApiData.setTangibleAssets(tangible);
             }
 
+
+            if (!StringUtils.isEmpty(smallFull.getLinks().getEmployeesNote())) {
+
+                errorString = "employees";
+
+                EmployeesApi employees = apiClient.smallFull().employees()
+                        .get(smallFull.getLinks().getEmployeesNote()).execute();
+
+                smallFullApiData.setEmployees(employees);
+            }
+
+
+            if (!StringUtils.isEmpty(smallFull.getLinks().getStocksNote())) {
+
+                errorString = "stocks";
+
+                StocksApi stocks = apiClient.smallFull().stocks()
+                        .get(smallFull.getLinks().getStocksNote()).execute();
+
+                smallFullApiData.setStocks(stocks);
+            }
+
             if (!StringUtils.isEmpty(smallFull.getLinks().getDebtorsNote())) {
+
+                errorString = "debtors";
 
                 DebtorsApi debtors = apiClient.smallFull().debtors()
                         .get(smallFull.getLinks().getDebtorsNote()).execute();
@@ -186,10 +224,22 @@ public class AccountsManager {
             
             if (!StringUtils.isEmpty(smallFull.getLinks().getCreditorsWithinOneYearNote())) {
 
+                errorString = "creditors within one year";
+
                 CreditorsWithinOneYearApi creditorsWithinOneYearApi = apiClient.smallFull().creditorsWithinOneYear()
                         .get(smallFull.getLinks().getCreditorsWithinOneYearNote()).execute();
 
                 smallFullApiData.setCreditorsWithinOneYear(creditorsWithinOneYearApi);
+            }
+            
+            if (!StringUtils.isEmpty(smallFull.getLinks().getCreditorsAfterMoreThanOneYearNote())) {
+
+                errorString = "creditors after one year";
+
+                CreditorsAfterOneYearApi creditorsAfterOneYearApi = apiClient.smallFull().creditorsAfterOneYear()
+                        .get(smallFull.getLinks().getCreditorsAfterMoreThanOneYearNote()).execute();
+
+                smallFullApiData.setCreditorsAfterOneYear(creditorsAfterOneYearApi);
             }
 
         } catch (ApiErrorResponseException e) {
@@ -199,7 +249,7 @@ public class AccountsManager {
         smallFullApiData.setCompanyProfile(companyService.getCompanyProfile(transaction.getCompanyNumber()));
 
 
-        return SmallFullIXBRLMapper.INSTANCE.mapSmallFullIXBRLModel(smallFullApiData);
+        return smallFullIXBRLMapper.mapSmallFullIXBRLModel(smallFullApiData);
     }
 
     private void handleException(ApiErrorResponseException e, String text, String link)

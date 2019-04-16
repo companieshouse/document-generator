@@ -3,9 +3,7 @@ package uk.gov.companieshouse.document.generator.accounts.handler.accounts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.gov.companieshouse.accountsdates.AccountsDatesHelper;
-import uk.gov.companieshouse.accountsdates.impl.AccountsDatesHelperImpl;
-import uk.gov.companieshouse.api.model.accounts.CompanyAccounts;
+import uk.gov.companieshouse.api.model.accounts.CompanyAccountsApi;
 import uk.gov.companieshouse.document.generator.accounts.AccountType;
 import uk.gov.companieshouse.document.generator.accounts.data.accounts.CompanyAccountsDocumentDataManager;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
@@ -14,14 +12,12 @@ import uk.gov.companieshouse.document.generator.accounts.exception.AccountsLinkN
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.accounts.mapping.PeriodAwareIxbrl;
 import uk.gov.companieshouse.document.generator.accounts.service.AccountsService;
-import uk.gov.companieshouse.document.generator.accounts.service.CompanyService;
 import uk.gov.companieshouse.document.generator.accounts.service.TransactionService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,15 +32,10 @@ public class CompanyAccountsDataHandler {
     private AccountsService accountsService;
 
     @Autowired
-    private CompanyService companyService;
-
-    @Autowired
     private TransactionService transactionService;
 
     @Autowired
     private CompanyAccountsDocumentDataManager companyAccountsDocumentDataManager;
-
-    private AccountsDatesHelper accountsDatesHelper = new AccountsDatesHelperImpl();
 
     private static final String RESOURCE_URI = "resourceUri";
 
@@ -63,7 +54,7 @@ public class CompanyAccountsDataHandler {
     public DocumentInfoResponse getCompanyAccountsData(String resourceUri, String requestId)
             throws HandlerException {
 
-        CompanyAccounts companyAccounts = getCompanyAccounts(resourceUri, requestId);
+        CompanyAccountsApi companyAccounts = getCompanyAccounts(resourceUri, requestId);
 
         String transactionLink = getTransactionLink(companyAccounts, resourceUri);
 
@@ -98,7 +89,7 @@ public class CompanyAccountsDataHandler {
         }
     }
 
-    private String getTransactionLink(CompanyAccounts companyAccounts, String resourceUri)
+    private String getTransactionLink(CompanyAccountsApi companyAccounts, String resourceUri)
             throws HandlerException {
 
         if (companyAccounts.getLinks().getTransaction() != null) {
@@ -109,7 +100,7 @@ public class CompanyAccountsDataHandler {
         }
     }
 
-    private AccountType getCompanyAccountType(CompanyAccounts companyAccounts) throws HandlerException {
+    private AccountType getCompanyAccountType(CompanyAccountsApi companyAccounts) throws HandlerException {
 
         if (companyAccounts.getLinks().getSmallFullAccounts() != null) {
             return AccountType.getAccountType("small_full_accounts");
@@ -119,7 +110,7 @@ public class CompanyAccountsDataHandler {
         }
     }
 
-    private CompanyAccounts getCompanyAccounts(String resourceUri, String requestId) throws HandlerException {
+    private CompanyAccountsApi getCompanyAccounts(String resourceUri, String requestId) throws HandlerException {
 
         try {
             return accountsService.getCompanyAccounts(resourceUri, requestId);
@@ -142,8 +133,7 @@ public class CompanyAccountsDataHandler {
         documentInfoResponse.setPath(createPathString(accountType));
 
         Map<String, String> descriptionValues = new HashMap<>();
-        descriptionValues.put("period_end_on", accountsDatesHelper
-                .convertDateToString(getCurrentPeriodEndOn(accountData)));
+        descriptionValues.put("period_end_on", getCurrentPeriodEndOn(accountData));
 
         documentInfoResponse.setDescriptionValues(descriptionValues);
         documentInfoResponse.setDescriptionIdentifier(accountType.getEnumerationKey());
@@ -161,11 +151,7 @@ public class CompanyAccountsDataHandler {
         return mapper.writeValueAsString(accountData);
     }
 
-    private <T extends PeriodAwareIxbrl> LocalDate getCurrentPeriodEndOn(T accountData) {
-        return formatDate(accountData.getPeriod().getCurrentPeriodEndsOn());
-    }
-
-    private LocalDate formatDate(String date) {
-        return accountsDatesHelper.convertStringToDate(date);
+    private <T extends PeriodAwareIxbrl> String getCurrentPeriodEndOn(T accountData) {
+        return accountData.getPeriod().getCurrentPeriodEndsOn();
     }
 }
