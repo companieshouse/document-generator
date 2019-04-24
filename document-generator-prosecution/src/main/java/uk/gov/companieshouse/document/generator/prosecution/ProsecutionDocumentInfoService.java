@@ -97,8 +97,7 @@ public class ProsecutionDocumentInfoService implements DocumentInfoService {
         } else {
             Map<String, Object> logMap = new HashMap<>();
             logMap.put(LOGGING_RESOURCE_KEY, docGenUri);
-            // TODO: Bruce: I am not sure that this is the right way of logging this
-            LOG.error("Unmatchable resourceUri inside prosecution: " + docGenUri);
+            LOG.error("Unmatchable resourceUri inside prosecution: " + docGenUri, logMap);
             throw new DocumentInfoException(
                             "Unmatchable resourceUri inside prosecution: " + docGenUri);
         }
@@ -176,6 +175,6 @@ public class ProsecutionDocumentInfoService implements DocumentInfoService {
 
     private DocumentInfoResponse getSjpInfo(String docGenUri, String requestId)
                     throws DocumentInfoException {
-        throw new UnsupportedOperationException("TODO: SJP-");
+        throw new UnsupportedOperationException("TODO: SJP-574");
     }
 }
