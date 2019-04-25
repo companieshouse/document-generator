@@ -19,6 +19,12 @@ public class UltimatumDocumentInfoBuilderProvider {
     private final String templateName = "ultimatum.html";
     private final String templateRegistryAddress;
 
+    /**
+     * Builds template values, in the form of a {@link DocumentInfoResponse},
+     * that can be used to render an ultimatum.
+     * 
+     * @param environmentReader Used to get hold of config.
+     */
     public UltimatumDocumentInfoBuilderProvider(EnvironmentReader environmentReader) {
         // TODO: SJP-599 make these configurable: https://companieshouse.atlassian.net/browse/SJP-599
         // assetId = environmentReader.getMandatoryString(EnvironmentReaderKeys.ULTIMATUM_ASSET_ID);
@@ -46,11 +52,21 @@ public class UltimatumDocumentInfoBuilderProvider {
 
         private UltimatumDocumentInfoBuilder() {}
 
+        /**
+         * Sets the prosecution case, a source of info for building the template values.
+         * @param prosecutionCase
+         * @return
+         */
         public UltimatumDocumentInfoBuilder prosecutionCase(ProsecutionCase prosecutionCase) {
             this.prosecutionCase = prosecutionCase;
             return this;
         }
 
+        /**
+         * Sets the name of file for the rendered doc.
+         * @param renderedDocFileName
+         * @return
+         */
         public UltimatumDocumentInfoBuilder renderedDocFileName(String renderedDocFileName) {
             this.renderedDocFileName = renderedDocFileName;
             return this;
@@ -78,16 +94,17 @@ public class UltimatumDocumentInfoBuilderProvider {
             templateValues.setDefendantName("David Fraud");
             return templateValues;
         }
-    }
 
-    private String toJson(UltimatumTemplateValues templateValues)
-                    throws DocumentInfoCreationException {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            return mapper.writeValueAsString(templateValues);
-        } catch (JsonProcessingException e) {
-            throw new DocumentInfoCreationException(
-                            "Could not serialise Document Info for Ultimatum");
+        private String toJson(UltimatumTemplateValues templateValues)
+                        throws DocumentInfoCreationException {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                return mapper.writeValueAsString(templateValues);
+            } catch (JsonProcessingException e) {
+                throw new DocumentInfoCreationException(
+                                "Could not serialise Document Info for Ultimatum");
+            }
         }
     }
+
 }
