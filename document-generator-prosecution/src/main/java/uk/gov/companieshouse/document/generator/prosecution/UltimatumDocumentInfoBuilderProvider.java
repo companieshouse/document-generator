@@ -91,7 +91,8 @@ public class UltimatumDocumentInfoBuilderProvider {
             templateValues.setCompanyName(companyName);
             templateValues.setCompanyNumber(companyIncorporationNumber);
             templateValues.setTemplateRegistryAddress(templateRegistryAddress);
-            templateValues.setDefendantName("David Fraud");
+            //defendant name temporarily WS only, this will vanish in the template rework
+            templateValues.setDefendantName(" ");
             return templateValues;
         }
 
@@ -102,7 +103,8 @@ public class UltimatumDocumentInfoBuilderProvider {
                 return mapper.writeValueAsString(templateValues);
             } catch (JsonProcessingException e) {
                 throw new DocumentInfoCreationException(
-                                "Could not serialise Document Info for Ultimatum");
+                                "Could not serialise Document Info for Ultimatum for prosecution case: "
+                                                + prosecutionCase.getLinks().get("self"));
             }
         }
     }

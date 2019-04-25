@@ -34,11 +34,11 @@ import uk.gov.companieshouse.logging.LoggerFactory;
  * <ul>
  * <li>Ultimatum: <code>/prosecution/ultimatum{urlOfProsecutionCase}</code></br>
  * e.g.
- * <code>/prosecution/ultimatum/company/00066516/prosecution-cases/dd908afef2b8529aab3c680239f5d06717113634</code>
+ * <code>/prosecution/ultimatum/company/1/prosecution-cases/dd908afef2b8529aab3c680239f5d06717113634</code>
  * </li>
  * <li>SJP: <code>/prosecution/sjp{urlOfProsecutionCase}</code></br>
  * e.g.
- * <code>/prosecution/sjp/company/00066516/prosecution-cases/dd908afef2b8529aab3c680239f5d06717113634</code>
+ * <code>/prosecution/sjp/company/1/prosecution-cases/dd908afef2b8529aab3c680239f5d06717113634</code>
  * </li>
  * </ul>
  * This service will be matched on the base of this URI, will use the base to further determine
@@ -87,8 +87,12 @@ public class ProsecutionDocumentInfoService implements DocumentInfoService {
     @Override
     public DocumentInfoResponse getDocumentInfo(DocumentInfoRequest documentInfoRequest)
                     throws DocumentInfoException {
-        LOG.info("Started getting document");
+        String resourceUri = documentInfoRequest.getResourceUri();
         String requestId = documentInfoRequest.getRequestId();
+        final Map< String, Object > debugMap = new HashMap< >();
+        debugMap.put("resource_uri", resourceUri);
+        LOG.infoContext(requestId,"Started getting document info", debugMap);
+
         String docGenUri = documentInfoRequest.getResourceUri();
         if (isProsecutionUltimatumRequest(docGenUri)) {
             return getUltimatumInfo(docGenUri, requestId);
