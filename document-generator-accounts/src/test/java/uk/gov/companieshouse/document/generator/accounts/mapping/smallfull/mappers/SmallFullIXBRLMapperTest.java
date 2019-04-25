@@ -19,6 +19,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.PreviousPeriod;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.CreditorsAfterOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.fixedassetsinvestments.FixedAssetsInvestmentsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.FixedAssetsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.OtherLiabilitiesOrAssetsApi;
@@ -40,6 +41,7 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorsafteroneyear.CreditorsAfterOneYear;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorswithinoneyear.CreditorsWithinOneYear;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.Debtors;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.fixedassetsinvestments.FixedAssetsInvestments;
 import java.time.LocalDate;
 
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.employees.Employees;
@@ -94,6 +96,9 @@ public class SmallFullIXBRLMapperTest {
     private ApiToTangibleAssetsNoteMapper apiToTangibleAssetsNoteMapper;
 
     @Mock
+    private ApiToFixedAssetsInvestmentsMapper apiToFixedAssetsInvestmentsMapper;
+
+    @Mock
     private CalledUpSharedCapitalNotPaid calledUpSharedCapitalNotPaid;
 
     @Mock
@@ -140,6 +145,9 @@ public class SmallFullIXBRLMapperTest {
 
     @Mock
     private TangibleAssetsColumns column;
+
+    @Mock
+    private FixedAssetsInvestments fixedAssetsInvestments;
 
     @InjectMocks
     private SmallFullIXBRLMapper smallFullIXBRLMapper = new SmallFullIXBRLMapperImpl();
@@ -350,6 +358,10 @@ public class SmallFullIXBRLMapperTest {
         when(apiToTangibleAssetsNoteMapper.apiToTangibleAssetsNetBookValuePreviousPeriodMapper(
                 smallFullApiData.getTangibleAssets()))
                 .thenReturn(column);
+
+        when(apiToFixedAssetsInvestmentsMapper.apiToFixedAssetsInvestments(
+                smallFullApiData.getFixedAssetsInvestments()))
+                .thenReturn(fixedAssetsInvestments);
     }
 
     private void verifyOptionalFieldMappersExecuted(SmallFullApiData smallFullApiData) {
@@ -437,7 +449,10 @@ public class SmallFullIXBRLMapperTest {
                 smallFullAccountIxbrl.getBalanceSheetNotes().getCreditorsAfterOneYearNote());
         assertEquals(tangibleAssets,
                 smallFullAccountIxbrl.getBalanceSheetNotes().getTangibleAssets());
+        assertEquals(fixedAssetsInvestments,
+                smallFullAccountIxbrl.getBalanceSheetNotes().getFixedAssetsInvestments());
         assertEquals(employees, smallFullAccountIxbrl.getAdditionalNotes().getEmployees());
+
     }
 
     private SmallFullAccountIxbrl createSmallFullAccountIxbrl() {
@@ -464,6 +479,7 @@ public class SmallFullIXBRLMapperTest {
             smallFullApiData.setCreditorsWithinOneYear(createCreditorsWithinOneYear());
             smallFullApiData.setCreditorsAfterOneYear(createCreditorsAfterOneYear());
             smallFullApiData.setTangibleAssets(createTangible());
+            smallFullApiData.setFixedAssetsInvestments(createFixedAssetsInvestments());
             smallFullApiData.setEmployees(createEmployees());
         }
 
@@ -577,5 +593,13 @@ public class SmallFullIXBRLMapperTest {
     private TangibleApi createTangible() {
 
         return new TangibleApi();
+    }
+
+    private FixedAssetsInvestmentsApi createFixedAssetsInvestments() {
+
+        FixedAssetsInvestmentsApi fixedAssetsInvestmentsApi = new FixedAssetsInvestmentsApi();
+        fixedAssetsInvestmentsApi.setDetails("details");
+
+        return fixedAssetsInvestmentsApi;
     }
 }
