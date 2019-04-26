@@ -134,6 +134,10 @@ public class ProsecutionDocumentInfoService implements DocumentInfoService {
                             "Could not get prosecution case info to build template for URI: "
                                             + prosecutionCaseUri,
                             ex, logMap);
+            LOG.errorContext(requestId,
+                            "Could not get prosecution case info to build template for URI, cause: "
+                                            + prosecutionCaseUri,
+                            (Exception) ex.getCause(), logMap);
             throw new DocumentInfoException("Could not build template: " + docGenUri, ex);
         }
     }
