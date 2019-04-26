@@ -7,9 +7,6 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 public class ProsecutionCase {
-    @JsonProperty("etag")
-    private String etag;
-
     @JsonProperty("kind")
     private String kind;
 
@@ -96,13 +93,5 @@ public class ProsecutionCase {
 
     public void setLinks(Map<String, String> links) {
         this.links = links;
-    }
-
-    public String getEtag() {
-        return etag;
-    }
-
-    public void setEtag(String etag) {
-        this.etag = etag;
     }
 }
