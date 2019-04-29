@@ -19,6 +19,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.PreviousPeriod;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.CreditorsAfterOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.currentassetsinvestments.CurrentAssetsInvestmentsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.fixedassetsinvestments.FixedAssetsInvestmentsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.FixedAssetsApi;
@@ -40,6 +41,7 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.company.Company;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorsafteroneyear.CreditorsAfterOneYear;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorswithinoneyear.CreditorsWithinOneYear;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.currentassetsinvestments.CurrentAssetsInvestments;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.Debtors;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.fixedassetsinvestments.FixedAssetsInvestments;
 import java.time.LocalDate;
@@ -96,6 +98,9 @@ public class SmallFullIXBRLMapperTest {
     private ApiToTangibleAssetsNoteMapper apiToTangibleAssetsNoteMapper;
 
     @Mock
+    private ApiToCurrentAssetsInvestmentsMapper apiToCurrentAssetsInvestmentsMapper;
+
+    @Mock
     private ApiToFixedAssetsInvestmentsMapper apiToFixedAssetsInvestmentsMapper;
 
     @Mock
@@ -145,6 +150,9 @@ public class SmallFullIXBRLMapperTest {
 
     @Mock
     private TangibleAssetsColumns column;
+
+    @Mock
+    private CurrentAssetsInvestments currentAssetsInvestments;
 
     @Mock
     private FixedAssetsInvestments fixedAssetsInvestments;
@@ -359,6 +367,10 @@ public class SmallFullIXBRLMapperTest {
                 smallFullApiData.getTangibleAssets()))
                 .thenReturn(column);
 
+        when(apiToCurrentAssetsInvestmentsMapper.apiToCurrentAssetsInvestments(
+                smallFullApiData.getCurrentAssetsInvestments()))
+                .thenReturn(currentAssetsInvestments);
+
         when(apiToFixedAssetsInvestmentsMapper.apiToFixedAssetsInvestments(
                 smallFullApiData.getFixedAssetsInvestments()))
                 .thenReturn(fixedAssetsInvestments);
@@ -449,6 +461,7 @@ public class SmallFullIXBRLMapperTest {
                 smallFullAccountIxbrl.getBalanceSheetNotes().getCreditorsAfterOneYearNote());
         assertEquals(tangibleAssets,
                 smallFullAccountIxbrl.getBalanceSheetNotes().getTangibleAssets());
+        assertEquals(currentAssetsInvestments, smallFullAccountIxbrl.getBalanceSheetNotes().getCurrentAssetsInvestments());
         assertEquals(fixedAssetsInvestments,
                 smallFullAccountIxbrl.getBalanceSheetNotes().getFixedAssetsInvestments());
         assertEquals(employees, smallFullAccountIxbrl.getAdditionalNotes().getEmployees());
@@ -471,6 +484,7 @@ public class SmallFullIXBRLMapperTest {
         smallFullApiData.setCurrentPeriod(createCurrentPeriod());
         smallFullApiData.setPreviousPeriod(createPreviousPeriod());
         smallFullApiData.setBalanceSheetStatements(createBalanceSheetStatements());
+        smallFullApiData.setCurrentAssetsInvestments(createCurrentAssetsInvestments());
 
         if (hasOptionalResources) {
             smallFullApiData.setAccountingPolicies(createAccountingPolicies());
@@ -555,6 +569,14 @@ public class SmallFullIXBRLMapperTest {
         employees.setPreviousPeriod(new uk.gov.companieshouse.api.model.accounts.smallfull.employees.PreviousPeriod());
 
         return employees;
+    }
+
+    private CurrentAssetsInvestmentsApi createCurrentAssetsInvestments() {
+
+        CurrentAssetsInvestmentsApi currentAssetsInvestmentsApi = new CurrentAssetsInvestmentsApi();
+        currentAssetsInvestmentsApi.setDetails("details");
+
+        return currentAssetsInvestmentsApi;
     }
 
     private StocksApi createStocks() {
