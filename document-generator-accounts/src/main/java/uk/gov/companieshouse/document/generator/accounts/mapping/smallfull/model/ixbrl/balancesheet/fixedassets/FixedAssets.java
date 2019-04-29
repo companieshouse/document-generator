@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.Gson;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.fixedassets.items.Investments;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.fixedassets.items.TangibleAssets;
 
 import java.util.Objects;
@@ -13,6 +14,9 @@ public class FixedAssets {
 
     @JsonProperty("tangible")
     public TangibleAssets tangibleAssets;
+
+    @JsonProperty("investments")
+    public Investments investments;
 
     @JsonProperty("current_total")
     public Long totalFixedAssetsCurrent;
@@ -44,24 +48,39 @@ public class FixedAssets {
         this.totalFixedAssetsPrevious = totalFixedAssetsPrevious;
     }
 
+    public Investments getInvestments() {
+        return investments;
+    }
+
+    public void setInvestments(Investments investments) {
+        this.investments = investments;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof FixedAssets)) return false;
+        if (this == o)
+            return true;
+        if (! (o instanceof FixedAssets))
+            return false;
         FixedAssets that = (FixedAssets) o;
-        return getTotalFixedAssetsCurrent() == that.getTotalFixedAssetsCurrent() &&
-                getTotalFixedAssetsPrevious() == that.getTotalFixedAssetsPrevious() &&
-                Objects.equals(getTangibleAssets(), that.getTangibleAssets());
+        return Objects.equals(getTangibleAssets(), that.getTangibleAssets()) &&
+                Objects.equals(getInvestments(), that.getInvestments()) &&
+                Objects.equals(getTotalFixedAssetsCurrent(), that.getTotalFixedAssetsCurrent()) &&
+                Objects.equals(getTotalFixedAssetsPrevious(), that.getTotalFixedAssetsPrevious());
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(getTangibleAssets(), getTotalFixedAssetsCurrent(), getTotalFixedAssetsPrevious());
+        return Objects.hash(getTangibleAssets(), getInvestments(), getTotalFixedAssetsCurrent(), getTotalFixedAssetsPrevious());
     }
 
     @Override
     public String toString() {
-        return new Gson().toJson(this);
+        return "FixedAssets{" +
+                "tangibleAssets=" + tangibleAssets +
+                ", investments=" + investments +
+                ", totalFixedAssetsCurrent=" + totalFixedAssetsCurrent +
+                ", totalFixedAssetsPrevious=" + totalFixedAssetsPrevious +
+                '}';
     }
 }

@@ -9,6 +9,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.CreditorsAfterOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.currentassetsinvestments.CurrentAssetsInvestmentsApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.fixedassetsinvestments.FixedAssetsInvestmentsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.employees.EmployeesApi;
@@ -46,6 +47,8 @@ public class SmallFullApiData {
     private CreditorsWithinOneYearApi creditorsWithinOneYear;
     
     private CreditorsAfterOneYearApi creditorsAfterOneYear;
+    
+    private FixedAssetsInvestmentsApi fixedAssetsInvestments;
 
     public CurrentPeriodApi getCurrentPeriod() {
         return currentPeriod;
@@ -153,6 +156,14 @@ public class SmallFullApiData {
       this.creditorsAfterOneYear = creditorsAfterOneYear;
     }
 
+    public FixedAssetsInvestmentsApi getFixedAssetsInvestments() {
+        return fixedAssetsInvestments;
+    }
+
+    public void setFixedAssetsInvestments(FixedAssetsInvestmentsApi fixedAssetsInvestments) {
+        this.fixedAssetsInvestments = fixedAssetsInvestments;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -173,14 +184,17 @@ public class SmallFullApiData {
                 Objects.equals(getEmployees(), that.getEmployees()) &&
                 Objects.equals(getCurrentAssetsInvestments(), that.getCurrentAssetsInvestments()) &&
                 Objects.equals(getCreditorsWithinOneYear(), that.getCreditorsWithinOneYear()) &&
-                Objects.equals(getCreditorsAfterOneYear(), that.getCreditorsAfterOneYear());
+                Objects.equals(getCreditorsAfterOneYear(), that.getCreditorsAfterOneYear()) &&
+                Objects.equals(getFixedAssetsInvestments(), that.getFixedAssetsInvestments());
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(getCurrentPeriod(), getPreviousPeriod(), getCompanyProfile(),
                 getCompanyAccounts(), getApproval(), getBalanceSheetStatements(),
-                getAccountingPolicies(), getTangibleAssets(), getStocks(), getDebtors(), getEmployees(), getCurrentAssetsInvestments(), getCreditorsWithinOneYear(), getCreditorsAfterOneYear());
+                getAccountingPolicies(), getTangibleAssets(), getStocks(), getDebtors(),
+                getEmployees(), getCurrentAssetsInvestments(), getCreditorsWithinOneYear(),
+                getCreditorsAfterOneYear(), getFixedAssetsInvestments());
     }
 
     @Override
@@ -200,6 +214,7 @@ public class SmallFullApiData {
                 ", currentAssetsInvestments=" + currentAssetsInvestments +
                 ", creditorsWithinOneYear=" + creditorsWithinOneYear +
                 ", creditorsAfterOneYear=" + creditorsAfterOneYear +
+                ", fixedAssetsInvestments=" + fixedAssetsInvestments +
                 '}';
     }
 }

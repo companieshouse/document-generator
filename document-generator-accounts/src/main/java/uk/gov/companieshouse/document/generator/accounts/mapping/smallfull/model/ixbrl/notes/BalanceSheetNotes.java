@@ -8,27 +8,30 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorswithinoneyear.CreditorsWithinOneYear;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.currentassetsinvestments.CurrentAssetsInvestments;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.Debtors;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.fixedassetsinvestments.FixedAssetsInvestments;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.stocks.StocksNote;
-
 
 @JsonInclude(Include.NON_NULL)
 public class BalanceSheetNotes {
 
     @JsonProperty("stocks")
     private StocksNote stocksNote;
-    
+
     @JsonProperty("debtors")
     private Debtors debtorsNote;
-    
+
     @JsonProperty("creditors_within_one_year")
     private CreditorsWithinOneYear creditorsWithinOneYearNote;
-    
+
     @JsonProperty("creditors_after_one_year")
     private CreditorsAfterOneYear creditorsAfterOneYearNote;
 
     @JsonProperty("tangible_assets")
     private TangibleAssets tangibleAssets;
+
+    @JsonProperty("fixed_assets_investments")
+    private FixedAssetsInvestments fixedAssetsInvestments;
 
     @JsonProperty("current_assets_investments")
     private CurrentAssetsInvestments currentAssetsInvestments;
@@ -41,7 +44,7 @@ public class BalanceSheetNotes {
     public void setStocksNote(StocksNote stocksNote) {
         this.stocksNote = stocksNote;
     }
-    
+
     public Debtors getDebtorsNote() {
         return debtorsNote;
     }
@@ -51,20 +54,20 @@ public class BalanceSheetNotes {
     }
 
     public CreditorsWithinOneYear getCreditorsWithinOneYearNote() {
-      return creditorsWithinOneYearNote;
+        return creditorsWithinOneYearNote;
     }
 
     public void setCreditorsWithinOneYearNote(CreditorsWithinOneYear creditorsWithinOneYearNote) {
-      this.creditorsWithinOneYearNote = creditorsWithinOneYearNote;
+        this.creditorsWithinOneYearNote = creditorsWithinOneYearNote;
     }
-    
+
     public CreditorsAfterOneYear getCreditorsAfterOneYearNote() {
         return creditorsAfterOneYearNote;
-      }
+    }
 
-      public void setCreditorsAfterOneYearNote(CreditorsAfterOneYear creditorsAfterOneYearNote) {
+    public void setCreditorsAfterOneYearNote(CreditorsAfterOneYear creditorsAfterOneYearNote) {
         this.creditorsAfterOneYearNote = creditorsAfterOneYearNote;
-      }
+    }
 
     public TangibleAssets getTangibleAssets() {
         return tangibleAssets;
@@ -82,6 +85,14 @@ public class BalanceSheetNotes {
         this.currentAssetsInvestments = currentAssetsInvestments;
     }
 
+    public FixedAssetsInvestments getFixedAssetsInvestments() {
+        return fixedAssetsInvestments;
+    }
+
+    public void setFixedAssetsInvestments(FixedAssetsInvestments fixedAssetsInvestments) {
+        this.fixedAssetsInvestments = fixedAssetsInvestments;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -96,12 +107,13 @@ public class BalanceSheetNotes {
                 Objects.equals(getCreditorsAfterOneYearNote(),
                         that.getCreditorsAfterOneYearNote()) &&
                 Objects.equals(getTangibleAssets(), that.getTangibleAssets()) &&
+                Objects.equals(getFixedAssetsInvestments(), that.getFixedAssetsInvestments()) &&
                 Objects.equals(getCurrentAssetsInvestments(), that.getCurrentAssetsInvestments());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getStocksNote(), getDebtorsNote(), getCreditorsWithinOneYearNote(), getCreditorsAfterOneYearNote(), getTangibleAssets(), getCurrentAssetsInvestments());
+        return Objects.hash(getStocksNote(), getDebtorsNote(), getCreditorsWithinOneYearNote(), getCreditorsAfterOneYearNote(), getTangibleAssets(), getFixedAssetsInvestments(), getCurrentAssetsInvestments());
     }
 
     @Override
@@ -112,7 +124,11 @@ public class BalanceSheetNotes {
                 ", creditorsWithinOneYearNote=" + creditorsWithinOneYearNote +
                 ", creditorsAfterOneYearNote=" + creditorsAfterOneYearNote +
                 ", tangibleAssets=" + tangibleAssets +
+                ", fixedAssetsInvestments=" + fixedAssetsInvestments +
                 ", currentAssetsInvestments=" + currentAssetsInvestments +
                 '}';
     }
 }
+
+
+

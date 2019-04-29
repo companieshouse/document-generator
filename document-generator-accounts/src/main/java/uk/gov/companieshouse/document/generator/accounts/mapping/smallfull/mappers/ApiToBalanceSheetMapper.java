@@ -35,12 +35,15 @@ public interface ApiToBalanceSheetMapper {
                     target = "sharePremiumAccount.currentAmount"),
             @Mapping(source = "previousPeriod.balanceSheet.capitalAndReserves.sharePremiumAccount",
                     target = "sharePremiumAccount.previousAmount"),
-            @Mapping(source = "currentPeriod.balanceSheet.capitalAndReserves.totalShareholdersFunds",
+            @Mapping(source = "currentPeriod.balanceSheet.capitalAndReserves" +
+                    ".totalShareholdersFunds",
                     target = "totalShareHoldersFunds.currentAmount"),
-            @Mapping(source = "previousPeriod.balanceSheet.capitalAndReserves.totalShareholdersFunds",
+            @Mapping(source = "previousPeriod.balanceSheet.capitalAndReserves" +
+                    ".totalShareholdersFunds",
                     target = "totalShareHoldersFunds.previousAmount"),
     })
-    CapitalAndReserve apiToCapitalAndReserve(CurrentPeriodApi currentPeriod, PreviousPeriodApi previousPeriod);
+    CapitalAndReserve apiToCapitalAndReserve(CurrentPeriodApi currentPeriod,
+            PreviousPeriodApi previousPeriod);
 
     @Mappings({
             @Mapping(source = "currentPeriod.balanceSheet.currentAssets.stocks",
@@ -64,13 +67,18 @@ public interface ApiToBalanceSheetMapper {
             @Mapping(source = "previousPeriod.balanceSheet.currentAssets.total",
                     target = "previousTotal"),
     })
-    CurrentAssets apiToCurrentAssets(CurrentPeriodApi currentPeriod, PreviousPeriodApi previousPeriod);
+    CurrentAssets apiToCurrentAssets(CurrentPeriodApi currentPeriod,
+            PreviousPeriodApi previousPeriod);
 
     @Mappings({
             @Mapping(source = "currentPeriod.balanceSheet.fixedAssets.tangible",
                     target = "tangibleAssets.currentAmount"),
             @Mapping(source = "previousPeriod.balanceSheet.fixedAssets.tangible",
                     target = "tangibleAssets.previousAmount"),
+            @Mapping(source = "currentPeriod.balanceSheet.fixedAssets.investments",
+                    target = "investments.currentAmount"),
+            @Mapping(source = "previousPeriod.balanceSheet.fixedAssets.investments",
+                    target = "investments.previousAmount"),
             @Mapping(source = "currentPeriod.balanceSheet.fixedAssets.total",
                     target = "totalFixedAssetsCurrent"),
             @Mapping(source = "previousPeriod.balanceSheet.fixedAssets.total",
@@ -79,46 +87,64 @@ public interface ApiToBalanceSheetMapper {
     FixedAssets apiToFixedAssets(CurrentPeriodApi currentPeriod, PreviousPeriodApi previousPeriod);
 
     @Mappings({
-            @Mapping(source = "currentPeriod.balanceSheet.otherLiabilitiesOrAssets.prepaymentsAndAccruedIncome",
+            @Mapping(source = "currentPeriod.balanceSheet.otherLiabilitiesOrAssets" +
+                    ".prepaymentsAndAccruedIncome",
                     target = "prepaymentsAndAccruedIncome.currentAmount"),
-            @Mapping(source = "previousPeriod.balanceSheet.otherLiabilitiesOrAssets.prepaymentsAndAccruedIncome",
+            @Mapping(source = "previousPeriod.balanceSheet.otherLiabilitiesOrAssets" +
+                    ".prepaymentsAndAccruedIncome",
                     target = "prepaymentsAndAccruedIncome.previousAmount"),
-            @Mapping(source = "currentPeriod.balanceSheet.otherLiabilitiesOrAssets.creditorsDueWithinOneYear",
+            @Mapping(source = "currentPeriod.balanceSheet.otherLiabilitiesOrAssets" +
+                    ".creditorsDueWithinOneYear",
                     target = "creditorsAmountsFallingDueWithinOneYear.currentAmount"),
-            @Mapping(source = "previousPeriod.balanceSheet.otherLiabilitiesOrAssets.creditorsDueWithinOneYear",
+            @Mapping(source = "previousPeriod.balanceSheet.otherLiabilitiesOrAssets" +
+                    ".creditorsDueWithinOneYear",
                     target = "creditorsAmountsFallingDueWithinOneYear.previousAmount"),
-            @Mapping(source = "currentPeriod.balanceSheet.otherLiabilitiesOrAssets.netCurrentAssets",
+            @Mapping(source = "currentPeriod.balanceSheet.otherLiabilitiesOrAssets" +
+                    ".netCurrentAssets",
                     target = "netCurrentAssets.currentAmount"),
-            @Mapping(source = "previousPeriod.balanceSheet.otherLiabilitiesOrAssets.netCurrentAssets",
+            @Mapping(source = "previousPeriod.balanceSheet.otherLiabilitiesOrAssets" +
+                    ".netCurrentAssets",
                     target = "netCurrentAssets.previousAmount"),
-            @Mapping(source = "currentPeriod.balanceSheet.otherLiabilitiesOrAssets.totalAssetsLessCurrentLiabilities",
+            @Mapping(source = "currentPeriod.balanceSheet.otherLiabilitiesOrAssets" +
+                    ".totalAssetsLessCurrentLiabilities",
                     target = "totalAssetsLessCurrentLiabilities.currentAmount"),
-            @Mapping(source = "previousPeriod.balanceSheet.otherLiabilitiesOrAssets.totalAssetsLessCurrentLiabilities",
+            @Mapping(source = "previousPeriod.balanceSheet.otherLiabilitiesOrAssets" +
+                    ".totalAssetsLessCurrentLiabilities",
                     target = "totalAssetsLessCurrentLiabilities.previousAmount"),
-            @Mapping(source = "currentPeriod.balanceSheet.otherLiabilitiesOrAssets.creditorsAfterOneYear",
+            @Mapping(source = "currentPeriod.balanceSheet.otherLiabilitiesOrAssets" +
+                    ".creditorsAfterOneYear",
                     target = "creditorsAmountsFallingDueAfterMoreThanOneYear.currentAmount"),
-            @Mapping(source = "previousPeriod.balanceSheet.otherLiabilitiesOrAssets.creditorsAfterOneYear",
+            @Mapping(source = "previousPeriod.balanceSheet.otherLiabilitiesOrAssets" +
+                    ".creditorsAfterOneYear",
                     target = "creditorsAmountsFallingDueAfterMoreThanOneYear.previousAmount"),
-            @Mapping(source = "currentPeriod.balanceSheet.otherLiabilitiesOrAssets.provisionForLiabilities",
+            @Mapping(source = "currentPeriod.balanceSheet.otherLiabilitiesOrAssets" +
+                    ".provisionForLiabilities",
                     target = "provisionForLiabilities.currentAmount"),
-            @Mapping(source = "previousPeriod.balanceSheet.otherLiabilitiesOrAssets.provisionForLiabilities",
+            @Mapping(source = "previousPeriod.balanceSheet.otherLiabilitiesOrAssets" +
+                    ".provisionForLiabilities",
                     target = "provisionForLiabilities.previousAmount"),
-            @Mapping(source = "currentPeriod.balanceSheet.otherLiabilitiesOrAssets.accrualsAndDeferredIncome",
+            @Mapping(source = "currentPeriod.balanceSheet.otherLiabilitiesOrAssets" +
+                    ".accrualsAndDeferredIncome",
                     target = "accrualsAndDeferredIncome.currentAmount"),
-            @Mapping(source = "previousPeriod.balanceSheet.otherLiabilitiesOrAssets.accrualsAndDeferredIncome",
+            @Mapping(source = "previousPeriod.balanceSheet.otherLiabilitiesOrAssets" +
+                    ".accrualsAndDeferredIncome",
                     target = "accrualsAndDeferredIncome.previousAmount"),
             @Mapping(source = "currentPeriod.balanceSheet.otherLiabilitiesOrAssets.totalNetAssets",
                     target = "currentTotalNetAssets"),
             @Mapping(source = "previousPeriod.balanceSheet.otherLiabilitiesOrAssets.totalNetAssets",
                     target = "previousTotalNetAssets"),
     })
-    OtherLiabilitiesOrAssets apiToOtherLiabilitiesOrAssets(CurrentPeriodApi currentPeriod, PreviousPeriodApi previousPeriod);
+    OtherLiabilitiesOrAssets apiToOtherLiabilitiesOrAssets(CurrentPeriodApi currentPeriod,
+            PreviousPeriodApi previousPeriod);
 
     @Mappings({
-            @Mapping(source = "currentPeriod.balanceSheet.calledUpShareCapitalNotPaid", target = "currentAmount"),
-            @Mapping(source = "previousPeriod.balanceSheet.calledUpShareCapitalNotPaid", target = "previousAmount")
+            @Mapping(source = "currentPeriod.balanceSheet.calledUpShareCapitalNotPaid", target =
+                    "currentAmount"),
+            @Mapping(source = "previousPeriod.balanceSheet.calledUpShareCapitalNotPaid", target =
+                    "previousAmount")
     })
-    CalledUpSharedCapitalNotPaid apiToCalledUpSharedCapitalNotPaid(CurrentPeriodApi currentPeriod, PreviousPeriodApi previousPeriod);
+    CalledUpSharedCapitalNotPaid apiToCalledUpSharedCapitalNotPaid(CurrentPeriodApi currentPeriod
+            , PreviousPeriodApi previousPeriod);
 
     @Mappings({
             @Mapping(source = "balanceSheetStatements.legalStatements.section477",
