@@ -17,6 +17,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.CurrentPeriod;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.PreviousPeriod;
+import uk.gov.companieshouse.api.model.accounts.smallfull.MembersFundsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.CreditorsAfterOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.fixedassetsinvestments.FixedAssetsInvestmentsApi;
@@ -36,6 +37,7 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.capitalandreserves.CapitalAndReserve;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.currentassets.CurrentAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.fixedassets.FixedAssets;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.membersfunds.MembersFunds;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.otherliabilitiesandassets.OtherLiabilitiesOrAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.company.Company;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorsafteroneyear.CreditorsAfterOneYear;
@@ -112,6 +114,9 @@ public class SmallFullIXBRLMapperTest {
 
     @Mock
     private CapitalAndReserve capitalAndReserve;
+
+    @Mock
+    private MembersFunds membersFunds;
 
     @Mock
     private BalanceSheetStatements balanceSheetStatements;
@@ -214,6 +219,10 @@ public class SmallFullIXBRLMapperTest {
                 smallFullApiData.getCurrentPeriod(), smallFullApiData.getPreviousPeriod()))
                 .thenReturn(capitalAndReserve);
 
+        when(apiToBalanceSheetMapper.apiToMembersFunds(
+                smallFullApiData.getCurrentPeriod(), smallFullApiData.getPreviousPeriod()))
+                .thenReturn(membersFunds);
+
         when(apiToBalanceSheetMapper.apiToStatements(smallFullApiData.getBalanceSheetStatements()))
                 .thenReturn(balanceSheetStatements);
 
@@ -243,6 +252,9 @@ public class SmallFullIXBRLMapperTest {
         verify(apiToBalanceSheetMapper, times(1)).apiToCapitalAndReserve(
                 smallFullApiData.getCurrentPeriod(), smallFullApiData.getPreviousPeriod());
 
+        verify(apiToBalanceSheetMapper, times(1)).apiToMembersFunds(
+                smallFullApiData.getCurrentPeriod(), smallFullApiData.getPreviousPeriod());
+
         verify(apiToBalanceSheetMapper, times(1))
                 .apiToStatements(smallFullApiData.getBalanceSheetStatements());
 
@@ -268,6 +280,8 @@ public class SmallFullIXBRLMapperTest {
                 smallFullAccountIxbrl.getBalanceSheet().getCurrentAssets());
         assertEquals(capitalAndReserve,
                 smallFullAccountIxbrl.getBalanceSheet().getCapitalAndReserve());
+        assertEquals(membersFunds,
+                smallFullAccountIxbrl.getBalanceSheet().getMembersFunds());
         assertEquals(balanceSheetStatements,
                 smallFullAccountIxbrl.getBalanceSheet().getBalanceSheetStatements());
 
@@ -510,6 +524,7 @@ public class SmallFullIXBRLMapperTest {
         balanceSheetApi.setFixedAssets(new FixedAssetsApi());
         balanceSheetApi.setCurrentAssets(new CurrentAssetsApi());
         balanceSheetApi.setCapitalAndReserves(new CapitalAndReservesApi());
+        balanceSheetApi.setMembersFunds(new MembersFundsApi());
 
         return balanceSheetApi;
     }
