@@ -13,6 +13,7 @@ import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.CreditorsAfterOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.currentassetsinvestments.CurrentAssetsInvestmentsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.fixedassetsinvestments.FixedAssetsInvestmentsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.SmallFullApi;
@@ -221,6 +222,16 @@ public class AccountsManager {
                         .get(smallFull.getLinks().getDebtorsNote()).execute();
 
                 smallFullApiData.setDebtors(debtors);
+            }
+
+            if (!StringUtils.isEmpty(smallFull.getLinks().getCurrentAssetsInvestmentsNote())) {
+
+                errorString = "current assets investments";
+
+                CurrentAssetsInvestmentsApi currentAssetsInvestmentsApi = apiClient.smallFull().currentAssetsInvestments()
+                        .get(smallFull.getLinks().getCurrentAssetsInvestmentsNote()).execute();
+
+                smallFullApiData.setCurrentAssetsInvestments(currentAssetsInvestmentsApi);
             }
             
             if (!StringUtils.isEmpty(smallFull.getLinks().getCreditorsWithinOneYearNote())) {

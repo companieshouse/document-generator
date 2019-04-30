@@ -12,11 +12,9 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.CreditorsAfterOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
-
+import uk.gov.companieshouse.api.model.accounts.smallfull.currentassetsinvestments.CurrentAssetsInvestmentsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.fixedassetsinvestments.FixedAssetsInvestmentsApi;
-
 import uk.gov.companieshouse.api.model.accounts.smallfull.employees.EmployeesApi;
-
 import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.SmallFullApiData;
@@ -25,11 +23,11 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.BalanceSheet;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorsafteroneyear.CreditorsAfterOneYear;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorswithinoneyear.CreditorsWithinOneYear;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.currentassetsinvestments.CurrentAssetsInvestments;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.Debtors;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.fixedassetsinvestments.FixedAssetsInvestments;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.employees.Employees;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssets;
-
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.AdditionalNotes;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.BalanceSheetNotes;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssetsCost;
@@ -69,6 +67,9 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
 
     @Autowired
     private ApiToEmployeesMapper apiToEmployeesMapper;
+
+    @Autowired
+    private ApiToCurrentAssetsInvestmentsMapper apiToCurrentAssetsInvestmentsMapper;
 
     @Autowired
     private ApiToTangibleAssetsNoteMapper apiToTangibleAssetsNoteMapper;
@@ -145,6 +146,13 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
         if (smallFullApiData.getCreditorsAfterOneYear() != null) {
 
             balanceSheetNotes.setCreditorsAfterOneYearNote(mapCreditorsAfterOneYear(smallFullApiData.getCreditorsAfterOneYear()));
+
+            hasBalanceSheetNotes = true;
+        }
+
+        if (smallFullApiData.getCurrentAssetsInvestments() != null) {
+
+            balanceSheetNotes.setCurrentAssetsInvestments(mapCurrentAssetsInvestments(smallFullApiData.getCurrentAssetsInvestments()));
 
             hasBalanceSheetNotes = true;
         }
@@ -296,6 +304,11 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
                 .apiToTangibleAssetsNetBookValuePreviousPeriodMapper(tangible));
 
         return netBookValue;
+    }
+
+    private CurrentAssetsInvestments mapCurrentAssetsInvestments(CurrentAssetsInvestmentsApi currentAssetsInvestmentsApi) {
+        return apiToCurrentAssetsInvestmentsMapper
+                .apiToCurrentAssetsInvestments(currentAssetsInvestmentsApi);
     }
 
     private FixedAssetsInvestments mapFixedAssetInvestments(FixedAssetsInvestmentsApi fixedAssetsInvestmentsApi) {

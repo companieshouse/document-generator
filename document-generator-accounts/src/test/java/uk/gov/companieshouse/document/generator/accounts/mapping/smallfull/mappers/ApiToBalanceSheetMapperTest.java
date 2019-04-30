@@ -44,7 +44,8 @@ public class ApiToBalanceSheetMapperTest {
     private static final Long CURRENT_CURRENT_ASSETS_CASH_AT_BANK_AND_IN_HAND = 121L;
     private static final Long CURRENT_CURRENT_ASSETS_DEBTORS = 122L;
     private static final Long CURRENT_CURRENT_ASSETS_STOCKS = 123L;
-    private static final Long CURRENT_CURRENT_ASSETS_TOTAL = 124L;
+    private static final Long CURRENT_CURRENT_ASSETS_INVESTMENTS = 124L;
+    private static final Long CURRENT_CURRENT_ASSETS_TOTAL = 125L;
 
     private static final Long CURRENT_FIXED_ASSETS_TANGIBLE = 131L;
     private static final Long CURRENT_FIXED_ASSETS_INVESTMENTS = 132L;
@@ -73,7 +74,8 @@ public class ApiToBalanceSheetMapperTest {
     private static final Long PREVIOUS_CURRENT_ASSETS_CASH_AT_BANK_AND_IN_HAND = 221L;
     private static final Long PREVIOUS_CURRENT_ASSETS_DEBTORS = 222L;
     private static final Long PREVIOUS_CURRENT_ASSETS_STOCKS = 223L;
-    private static final Long PREVIOUS_CURRENT_ASSETS_TOTAL = 224L;
+    private static final Long PREVIOUS_CURRENT_ASSETS_INVESTMENTS = 224L;
+    private static final Long PREVIOUS_CURRENT_ASSETS_TOTAL = 225L;
 
     private static final Long PREVIOUS_FIXED_ASSETS_TANGIBLE = 231L;
     private static final Long PREVIOUS_FIXED_ASSETS_INVESTMENTS = 232L;
@@ -177,10 +179,12 @@ public class ApiToBalanceSheetMapperTest {
         assertEquals(CURRENT_CURRENT_ASSETS_CASH_AT_BANK_AND_IN_HAND, currentAssets.getCashAtBankAndInHand().getCurrentAmount());
         assertEquals(CURRENT_CURRENT_ASSETS_DEBTORS, currentAssets.getDebtors().getCurrentAmount());
         assertEquals(CURRENT_CURRENT_ASSETS_STOCKS, currentAssets.getStocks().getCurrentAmount());
+        assertEquals(CURRENT_CURRENT_ASSETS_INVESTMENTS, currentAssets.getInvestments().getCurrentAmount());
         assertEquals(CURRENT_CURRENT_ASSETS_TOTAL, currentAssets.getCurrentTotal());
         assertEquals(PREVIOUS_CURRENT_ASSETS_CASH_AT_BANK_AND_IN_HAND, currentAssets.getCashAtBankAndInHand().getPreviousAmount());
         assertEquals(PREVIOUS_CURRENT_ASSETS_DEBTORS, currentAssets.getDebtors().getPreviousAmount());
         assertEquals(PREVIOUS_CURRENT_ASSETS_STOCKS, currentAssets.getStocks().getPreviousAmount());
+        assertEquals(PREVIOUS_CURRENT_ASSETS_INVESTMENTS, currentAssets.getInvestments().getPreviousAmount());
         assertEquals(PREVIOUS_CURRENT_ASSETS_TOTAL, currentAssets.getPreviousTotal());
     }
 
@@ -200,10 +204,12 @@ public class ApiToBalanceSheetMapperTest {
         assertEquals(CURRENT_CURRENT_ASSETS_CASH_AT_BANK_AND_IN_HAND, currentAssets.getCashAtBankAndInHand().getCurrentAmount());
         assertEquals(CURRENT_CURRENT_ASSETS_DEBTORS, currentAssets.getDebtors().getCurrentAmount());
         assertEquals(CURRENT_CURRENT_ASSETS_STOCKS, currentAssets.getStocks().getCurrentAmount());
+        assertEquals(CURRENT_CURRENT_ASSETS_INVESTMENTS, currentAssets.getInvestments().getCurrentAmount());
         assertEquals(CURRENT_CURRENT_ASSETS_TOTAL, currentAssets.getCurrentTotal());
         assertNull(currentAssets.getCashAtBankAndInHand().getPreviousAmount());
         assertNull(currentAssets.getDebtors().getPreviousAmount());
         assertNull(currentAssets.getStocks().getPreviousAmount());
+        assertNull(currentAssets.getInvestments().getPreviousAmount());
         assertNull(currentAssets.getPreviousTotal());
     }
 
@@ -481,6 +487,7 @@ public class ApiToBalanceSheetMapperTest {
         currentAssets.setCashAtBankAndInHand(CURRENT_CURRENT_ASSETS_CASH_AT_BANK_AND_IN_HAND);
         currentAssets.setDebtors(CURRENT_CURRENT_ASSETS_DEBTORS);
         currentAssets.setStocks(CURRENT_CURRENT_ASSETS_STOCKS);
+        currentAssets.setInvestments(CURRENT_CURRENT_ASSETS_INVESTMENTS);
         currentAssets.setTotal(CURRENT_CURRENT_ASSETS_TOTAL);
 
         return currentAssets;
@@ -492,6 +499,7 @@ public class ApiToBalanceSheetMapperTest {
         currentAssets.setCashAtBankAndInHand(PREVIOUS_CURRENT_ASSETS_CASH_AT_BANK_AND_IN_HAND);
         currentAssets.setDebtors(PREVIOUS_CURRENT_ASSETS_DEBTORS);
         currentAssets.setStocks(PREVIOUS_CURRENT_ASSETS_STOCKS);
+        currentAssets.setInvestments(PREVIOUS_CURRENT_ASSETS_INVESTMENTS);
         currentAssets.setTotal(PREVIOUS_CURRENT_ASSETS_TOTAL);
 
         return currentAssets;
