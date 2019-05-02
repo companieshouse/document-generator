@@ -35,8 +35,8 @@ public class MembersFunds {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof MembersFunds)) return false;
+        if (this == o) { return true; }
+        if (!(o instanceof MembersFunds)) { return false; }
         MembersFunds that = (MembersFunds) o;
         return Objects.equals(getProfitAndLossAccount(), that.getProfitAndLossAccount()) &&
                 Objects.equals(getTotalMembersFunds(), that.getTotalMembersFunds());

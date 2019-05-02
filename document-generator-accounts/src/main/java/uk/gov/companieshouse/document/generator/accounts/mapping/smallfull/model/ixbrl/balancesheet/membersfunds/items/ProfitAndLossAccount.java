@@ -33,8 +33,8 @@ public class ProfitAndLossAccount {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ProfitAndLossAccount)) return false;
+        if (this == o) { return true; }
+        if (!(o instanceof ProfitAndLossAccount)) { return false; }
         ProfitAndLossAccount that = (ProfitAndLossAccount) o;
         return Objects.equals(getCurrentAmount(), that.getCurrentAmount()) &&
                 Objects.equals(getPreviousAmount(), that.getPreviousAmount());
