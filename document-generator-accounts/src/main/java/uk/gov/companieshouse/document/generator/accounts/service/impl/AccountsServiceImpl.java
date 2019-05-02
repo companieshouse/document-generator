@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.accounts.Accounts;
-import uk.gov.companieshouse.api.model.accounts.CompanyAccounts;
+import uk.gov.companieshouse.api.model.accounts.CompanyAccountsApi;
 import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
 import uk.gov.companieshouse.document.generator.accounts.data.accounts.AccountsManager;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
@@ -60,7 +60,7 @@ public class AccountsServiceImpl implements AccountsService {
      * {@inheritDoc}
      */
     @Override
-    public CompanyAccounts getCompanyAccounts(String resource, String requestId) throws ServiceException {
+    public CompanyAccountsApi getCompanyAccounts(String resource, String requestId) throws ServiceException {
         try {
             LOG.infoContext(requestId, "Getting company-accounts data: " + resource, getDebugMap(resource));
             return accountsManager.getCompanyAccounts(resource);

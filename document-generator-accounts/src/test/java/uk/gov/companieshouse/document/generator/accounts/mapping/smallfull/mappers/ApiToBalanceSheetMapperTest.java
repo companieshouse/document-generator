@@ -271,7 +271,7 @@ public class ApiToBalanceSheetMapperTest {
     private CurrentAssetsApi createCurrentAssetsApiData() {
 
         CurrentAssetsApi currentAssets = new CurrentAssetsApi();
-        currentAssets.setCashInBankAndInHand(new Long(VALUE_ONE));
+        currentAssets.setCashAtBankAndInHand(new Long(VALUE_ONE));
         currentAssets.setDebtors(new Long(VALUE_TWO));
         currentAssets.setStocks(new Long(VALUE_THREE));
         currentAssets.setTotal(new Long(VALUE_ONE));

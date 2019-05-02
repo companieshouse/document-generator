@@ -7,7 +7,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.companieshouse.api.model.accounts.CompanyAccounts;
 import uk.gov.companieshouse.api.model.accounts.CompanyAccountsApi;
 import uk.gov.companieshouse.api.model.accounts.CompanyAccountsLinks;
 import uk.gov.companieshouse.document.generator.accounts.AccountType;
@@ -86,7 +85,7 @@ public class CompanyAccountsDocumentDataManagerTest {
                 createTransaction(COMPANY_ACCOUNTS_RESOURCE_URI), COMPANY_ACCOUNTS_RESOURCE_URI));
     }
 
-    private CompanyAccounts createCompanyAccounts(boolean validLink) {
+    private CompanyAccountsApi createCompanyAccounts(boolean validLink) {
 
         CompanyAccountsApi companyAccounts = new CompanyAccountsApi();
         CompanyAccountsLinks links = new CompanyAccountsLinks();
