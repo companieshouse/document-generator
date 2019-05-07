@@ -10,13 +10,16 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Scope;
 import uk.gov.companieshouse.document.generator.accounts.AccountsDocumentInfoServiceImpl;
 import uk.gov.companieshouse.document.generator.api.factory.DocumentInfoServiceFactory;
+import uk.gov.companieshouse.document.generator.company.report.CompanyReportDocumentInfoServiceImpl;
 import uk.gov.companieshouse.document.generator.prosecution.ProsecutionDocumentInfoService;
 import uk.gov.companieshouse.document.generator.prosecution.UltimatumDocumentInfoBuilderProvider;
 import uk.gov.companieshouse.document.generator.prosecution.tmpclient.ProsecutionClient;
 import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.environment.impl.EnvironmentReaderImpl;
 @Configuration
-@ComponentScan(basePackages = {"uk.gov.companieshouse.document.generator.accounts", "uk.gov.companieshouse.document.generator.prosecution"})
+@ComponentScan(basePackages = {"uk.gov.companieshouse.document.generator.accounts",
+                    "uk.gov.companieshouse.document.generator.prosecution",
+                    "uk.gov.companieshouse.document.generator.company.report"})
 public class DocumentGeneratorApplicationConfiguration {
 
     @Bean
@@ -36,6 +39,12 @@ public class DocumentGeneratorApplicationConfiguration {
     @Scope(scopeName = ConfigurableBeanFactory.SCOPE_SINGLETON)
     public ProsecutionDocumentInfoService prosecutionDocumentInfoService() {
         return new ProsecutionDocumentInfoService(getUltimatumDocumentInfoBuilderProvider(), getProsecutionClient());
+    }
+
+    @Bean(name = "COMPANY_REPORT")
+    @Scope(scopeName = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    public CompanyReportDocumentInfoServiceImpl companyReportDocumentInfoService() {
+        return new CompanyReportDocumentInfoServiceImpl();
     }
 
     @Bean
