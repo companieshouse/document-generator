@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.document.generator.prosecution.tmpclient;
+package uk.gov.companieshouse.document.generator.prosecution.mapping.model.prosecutioncase;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;

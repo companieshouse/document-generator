@@ -26,7 +26,7 @@
 
         <!--Dependencies-->
         <spring-boot-start-web.version>2.0.4.RELEASE</spring-boot-start-web.version>
-        <api-sdk-java.version>3.13.12</api-sdk-java.version>
+        <private-api-sdk-java.version>1.2.10</private-api-sdk-java.version>
         <environment-reader-library.version>1.2.0-rc1</environment-reader-library.version>
         <structured-logging.version>1.3.0-rc1</structured-logging.version>
 
@@ -38,8 +38,8 @@
     <dependencies>
         <dependency>
             <groupId>uk.gov.companieshouse</groupId>
-            <artifactId>api-sdk-java</artifactId>
-            <version>${api-sdk-java.version}</version>
+            <artifactId>private-api-sdk-java</artifactId>
+            <version>${private-api-sdk-java.version}</version>
         </dependency>
         <dependency>
             <groupId>uk.gov.companieshouse</groupId>
