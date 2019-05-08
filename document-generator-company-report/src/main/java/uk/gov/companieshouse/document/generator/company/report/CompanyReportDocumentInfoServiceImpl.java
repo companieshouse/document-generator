@@ -3,6 +3,7 @@ package uk.gov.companieshouse.document.generator.company.report;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.company.report.model.CompanyReport;
@@ -14,10 +15,10 @@ import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRes
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Service
 public class CompanyReportDocumentInfoServiceImpl implements DocumentInfoService {
 
     public static final String MODULE_NAME_SPACE = "document-generator-company-report";
@@ -50,7 +51,6 @@ public class CompanyReportDocumentInfoServiceImpl implements DocumentInfoService
 
     private DocumentInfoResponse createDocumentInfoResponse(CompanyProfileApi companyProfileApi) throws DocumentInfoException {
 
-        //TODO - complete documentInfoResponse
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
         documentInfoResponse.setData(createData(companyProfileApi));
         documentInfoResponse.setAssetId("company-report");
@@ -82,7 +82,6 @@ public class CompanyReportDocumentInfoServiceImpl implements DocumentInfoService
         }
 
         return reportToJson;
-
     }
 
     private String getCompanyNumberFromUri(String resourceUri) {

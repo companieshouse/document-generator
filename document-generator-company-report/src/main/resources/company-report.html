@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Company Report</title>
+</head>
+<body>
+<table cellspacing="10">
+    <tbody>
+        <tr>
+            <td style="width: 100%; text-align: centre;">
+                <h1><span style="width: 100%; color: #000000;">Companies House</span></h1>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<h1 style="text-align: center;"><span style="color: #000000;">Company Report</span></h1>
+<table border="1" style="border-collapse: collapse; width: 95%;" height="95">
+    <tbody>
+    <tr>
+        <td style="width: 50%;">
+            <h1>Company Profile</h1>
+        </td>
+        <td style="width: 50%;">
+            <table border="1" style="border-collapse: collapse; width: 100%;">
+                <tbody>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; font-weight: bold; height: 21px;">Can File:</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; height: 21px;">{{.canFile}}</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; font-weight: bold; height: 21px;">Company Name:</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; height: 21px;">{{.companyName}}</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; font-weight: bold; height: 21px;">Company Number:</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; height: 21px;">{{.CompanyNumber}}</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; font-weight: bold; height: 21px;">Company Status:</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; height: 21px;">{{.companyStatusDetail}}</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; font-weight: bold; height: 21px;">Date of Cessation:</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; height: 21px;">{{.dateOfCessation}}</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; font-weight: bold; height: 21px;">Date of Creation:</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; height: 21px;">{{.dateOfCreation}}</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; font-weight: bold; height: 21px;">External Registration Number:</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; height: 21px;">{{.externalRegistrationNumber}}</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; font-weight: bold; height: 21px;">Has Been Liquidated:</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; height: 21px;">{{.hasBeenLiquidated}}</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; font-weight: bold; height: 21px;">Has Charges:</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; height: 21px;">{{.hasCharges}}</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; font-weight: bold; height: 21px;">Has Insolvency History:</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; height: 21px;">{{.hasInsolvencyHistory}}</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; font-weight: bold; height: 21px;">Is Community Interest Company:</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; height: 21px;">{{.isCommunityInterestCompany}}</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; font-weight: bold; height: 21px;">Jurisdiction:</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; height: 21px;">{{.jurisdiction}}</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; font-weight: bold; height: 21px;">Last Full Members List Date:</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; height: 21px;">{{.lastFullMembersListDate}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 50%;">
+            <h1>Company Account Last Accounts</h1>
+        </td>
+        <td style="width: 50%;">
+            <table border="1" style="border-collapse: collapse; width: 100%;">
+                <tbody>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; font-weight: bold; height: 21px;">Last Accounts Made Up To:</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; height: 21px;">{{.accounts.lastAccounts.madeUpTo}}</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; font-weight: bold; height: 21px;">Last Accounts Period End On:</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; height: 21px;">{{.accounts.lastAccounts.periodEndOn}}</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; font-weight: bold; height: 21px;">Last Accounts Period Start On:</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; height: 21px;">{{.accounts.lastAccounts.periodStartOn}}</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; font-weight: bold; height: 21px;">Type:</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; height: 21px;">{{.accounts.lastAccounts.type}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 50%;">
+            <h1>Company Account Next Accounts</h1>
+        </td>
+        <td style="width: 50%;">
+            <table border="1" style="border-collapse: collapse; width: 100%;">
+                <tbody>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; font-weight: bold; height: 21px;"> Due On:</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; height: 21px;">{{.accounts.nextAccounts.dueOn}}</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; font-weight: bold; height: 21px;">Overdue:</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; height: 21px;">{{.accounts.nextAccounts.overdue}}</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; font-weight: bold; height: 21px;">Next Accounts Period Start On:</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; height: 21px;">{{.accounts.nextAccounts.periodStartOn}}</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; font-weight: bold; height: 21px;">Next Accounts Period End On:</td>
+                </tr>
+                <tr style="height: 21px;">
+                    <td style="width: 100%; height: 21px;">{{.accounts.nextAccounts.periodEndOn}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
