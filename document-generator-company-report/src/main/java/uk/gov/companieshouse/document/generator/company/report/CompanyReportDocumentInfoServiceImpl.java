@@ -3,6 +3,7 @@ package uk.gov.companieshouse.document.generator.company.report;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
@@ -16,10 +17,11 @@ import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRes
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
+@Service
 public class CompanyReportDocumentInfoServiceImpl implements DocumentInfoService {
 
     public static final String MODULE_NAME_SPACE = "document-generator-company-report";
@@ -60,11 +62,11 @@ public class CompanyReportDocumentInfoServiceImpl implements DocumentInfoService
 
     private DocumentInfoResponse createDocumentInfoResponse(CompanyProfileApi companyProfileApi, FilingHistoryApi filingHistoryApi) throws DocumentInfoException {
 
-        //TODO - complete documentInfoResponse
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
+
         documentInfoResponse.setData(createData(companyProfileApi, filingHistoryApi));
-        documentInfoResponse.setAssetId("company-report");
-        documentInfoResponse.setPath("/company-report/report/");
+        documentInfoResponse.setAssetId("accounts");
+        documentInfoResponse.setPath(createPathString());
         documentInfoResponse.setTemplateName("company-report.html");
 
         return documentInfoResponse;
@@ -94,7 +96,15 @@ public class CompanyReportDocumentInfoServiceImpl implements DocumentInfoService
         }
 
         return reportToJson;
+    }
 
+    private String createPathString() {
+        return String.format("/%s/%s", "accounts", getUniqueFileName());
+    }
+
+    public String getUniqueFileName() {
+        UUID uuid = UUID.randomUUID();
+        return "companyReport" + uuid.toString() + ".html";
     }
 
     private String getCompanyNumberFromUri(String resourceUri) {
