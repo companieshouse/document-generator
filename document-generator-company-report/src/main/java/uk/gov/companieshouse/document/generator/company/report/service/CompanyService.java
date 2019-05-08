@@ -13,8 +13,6 @@ public class CompanyService {
     @Autowired
     private ApiClientService apiClientService;
 
-
-
     private static final UriTemplate GET_COMPANY_URI =
         new UriTemplate("/company/{companyNumber}");
 

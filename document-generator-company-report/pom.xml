@@ -30,7 +30,7 @@
         <dependency>
             <groupId>uk.gov.companieshouse</groupId>
             <artifactId>api-sdk-java</artifactId>
-            <version>3.13.29</version>
+            <version>myversion</version>
         </dependency>
         <dependency>
             <groupId>uk.gov.companieshouse</groupId>

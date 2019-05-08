@@ -4,9 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
+import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.company.report.model.CompanyReport;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
+import uk.gov.companieshouse.document.generator.company.report.service.FilingHistoryService;
 import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
 import uk.gov.companieshouse.document.generator.interfaces.exception.DocumentInfoException;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
@@ -27,6 +29,9 @@ public class CompanyReportDocumentInfoServiceImpl implements DocumentInfoService
     @Autowired
     private CompanyService companyService;
 
+    @Autowired
+    private FilingHistoryService filingHistoryService;
+
     @Override
     public DocumentInfoResponse getDocumentInfo(DocumentInfoRequest documentInfoRequest) throws DocumentInfoException {
 
@@ -39,20 +44,25 @@ public class CompanyReportDocumentInfoServiceImpl implements DocumentInfoService
         LOG.infoContext(requestId,"Started getting document info for company profile", debugMap);
 
         CompanyProfileApi companyProfileApi;
+        FilingHistoryApi filingHistoryApi;
+
+        String companyNumber = getCompanyNumberFromUri(resourceUri);
+
         try {
-           companyProfileApi = companyService.getCompanyProfile(getCompanyNumberFromUri(resourceUri));
+           companyProfileApi = companyService.getCompanyProfile(companyNumber);
+           filingHistoryApi = filingHistoryService.getFilingHistory(companyNumber);
         } catch (ServiceException se) {
             throw new DocumentInfoException("error occurred obtaining the company profile", se);
         }
 
-        return createDocumentInfoResponse(companyProfileApi);
+        return createDocumentInfoResponse(companyProfileApi, filingHistoryApi);
     }
 
-    private DocumentInfoResponse createDocumentInfoResponse(CompanyProfileApi companyProfileApi) throws DocumentInfoException {
+    private DocumentInfoResponse createDocumentInfoResponse(CompanyProfileApi companyProfileApi, FilingHistoryApi filingHistoryApi) throws DocumentInfoException {
 
         //TODO - complete documentInfoResponse
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
-        documentInfoResponse.setData(createData(companyProfileApi));
+        documentInfoResponse.setData(createData(companyProfileApi, filingHistoryApi));
         documentInfoResponse.setAssetId("company-report");
         documentInfoResponse.setPath("/company-report/report/");
         documentInfoResponse.setTemplateName("company-report.html");
@@ -60,10 +70,12 @@ public class CompanyReportDocumentInfoServiceImpl implements DocumentInfoService
         return documentInfoResponse;
     }
 
-    private String createData(CompanyProfileApi companyProfileApi) throws DocumentInfoException {
+    private String createData(CompanyProfileApi companyProfileApi,
+                              FilingHistoryApi filingHistoryApi) throws DocumentInfoException {
 
         CompanyReport companyReport = new CompanyReport();
         companyReport.setCompanyProfileApi(companyProfileApi);
+        companyReport.setFilingHistoryApi(filingHistoryApi);
 
         return toJson(companyReport);
     }
