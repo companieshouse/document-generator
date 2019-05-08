@@ -17,6 +17,7 @@ import uk.gov.companieshouse.logging.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class CompanyReportDocumentInfoServiceImpl implements DocumentInfoService {
@@ -53,8 +54,8 @@ public class CompanyReportDocumentInfoServiceImpl implements DocumentInfoService
 
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
         documentInfoResponse.setData(createData(companyProfileApi));
-        documentInfoResponse.setAssetId("company-report");
-        documentInfoResponse.setPath("/company-report/report/");
+        documentInfoResponse.setAssetId("accounts");
+        documentInfoResponse.setPath(createPathString());
         documentInfoResponse.setTemplateName("company-report.html");
 
         return documentInfoResponse;
@@ -82,6 +83,15 @@ public class CompanyReportDocumentInfoServiceImpl implements DocumentInfoService
         }
 
         return reportToJson;
+    }
+
+    private String createPathString() {
+        return String.format("/%s/%s", "accounts", getUniqueFileName());
+    }
+
+    public String getUniqueFileName() {
+        UUID uuid = UUID.randomUUID();
+        return "companyReport" + uuid.toString() + ".html";
     }
 
     private String getCompanyNumberFromUri(String resourceUri) {
