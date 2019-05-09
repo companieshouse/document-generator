@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
-import uk.gov.companieshouse.document.generator.prosecution.tmpclient.ProsecutionCase;
+import uk.gov.companieshouse.document.generator.prosecution.mapping.model.prosecutioncase.ProsecutionCase;
 import uk.gov.companieshouse.environment.EnvironmentReader;
 
 /**

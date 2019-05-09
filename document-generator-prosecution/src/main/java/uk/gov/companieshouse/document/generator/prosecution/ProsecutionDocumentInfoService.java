@@ -9,7 +9,7 @@ import uk.gov.companieshouse.document.generator.interfaces.exception.DocumentInf
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.document.generator.prosecution.UltimatumDocumentInfoBuilderProvider.UltimatumDocumentInfoBuilder;
-import uk.gov.companieshouse.document.generator.prosecution.tmpclient.ProsecutionCase;
+import uk.gov.companieshouse.document.generator.prosecution.mapping.model.prosecutioncase.ProsecutionCase;
 import uk.gov.companieshouse.document.generator.prosecution.tmpclient.ProsecutionClient;
 import uk.gov.companieshouse.document.generator.prosecution.tmpclient.SdkException;
 import uk.gov.companieshouse.logging.Logger;
