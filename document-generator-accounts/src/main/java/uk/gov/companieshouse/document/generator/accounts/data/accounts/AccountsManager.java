@@ -13,6 +13,8 @@ import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.CreditorsAfterOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.currentassetsinvestments.CurrentAssetsInvestmentsApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.fixedassetsinvestments.FixedAssetsInvestmentsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.SmallFullApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
@@ -221,6 +223,16 @@ public class AccountsManager {
 
                 smallFullApiData.setDebtors(debtors);
             }
+
+            if (!StringUtils.isEmpty(smallFull.getLinks().getCurrentAssetsInvestmentsNote())) {
+
+                errorString = "current assets investments";
+
+                CurrentAssetsInvestmentsApi currentAssetsInvestmentsApi = apiClient.smallFull().currentAssetsInvestments()
+                        .get(smallFull.getLinks().getCurrentAssetsInvestmentsNote()).execute();
+
+                smallFullApiData.setCurrentAssetsInvestments(currentAssetsInvestmentsApi);
+            }
             
             if (!StringUtils.isEmpty(smallFull.getLinks().getCreditorsWithinOneYearNote())) {
 
@@ -240,6 +252,16 @@ public class AccountsManager {
                         .get(smallFull.getLinks().getCreditorsAfterMoreThanOneYearNote()).execute();
 
                 smallFullApiData.setCreditorsAfterOneYear(creditorsAfterOneYearApi);
+            }
+            
+            if (!StringUtils.isEmpty(smallFull.getLinks().getFixedAssetsInvestmentsNote())) {
+
+                errorString = "fixed assets investments";
+                
+                FixedAssetsInvestmentsApi fixedAssetsInvestmentsApi = apiClient.smallFull().fixedAssetsInvestments()
+                        .get(smallFull.getLinks().getFixedAssetsInvestmentsNote()).execute();
+
+                smallFullApiData.setFixedAssetsInvestments(fixedAssetsInvestmentsApi);
             }
 
         } catch (ApiErrorResponseException e) {
