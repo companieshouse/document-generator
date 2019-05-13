@@ -11,14 +11,9 @@ import uk.gov.companieshouse.api.model.prosecution.defendant.DefendantApi;
 import uk.gov.companieshouse.api.model.prosecution.defendant.PersonOfficerDetailsApi;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.mappers.ApiToDefendantMapper;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.mappers.ApiToDefendantMapperImpl;
-import uk.gov.companieshouse.document.generator.prosecution.mapping.model.defendant.Address;
-import uk.gov.companieshouse.document.generator.prosecution.mapping.model.defendant.CompanyOfficerDetails;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.model.defendant.Defendant;
-import uk.gov.companieshouse.document.generator.prosecution.mapping.model.defendant.PersonOfficerDetails;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -51,7 +46,8 @@ public class ApiToDefendantMapperTest {
         assertEquals(ADDRESS.getArea(), defendant.getAddress().getArea());
         assertEquals(ADDRESS.getPostTown(), defendant.getAddress().getPostTown());
         assertEquals(ADDRESS.getRegion(), defendant.getAddress().getRegion());
-        assertEquals(ADDRESS.getRegion(), defendant.getAddress().getRegion());
+        assertEquals(ADDRESS.getCountry(), defendant.getAddress().getCountry());
+        assertEquals(ADDRESS.getPostCode(), defendant.getAddress().getPostCode());
         assertEquals(PERSON_OFFICER_DETAILS.getDateOfBirth(), defendant.getPersonOfficerDetails().getDateOfBirth());
         assertEquals(PERSON_OFFICER_DETAILS.getTitle(), defendant.getPersonOfficerDetails().getTitle());
         assertEquals(PERSON_OFFICER_DETAILS.getForename(), defendant.getPersonOfficerDetails().getForename());

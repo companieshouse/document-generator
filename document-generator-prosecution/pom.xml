@@ -54,7 +54,7 @@
         <dependency>
             <groupId>uk.gov.companieshouse</groupId>
             <artifactId>document-generator-interfaces</artifactId>
-            <version>5f53c6f</version>
+            <version>unversioned</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
