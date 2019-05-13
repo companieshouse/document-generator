@@ -6,10 +6,11 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.prosecution.prosecutioncase.ProsecutionCaseApi;
-import uk.gov.companieshouse.api.model.prosecution.prosecutioncase.ProsecutionCaseStatus;
+import uk.gov.companieshouse.api.model.prosecution.prosecutioncase.ProsecutionCaseStatusApi;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.mappers.ApiToProsecutionCaseMapper;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.mappers.ApiToProsecutionCaseMapperImpl;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.model.prosecutioncase.ProsecutionCase;
+import uk.gov.companieshouse.document.generator.prosecution.mapping.model.prosecutioncase.ProsecutionCaseStatus;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -26,7 +27,7 @@ public class ApiToProsecutionCaseMapperTest {
             new ApiToProsecutionCaseMapperImpl();
 
     private static final String KIND = "kind";
-    private static final ProsecutionCaseStatus STATUS = ProsecutionCaseStatus.ACCEPTED;
+    private static final ProsecutionCaseStatusApi STATUS = ProsecutionCaseStatusApi.ACCEPTED;
     private static final String COMPANY_INCORPORATION_NUMBER = "companyIncorporationNumber";
     private static final String COMPANY_NAME = "companyName";
     private static final String COMPLIANCE_CASE_ID = "complianceCaseId";
@@ -42,9 +43,7 @@ public class ApiToProsecutionCaseMapperTest {
 
         assertNotNull(prosecutionCase);
         assertEquals(KIND, prosecutionCase.getKind());
-        assertEquals(
-                uk.gov.companieshouse.document.generator.prosecution.mapping.model.prosecutioncase.ProsecutionCaseStatus.ACCEPTED,
-                prosecutionCase.getStatus());
+        assertEquals(ProsecutionCaseStatus.ACCEPTED, prosecutionCase.getStatus());
         assertEquals(COMPANY_INCORPORATION_NUMBER, prosecutionCase.getCompanyIncorporationNumber());
         assertEquals(COMPANY_NAME, prosecutionCase.getCompanyName());
         assertEquals(COMPLIANCE_CASE_ID, prosecutionCase.getComplianceCaseId());
