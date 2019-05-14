@@ -34,7 +34,7 @@ public class ApiToOffenceMapperTest {
     @Test
     @DisplayName("Tests offence API values map to offence DocGen model")
     void testApiToOffenceMaps() {
-        Offence offence = apiToOffenceMapper.apiToOfffence(createOffence());
+        Offence offence = apiToOffenceMapper.apiToOffence(createOffence());
 
         assertNotNull(offence);
         assertEquals(FILING_PERIOD_TYPE, offence.getFilingPeriodType());
