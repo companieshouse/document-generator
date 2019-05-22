@@ -1,6 +1,6 @@
-package uk.gov.companieshouse.document.generator.prosecution.tmpclient;
+package uk.gov.companieshouse.document.generator.prosecution.mapping.model.prosecutioncase;
 
-enum ProsecutionCaseStatus {
+public enum ProsecutionCaseStatus {
     PREPARING("Preparing"),
     REFERRED("Referred"),
     ACCEPTED("Accepted"),

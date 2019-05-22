@@ -198,6 +198,9 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
             if (currentPeriod.getBalanceSheet().getCapitalAndReserves() != null) {
                 balanceSheet.setCapitalAndReserve(apiToBalanceSheetMapper.apiToCapitalAndReserve(currentPeriod, previousPeriod));
             }
+            if (currentPeriod.getBalanceSheet().getMembersFunds() != null) {
+                balanceSheet.setMembersFunds(apiToBalanceSheetMapper.apiToMembersFunds(currentPeriod, previousPeriod));
+            }
         }
 
         if (balanceSheetStatements != null) {

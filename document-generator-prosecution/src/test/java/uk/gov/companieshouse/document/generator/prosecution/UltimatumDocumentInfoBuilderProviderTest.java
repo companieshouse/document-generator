@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.document.generator.prosecution.UltimatumDocumentInfoBuilderProvider.UltimatumDocumentInfoBuilder;
-import uk.gov.companieshouse.document.generator.prosecution.tmpclient.ProsecutionCase;
+import uk.gov.companieshouse.document.generator.prosecution.mapping.model.prosecutioncase.ProsecutionCase;
 import uk.gov.companieshouse.environment.EnvironmentReader;
 
 @ExtendWith(MockitoExtension.class)

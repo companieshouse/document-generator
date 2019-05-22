@@ -9,7 +9,9 @@ import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.company.Company;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -23,24 +25,58 @@ public class ApiToCompanyMapperTest {
 
     private static final String COMPANY_NUMBER = "companyNumber";
 
-    @Test
-    @DisplayName("tests company values map to company IXBRL model")
-    void testApiToCompanyMaps() {
+    private static final String PRIVATE_LIMITED_BY_GUARANTEE = "private-limited-guarant-nsc";
 
-        Company company = apiToCompanyMapper.apiToCompany(createCompanyProfile());
+    private static final String PRIVATE_LIMITED_BY_GUARANTEE_EXEMPT = "private-limited-guarant-nsc-limited-exemption";
+
+    private static final String PLC = "plc";
+
+    @Test
+    @DisplayName("Api to company mapper - PLC")
+    void testApiToCompanyMapperPLCCompany() {
+
+        Company company = apiToCompanyMapper.apiToCompany(createCompanyProfileWithType(PLC));
 
         assertNotNull(company);
         assertEquals(COMPANY_NAME, company.getCompanyName());
         assertEquals(COMPANY_NUMBER, company.getCompanyNumber());
         assertEquals(JURISDICTION, company.getJurisdiction());
+        assertFalse(company.getIsLBG());
     }
 
-    private CompanyProfileApi createCompanyProfile() {
+    @Test
+    @DisplayName("Api to company mapper - private limited by guarantee")
+    void testApiToCompanyMapperPrivateLimitedByGuaranteeCompany() {
+
+        Company company = apiToCompanyMapper.apiToCompany(createCompanyProfileWithType(PRIVATE_LIMITED_BY_GUARANTEE));
+
+        assertNotNull(company);
+        assertEquals(COMPANY_NAME, company.getCompanyName());
+        assertEquals(COMPANY_NUMBER, company.getCompanyNumber());
+        assertEquals(JURISDICTION, company.getJurisdiction());
+        assertTrue(company.getIsLBG());
+    }
+
+    @Test
+    @DisplayName("Api to company mapper - private limited by guarantee exempt")
+    void testApiToCompanyMapperPrivateLimitedByGuaranteeExemptCompany() {
+
+        Company company = apiToCompanyMapper.apiToCompany(createCompanyProfileWithType(PRIVATE_LIMITED_BY_GUARANTEE_EXEMPT));
+
+        assertNotNull(company);
+        assertEquals(COMPANY_NAME, company.getCompanyName());
+        assertEquals(COMPANY_NUMBER, company.getCompanyNumber());
+        assertEquals(JURISDICTION, company.getJurisdiction());
+        assertTrue(company.getIsLBG());
+    }
+
+    private CompanyProfileApi createCompanyProfileWithType(String companyType) {
 
         CompanyProfileApi companyProfile = new CompanyProfileApi();
         companyProfile.setCompanyName(COMPANY_NAME);
         companyProfile.setCompanyNumber(COMPANY_NUMBER);
         companyProfile.setJurisdiction(JURISDICTION);
+        companyProfile.setType(companyType);
 
         return companyProfile;
     }

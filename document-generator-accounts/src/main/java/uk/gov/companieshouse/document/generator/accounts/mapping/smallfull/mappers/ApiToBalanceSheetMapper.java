@@ -12,11 +12,24 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.capitalandreserves.CapitalAndReserve;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.currentassets.CurrentAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.fixedassets.FixedAssets;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.membersfunds.MembersFunds;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.otherliabilitiesandassets.OtherLiabilitiesOrAssets;
 
 @RequestScope
 @Mapper(componentModel = "spring")
 public interface ApiToBalanceSheetMapper {
+
+    @Mappings({
+            @Mapping(source = "currentPeriod.balanceSheet.membersFunds.profitAndLossAccount",
+                    target = "profitAndLossAccount.currentAmount"),
+            @Mapping(source = "previousPeriod.balanceSheet.membersFunds.profitAndLossAccount",
+                    target = "profitAndLossAccount.previousAmount"),
+            @Mapping(source = "currentPeriod.balanceSheet.membersFunds.totalMembersFunds",
+                    target = "totalMembersFunds.currentAmount"),
+            @Mapping(source = "previousPeriod.balanceSheet.membersFunds.totalMembersFunds",
+                    target = "totalMembersFunds.previousAmount")
+    })
+    MembersFunds apiToMembersFunds(CurrentPeriodApi currentPeriod, PreviousPeriodApi previousPeriod);
 
     @Mappings({
             @Mapping(source = "currentPeriod.balanceSheet.capitalAndReserves.calledUpShareCapital",
