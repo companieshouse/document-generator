@@ -145,5 +145,6 @@
         <module>document-generator-accounts</module>
         <module>document-generator-prosecution</module>
         <module>document-generator-api</module>
+        <module>document-generator-company-report</module>
     </modules>
 </project>
