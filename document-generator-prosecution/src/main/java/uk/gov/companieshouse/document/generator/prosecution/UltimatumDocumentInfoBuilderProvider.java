@@ -103,8 +103,7 @@ public class UltimatumDocumentInfoBuilderProvider {
                 return mapper.writeValueAsString(templateValues);
             } catch (JsonProcessingException e) {
                 throw new DocumentInfoCreationException(
-                                "Could not serialise Document Info for Ultimatum for prosecution case: "
-                                                + prosecutionCase.getLinks().get("self"));
+                                "Could not serialise Document Info for Ultimatum for prosecution case: ");
             }
         }
     }

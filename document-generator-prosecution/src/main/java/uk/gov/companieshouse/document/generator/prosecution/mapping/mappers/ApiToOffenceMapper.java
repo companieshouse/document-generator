@@ -13,7 +13,6 @@ public interface ApiToOffenceMapper {
 
     @Mappings({
             @Mapping(source = "offence.filingPeriodType", target = "filingPeriodType"),
-            @Mapping(source = "offence.status", target = "status"),
             @Mapping(source = "offence.filingPeriodEndsOn", target = "filingPeriodEndsOn"),
             @Mapping(source = "offence.filingDueOn", target = "filingDueOn"),
             @Mapping(source = "offence.filingPeriodId", target = "filingPeriodId")

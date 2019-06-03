@@ -10,17 +10,11 @@ public class Offence {
     @JsonProperty("filing_period_type")
     private FilingPeriodType filingPeriodType;
 
-    @JsonProperty("status")
-    private OffenceStatus status;
-
     @JsonProperty("filing_period_ends_on")
     private LocalDate filingPeriodEndsOn;
 
     @JsonProperty("filing_due_on")
     private LocalDate filingDueOn;
-
-    @JsonProperty("filing_period_id")
-    private String filingPeriodId;
 
     public FilingPeriodType getFilingPeriodType() {
         return filingPeriodType;
@@ -28,14 +22,6 @@ public class Offence {
 
     public void setFilingPeriodType(FilingPeriodType filingPeriodType) {
         this.filingPeriodType = filingPeriodType;
-    }
-
-    public OffenceStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(OffenceStatus status) {
-        this.status = status;
     }
 
     public LocalDate getFilingPeriodEndsOn() {
@@ -52,13 +38,5 @@ public class Offence {
 
     public void setFilingDueOn(LocalDate filingDueOn) {
         this.filingDueOn = filingDueOn;
-    }
-
-    public String getFilingPeriodId() {
-        return filingPeriodId;
-    }
-
-    public void setFilingPeriodId(String periodId) {
-        this.filingPeriodId = periodId;
     }
 }
