@@ -21,6 +21,6 @@ public class ProsecutionService {
 		
 		String uri = GET_DEFENDANT_URI.expand(companyNumber, prosecutionCaseId, defendantId).toString();
 		
-		
+		defendantApi = internalApiClient.
 	}
 }
