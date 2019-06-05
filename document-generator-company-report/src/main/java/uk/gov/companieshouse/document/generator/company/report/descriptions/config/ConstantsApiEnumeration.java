@@ -9,7 +9,6 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
-import org.yaml.snakeyaml.Yaml;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
@@ -27,6 +26,7 @@ public class ConstantsApiEnumeration {
 
     @PostConstruct
     public void init() throws IOException {
+
 
         Yaml yaml = new Yaml();
         File descriptionsFile = new File(CONSTANTS_FILE_LOCATION);
