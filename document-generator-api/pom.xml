@@ -23,16 +23,6 @@
         <!-- JDK Version -->
         <jdk.version>1.8</jdk.version>
 
-        <!-- Dependency Version -->
-        <environment-reader-library.version>1.0.0-rc1</environment-reader-library.version>
-        
-        <!-- JUnit Testing -->
-        <junit-jupiter-engine.version>5.2.0</junit-jupiter-engine.version>
-        <mockito-junit-jupiter.version>2.18.0</mockito-junit-jupiter.version>
-
-        <!-- Structured logging -->
-        <structured-logging.version>1.4.0-rc2</structured-logging.version>
-
         <apache-http-components.version>4.5.2</apache-http-components.version>
         
         <commons-io.version>2.4</commons-io.version>
@@ -41,28 +31,6 @@
     </properties>
   
     <dependencies>
-        <dependency>
-            <groupId>uk.gov.companieshouse</groupId>
-            <artifactId>environment-reader-library</artifactId>
-            <version>${environment-reader-library.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit-jupiter-engine.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-junit-jupiter</artifactId>
-            <version>${mockito-junit-jupiter.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>uk.gov.companieshouse</groupId>
-            <artifactId>structured-logging</artifactId>
-            <version>${structured-logging.version}</version>
-        </dependency>
          <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
