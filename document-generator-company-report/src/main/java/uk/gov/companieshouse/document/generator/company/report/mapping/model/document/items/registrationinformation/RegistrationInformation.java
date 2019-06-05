@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.document.generator.company.report.mapping.model.documentmodels.registrationinformation;
+package uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -6,7 +6,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import java.time.LocalDate;
-import uk.gov.companieshouse.document.generator.company.report.mapping.model.documentmodels.registrationinformation.items.CompanyType;
+import java.util.List;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.items.CompanyType;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.items.RegisteredOffice;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.items.SicCodes;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.items.Status;
 
 @JsonInclude(Include.NON_NULL)
 public class RegistrationInformation {

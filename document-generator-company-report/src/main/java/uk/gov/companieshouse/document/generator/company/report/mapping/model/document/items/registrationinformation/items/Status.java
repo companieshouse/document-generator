@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.document.generator.company.report.mapping.model.documentmodels.registrationinformation.items;
+package uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.items;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
