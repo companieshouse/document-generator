@@ -24,26 +24,26 @@ public class ProsecutionHandler {
 	@Autowired
 	ProsecutionService prosecutionService;
 
-	private String companyNumber;
-	private String prosecutionCaseId;
-	private String defendantId;
+//	private String companyNumber;
+//	private String prosecutionCaseId;
+//	private String defendantId;
 	
 	public DocumentInfoResponse getUltimatumResponse(String resourceUri, String requestId) throws HandlerException {
 		DocumentInfoResponse response = new DocumentInfoResponse();
-		setUriValues(resourceUri);
-		Defendant defendant = prosecutionService.getDefendant(companyNumber, prosecutionCaseId, defendantId); 
+//		setUriValues(resourceUri);
+		Defendant defendant = prosecutionService.getDefendant(resourceUri);
 
 		UltimatumDocument document = new UltimatumDocument();
 		document.setDefendant(defendant);
 		
-		response.setAssetId("prosecution");
+		response.setAssetId("accounts");
 		response.setPath(createPathString("ultimatum"));
 		response.setTemplateName("ultimatum.html");
-		response.setDescriptionIdentifier("ultimatum");
+		//response.setDescriptionIdentifier("ultimatum");
 		try {
 			response.setData(convertToJson(document, "Ultimatum"));
 		} catch (DocumentInfoCreationException e) {
-			LOG.error("Error creating document info response for ultimatum for defendant " + defendantId);
+			//LOG.error("Error creating document info response for ultimatum for defendant " + defendantId);
 		}
 		return response;
 	}
@@ -61,13 +61,13 @@ public class ProsecutionHandler {
 	 * method to get the company number, prosecution case id and defendant id from the url
 	 * @param resourceUri
 	 */
-	private void setUriValues(String resourceUri) {
-		String[] elements = resourceUri.split("/");
-		companyNumber = elements[3];
-		prosecutionCaseId = elements[5];
-		defendantId = elements[7];
-	}
-	
+//	private void setUriValues(String resourceUri) {
+//		String[] elements = resourceUri.split("/");
+//		companyNumber = elements[3];
+//		prosecutionCaseId = elements[5];
+//		defendantId = elements[7];
+//	}
+//
 	private String createPathString(String docType) {
 		StringBuilder path = new StringBuilder("/prosecution/" + docType);
 		// TODO append the defendant UID to the file name

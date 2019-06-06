@@ -10,6 +10,7 @@ import org.springframework.web.util.UriTemplate;
 import uk.gov.companieshouse.api.InternalApiClient;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
+import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.model.prosecution.defendant.DefendantApi;
 import uk.gov.companieshouse.api.model.prosecution.offence.OffenceApi;
 import uk.gov.companieshouse.api.model.prosecution.prosecutioncase.ProsecutionCaseApi;
@@ -17,9 +18,15 @@ import uk.gov.companieshouse.document.generator.prosecution.mapping.mappers.ApiT
 import uk.gov.companieshouse.document.generator.prosecution.mapping.mappers.ApiToOffenceMapper;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.mappers.ApiToProsecutionCaseMapper;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.model.defendant.Defendant;
+import uk.gov.companieshouse.logging.Logger;
+import uk.gov.companieshouse.logging.LoggerFactory;
+
+import static uk.gov.companieshouse.document.generator.prosecution.ProsecutionDocumentInfoService.MODULE_NAME_SPACE;
 
 @Service
 public class ProsecutionService {
+
+	private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 	
 	@Autowired
 	private ApiClientService apiClientService;
@@ -33,22 +40,26 @@ public class ProsecutionService {
 	@Autowired
 	private ApiToProsecutionCaseMapper caseMapper;
 	
-	private static final UriTemplate GET_DEFENDANT_URI = new UriTemplate("/internal/company/{companyNumber}/prosecution-cases/{prosecutionCaseId}/defendants/{defendantId}");
+	//private static final UriTemplate GET_DEFENDANT_URI = new UriTemplate("/internal/company/{companyNumber}/prosecution-cases/{prosecutionCaseId}/defendants/{defendantId}");
 
 	private DefendantApi defendantApi;
 	
-	public Defendant getDefendant(String companyNumber, String prosecutionCaseId, String defendantId) {
+	public Defendant getDefendant(String uri) {
 		InternalApiClient internalApiClient = apiClientService.getApiClient();
+		boolean result = internalApiClient != null;
+		LOG.info("InternalApiClient: " + String.valueOf(result));
 
-		GET_DEFENDANT_URI.expand(companyNumber, prosecutionCaseId, defendantId);
+		//GET_DEFENDANT_URI.expand(companyNumber, prosecutionCaseId, defendantId);
 		try {
-			defendantApi = internalApiClient.privateDefendant().get(GET_DEFENDANT_URI.toString()).execute();
+		    LOG.info("Call to DEFENDANT API : " + uri);
+		    LOG.info("Getting defendant information");
+			ApiResponse<DefendantApi> response = internalApiClient.privateDefendant().get(uri).execute();
+			DefendantApi defendantApi = response.getData();
+			LOG.info("Defendant information : " + defendantApi.toString());
 		} catch (ApiErrorResponseException e) {
-			
-			e.printStackTrace();
+            LOG.error("ApiErrorResponseException" + e);
 		} catch (URIValidationException e) {
-			
-			e.printStackTrace();
+            LOG.error("UriValidationException" + e);
 		}
 		return defendantMapper.apiToDefendant(defendantApi);
 	}

@@ -3,7 +3,7 @@ package uk.gov.companieshouse.document.generator.api.document;
 public enum DocumentType {
 
     ACCOUNTS("/transactions\\/.*\\/(?:company-)?accounts\\/.*"),
-    PROSECUTION("/prosecution/.*");
+    PROSECUTION("/internal/company/.*/prosecution-cases/.*/defendants/.*/ultimatum");
 
     private String pattern;
 

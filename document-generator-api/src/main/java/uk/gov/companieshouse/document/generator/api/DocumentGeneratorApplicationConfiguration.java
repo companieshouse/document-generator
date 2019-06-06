@@ -12,7 +12,6 @@ import uk.gov.companieshouse.document.generator.accounts.AccountsDocumentInfoSer
 import uk.gov.companieshouse.document.generator.api.factory.DocumentInfoServiceFactory;
 import uk.gov.companieshouse.document.generator.prosecution.ProsecutionDocumentInfoService;
 import uk.gov.companieshouse.document.generator.prosecution.UltimatumDocumentInfoBuilderProvider;
-import uk.gov.companieshouse.document.generator.prosecution.tmpclient.ProsecutionClient;
 import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.environment.impl.EnvironmentReaderImpl;
 @Configuration
@@ -35,13 +34,7 @@ public class DocumentGeneratorApplicationConfiguration {
     @Bean(name = "PROSECUTION")
     @Scope(scopeName = ConfigurableBeanFactory.SCOPE_SINGLETON)
     public ProsecutionDocumentInfoService prosecutionDocumentInfoService() {
-        return new ProsecutionDocumentInfoService(getUltimatumDocumentInfoBuilderProvider(), getProsecutionClient());
-    }
-
-    @Bean
-    @Scope(scopeName = ConfigurableBeanFactory.SCOPE_SINGLETON)
-    public ProsecutionClient getProsecutionClient() {
-        return new ProsecutionClient(environmentReader());
+        return new ProsecutionDocumentInfoService();
     }
 
     @Bean

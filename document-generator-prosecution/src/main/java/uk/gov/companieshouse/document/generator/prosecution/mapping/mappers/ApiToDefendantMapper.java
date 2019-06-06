@@ -3,10 +3,12 @@ package uk.gov.companieshouse.document.generator.prosecution.mapping.mappers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.api.model.prosecution.defendant.AddressApi;
 import uk.gov.companieshouse.api.model.prosecution.defendant.DefendantApi;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.model.defendant.Defendant;
 
+@Component
 public class ApiToDefendantMapper {
 	
     public Defendant apiToDefendant(DefendantApi defendant) {

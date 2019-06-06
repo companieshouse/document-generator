@@ -14,8 +14,8 @@ public class ProsecutionCase {
     @JsonProperty("company_name")
     private String companyName;
     
-    @JsonProperty("case_reference_number")
-    private String caseReferenceNumber;
+    /*@JsonProperty("case_reference_number")
+    private String caseReferenceNumber;*/
 
     public String getCompanyIncorporationNumber() {
         return companyIncorporationNumber;
@@ -33,11 +33,11 @@ public class ProsecutionCase {
         this.companyName = companyName;
     }
 
-	public String getCaseReferenceNumber() {
+	/*public String getCaseReferenceNumber() {
 		return caseReferenceNumber;
 	}
 
 	public void setCaseReferenceNumber(String caseReferenceNumber) {
 		this.caseReferenceNumber = caseReferenceNumber;
-	}
+	}*/
 }

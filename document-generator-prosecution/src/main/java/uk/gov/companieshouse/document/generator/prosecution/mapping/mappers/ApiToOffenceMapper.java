@@ -15,7 +15,6 @@ public interface ApiToOffenceMapper {
             @Mapping(source = "offence.filingPeriodType", target = "filingPeriodType"),
             @Mapping(source = "offence.filingPeriodEndsOn", target = "filingPeriodEndsOn"),
             @Mapping(source = "offence.filingDueOn", target = "filingDueOn"),
-            @Mapping(source = "offence.filingPeriodId", target = "filingPeriodId")
     })
     Offence apiToOffence(OffenceApi offence);
 }

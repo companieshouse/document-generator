@@ -75,7 +75,10 @@ public class ProsecutionDocumentInfoService implements DocumentInfoService {
 		String docGenUri = documentInfoRequest.getResourceUri();
 		if (resourceUri.endsWith("ultimatum")) {
 			try {
-				return handler.getUltimatumResponse(resourceUri, requestId);
+				int index = resourceUri.lastIndexOf('/');
+				String newUri = resourceUri.substring(0, index);
+				LOG.info("New Uri: " + newUri);
+				return handler.getUltimatumResponse(newUri, requestId);
 			} catch (HandlerException he) {
 				LOG.errorContext(requestId, String.format("An error occurred when retrieving data for ultimatum"), he,
 						debugMap);
