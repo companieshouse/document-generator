@@ -13,6 +13,7 @@ import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.company.report.exception.MapperException;
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
+import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.CompanyReportMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
@@ -48,14 +49,14 @@ public class CompanyReportDataHandler {
         try {
             LOG.infoContext(requestId, "Getting data for report for company number: " + companyNumber, getDebugMap(companyNumber));
             return createDocumentInfoResponse(companyNumber);
-        } catch (URIValidationException | ApiErrorResponseException | MapperException e) {
+        } catch (MapperException e) {
             LOG.errorContext(requestId,"Failed to get data for report for company number " + companyNumber, e, getDebugMap(companyNumber));
             throw new HandlerException(e.getMessage(), e.getCause());
         }
     }
 
-    private DocumentInfoResponse createDocumentInfoResponse(String companyNumber) throws HandlerException,
-        URIValidationException, ApiErrorResponseException, MapperException {
+    private DocumentInfoResponse createDocumentInfoResponse(String companyNumber)
+        throws HandlerException, MapperException {
 
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
 
@@ -67,8 +68,7 @@ public class CompanyReportDataHandler {
         return documentInfoResponse;
     }
 
-    private String getCompanyReportData(String companyNumber) throws HandlerException,
-        URIValidationException, ApiErrorResponseException, MapperException {
+    private String getCompanyReportData(String companyNumber) throws HandlerException, MapperException {
 
         CompanyReportApiData companyReportApiData = new CompanyReportApiData();
 
@@ -94,7 +94,7 @@ public class CompanyReportDataHandler {
             reportToJson = mapper.writeValueAsString(companyReport);
         } catch (JsonProcessingException e) {
             throw new HandlerException(
-                "Could not serialise Document Info for the company report for");
+                "Could not serialise Document data for the generation of the company report for company: ");
         }
 
         return reportToJson;
