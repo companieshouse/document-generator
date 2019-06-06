@@ -94,7 +94,9 @@ public class CompanyReportDataHandler {
             reportToJson = mapper.writeValueAsString(companyReport);
         } catch (JsonProcessingException e) {
             throw new HandlerException(
-                "Could not serialise Document data for the generation of the company report for company: ");
+                new StringBuilder("Could not serialise Document data for the generation of the company report for company: ")
+                    .append(companyReport.getRegistrationInformation().getCompanyName())
+                    .append("-").append(companyReport.getRegistrationInformation().getCompanyNumber()).toString());
         }
 
         return reportToJson;
