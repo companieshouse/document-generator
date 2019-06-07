@@ -92,6 +92,7 @@ public class CompanyReportDataHandler {
         mapper.setDateFormat(new SimpleDateFormat("dd-MMMM-yyyy"));
 
         try {
+            LOG.info("Attempting to convert company report to JSON");
             reportToJson = mapper.writeValueAsString(companyReport);
         } catch (JsonProcessingException e) {
             throw new HandlerException(
@@ -104,6 +105,7 @@ public class CompanyReportDataHandler {
     private CompanyProfileApi getCompanyProfile(String companyNumber) throws HandlerException {
 
         try {
+            LOG.info("Attempting to retrieve company profile");
             return companyService.getCompanyProfile(companyNumber);
         } catch (ServiceException se) {
             throw new HandlerException("error occurred obtaining the company profile", se);
