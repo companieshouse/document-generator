@@ -48,9 +48,16 @@
 
         <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
 
+        <api-sdk-java.version>4.0.6</api-sdk-java.version>
+
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>uk.gov.companieshouse</groupId>
+            <artifactId>api-sdk-java</artifactId>
+            <version>${api-sdk-java.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-hateoas</artifactId>
