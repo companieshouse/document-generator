@@ -41,6 +41,8 @@ public class CompanyReportDataHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
+    private static final String DATE_TIME_FORMAT = "dd-MMMM-yyyy";
+
     public DocumentInfoResponse getCompanyReport(String resourceUri, String requestId)
         throws HandlerException {
 
@@ -60,7 +62,7 @@ public class CompanyReportDataHandler {
 
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
 
-        documentInfoResponse.setData(getCompanyReportData(companyNumber));
+        documentInfoResponse.setData(getCompanyReportData(companyNumber, requestId));
         documentInfoResponse.setAssetId("company-report");
         documentInfoResponse.setPath(createPathString());
         documentInfoResponse.setTemplateName("company-report.html");
@@ -72,39 +74,46 @@ public class CompanyReportDataHandler {
 
         CompanyReportApiData companyReportApiData = new CompanyReportApiData();
 
-        CompanyProfileApi companyProfileApi = getCompanyProfile(companyNumber);
+        CompanyProfileApi companyProfileApi = getCompanyProfile(companyNumber, requestId);
 
         companyReportApiData.setCompanyProfileApi(companyProfileApi);
 
-        return toJson(companyReportMapper.mapCompanyReport(companyReportApiData));
+        return toJson(companyReportMapper
+            .mapCompanyReport(companyReportApiData),
+            companyNumber,
+            requestId);
     }
 
 
-    private String toJson(CompanyReport companyReport) throws HandlerException {
+    private String toJson(CompanyReport companyReport, String companyNumber,
+                          String requestId) throws HandlerException {
 
         String reportToJson;
         ObjectMapper mapper = new ObjectMapper();
         JavaTimeModule javaTimeModule = new JavaTimeModule();
-        javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern("dd-MMMM-yyyy")));
-        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern("dd-MMMM-yyyy")));
+        javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)));
+        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)));
         mapper.registerModule(javaTimeModule);
-        mapper.setDateFormat(new SimpleDateFormat("dd-MMMM-yyyy"));
+        mapper.setDateFormat(new SimpleDateFormat(DATE_TIME_FORMAT));
 
         try {
+            LOG.infoContext(requestId,"Attempting to convert company report to JSON",  getDebugMap(companyNumber));
             reportToJson = mapper.writeValueAsString(companyReport);
         } catch (JsonProcessingException e) {
             throw new HandlerException(
                 new StringBuilder("Could not serialise Document data for the generation of the company report for company: ")
                     .append(companyReport.getRegistrationInformation().getCompanyName())
                     .append("-").append(companyReport.getRegistrationInformation().getCompanyNumber()).toString());
+
         }
 
         return reportToJson;
     }
 
-    private CompanyProfileApi getCompanyProfile(String companyNumber) throws HandlerException {
+    private CompanyProfileApi getCompanyProfile(String companyNumber, String requestId) throws HandlerException {
 
         try {
+            LOG.infoContext(requestId,"Attempting to retrieve company profile", getDebugMap(companyNumber));
             return companyService.getCompanyProfile(companyNumber);
         } catch (ServiceException se) {
             throw new HandlerException("error occurred obtaining the company profile", se);
