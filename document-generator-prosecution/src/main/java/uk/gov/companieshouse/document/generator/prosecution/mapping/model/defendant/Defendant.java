@@ -1,30 +1,29 @@
 package uk.gov.companieshouse.document.generator.prosecution.mapping.model.defendant;
 
-import java.util.List;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Defendant {
 
-    @JsonProperty("address")
-    private List<String> address;
+    @JsonProperty("Address")
+    private Address address;
 
-    @JsonProperty("name")
+    @JsonProperty("Name")
     private String name;
     
     @JsonIgnoreProperties("links")
     private Map<String, String> links;
-    
-    public List<String> getAddress() {
+
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddress(List<String> address) {
+    public void setAddress(Address address) {
         this.address = address;
     }
 
-	public String getName() {
+    public String getName() {
 		return name;
 	}
 

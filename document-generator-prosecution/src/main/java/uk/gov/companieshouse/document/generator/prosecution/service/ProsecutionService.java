@@ -46,11 +46,10 @@ public class ProsecutionService {
 	    InternalApiClient internalApiClient = getInternalApiClient();
 		DefendantApi defendantApi = new DefendantApi();
 		try {
-		    LOG.info("Call to DEFENDANT API : " + uri);
-		    LOG.info("Getting defendant information");
+		    LOG.info("Getting defendant information from: " + uri);
 			ApiResponse<DefendantApi> response = internalApiClient.privateDefendant().get(uri).execute();
 			defendantApi = response.getData();
-			LOG.info("Defendant information : " + defendantApi.toString());
+			LOG.info("Successfully retrieved defendant information");
 		} catch (ApiErrorResponseException e) {
             LOG.error("ApiErrorResponseException" + e);
 		} catch (URIValidationException e) {
@@ -63,8 +62,10 @@ public class ProsecutionService {
 	    InternalApiClient internalApiClient = getInternalApiClient();
 	    OffenceApi offenceApi = new OffenceApi();
 	    try {
+            LOG.info("Getting offences information from: " + uri);
             ApiResponse<List> apiResponse = internalApiClient.privateOffence().list(uri).execute();
             List<OffenceApi> responseList = apiResponse.getData();
+            LOG.info("Successfully retrieved offences information");
         } catch (ApiErrorResponseException e) {
             LOG.error("ApiErrorResponseException " + e);
         } catch (URIValidationException e) {
@@ -77,8 +78,10 @@ public class ProsecutionService {
 	    InternalApiClient internalApiClient = getInternalApiClient();
         ProsecutionCaseApi prosecutionCaseApi = new ProsecutionCaseApi();
 		try {
+            LOG.info("Getting prosecution case information from: " + uri);
             ApiResponse<ProsecutionCaseApi> apiResponse = internalApiClient.privateProsecutionCase().get(uri).execute();
             prosecutionCaseApi = apiResponse.getData();
+            LOG.info("Successfully retrieved prosecution case information");
         } catch (ApiErrorResponseException e ) { 
             LOG.error("ApiErrorResponseException " + e);
 	    } catch (URIValidationException e) {
@@ -94,4 +97,3 @@ public class ProsecutionService {
         return internalApiClient;
 	}
 }
-		

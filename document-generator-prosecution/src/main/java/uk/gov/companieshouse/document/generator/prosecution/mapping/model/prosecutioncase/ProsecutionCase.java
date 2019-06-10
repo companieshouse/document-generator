@@ -7,14 +7,14 @@ import uk.gov.companieshouse.api.model.prosecution.prosecutioncase.ProsecutionCa
 
 public class ProsecutionCase {
 
-    @JsonProperty("company_incorporation_number")
+    @JsonProperty("CompanyIncorporationNumber")
     private String companyIncorporationNumber;
 
-    @JsonProperty("company_name")
+    @JsonProperty("CompanyName")
     private String companyName;
 
-    @JsonIgnoreProperties("caseStatus")
-    private ProsecutionCaseStatusApi caseStatus;
+    @JsonIgnoreProperties("status")
+    private ProsecutionCaseStatusApi status;
 
     /*
      * @JsonProperty("case_reference_number") private String caseReferenceNumber;
@@ -43,11 +43,11 @@ public class ProsecutionCase {
      * caseReferenceNumber; }
      */
 
-    public ProsecutionCaseStatusApi getCaseStatus() {
-        return caseStatus;
+    public ProsecutionCaseStatusApi getStatus() {
+        return status;
     }
 
-    public void setCaseStatus(ProsecutionCaseStatusApi status) {
-        this.caseStatus = status;
+    public void setStatus(ProsecutionCaseStatusApi status) {
+        this.status = status;
     }
 }

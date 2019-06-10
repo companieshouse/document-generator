@@ -8,13 +8,13 @@ import uk.gov.companieshouse.document.generator.prosecution.mapping.model.prosec
 
 public class ProsecutionDocument {
 
-    @JsonProperty("defendant")
+    @JsonProperty("Defendant")
     private Defendant defendant;
 
-    @JsonProperty("offence")
+    @JsonProperty("Offence")
     private List<Offence> offences;
 
-    @JsonProperty("case")
+    @JsonProperty("ProsecutionCase")
     private ProsecutionCase prosecutionCase;
 
     public Defendant getDefendant() {

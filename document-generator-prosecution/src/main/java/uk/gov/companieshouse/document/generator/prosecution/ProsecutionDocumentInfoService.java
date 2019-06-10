@@ -73,10 +73,10 @@ public class ProsecutionDocumentInfoService implements DocumentInfoService {
         try {
             document = handler.getProsecutionDocument(resourceUri, requestId);
             if (document.getProsecutionCase()
-                    .getCaseStatus() == ProsecutionCaseStatusApi.ACCEPTED) {
+                    .getStatus() == ProsecutionCaseStatusApi.ACCEPTED) {
                 return handler.getUltimatumResponse(document, requestId);
             } else if (document.getProsecutionCase()
-                    .getCaseStatus() == ProsecutionCaseStatusApi.ULTIMATUM_ISSUED) {
+                    .getStatus() == ProsecutionCaseStatusApi.ULTIMATUM_ISSUED) {
                 return handler.getSJPnResponse(document, requestId);
             }
         } catch (HandlerException e) {

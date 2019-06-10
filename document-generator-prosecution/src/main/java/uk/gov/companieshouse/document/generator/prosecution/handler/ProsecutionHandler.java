@@ -41,9 +41,9 @@ public class ProsecutionHandler {
             throws HandlerException {
         Defendant defendant = prosecutionService.getDefendant(resourceUri);
         ProsecutionCase prosecutionCase =
-                prosecutionService.getProsecutionCase(defendant.getLinks().get("prosecution-case"));
+                prosecutionService.getProsecutionCase("/" + defendant.getLinks().get("prosecution-case"));
         List<Offence> offences =
-                prosecutionService.getOffences(defendant.getLinks().get("offence"));
+                prosecutionService.getOffences(defendant.getLinks().get("offences"));
         ProsecutionDocument document = new ProsecutionDocument();
         document.setDefendant(defendant);
         document.setOffences(offences);
@@ -95,7 +95,7 @@ public class ProsecutionHandler {
         response.setAssetId(ProsecutionType.ULTIMATUM.getAssetId());
         response.setPath(createPathString(ProsecutionType.ULTIMATUM));
         response.setTemplateName(ProsecutionType.ULTIMATUM.getTemplate());
-        response.setDescriptionIdentifier(ProsecutionType.ULTIMATUM.getResource());
+        //response.setDescriptionIdentifier(ProsecutionType.ULTIMATUM.getResource());
         try {
             response.setData(convertToJson(document, requestId));
         } catch (DocumentInfoCreationException e) {
@@ -117,7 +117,7 @@ public class ProsecutionHandler {
         response.setAssetId(ProsecutionType.SJPN.getAssetId());
         response.setPath(createPathString(ProsecutionType.SJPN));
         response.setTemplateName(ProsecutionType.SJPN.getTemplate());
-        response.setDescriptionIdentifier(ProsecutionType.SJPN.getResource());
+        //response.setDescriptionIdentifier(ProsecutionType.SJPN.getResource());
         try {
             response.setData(convertToJson(document, requestId));
         } catch (DocumentInfoCreationException e) {
