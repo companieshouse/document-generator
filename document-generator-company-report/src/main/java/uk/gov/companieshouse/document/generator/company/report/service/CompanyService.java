@@ -7,7 +7,6 @@ import uk.gov.companieshouse.api.ApiClient;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
-import uk.gov.companieshouse.document.generator.accounts.service.impl.ApiClientService;
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
 
 @Service
