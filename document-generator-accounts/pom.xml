@@ -12,7 +12,7 @@
     </parent>
 
     <artifactId>document-generator-accounts</artifactId>
-    <version>unversioned</version>
+    <version>97cd4a1</version>
 
     <name>document-generator-accounts</name>
     <description>Module for retrieving accounts data for document generation</description>
@@ -26,6 +26,7 @@
 
         <!--Dependencies-->
         <spring-boot-start-web.version>2.0.4.RELEASE</spring-boot-start-web.version>
+
         <structured-logging.version>1.3.0-rc1</structured-logging.version>
 
         <company-accounts-library.version>1.1.0-rc1</company-accounts-library.version>
@@ -35,7 +36,7 @@
         <dependency>
             <groupId>uk.gov.companieshouse</groupId>
             <artifactId>document-generator-interfaces</artifactId>
-            <version>unversioned</version>
+            <version>97cd4a1</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

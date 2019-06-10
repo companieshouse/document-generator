@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.document.generator.company.report;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.document.generator.company.report.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.company.report.handler.CompanyReportDataHandler;
 import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
@@ -13,6 +14,7 @@ import uk.gov.companieshouse.logging.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
+@Service
 public class CompanyReportDocumentInfoServiceImpl implements DocumentInfoService {
 
     public static final String MODULE_NAME_SPACE = "document-generator-company-report";
