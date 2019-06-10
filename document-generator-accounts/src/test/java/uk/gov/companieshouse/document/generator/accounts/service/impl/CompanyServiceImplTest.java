@@ -42,9 +42,6 @@ public class CompanyServiceImplTest {
     @Mock
     private ApiResponse<CompanyProfileApi> responseWithData;
 
-    @Mock
-    private ApiResponse<Void> responseNoData;
-
     @InjectMocks
     private CompanyService companyService = new CompanyServiceImpl();
 
