@@ -50,14 +50,14 @@ public class CompanyReportDataHandler {
 
         try {
             LOG.infoContext(requestId, "Getting data for report for company number: " + companyNumber, getDebugMap(companyNumber));
-            return createDocumentInfoResponse(companyNumber);
+            return createDocumentInfoResponse(companyNumber, requestId);
         } catch (MapperException e) {
             LOG.errorContext(requestId,"Failed to get data for report for company number " + companyNumber, e, getDebugMap(companyNumber));
             throw new HandlerException(e.getMessage(), e.getCause());
         }
     }
 
-    private DocumentInfoResponse createDocumentInfoResponse(String companyNumber)
+    private DocumentInfoResponse createDocumentInfoResponse(String companyNumber, String requestId)
         throws HandlerException, MapperException {
 
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
@@ -70,7 +70,7 @@ public class CompanyReportDataHandler {
         return documentInfoResponse;
     }
 
-    private String getCompanyReportData(String companyNumber) throws HandlerException, MapperException {
+    private String getCompanyReportData(String companyNumber, String requestId) throws HandlerException, MapperException {
 
         CompanyReportApiData companyReportApiData = new CompanyReportApiData();
 
