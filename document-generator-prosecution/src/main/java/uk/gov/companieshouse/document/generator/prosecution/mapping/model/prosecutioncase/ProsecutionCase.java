@@ -1,10 +1,9 @@
 package uk.gov.companieshouse.document.generator.prosecution.mapping.model.prosecutioncase;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.time.LocalDateTime;
-import java.util.Map;
+import uk.gov.companieshouse.api.model.prosecution.prosecutioncase.ProsecutionCaseStatusApi;
 
 public class ProsecutionCase {
 
@@ -13,9 +12,13 @@ public class ProsecutionCase {
 
     @JsonProperty("company_name")
     private String companyName;
-    
-    /*@JsonProperty("case_reference_number")
-    private String caseReferenceNumber;*/
+
+    @JsonIgnoreProperties("caseStatus")
+    private ProsecutionCaseStatusApi caseStatus;
+
+    /*
+     * @JsonProperty("case_reference_number") private String caseReferenceNumber;
+     */
 
     public String getCompanyIncorporationNumber() {
         return companyIncorporationNumber;
@@ -33,11 +36,18 @@ public class ProsecutionCase {
         this.companyName = companyName;
     }
 
-	/*public String getCaseReferenceNumber() {
-		return caseReferenceNumber;
-	}
+    /*
+     * public String getCaseReferenceNumber() { return caseReferenceNumber; }
+     * 
+     * public void setCaseReferenceNumber(String caseReferenceNumber) { this.caseReferenceNumber =
+     * caseReferenceNumber; }
+     */
 
-	public void setCaseReferenceNumber(String caseReferenceNumber) {
-		this.caseReferenceNumber = caseReferenceNumber;
-	}*/
+    public ProsecutionCaseStatusApi getCaseStatus() {
+        return caseStatus;
+    }
+
+    public void setCaseStatus(ProsecutionCaseStatusApi status) {
+        this.caseStatus = status;
+    }
 }

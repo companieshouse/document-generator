@@ -29,6 +29,7 @@ public class ApiToDefendantMapper {
     		def.setName(name.toString());
     	}
     	def.setAddress(getAddress(defendant));
+    	def.setLinks(defendant.getLinks());
     	return def;
     }
     

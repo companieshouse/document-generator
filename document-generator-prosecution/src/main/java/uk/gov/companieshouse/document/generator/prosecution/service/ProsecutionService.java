@@ -18,6 +18,8 @@ import uk.gov.companieshouse.document.generator.prosecution.mapping.mappers.ApiT
 import uk.gov.companieshouse.document.generator.prosecution.mapping.mappers.ApiToOffenceMapper;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.mappers.ApiToProsecutionCaseMapper;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.model.defendant.Defendant;
+import uk.gov.companieshouse.document.generator.prosecution.mapping.model.offence.Offence;
+import uk.gov.companieshouse.document.generator.prosecution.mapping.model.prosecutioncase.ProsecutionCase;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
@@ -40,21 +42,14 @@ public class ProsecutionService {
 	@Autowired
 	private ApiToProsecutionCaseMapper caseMapper;
 	
-	//private static final UriTemplate GET_DEFENDANT_URI = new UriTemplate("/internal/company/{companyNumber}/prosecution-cases/{prosecutionCaseId}/defendants/{defendantId}");
-
-	private DefendantApi defendantApi;
-	
 	public Defendant getDefendant(String uri) {
-		InternalApiClient internalApiClient = apiClientService.getApiClient();
-		boolean result = internalApiClient != null;
-		LOG.info("InternalApiClient: " + String.valueOf(result));
-
-		//GET_DEFENDANT_URI.expand(companyNumber, prosecutionCaseId, defendantId);
+	    InternalApiClient internalApiClient = getInternalApiClient();
+		DefendantApi defendantApi = new DefendantApi();
 		try {
 		    LOG.info("Call to DEFENDANT API : " + uri);
 		    LOG.info("Getting defendant information");
 			ApiResponse<DefendantApi> response = internalApiClient.privateDefendant().get(uri).execute();
-			DefendantApi defendantApi = response.getData();
+			defendantApi = response.getData();
 			LOG.info("Defendant information : " + defendantApi.toString());
 		} catch (ApiErrorResponseException e) {
             LOG.error("ApiErrorResponseException" + e);
@@ -64,13 +59,39 @@ public class ProsecutionService {
 		return defendantMapper.apiToDefendant(defendantApi);
 	}
 	
-	public List<OffenceApi> getOffences(){
-		List<OffenceApi> offences = new ArrayList<OffenceApi>();
-		return offences;
+	public List<Offence> getOffences(String uri){
+	    InternalApiClient internalApiClient = getInternalApiClient();
+	    OffenceApi offenceApi = new OffenceApi();
+	    try {
+            ApiResponse<List> apiResponse = internalApiClient.privateOffence().list(uri).execute();
+            List<OffenceApi> responseList = apiResponse.getData();
+        } catch (ApiErrorResponseException e) {
+            LOG.error("ApiErrorResponseException " + e);
+        } catch (URIValidationException e) {
+            LOG.error("URIValidationException " + e);
+        }
+	    return new ArrayList<>();
 	}
 	
-	public ProsecutionCaseApi getProsecutionCase() {
-		ProsecutionCaseApi prosecutionCase = new ProsecutionCaseApi();
-		return prosecutionCase;
+	public ProsecutionCase getProsecutionCase(String uri) {
+	    InternalApiClient internalApiClient = getInternalApiClient();
+        ProsecutionCaseApi prosecutionCaseApi = new ProsecutionCaseApi();
+		try {
+            ApiResponse<ProsecutionCaseApi> apiResponse = internalApiClient.privateProsecutionCase().get(uri).execute();
+            prosecutionCaseApi = apiResponse.getData();
+        } catch (ApiErrorResponseException e ) { 
+            LOG.error("ApiErrorResponseException " + e);
+	    } catch (URIValidationException e) {
+	        LOG.error("UriValidationException" + e);
+        }
+		return caseMapper.apiToProsecutionCase(prosecutionCaseApi);
+	}
+	
+	private InternalApiClient getInternalApiClient() {
+	    InternalApiClient internalApiClient = apiClientService.getApiClient();
+        boolean result = internalApiClient != null;
+        LOG.info("InternalApiClient: " + result);
+        return internalApiClient;
 	}
 }
+		
