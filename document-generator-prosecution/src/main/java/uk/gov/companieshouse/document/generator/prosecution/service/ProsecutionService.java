@@ -54,7 +54,7 @@ public class ProsecutionService {
 		    LOG.info("Call to DEFENDANT API : " + uri);
 		    LOG.info("Getting defendant information");
 			ApiResponse<DefendantApi> response = internalApiClient.privateDefendant().get(uri).execute();
-			DefendantApi defendantApi = response.getData();
+			defendantApi = response.getData();
 			LOG.info("Defendant information : " + defendantApi.toString());
 		} catch (ApiErrorResponseException e) {
             LOG.error("ApiErrorResponseException" + e);
