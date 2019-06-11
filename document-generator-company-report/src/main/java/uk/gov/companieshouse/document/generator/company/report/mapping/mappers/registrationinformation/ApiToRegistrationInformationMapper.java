@@ -75,11 +75,13 @@ public abstract class ApiToRegistrationInformationMapper {
 
         List<SicCodes> listNatureOfBusiness = new ArrayList<>();
 
-        for (String sicCode : sicCodes) {
-            SicCodes codes = new SicCodes();
-            codes.setSicCodes(sicCode);
-            codes.setSicCodesDescription(sicCode + "To be converted to api enumeration value PCI-77");
-            listNatureOfBusiness.add(codes);
+        if (sicCodes != null) {
+            for (String sicCode : sicCodes) {
+                SicCodes codes = new SicCodes();
+                codes.setSicCodes(sicCode);
+                codes.setSicCodesDescription(sicCode + "To be converted to api enumeration value PCI-77");
+                listNatureOfBusiness.add(codes);
+            }
         }
 
         return listNatureOfBusiness;
