@@ -127,8 +127,8 @@ public class CompanyReportDataHandler {
         return "companyReport" + uuid.toString() + ".html";
     }
 
-    private String getCompanyNumberFromUri(String resourceUri) {
-        return resourceUri.replaceAll("[^\\d.]", "");
+    protected String getCompanyNumberFromUri(String resourceUri) {
+        return resourceUri.replaceAll("^/company-number/", "");
     }
 
     private Map<String, Object> getDebugMap(String companyNumber) {

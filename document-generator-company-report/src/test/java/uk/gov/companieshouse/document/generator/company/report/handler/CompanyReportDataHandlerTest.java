@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sun.jvm.hotspot.utilities.Assert;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.CompanyReportMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
@@ -14,6 +15,7 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -53,6 +55,24 @@ public class CompanyReportDataHandlerTest {
         assertNotNull(documentInfoResponse);
 
         //TODO - This test needs to be revisited when we have access to the mappers/companyreport
+    }
+
+    @Test
+    @DisplayName("Test regex gets company number containing letters from url")
+    void testRegexGetsCompanyNumberContainingCharacters() {
+
+        String result = companyReportDataHandler.getCompanyNumberFromUri("/company-number/CV2234554");
+
+        assertEquals("CV2234554",result);
+    }
+
+    @Test
+    @DisplayName("Test regex gets company number containing numeric only from url")
+    void testRegexGetsCompanyNumberContainingNumericOnly() {
+
+        String result = companyReportDataHandler.getCompanyNumberFromUri("/company-number/112234554");
+
+        assertEquals("112234554",result);
     }
 
     private CompanyProfileApi createCompanyProfile() {
