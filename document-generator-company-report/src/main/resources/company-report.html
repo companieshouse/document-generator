@@ -368,11 +368,11 @@
             {{end}}
             <tr>
                 <td><b>Company Type:</b></td>
-                <td> {{index $companyRegistrationInformation.company_type "type"}}</td>
+                <td> {{$companyRegistrationInformation.company_type.type}}/{{$companyRegistrationInformation.company_type.subtype}}</td>
             </tr>
             <tr>
                 <td><b>Status:</b></td>
-                <td> {{index $companyRegistrationInformation.status "company_status"}}</td>
+                <td> {{$companyRegistrationInformation.status.company_status}}/{{$companyRegistrationInformation.status.company_status_detail}}</td>
             </tr>
             <tr>
                 <td><b>Nature Of Business (SIC):</b></td>
