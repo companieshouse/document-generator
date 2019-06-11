@@ -3,6 +3,7 @@ package uk.gov.companieshouse.document.generator.prosecution.mapping.model.defen
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import uk.gov.companieshouse.api.model.common.Address;
 
 public class Defendant {
 
@@ -11,7 +12,7 @@ public class Defendant {
 
     @JsonProperty("Name")
     private String name;
-    
+
     @JsonIgnoreProperties("links")
     private Map<String, String> links;
 
@@ -24,12 +25,12 @@ public class Defendant {
     }
 
     public String getName() {
-		return name;
-	}
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public Map<String, String> getLinks() {
         return links;

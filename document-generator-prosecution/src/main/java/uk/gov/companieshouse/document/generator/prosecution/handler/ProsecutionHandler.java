@@ -6,12 +6,11 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
-import uk.gov.companieshouse.document.generator.prosecution.DocumentInfoCreationException;
 import uk.gov.companieshouse.document.generator.prosecution.ProsecutionDocumentInfoService;
 import uk.gov.companieshouse.document.generator.prosecution.ProsecutionType;
+import uk.gov.companieshouse.document.generator.prosecution.exception.DocumentInfoCreationException;
 import uk.gov.companieshouse.document.generator.prosecution.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.model.ProsecutionDocument;
-import uk.gov.companieshouse.document.generator.prosecution.mapping.model.UltimatumDocument;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.model.defendant.Defendant;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.model.offence.Offence;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.model.prosecutioncase.ProsecutionCase;
@@ -88,18 +87,21 @@ public class ProsecutionHandler {
      *        and offences
      * @param requestId The request id
      * @return the DocumentInfoResponse for an Ultimatum
+     * @throws HandlerException 
      */
     public DocumentInfoResponse getUltimatumResponse(ProsecutionDocument document,
-            String requestId) {
+            String requestId) throws HandlerException {
         DocumentInfoResponse response = new DocumentInfoResponse();
         response.setAssetId(ProsecutionType.ULTIMATUM.getAssetId());
         response.setPath(createPathString(ProsecutionType.ULTIMATUM));
         response.setTemplateName(ProsecutionType.ULTIMATUM.getTemplate());
-        //response.setDescriptionIdentifier(ProsecutionType.ULTIMATUM.getResource());
+        response.setDescriptionIdentifier(ProsecutionType.ULTIMATUM.getResource());
         try {
             response.setData(convertToJson(document, requestId));
         } catch (DocumentInfoCreationException e) {
-            LOG.error("Error creating document info response for request : " + requestId);
+            String message = "Error creating ultimatum document info response for request : " + requestId;
+            LOG.error(message);
+            throw new HandlerException(message, e);
         }
         return response;
     }
@@ -117,7 +119,7 @@ public class ProsecutionHandler {
         response.setAssetId(ProsecutionType.SJPN.getAssetId());
         response.setPath(createPathString(ProsecutionType.SJPN));
         response.setTemplateName(ProsecutionType.SJPN.getTemplate());
-        //response.setDescriptionIdentifier(ProsecutionType.SJPN.getResource());
+        response.setDescriptionIdentifier(ProsecutionType.SJPN.getResource());
         try {
             response.setData(convertToJson(document, requestId));
         } catch (DocumentInfoCreationException e) {

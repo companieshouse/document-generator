@@ -72,12 +72,13 @@ public class ProsecutionDocumentInfoService implements DocumentInfoService {
         ProsecutionDocument document;
         try {
             document = handler.getProsecutionDocument(resourceUri, requestId);
-            if (document.getProsecutionCase()
-                    .getStatus() == ProsecutionCaseStatusApi.ACCEPTED) {
+            if (document.getProsecutionCase().getStatus() == ProsecutionCaseStatusApi.ACCEPTED) {
                 return handler.getUltimatumResponse(document, requestId);
             } else if (document.getProsecutionCase()
                     .getStatus() == ProsecutionCaseStatusApi.ULTIMATUM_ISSUED) {
                 return handler.getSJPnResponse(document, requestId);
+            } else {
+                throw new HandlerException("No matching case status");
             }
         } catch (HandlerException e) {
             LOG.error("Unmatchable resourceUri inside prosecution request : " + docGenUri);
