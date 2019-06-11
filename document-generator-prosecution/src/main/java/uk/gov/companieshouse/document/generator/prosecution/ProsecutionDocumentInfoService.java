@@ -70,6 +70,7 @@ public class ProsecutionDocumentInfoService implements DocumentInfoService {
 
         String docGenUri = documentInfoRequest.getResourceUri();
         ProsecutionDocument document;
+        //TODO : change to switch statement
         try {
             document = handler.getProsecutionDocument(resourceUri, requestId);
             if (document.getProsecutionCase()
@@ -83,6 +84,7 @@ public class ProsecutionDocumentInfoService implements DocumentInfoService {
             LOG.error("Unmatchable resourceUri inside prosecution request : " + docGenUri);
 
         }
+        //TODO : add this to default statment of switch
         throw new DocumentInfoException("Unmatchable resourceUri inside prosecution" + docGenUri);
 
     }

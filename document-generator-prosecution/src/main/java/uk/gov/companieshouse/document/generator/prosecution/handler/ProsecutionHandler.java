@@ -40,10 +40,8 @@ public class ProsecutionHandler {
     public ProsecutionDocument getProsecutionDocument(String resourceUri, String requestId)
             throws HandlerException {
         Defendant defendant = prosecutionService.getDefendant(resourceUri);
-        ProsecutionCase prosecutionCase =
-                prosecutionService.getProsecutionCase("/" + defendant.getLinks().get("prosecution-case"));
-        List<Offence> offences =
-                prosecutionService.getOffences(defendant.getLinks().get("offences"));
+        ProsecutionCase prosecutionCase = prosecutionService.getProsecutionCase("/" + defendant.getLinks().get("prosecution-case"));
+        List<Offence> offences = prosecutionService.getOffences(defendant.getLinks().get("offences"));
         ProsecutionDocument document = new ProsecutionDocument();
         document.setDefendant(defendant);
         document.setOffences(offences);
@@ -76,6 +74,7 @@ public class ProsecutionHandler {
      * @param type of the prosecution document to store e.g. Ultimatum, SJPn, witness statements
      * @return the path to store the finished document
      */
+    //TODO: change method to createLocationLink
     private String createPathString(ProsecutionType type) {
         String documentId = String.format("%s-<number>", type.getResource());
         return String.format("/%s/%s/%s", type.getAssetId(), type.getResource(), documentId);
@@ -89,13 +88,13 @@ public class ProsecutionHandler {
      * @param requestId The request id
      * @return the DocumentInfoResponse for an Ultimatum
      */
+    //TODO: pass enum as a parameter and keep bottom 2 methods as one method
     public DocumentInfoResponse getUltimatumResponse(ProsecutionDocument document,
             String requestId) {
         DocumentInfoResponse response = new DocumentInfoResponse();
         response.setAssetId(ProsecutionType.ULTIMATUM.getAssetId());
         response.setPath(createPathString(ProsecutionType.ULTIMATUM));
         response.setTemplateName(ProsecutionType.ULTIMATUM.getTemplate());
-        //response.setDescriptionIdentifier(ProsecutionType.ULTIMATUM.getResource());
         try {
             response.setData(convertToJson(document, requestId));
         } catch (DocumentInfoCreationException e) {
@@ -117,7 +116,6 @@ public class ProsecutionHandler {
         response.setAssetId(ProsecutionType.SJPN.getAssetId());
         response.setPath(createPathString(ProsecutionType.SJPN));
         response.setTemplateName(ProsecutionType.SJPN.getTemplate());
-        //response.setDescriptionIdentifier(ProsecutionType.SJPN.getResource());
         try {
             response.setData(convertToJson(document, requestId));
         } catch (DocumentInfoCreationException e) {

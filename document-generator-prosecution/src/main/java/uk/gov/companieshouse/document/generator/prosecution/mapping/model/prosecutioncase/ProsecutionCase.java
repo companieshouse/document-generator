@@ -16,10 +16,6 @@ public class ProsecutionCase {
     @JsonIgnoreProperties("status")
     private ProsecutionCaseStatusApi status;
 
-    /*
-     * @JsonProperty("case_reference_number") private String caseReferenceNumber;
-     */
-
     public String getCompanyIncorporationNumber() {
         return companyIncorporationNumber;
     }
@@ -35,13 +31,6 @@ public class ProsecutionCase {
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
     }
-
-    /*
-     * public String getCaseReferenceNumber() { return caseReferenceNumber; }
-     * 
-     * public void setCaseReferenceNumber(String caseReferenceNumber) { this.caseReferenceNumber =
-     * caseReferenceNumber; }
-     */
 
     public ProsecutionCaseStatusApi getStatus() {
         return status;

@@ -24,23 +24,25 @@ import uk.gov.companieshouse.logging.LoggerFactory;
 
 import static uk.gov.companieshouse.document.generator.prosecution.ProsecutionDocumentInfoService.MODULE_NAME_SPACE;
 
+//TODO: throw exceptions as ProsecutionDocumentException
+//TODO: add JavaDoc
 @Service
 public class ProsecutionService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
-	
+
 	@Autowired
 	private ApiClientService apiClientService;
-	
+
 	@Autowired
 	private ApiToDefendantMapper defendantMapper;
-	
+
 	@Autowired
 	private ApiToOffenceMapper offenceMapper;
-	
+
 	@Autowired
 	private ApiToProsecutionCaseMapper caseMapper;
-	
+
 	public Defendant getDefendant(String uri) {
 	    InternalApiClient internalApiClient = getInternalApiClient();
 		DefendantApi defendantApi = new DefendantApi();
