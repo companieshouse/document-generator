@@ -7,6 +7,8 @@ import org.springframework.web.context.annotation.RequestScope;
 import uk.gov.companieshouse.api.model.prosecution.offence.OffenceApi;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.model.offence.Offence;
 
+import java.util.List;
+
 @RequestScope
 @Mapper(componentModel = "spring")
 public interface ApiToOffenceMapper {
@@ -17,4 +19,5 @@ public interface ApiToOffenceMapper {
             @Mapping(source = "offence.filingDueOn", target = "filingDueOn"),
     })
     Offence apiToOffence(OffenceApi offence);
+    List<Offence> apiToOffences(OffenceApi[] offences);
 }

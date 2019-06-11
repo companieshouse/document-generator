@@ -34,12 +34,11 @@ public class ProsecutionHandler {
      * Throws a HandlerException if any exceptions occurred in the service
      * 
      * @param resourceUri the URI for the defendant
-     * @param requestId the request id for the request
      * @return the ProsecutionDocument containing defendant, prosecution case and offence(s)
      *         information
      * @throws HandlerException
      */
-    public ProsecutionDocument getProsecutionDocument(String resourceUri, String requestId)
+    public ProsecutionDocument getProsecutionDocument(String resourceUri)
             throws HandlerException {
         try {
             Defendant defendant = prosecutionService.getDefendant(resourceUri);

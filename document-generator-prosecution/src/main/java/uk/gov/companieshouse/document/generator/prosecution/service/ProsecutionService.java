@@ -50,7 +50,7 @@ public class ProsecutionService {
      */
     public Defendant getDefendant(String uri) throws ProsecutionServiceException {
         InternalApiClient internalApiClient = getInternalApiClient();
-        DefendantApi defendantApi = new DefendantApi();
+        DefendantApi defendantApi;
         try {
             LOG.info("Getting defendant information from: " + uri);
             ApiResponse<DefendantApi> response = internalApiClient.privateDefendant().get(uri).execute();
@@ -74,11 +74,11 @@ public class ProsecutionService {
      */
     public List<Offence> getOffences(String uri) throws ProsecutionServiceException {
         InternalApiClient internalApiClient = getInternalApiClient();
-        OffenceApi offenceApi = new OffenceApi();
+        OffenceApi[] offenceApis;
         try {
             LOG.info("Getting offences information from: " + uri);
-            ApiResponse<List> apiResponse = internalApiClient.privateOffence().list(uri).execute();
-            List<OffenceApi> responseList = apiResponse.getData();
+            ApiResponse<OffenceApi[]> apiResponse = internalApiClient.privateOffence().list(uri).execute();
+            offenceApis = apiResponse.getData();
             LOG.info("Successfully retrieved offences information");
         } catch (ApiErrorResponseException e) {
             LOG.error("ApiErrorResponseException " + e);
@@ -87,7 +87,7 @@ public class ProsecutionService {
             LOG.error("URIValidationException " + e);
             throw new ProsecutionServiceException("Invalid URI to retrieve offences: " + e);
         }
-        return new ArrayList<>();
+        return offenceMapper.apiToOffences(offenceApis);
     }
 
     /**
@@ -98,7 +98,7 @@ public class ProsecutionService {
      */
     public ProsecutionCase getProsecutionCase(String uri) throws ProsecutionServiceException {
         InternalApiClient internalApiClient = getInternalApiClient();
-        ProsecutionCaseApi prosecutionCaseApi = new ProsecutionCaseApi();
+        ProsecutionCaseApi prosecutionCaseApi;
         try {
             LOG.info("Getting prosecution case information from: " + uri);
             ApiResponse<ProsecutionCaseApi> apiResponse = internalApiClient.privateProsecutionCase().get(uri).execute();

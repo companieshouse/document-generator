@@ -16,21 +16,21 @@ import uk.gov.companieshouse.environment.impl.EnvironmentReaderImpl;
 
 @Component
 public class ApiClientService {
-	
-	private static final EnvironmentReader READER = new EnvironmentReaderImpl(); 
-	
-	private static final String chsApiKey = READER.getMandatoryString("CHS_API_KEY");
-	private static final String apiUrl = READER.getMandatoryString("API_URL");
+
+    private static final EnvironmentReader READER = new EnvironmentReaderImpl();
+
+    private static final String chsApiKey = READER.getMandatoryString("CHS_API_KEY");
+    private static final String apiUrl = READER.getMandatoryString("API_URL");
     private static final String X_REQUEST_ID_HEADER = "x-request-id";
-	
-	public InternalApiClient getApiClient() {
-		HttpClient httpClient = new ApiKeyHttpClient(chsApiKey);
-		setRequestId(httpClient);
-		InternalApiClient apiClient = new InternalApiClient(httpClient);
-		apiClient.setBasePath(apiUrl);
-		return apiClient;
-	}
-	
+
+    public InternalApiClient getApiClient() {
+        HttpClient httpClient = new ApiKeyHttpClient(chsApiKey);
+        setRequestId(httpClient);
+        InternalApiClient apiClient = new InternalApiClient(httpClient);
+        apiClient.setBasePath(apiUrl);
+        return apiClient;
+    }
+
     /**
      *  Set request ID using httpclient
      * @param httpClient

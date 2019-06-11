@@ -70,7 +70,7 @@ public class ProsecutionDocumentInfoService implements DocumentInfoService {
         String docGenUri = documentInfoRequest.getResourceUri();
         ProsecutionDocument document;
         try {
-            document = handler.getProsecutionDocument(resourceUri, requestId);
+            document = handler.getProsecutionDocument(resourceUri);
             return handler.getDocumentResponse(document, requestId, document.getProsecutionCase().getStatus());
         } catch (HandlerException e) {
             LOG.error("Unmatchable resourceUri inside prosecution request : " + docGenUri);
