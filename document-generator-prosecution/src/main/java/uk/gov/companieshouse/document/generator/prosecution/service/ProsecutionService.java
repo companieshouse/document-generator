@@ -13,6 +13,7 @@ import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.model.prosecution.defendant.DefendantApi;
 import uk.gov.companieshouse.api.model.prosecution.offence.OffenceApi;
 import uk.gov.companieshouse.api.model.prosecution.prosecutioncase.ProsecutionCaseApi;
+import uk.gov.companieshouse.document.generator.prosecution.exception.ProsecutionServiceException;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.mappers.ApiToDefendantMapper;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.mappers.ApiToOffenceMapper;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.mappers.ApiToProsecutionCaseMapper;
@@ -24,77 +25,99 @@ import uk.gov.companieshouse.logging.LoggerFactory;
 
 import static uk.gov.companieshouse.document.generator.prosecution.ProsecutionDocumentInfoService.MODULE_NAME_SPACE;
 
-//TODO: throw exceptions as ProsecutionDocumentException
-//TODO: add JavaDoc
 @Service
 public class ProsecutionService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
+    private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
-	@Autowired
-	private ApiClientService apiClientService;
+    @Autowired
+    private ApiClientService apiClientService;
 
-	@Autowired
-	private ApiToDefendantMapper defendantMapper;
+    @Autowired
+    private ApiToDefendantMapper defendantMapper;
 
-	@Autowired
-	private ApiToOffenceMapper offenceMapper;
+    @Autowired
+    private ApiToOffenceMapper offenceMapper;
 
-	@Autowired
-	private ApiToProsecutionCaseMapper caseMapper;
+    @Autowired
+    private ApiToProsecutionCaseMapper caseMapper;
 
-	public Defendant getDefendant(String uri) {
-	    InternalApiClient internalApiClient = getInternalApiClient();
-		DefendantApi defendantApi = new DefendantApi();
-		try {
-		    LOG.info("Getting defendant information from: " + uri);
-			ApiResponse<DefendantApi> response = internalApiClient.privateDefendant().get(uri).execute();
-			defendantApi = response.getData();
-			LOG.info("Successfully retrieved defendant information");
-		} catch (ApiErrorResponseException e) {
+    /**
+     * Retrieves defendant via SDK and transforms to local model
+     *
+     * @param uri
+     * @return
+     */
+    public Defendant getDefendant(String uri) throws ProsecutionServiceException {
+        InternalApiClient internalApiClient = getInternalApiClient();
+        DefendantApi defendantApi = new DefendantApi();
+        try {
+            LOG.info("Getting defendant information from: " + uri);
+            ApiResponse<DefendantApi> response = internalApiClient.privateDefendant().get(uri).execute();
+            defendantApi = response.getData();
+            LOG.info("Successfully retrieved defendant information");
+        } catch (ApiErrorResponseException e) {
             LOG.error("ApiErrorResponseException" + e);
-		} catch (URIValidationException e) {
+            throw new ProsecutionServiceException("An error occurred while retrieving the defendant from the SDK: " + e);
+        } catch (URIValidationException e) {
             LOG.error("UriValidationException" + e);
-		}
-		return defendantMapper.apiToDefendant(defendantApi);
-	}
-	
-	public List<Offence> getOffences(String uri){
-	    InternalApiClient internalApiClient = getInternalApiClient();
-	    OffenceApi offenceApi = new OffenceApi();
-	    try {
+            throw new ProsecutionServiceException("Invalid URI to retrieve the defendant: " + e);
+        }
+        return defendantMapper.apiToDefendant(defendantApi);
+    }
+
+    /**
+     * Retrieves offences via SDK and transforms to local model
+     *
+     * @param uri
+     * @return
+     */
+    public List<Offence> getOffences(String uri) throws ProsecutionServiceException {
+        InternalApiClient internalApiClient = getInternalApiClient();
+        OffenceApi offenceApi = new OffenceApi();
+        try {
             LOG.info("Getting offences information from: " + uri);
             ApiResponse<List> apiResponse = internalApiClient.privateOffence().list(uri).execute();
             List<OffenceApi> responseList = apiResponse.getData();
             LOG.info("Successfully retrieved offences information");
         } catch (ApiErrorResponseException e) {
             LOG.error("ApiErrorResponseException " + e);
+            throw new ProsecutionServiceException("An error occurred while retrieving offences from the SDK: " + e);
         } catch (URIValidationException e) {
             LOG.error("URIValidationException " + e);
+            throw new ProsecutionServiceException("Invalid URI to retrieve offences: " + e);
         }
-	    return new ArrayList<>();
-	}
-	
-	public ProsecutionCase getProsecutionCase(String uri) {
-	    InternalApiClient internalApiClient = getInternalApiClient();
+        return new ArrayList<>();
+    }
+
+    /**
+     * Retrieves prosecution case via SDK and transforms to local model
+     *
+     * @param uri
+     * @return
+     */
+    public ProsecutionCase getProsecutionCase(String uri) throws ProsecutionServiceException {
+        InternalApiClient internalApiClient = getInternalApiClient();
         ProsecutionCaseApi prosecutionCaseApi = new ProsecutionCaseApi();
-		try {
+        try {
             LOG.info("Getting prosecution case information from: " + uri);
             ApiResponse<ProsecutionCaseApi> apiResponse = internalApiClient.privateProsecutionCase().get(uri).execute();
             prosecutionCaseApi = apiResponse.getData();
             LOG.info("Successfully retrieved prosecution case information");
-        } catch (ApiErrorResponseException e ) { 
+        } catch (ApiErrorResponseException e) {
             LOG.error("ApiErrorResponseException " + e);
-	    } catch (URIValidationException e) {
-	        LOG.error("UriValidationException" + e);
+            throw new ProsecutionServiceException("An error occurred while retrieving the prosecution case from the SDK: " + e);
+        } catch (URIValidationException e) {
+            LOG.error("UriValidationException" + e);
+            throw new ProsecutionServiceException("Invalid URI to retrieve the prosecution case: " + e);
         }
-		return caseMapper.apiToProsecutionCase(prosecutionCaseApi);
-	}
-	
-	private InternalApiClient getInternalApiClient() {
-	    InternalApiClient internalApiClient = apiClientService.getApiClient();
+        return caseMapper.apiToProsecutionCase(prosecutionCaseApi);
+    }
+
+    private InternalApiClient getInternalApiClient() {
+        InternalApiClient internalApiClient = apiClientService.getApiClient();
         boolean result = internalApiClient != null;
         LOG.info("InternalApiClient: " + result);
         return internalApiClient;
-	}
+    }
 }

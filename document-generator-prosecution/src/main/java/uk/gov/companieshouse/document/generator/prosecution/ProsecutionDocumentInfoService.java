@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.gov.companieshouse.api.model.prosecution.prosecutioncase.ProsecutionCaseStatusApi;
 import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
 import uk.gov.companieshouse.document.generator.interfaces.exception.DocumentInfoException;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
@@ -70,22 +69,12 @@ public class ProsecutionDocumentInfoService implements DocumentInfoService {
 
         String docGenUri = documentInfoRequest.getResourceUri();
         ProsecutionDocument document;
-        //TODO : change to switch statement
         try {
             document = handler.getProsecutionDocument(resourceUri, requestId);
-            if (document.getProsecutionCase()
-                    .getStatus() == ProsecutionCaseStatusApi.ACCEPTED) {
-                return handler.getUltimatumResponse(document, requestId);
-            } else if (document.getProsecutionCase()
-                    .getStatus() == ProsecutionCaseStatusApi.ULTIMATUM_ISSUED) {
-                return handler.getSJPnResponse(document, requestId);
-            }
+            return handler.getDocumentResponse(document, requestId, document.getProsecutionCase().getStatus());
         } catch (HandlerException e) {
             LOG.error("Unmatchable resourceUri inside prosecution request : " + docGenUri);
-
+            throw new DocumentInfoException("Unmatchable resourceUri inside prosecution" + docGenUri);
         }
-        //TODO : add this to default statment of switch
-        throw new DocumentInfoException("Unmatchable resourceUri inside prosecution" + docGenUri);
-
     }
 }
