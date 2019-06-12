@@ -1,10 +1,12 @@
 package uk.gov.companieshouse.document.generator.prosecution.handler;
 
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import uk.gov.companieshouse.api.model.prosecution.defendant.DefendantApi;
+import uk.gov.companieshouse.api.model.prosecution.offence.OffenceApi;
+import uk.gov.companieshouse.api.model.prosecution.prosecutioncase.ProsecutionCaseApi;
 import uk.gov.companieshouse.api.model.prosecution.prosecutioncase.ProsecutionCaseStatusApi;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.document.generator.prosecution.ProsecutionDocumentInfoService;
@@ -12,10 +14,10 @@ import uk.gov.companieshouse.document.generator.prosecution.ProsecutionType;
 import uk.gov.companieshouse.document.generator.prosecution.exception.DocumentInfoCreationException;
 import uk.gov.companieshouse.document.generator.prosecution.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.prosecution.exception.ProsecutionServiceException;
+import uk.gov.companieshouse.document.generator.prosecution.mapping.mappers.ApiToDefendantMapper;
+import uk.gov.companieshouse.document.generator.prosecution.mapping.mappers.ApiToOffenceMapper;
+import uk.gov.companieshouse.document.generator.prosecution.mapping.mappers.ApiToProsecutionCaseMapper;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.model.ProsecutionDocument;
-import uk.gov.companieshouse.document.generator.prosecution.mapping.model.defendant.Defendant;
-import uk.gov.companieshouse.document.generator.prosecution.mapping.model.offence.Offence;
-import uk.gov.companieshouse.document.generator.prosecution.mapping.model.prosecutioncase.ProsecutionCase;
 import uk.gov.companieshouse.document.generator.prosecution.service.ProsecutionService;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
@@ -23,36 +25,19 @@ import uk.gov.companieshouse.logging.LoggerFactory;
 @Component
 public class ProsecutionHandler {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(ProsecutionDocumentInfoService.MODULE_NAME_SPACE);
+    private static final Logger LOG = LoggerFactory.getLogger(ProsecutionDocumentInfoService.MODULE_NAME_SPACE);
 
     @Autowired
     private ProsecutionService prosecutionService;
 
-    /**
-     * Method to get the base prosecution information for dealing with prosecution documents
-     * Throws a HandlerException if any exceptions occurred in the service
-     * 
-     * @param resourceUri the URI for the defendant
-     * @return the ProsecutionDocument containing defendant, prosecution case and offence(s)
-     *         information
-     * @throws HandlerException
-     */
-    public ProsecutionDocument getProsecutionDocument(String resourceUri)
-            throws HandlerException {
-        try {
-            Defendant defendant = prosecutionService.getDefendant(resourceUri);
-            ProsecutionCase prosecutionCase = prosecutionService.getProsecutionCase(defendant.getLinks().get("prosecution-case"));
-            List<Offence> offences = prosecutionService.getOffences(defendant.getLinks().get("offences"));
-            ProsecutionDocument document = new ProsecutionDocument();
-            document.setDefendant(defendant);
-            document.setOffences(offences);
-            document.setProsecutionCase(prosecutionCase);
-            return document;
-        } catch (ProsecutionServiceException pse) {
-            throw new HandlerException("An error occurred when retrieving data from the service: " + pse);
-        }
-    }
+    @Autowired
+    private ApiToProsecutionCaseMapper prosecutionCaseMapper;
+
+    @Autowired
+    private ApiToDefendantMapper defendantMapper;
+
+    @Autowired
+    private ApiToOffenceMapper offenceMapper;
 
     /**
      * Method to convert an annotated document to a JSON string
@@ -85,16 +70,31 @@ public class ProsecutionHandler {
     }
 
     /**
-     * Method to make a DocumentInfoResponse for an Ultimatum or SJPn document
-     * 
-     * @param document The document containing the base information on defendant, prosecution case
-     *        and offences
-     * @param requestId The request id
-     * @return the DocumentInfoResponse for an Ultimatum/SJPn
-     * @throws HandlerException 
+     * Retrieves prosecution data from service including case status,
+     * transforms prosecution data to appropriate models for the document
+     * and chooses the right document to generate based on case status
+     *
+     * @param requestId
+     * @param resourceUri URI of defendant
+     * @return
+     * @throws HandlerException
      */
-    public DocumentInfoResponse getDocumentResponse(ProsecutionDocument document,
-            String requestId, ProsecutionCaseStatusApi status) throws HandlerException {
+    public DocumentInfoResponse getDocumentResponse(String requestId, String resourceUri) throws HandlerException {
+        ProsecutionCaseStatusApi status;
+        ProsecutionDocument document;
+
+        try{
+            DefendantApi defendant = prosecutionService.getDefendant(resourceUri);
+            ProsecutionCaseApi prosecutionCase = prosecutionService.getProsecutionCase(defendant.getLinks().get("prosecution-case"));
+            status = prosecutionCase.getStatus();
+            OffenceApi[] offences = prosecutionService.getOffences(defendant.getLinks().get("offences"));
+            document = new ProsecutionDocument();
+            document.setDefendant(defendantMapper.apiToDefendant(defendant));
+            document.setOffences(offenceMapper.apiToOffences(offences));
+            document.setProsecutionCase(prosecutionCaseMapper.apiToProsecutionCase(prosecutionCase));
+        } catch (ProsecutionServiceException pse) {
+            throw new HandlerException("An error occurred when retrieving data from the service: " + pse);
+        }
         switch(status) {
             case ACCEPTED:
                 return createProsecutionDocumentResponse(document, requestId, ProsecutionType.ULTIMATUM);
@@ -105,6 +105,15 @@ public class ProsecutionHandler {
         }
     }
 
+    /**
+     * Builds a DocumentInfoResponse for an Ultimatum or SJPn document
+     *
+     * @param data Document consisting of prosecution case, defendant and offence information
+     * @param requestId
+     * @param type Type of ProsecutionDocument - either Ultimatum or SJPn
+     * @return DocumentInfoResponse for an Ultimatum or SJPn
+     * @throws HandlerException
+     */
     private DocumentInfoResponse createProsecutionDocumentResponse(ProsecutionDocument data, String requestId, ProsecutionType type) throws HandlerException {
         DocumentInfoResponse response = new DocumentInfoResponse();
         response.setAssetId(type.getAssetId());

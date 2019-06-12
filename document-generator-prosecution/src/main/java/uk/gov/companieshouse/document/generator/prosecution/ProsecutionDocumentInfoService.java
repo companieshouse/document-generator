@@ -10,7 +10,6 @@ import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoReq
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.document.generator.prosecution.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.prosecution.handler.ProsecutionHandler;
-import uk.gov.companieshouse.document.generator.prosecution.mapping.model.ProsecutionDocument;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
@@ -50,16 +49,14 @@ public class ProsecutionDocumentInfoService implements DocumentInfoService {
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
-    @Autowired
-    private ProsecutionHandler handler;
+    @Autowired private ProsecutionHandler handler;
 
     /**
      * Entry point from Document Generator, asking for a DocumentInfoResponse that contains info to
      * build a document, such info will include the location of any template, any variables that are
      * needed by the template, etc - see DocumentInfoResponse for more info.
      */
-    @Override
-    public DocumentInfoResponse getDocumentInfo(DocumentInfoRequest documentInfoRequest)
+    @Override public DocumentInfoResponse getDocumentInfo(DocumentInfoRequest documentInfoRequest)
             throws DocumentInfoException {
         String resourceUri = documentInfoRequest.getResourceUri();
         String requestId = documentInfoRequest.getRequestId();
@@ -68,14 +65,12 @@ public class ProsecutionDocumentInfoService implements DocumentInfoService {
         LOG.infoContext(requestId, "Started getting document info for prosecution", debugMap);
 
         String docGenUri = documentInfoRequest.getResourceUri();
-        ProsecutionDocument document;
         try {
-            document = handler.getProsecutionDocument(resourceUri);
-            return handler.getDocumentResponse(document, requestId, document.getProsecutionCase().getStatus());
-        } catch (HandlerException e) {
+            return handler.getDocumentResponse(requestId, resourceUri);
+        } catch (HandlerException he) {
             Map<String, Object> logData = new HashMap<>();
             logData.put("resource_uri", resourceUri);
-            LOG.errorContext(requestId, "Failed to generate prosecution document", e, logData);
+            LOG.errorContext(requestId, "Failed to generate prosecution document", he, logData);
             throw new DocumentInfoException("Unmatchable resourceUri inside prosecution" + docGenUri);
         }
     }
