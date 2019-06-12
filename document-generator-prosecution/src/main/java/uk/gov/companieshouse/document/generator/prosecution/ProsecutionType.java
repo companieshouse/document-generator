@@ -19,23 +19,12 @@ public enum ProsecutionType {
         return assetId;
     }
 
-    public void setAssetId(String assetId) {
-        this.assetId = assetId;
-    }
-
     public String getTemplate() {
         return template;
-    }
-
-    public void setTemplate(String template) {
-        this.template = template;
     }
 
     public String getResource() {
         return resource;
     }
 
-    public void setResource(String resource) {
-        this.resource = resource;
-    }
 }

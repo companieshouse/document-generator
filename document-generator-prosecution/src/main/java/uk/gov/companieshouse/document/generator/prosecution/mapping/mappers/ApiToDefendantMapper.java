@@ -34,7 +34,7 @@ public interface ApiToDefendantMapper {
                 name.append(middleName).append(" ");
             }
             if(surname != null && surname.trim().length() > 0) {
-                name.append(surname);
+                name.append(surname.trim());
             }
             defendant.setName(name.toString().trim());
         }

@@ -42,8 +42,9 @@ public class ApiClientService {
 
         String requestId = (String) request.getAttribute(X_REQUEST_ID_HEADER);
 
-        if (requestId == null)
+        if (requestId == null) {
             requestId = request.getHeader(X_REQUEST_ID_HEADER);
+        }
 
         if (requestId == null || requestId.isEmpty()) {
             requestId = generateRequestId();

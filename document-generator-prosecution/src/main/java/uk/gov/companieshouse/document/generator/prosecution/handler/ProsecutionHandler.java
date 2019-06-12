@@ -42,7 +42,7 @@ public class ProsecutionHandler {
             throws HandlerException {
         try {
             Defendant defendant = prosecutionService.getDefendant(resourceUri);
-            ProsecutionCase prosecutionCase = prosecutionService.getProsecutionCase("/" + defendant.getLinks().get("prosecution-case"));
+            ProsecutionCase prosecutionCase = prosecutionService.getProsecutionCase(defendant.getLinks().get("prosecution-case"));
             List<Offence> offences = prosecutionService.getOffences(defendant.getLinks().get("offences"));
             ProsecutionDocument document = new ProsecutionDocument();
             document.setDefendant(defendant);

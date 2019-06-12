@@ -30,8 +30,8 @@ class ProsecutionDocumentInfoServiceTest {
     @Mock
     ProsecutionHandler mockHandler;
 
-    private String resourceUri = "uri";
-    private String requestId = "1";
+    private static final String RESOURCE_URI = "uri";
+    private static final String REQUEST_ID = "1";
 
     @Test
     @DisplayName("Test using a prosecution case that has an ACCEPTED status should call "
@@ -39,15 +39,15 @@ class ProsecutionDocumentInfoServiceTest {
     public void testGetDocumentInfoWithAcceptedCase() throws Exception{
         ProsecutionCase prosecutionCase = new ProsecutionCase();
         prosecutionCase.setStatus(ProsecutionCaseStatusApi.ACCEPTED);
-        DocumentInfoRequest request = getDocumentInfoRequest(resourceUri, requestId);
+        DocumentInfoRequest request = getDocumentInfoRequest(RESOURCE_URI, REQUEST_ID);
         ProsecutionDocument document = new ProsecutionDocument();
         document.setProsecutionCase(prosecutionCase);
-        when(mockHandler.getProsecutionDocument(resourceUri)).thenReturn(document);
+        when(mockHandler.getProsecutionDocument(RESOURCE_URI)).thenReturn(document);
         DocumentInfoResponse response = new DocumentInfoResponse();
-        when(mockHandler.getDocumentResponse(document, requestId, prosecutionCase.getStatus())).thenReturn(response);
+        when(mockHandler.getDocumentResponse(document, REQUEST_ID, prosecutionCase.getStatus())).thenReturn(response);
         prosecutionDocumentInfoService.getDocumentInfo(request);
-        verify(mockHandler, times(1)).getProsecutionDocument(resourceUri);
-        verify(mockHandler, times(1)).getDocumentResponse(document, requestId, prosecutionCase.getStatus());
+        verify(mockHandler, times(1)).getProsecutionDocument(RESOURCE_URI);
+        verify(mockHandler, times(1)).getDocumentResponse(document, REQUEST_ID, prosecutionCase.getStatus());
     }
 
     @Test
@@ -56,15 +56,15 @@ class ProsecutionDocumentInfoServiceTest {
     public void testGetDocumentInfoWithUltimatumIssuedCase() throws Exception {
         ProsecutionCase prosecutionCase = new ProsecutionCase();
         prosecutionCase.setStatus(ProsecutionCaseStatusApi.ULTIMATUM_ISSUED);
-        DocumentInfoRequest request = getDocumentInfoRequest(resourceUri, requestId);
+        DocumentInfoRequest request = getDocumentInfoRequest(RESOURCE_URI, REQUEST_ID);
         ProsecutionDocument document = new ProsecutionDocument();
         document.setProsecutionCase(prosecutionCase);
-        when(mockHandler.getProsecutionDocument(resourceUri)).thenReturn(document);
+        when(mockHandler.getProsecutionDocument(RESOURCE_URI)).thenReturn(document);
         DocumentInfoResponse response = new DocumentInfoResponse();
-        when(mockHandler.getDocumentResponse(document, requestId, prosecutionCase.getStatus())).thenReturn(response);
+        when(mockHandler.getDocumentResponse(document, REQUEST_ID, prosecutionCase.getStatus())).thenReturn(response);
         prosecutionDocumentInfoService.getDocumentInfo(request);
-        verify(mockHandler, times(1)).getProsecutionDocument(resourceUri);
-        verify(mockHandler, times(1)).getDocumentResponse(document, requestId, prosecutionCase.getStatus());
+        verify(mockHandler, times(1)).getProsecutionDocument(RESOURCE_URI);
+        verify(mockHandler, times(1)).getDocumentResponse(document, REQUEST_ID, prosecutionCase.getStatus());
     }
 
     @Test
@@ -73,12 +73,12 @@ class ProsecutionDocumentInfoServiceTest {
     public void testGetDocumentInfoWithOtherStatusCase() throws Exception{
         ProsecutionCase prosecutionCase = new ProsecutionCase();
         prosecutionCase.setStatus(ProsecutionCaseStatusApi.REFERRED);
-        DocumentInfoRequest request = getDocumentInfoRequest(resourceUri, requestId);
+        DocumentInfoRequest request = getDocumentInfoRequest(RESOURCE_URI, REQUEST_ID);
         ProsecutionDocument document = new ProsecutionDocument();
         document.setProsecutionCase(prosecutionCase);
-        when(mockHandler.getProsecutionDocument(resourceUri)).thenThrow(HandlerException.class);
+        when(mockHandler.getProsecutionDocument(RESOURCE_URI)).thenThrow(HandlerException.class);
         assertThrows(DocumentInfoException.class, () -> prosecutionDocumentInfoService.getDocumentInfo(request));
-        verify(mockHandler, times(1)).getProsecutionDocument(resourceUri);
+        verify(mockHandler, times(1)).getProsecutionDocument(RESOURCE_URI);
     }
 
     private DocumentInfoRequest getDocumentInfoRequest(String resourceUri, String requestId) {
