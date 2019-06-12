@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers;
 
+
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 import org.springframework.web.context.annotation.RequestScope;

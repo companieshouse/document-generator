@@ -34,7 +34,8 @@ public class ApiClientService {
     }
 
     /**
-     *  Set request ID using httpclient
+     * Set request ID using httpclient
+     *
      * @param httpClient
      */
     private static void setRequestId(HttpClient httpClient) {
@@ -57,9 +58,10 @@ public class ApiClientService {
 
     /**
      * Generate a universally unique identifier
+     *
      * @return
      */
     private static String generateRequestId() {
-        return UUID.randomUUID().toString().substring(0,20);
+        return UUID.randomUUID().toString().substring(0, 20);
     }
 }
