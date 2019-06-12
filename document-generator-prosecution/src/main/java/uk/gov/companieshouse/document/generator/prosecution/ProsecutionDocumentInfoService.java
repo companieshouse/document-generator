@@ -73,7 +73,9 @@ public class ProsecutionDocumentInfoService implements DocumentInfoService {
             document = handler.getProsecutionDocument(resourceUri);
             return handler.getDocumentResponse(document, requestId, document.getProsecutionCase().getStatus());
         } catch (HandlerException e) {
-            LOG.error("Unmatchable resourceUri inside prosecution request : " + docGenUri);
+            Map<String, Object> logData = new HashMap<>();
+            logData.put("resource_uri", resourceUri);
+            LOG.errorContext(requestId, "Failed to generate prosecution document", e, logData);
             throw new DocumentInfoException("Unmatchable resourceUri inside prosecution" + docGenUri);
         }
     }

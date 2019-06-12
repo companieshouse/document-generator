@@ -95,30 +95,29 @@ public class ProsecutionHandler {
      */
     public DocumentInfoResponse getDocumentResponse(ProsecutionDocument document,
             String requestId, ProsecutionCaseStatusApi status) throws HandlerException {
-        DocumentInfoResponse response = new DocumentInfoResponse();
         switch(status) {
             case ACCEPTED:
-                response.setAssetId(ProsecutionType.ULTIMATUM.getAssetId());
-                response.setPath(createLocationLink(ProsecutionType.ULTIMATUM));
-                response.setTemplateName(ProsecutionType.ULTIMATUM.getTemplate());
-                response.setDescriptionIdentifier(ProsecutionType.ULTIMATUM.getResource());
-                break;
+                return createProsecutionDocumentResponse(document, requestId, ProsecutionType.ULTIMATUM);
             case ULTIMATUM_ISSUED:
-                response.setAssetId(ProsecutionType.SJPN.getAssetId());
-                response.setPath(createLocationLink(ProsecutionType.SJPN));
-                response.setTemplateName(ProsecutionType.SJPN.getTemplate());
-                response.setDescriptionIdentifier(ProsecutionType.SJPN.getResource());
-                break;
+                return createProsecutionDocumentResponse(document, requestId, ProsecutionType.SJPN);
             default:
                 throw new HandlerException("Invalid status for Prosecution Case to generate document: " + status);
         }
+    }
+
+    private DocumentInfoResponse createProsecutionDocumentResponse(ProsecutionDocument data, String requestId, ProsecutionType type) throws HandlerException {
+        DocumentInfoResponse response = new DocumentInfoResponse();
+        response.setAssetId(type.getAssetId());
+        response.setPath(createLocationLink(type));
+        response.setTemplateName(type.getTemplate());
+        response.setDescriptionIdentifier(type.getResource());
+
         try {
-            response.setData(convertToJson(document, requestId));
+            response.setData(convertToJson(data, requestId));
         } catch (DocumentInfoCreationException e) {
-            String message = "Error creating ultimatum document info response for request : " + requestId;
-            LOG.error(message);
-            throw new HandlerException(message, e);
+            throw new HandlerException("Error creating prosecution document info response for request: " + type, e);
         }
+
         return response;
     }
 
