@@ -27,7 +27,7 @@ public class ProsecutionHandler {
             LoggerFactory.getLogger(ProsecutionDocumentInfoService.MODULE_NAME_SPACE);
 
     @Autowired
-    ProsecutionService prosecutionService;
+    private ProsecutionService prosecutionService;
 
     /**
      * Method to get the base prosecution information for dealing with prosecution documents
@@ -85,12 +85,12 @@ public class ProsecutionHandler {
     }
 
     /**
-     * Method to make a DocumentInfoResponse for an Ultimatum
+     * Method to make a DocumentInfoResponse for an Ultimatum or SJPn document
      * 
      * @param document The document containing the base information on defendant, prosecution case
      *        and offences
      * @param requestId The request id
-     * @return the DocumentInfoResponse for an Ultimatum
+     * @return the DocumentInfoResponse for an Ultimatum/SJPn
      * @throws HandlerException 
      */
     public DocumentInfoResponse getDocumentResponse(ProsecutionDocument document,

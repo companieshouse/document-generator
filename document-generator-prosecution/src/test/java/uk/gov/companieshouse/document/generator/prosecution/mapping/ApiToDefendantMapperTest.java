@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ApiToDefendantMapperTest {
 
-    private ApiToDefendantMapper apiToDefendantMapper = new ApiToDefendantMapperImpl();;
+    private ApiToDefendantMapper apiToDefendantMapper = new ApiToDefendantMapperImpl();
 
     private static final String OFFICER_ID = "officerId";
     private static final AddressApi ADDRESS =
