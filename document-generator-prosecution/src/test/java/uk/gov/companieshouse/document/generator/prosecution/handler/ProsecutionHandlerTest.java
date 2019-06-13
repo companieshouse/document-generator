@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.document.generator.prosecution.handler;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -41,7 +42,7 @@ public class ProsecutionHandlerTest {
 
     private static final String RESOURCE_URI = "/internal/company/1234/prosecution-cases/4321/defendants/1122";
     private static final String PROSECUTION_LINK = "/internal/company/1234/prosecution-cases/4321";
-    private static final String OFFENCES = RESOURCE_URI + "/offences";
+    private static final String OFFENCES_LINK = RESOURCE_URI + "/offences";
 
     private ProsecutionCaseApi prosecutionCaseApi = new ProsecutionCaseApi();
     private DefendantApi defendantApi = new DefendantApi();
@@ -68,17 +69,24 @@ public class ProsecutionHandlerTest {
     @InjectMocks
     private ProsecutionHandler prosecutionHandler;
 
+    @BeforeEach
+    void setUp() {
+        Map<String, String> linkMap = new HashMap<>();
+        linkMap.put("prosecution-case", PROSECUTION_LINK);
+        linkMap.put("offences", OFFENCES_LINK);
+
+        defendantApi.setLinks(linkMap);
+    }
+
     @Test
     @DisplayName("Tests successful get of document info response for generating an ultimatum")
     void testGetUltimatumDocumentResponse() throws HandlerException, ProsecutionServiceException {
         type = ProsecutionType.ULTIMATUM;
         prosecutionCaseApi.setStatus(ProsecutionCaseStatusApi.ACCEPTED);
 
-        DefendantApi defendantApiWithLinks = addLinksToDefendant(defendantApi);
-
-        when(prosecutionService.getDefendant(RESOURCE_URI)).thenReturn(defendantApiWithLinks);
-        when(prosecutionService.getProsecutionCase(defendantApiWithLinks.getLinks().get("prosecution-case"))).thenReturn(prosecutionCaseApi);
-        when(prosecutionService.getOffences(defendantApiWithLinks.getLinks().get("offences"))).thenReturn(offenceApis);
+        when(prosecutionService.getDefendant(RESOURCE_URI)).thenReturn(defendantApi);
+        when(prosecutionService.getProsecutionCase(PROSECUTION_LINK)).thenReturn(prosecutionCaseApi);
+        when(prosecutionService.getOffences(OFFENCES_LINK)).thenReturn(offenceApis);
 
         when(prosecutionCaseMapper.apiToProsecutionCase(prosecutionCaseApi)).thenReturn(prosecutionCase);
         when(defendantMapper.apiToDefendant(defendantApi)).thenReturn(defendant);
@@ -98,11 +106,9 @@ public class ProsecutionHandlerTest {
         type = ProsecutionType.SJPN;
         prosecutionCaseApi.setStatus(ProsecutionCaseStatusApi.ULTIMATUM_ISSUED);
 
-        DefendantApi defendantApiWithLinks = addLinksToDefendant(defendantApi);
-
-        when(prosecutionService.getDefendant(RESOURCE_URI)).thenReturn(defendantApiWithLinks);
-        when(prosecutionService.getProsecutionCase(defendantApiWithLinks.getLinks().get("prosecution-case"))).thenReturn(prosecutionCaseApi);
-        when(prosecutionService.getOffences(defendantApiWithLinks.getLinks().get("offences"))).thenReturn(offenceApis);
+        when(prosecutionService.getDefendant(RESOURCE_URI)).thenReturn(defendantApi);
+        when(prosecutionService.getProsecutionCase(PROSECUTION_LINK)).thenReturn(prosecutionCaseApi);
+        when(prosecutionService.getOffences(OFFENCES_LINK)).thenReturn(offenceApis);
 
         when(prosecutionCaseMapper.apiToProsecutionCase(prosecutionCaseApi)).thenReturn(prosecutionCase);
         when(defendantMapper.apiToDefendant(defendantApi)).thenReturn(defendant);
@@ -127,10 +133,8 @@ public class ProsecutionHandlerTest {
     @Test
     @DisplayName("Tests unsuccessful get of prosecution document when trying to retrieve a prosecution case")
     void testGetProsecutionDocumentUnsuccessfulProsecutionCase() throws ProsecutionServiceException {
-        DefendantApi defendantApiWithLinks = addLinksToDefendant(defendantApi);
-
-        when(prosecutionService.getDefendant(RESOURCE_URI)).thenReturn(defendantApiWithLinks);
-        when(prosecutionService.getProsecutionCase(defendantApiWithLinks.getLinks().get("prosecution-case"))).thenThrow(ProsecutionServiceException.class);
+        when(prosecutionService.getDefendant(RESOURCE_URI)).thenReturn(defendantApi);
+        when(prosecutionService.getProsecutionCase(PROSECUTION_LINK)).thenThrow(ProsecutionServiceException.class);
 
         assertThrows(HandlerException.class, () -> prosecutionHandler.getDocumentResponse(REQUEST_ID, RESOURCE_URI));
     }
@@ -138,11 +142,9 @@ public class ProsecutionHandlerTest {
     @Test
     @DisplayName("Tests unsuccessful get of prosecution document when trying to retrieve a list of offences")
     void testGetProsecutionDocumentUnsuccessfulOffences() throws ProsecutionServiceException {
-        DefendantApi defendantApiWithLinks = addLinksToDefendant(defendantApi);
-
-        when(prosecutionService.getDefendant(RESOURCE_URI)).thenReturn(defendantApiWithLinks);
-        when(prosecutionService.getProsecutionCase(defendantApiWithLinks.getLinks().get("prosecution-case"))).thenThrow(ProsecutionServiceException.class);
-        when(prosecutionService.getOffences(defendantApiWithLinks.getLinks().get("offence"))).thenThrow(ProsecutionServiceException.class);
+        when(prosecutionService.getDefendant(RESOURCE_URI)).thenReturn(defendantApi);
+        when(prosecutionService.getProsecutionCase(PROSECUTION_LINK)).thenThrow(ProsecutionServiceException.class);
+        when(prosecutionService.getOffences(OFFENCES_LINK)).thenThrow(ProsecutionServiceException.class);
 
         assertThrows(HandlerException.class, () -> prosecutionHandler.getDocumentResponse(REQUEST_ID, RESOURCE_URI));
     }
@@ -152,11 +154,9 @@ public class ProsecutionHandlerTest {
     void testGetProsecutionDocumentUnsuccessfulWrongStatus() throws ProsecutionServiceException {
         prosecutionCaseApi.setStatus(ProsecutionCaseStatusApi.REJECTED);
 
-        DefendantApi defendantApiWithLinks = addLinksToDefendant(defendantApi);
-
-        when(prosecutionService.getDefendant(RESOURCE_URI)).thenReturn(defendantApiWithLinks);
-        when(prosecutionService.getProsecutionCase(defendantApiWithLinks.getLinks().get("prosecution-case"))).thenReturn(prosecutionCaseApi);
-        when(prosecutionService.getOffences(defendantApiWithLinks.getLinks().get("offences"))).thenReturn(offenceApis);
+        when(prosecutionService.getDefendant(RESOURCE_URI)).thenReturn(defendantApi);
+        when(prosecutionService.getProsecutionCase(PROSECUTION_LINK)).thenReturn(prosecutionCaseApi);
+        when(prosecutionService.getOffences(OFFENCES_LINK)).thenReturn(offenceApis);
 
         when(prosecutionCaseMapper.apiToProsecutionCase(prosecutionCaseApi)).thenReturn(prosecutionCase);
         when(defendantMapper.apiToDefendant(defendantApi)).thenReturn(defendant);
@@ -165,12 +165,4 @@ public class ProsecutionHandlerTest {
         assertThrows(HandlerException.class, () -> prosecutionHandler.getDocumentResponse(REQUEST_ID, RESOURCE_URI));
     }
 
-    private DefendantApi addLinksToDefendant(DefendantApi defendantApi) {
-        Map<String, String> linkMap = new HashMap<>();
-        linkMap.put("prosecution-case", PROSECUTION_LINK);
-        linkMap.put("offences", OFFENCES);
-
-        defendantApi.setLinks(linkMap);
-        return defendantApi;
-    }
 }
