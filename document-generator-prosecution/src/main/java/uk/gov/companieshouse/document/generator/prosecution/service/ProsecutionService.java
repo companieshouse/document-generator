@@ -10,7 +10,6 @@ import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.model.prosecution.defendant.DefendantApi;
 import uk.gov.companieshouse.api.model.prosecution.offence.OffenceApi;
 import uk.gov.companieshouse.api.model.prosecution.prosecutioncase.ProsecutionCaseApi;
-import uk.gov.companieshouse.api.model.prosecution.prosecutioncase.ProsecutionCaseStatusApi;
 import uk.gov.companieshouse.document.generator.prosecution.exception.ProsecutionServiceException;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
@@ -20,15 +19,13 @@ import static uk.gov.companieshouse.document.generator.prosecution.ProsecutionDo
 @Service
 public class ProsecutionService {
 
-    private ProsecutionCaseStatusApi statusApi;
-
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
     @Autowired
     private ApiClientService apiClientService;
 
     public DefendantApi getDefendant(String uri) throws ProsecutionServiceException {
-        InternalApiClient internalApiClient = getInternalApiClient();
+        InternalApiClient internalApiClient = apiClientService.getInternalApiClient();
         DefendantApi defendantApi;
         try {
             LOG.info("Getting defendant information from: " + uri);
@@ -46,7 +43,7 @@ public class ProsecutionService {
     }
 
     public OffenceApi[] getOffences(String uri) throws ProsecutionServiceException {
-        InternalApiClient internalApiClient = getInternalApiClient();
+        InternalApiClient internalApiClient = apiClientService.getInternalApiClient();
         OffenceApi[] offenceApis;
         try {
             LOG.info("Getting offences information from: " + uri);
@@ -64,13 +61,12 @@ public class ProsecutionService {
     }
 
     public ProsecutionCaseApi getProsecutionCase(String uri) throws ProsecutionServiceException {
-        InternalApiClient internalApiClient = getInternalApiClient();
+        InternalApiClient internalApiClient = apiClientService.getInternalApiClient();
         ProsecutionCaseApi prosecutionCaseApi;
         try {
             LOG.info("Getting prosecution case information from: " + uri);
             ApiResponse<ProsecutionCaseApi> apiResponse = internalApiClient.privateProsecutionCase().get(uri).execute();
             prosecutionCaseApi = apiResponse.getData();
-            statusApi = prosecutionCaseApi.getStatus();
             LOG.info("Successfully retrieved prosecution case information");
         } catch (ApiErrorResponseException e) {
             LOG.error("ApiErrorResponseException " + e);
@@ -80,12 +76,5 @@ public class ProsecutionService {
             throw new ProsecutionServiceException("Invalid URI to retrieve the prosecution case: " + e);
         }
         return prosecutionCaseApi;
-    }
-
-    private InternalApiClient getInternalApiClient() {
-        InternalApiClient internalApiClient = apiClientService.getApiClient();
-        boolean result = internalApiClient != null;
-        LOG.info("InternalApiClient: " + result);
-        return internalApiClient;
     }
 }
