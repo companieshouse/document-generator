@@ -15,8 +15,7 @@ import uk.gov.companieshouse.document.generator.prosecution.mapping.model.defend
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -24,21 +23,22 @@ public class ApiToDefendantMapperTest {
 
     private ApiToDefendantMapper apiToDefendantMapper = new ApiToDefendantMapperImpl();
 
-    private static final String OFFICER_ID = "officerId";
     private static final AddressApi ADDRESS =
             new AddressApi("1", "street", "area", "town", "region", "country", "postcode");
-    private static final PersonOfficerDetailsApi PERSON_OFFICER_DETAILS = new PersonOfficerDetailsApi();
-    private static final CompanyOfficerDetailsApi COMPANY_OFFICER_DETAILS = new CompanyOfficerDetailsApi();
+    private static final PersonOfficerDetailsApi PERSON_OFFICER_DETAILS =
+            new PersonOfficerDetailsApi();
+    private static final CompanyOfficerDetailsApi COMPANY_OFFICER_DETAILS =
+            new CompanyOfficerDetailsApi();
 
     @Test
     @DisplayName("Tests defendant API values map to defendant DocGen model for a person defendant")
     void testApiToPersonDefendantMaps() {
-        Defendant defendant = apiToDefendantMapper.apiToDefendant(createPersonDefendant());
+        Defendant defendant = apiToDefendantMapper.apiToDefendant(
+                createPersonDefendant("title", "forename", "middlename", "surname"));
         String defendantName =
                 PERSON_OFFICER_DETAILS.getTitle() + " " + PERSON_OFFICER_DETAILS.getForename() + " "
-                        + PERSON_OFFICER_DETAILS.getMiddleName() + " " + PERSON_OFFICER_DETAILS
-                        .getSurname();
-
+                        + PERSON_OFFICER_DETAILS.getMiddleName() + " "
+                        + PERSON_OFFICER_DETAILS.getSurname();
 
         assertNotNull(defendant);
         assertEquals(ADDRESS.getHouseNameNumber(), defendant.getAddress().getHouseNameNumber());
@@ -67,13 +67,63 @@ public class ApiToDefendantMapperTest {
         assertEquals(COMPANY_OFFICER_DETAILS.getCompanyName(), defendant.getName());
     }
 
-    private DefendantApi createPersonDefendant() {
+    @Test
+    @DisplayName("Tests defendant API correctly formats name when extra whitespace values are submitted")
+    void testApiToPersonDefendantMapsWithExtraWhitespaceValues() {
+        Defendant defendant = apiToDefendantMapper.apiToDefendant(
+                createPersonDefendant(" Title", "Forename   ", " Middlename ", " Surname"));
+
+        String defendantName =
+                PERSON_OFFICER_DETAILS.getTitle() + " " + PERSON_OFFICER_DETAILS.getForename() + " "
+                        + PERSON_OFFICER_DETAILS.getMiddleName() + " "
+                        + PERSON_OFFICER_DETAILS.getSurname();
+
+        assertNotNull(defendant);
+        assertNotEquals(defendantName, defendant.getName());
+        assertEquals("Title Forename Middlename Surname", defendant.getName());
+    }
+
+    @Test
+    @DisplayName("Tests defendant API handles null values")
+    void testApiToPersonDefendantMapsWithNullValue() {
+        Defendant defendant =
+                apiToDefendantMapper.apiToDefendant(createPersonDefendant(null, null, null, null));
+
+        assertNotNull(defendant);
+        assertEquals("", defendant.getName());
+    }
+
+    @Test
+    @DisplayName("Tests defendant API handles empty values")
+    void testApiToPersonDefendantMapsWithEmptyValues() {
+        Defendant defendant =
+                apiToDefendantMapper.apiToDefendant(createPersonDefendant("", "", "", ""));
+
+        assertNotNull(defendant);
+        assertEquals("", defendant.getName());
+        assertEquals(0, defendant.getName().length());
+    }
+
+    @Test
+    @DisplayName("Tests defendant API handles whitespace values")
+    void testApiToPersonDefendantMapsWithWhitespaceValues() {
+        Defendant defendant =
+                apiToDefendantMapper.apiToDefendant(createPersonDefendant(" ", " ", " ", " "));
+
+        assertNotNull(defendant);
+        assertEquals("", defendant.getName());
+        assertNotEquals(" ", defendant.getName());
+        assertEquals(0, defendant.getName().length());
+    }
+
+    private DefendantApi createPersonDefendant(String title, String forename, String middlename,
+                                               String surname) {
         DefendantApi defendant = new DefendantApi();
 
-        PERSON_OFFICER_DETAILS.setTitle("title");
-        PERSON_OFFICER_DETAILS.setForename("forename");
-        PERSON_OFFICER_DETAILS.setMiddleName("middlename");
-        PERSON_OFFICER_DETAILS.setSurname("surname");
+        PERSON_OFFICER_DETAILS.setTitle(title);
+        PERSON_OFFICER_DETAILS.setForename(forename);
+        PERSON_OFFICER_DETAILS.setMiddleName(middlename);
+        PERSON_OFFICER_DETAILS.setSurname(surname);
         PERSON_OFFICER_DETAILS.setDateOfBirth(LocalDate.now());
 
         defendant.setAddressApi(ADDRESS);
