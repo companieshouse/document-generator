@@ -7,13 +7,13 @@ import java.util.Map;
 
 public class Offence {
 
-    @JsonProperty("filing_period_type")
+    @JsonProperty("FilingPeriodType")
     private FilingPeriodType filingPeriodType;
 
-    @JsonProperty("filing_period_ends_on")
+    @JsonProperty("FilingPeriodEndsOn")
     private LocalDate filingPeriodEndsOn;
 
-    @JsonProperty("filing_due_on")
+    @JsonProperty("FilingDueOn")
     private LocalDate filingDueOn;
 
     public FilingPeriodType getFilingPeriodType() {
