@@ -50,6 +50,9 @@
 
         <api-sdk-java.version>4.0.6</api-sdk-java.version>
 
+        <!-- Structured logging -->
+        <structured-logging.version>1.4.0-rc2</structured-logging.version>
+
     </properties>
 
     <dependencies>
@@ -72,6 +75,11 @@
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>${org.mapstruct.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.companieshouse</groupId>
+            <artifactId>structured-logging</artifactId>
+            <version>${structured-logging.version}</version>
         </dependency>
     </dependencies>
 
@@ -152,5 +160,6 @@
         <module>document-generator-accounts</module>
         <module>document-generator-prosecution</module>
         <module>document-generator-api</module>
+        <module>document-generator-common</module>
     </modules>
 </project>
