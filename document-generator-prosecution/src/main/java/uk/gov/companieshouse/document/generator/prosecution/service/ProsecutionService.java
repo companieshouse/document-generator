@@ -33,10 +33,8 @@ public class ProsecutionService {
             defendantApi = response.getData();
             LOG.info("Successfully retrieved defendant information");
         } catch (ApiErrorResponseException e) {
-            LOG.error("ApiErrorResponseException" + e);
             throw new ProsecutionServiceException("An error occurred while retrieving the defendant from the SDK: " + e);
         } catch (URIValidationException e) {
-            LOG.error("UriValidationException" + e);
             throw new ProsecutionServiceException("Invalid URI to retrieve the defendant: " + e);
         }
         return defendantApi;
@@ -51,10 +49,8 @@ public class ProsecutionService {
             offenceApis = apiResponse.getData();
             LOG.info("Successfully retrieved offences information");
         } catch (ApiErrorResponseException e) {
-            LOG.error("ApiErrorResponseException " + e);
             throw new ProsecutionServiceException("An error occurred while retrieving offences from the SDK: " + e);
         } catch (URIValidationException e) {
-            LOG.error("URIValidationException " + e);
             throw new ProsecutionServiceException("Invalid URI to retrieve offences: " + e);
         }
         return offenceApis;
@@ -69,10 +65,8 @@ public class ProsecutionService {
             prosecutionCaseApi = apiResponse.getData();
             LOG.info("Successfully retrieved prosecution case information");
         } catch (ApiErrorResponseException e) {
-            LOG.error("ApiErrorResponseException " + e);
             throw new ProsecutionServiceException("An error occurred while retrieving the prosecution case from the SDK: " + e);
         } catch (URIValidationException e) {
-            LOG.error("UriValidationException" + e);
             throw new ProsecutionServiceException("Invalid URI to retrieve the prosecution case: " + e);
         }
         return prosecutionCaseApi;
