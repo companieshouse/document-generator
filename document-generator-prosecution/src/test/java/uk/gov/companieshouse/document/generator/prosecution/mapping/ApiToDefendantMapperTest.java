@@ -70,12 +70,11 @@ public class ApiToDefendantMapperTest {
     @Test
     @DisplayName("Tests defendant API correctly formats name when extra whitespace values are submitted")
     void testApiToPersonDefendantMapsWithExtraWhitespaceValues() {
-        Defendant defendant = apiToDefendantMapper.apiToDefendant(createPersonDefendant(TITLE, FORENAME, MIDDLENAME, SURNAME));
+        Defendant defendant = apiToDefendantMapper.apiToDefendant(createPersonDefendant(" " + TITLE, FORENAME + "   ", " " + MIDDLENAME + " ", " " + SURNAME));
         String defendantName = TITLE + " " + FORENAME + " " + MIDDLENAME + " " + SURNAME;
 
         assertNotNull(defendant);
-        assertNotEquals(defendantName, defendant.getName());
-        assertEquals("Title Forename Middlename Surname", defendant.getName());
+        assertEquals(TITLE + " " + FORENAME + " " + MIDDLENAME + " " + SURNAME, defendant.getName());
     }
 
     @Test
