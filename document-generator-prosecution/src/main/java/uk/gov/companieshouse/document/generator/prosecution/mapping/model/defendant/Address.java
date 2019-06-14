@@ -24,25 +24,12 @@ public class Address {
     @JsonProperty("postcode")
     private String postCode;
 
-    public Address() {
-    }
-
-    public Address(String houseNameNumber, String street, String area, String postTown, String region, String country, String postCode) {
-        this.houseNameNumber = houseNameNumber;
-        this.street = street;
-        this.area = area;
-        this.postTown = postTown;
-        this.region = region;
-        this.country = country;
-        this.postCode = postCode;
-    }
-
     public String getHouseNameNumber() {
         return houseNameNumber;
     }
 
-    public void setHouseNameNumber(String houseNamenumber) {
-        this.houseNameNumber = houseNamenumber;
+    public void setHouseNameNumber(String houseNameNumber) {
+        this.houseNameNumber = houseNameNumber;
     }
 
     public String getStreet() {
