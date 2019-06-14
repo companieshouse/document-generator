@@ -392,6 +392,29 @@
             <tr>
                 <td></td>
             </tr>
+<!--Previous Company Names-->
+            {{if $previousNames}}
+                <tr>
+                    <td>
+                        <h1>Previous Names</h1>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h3>Date of Change</h3>
+                    </td>
+                    <td>
+                        <h3>Previous Name</h3>
+                    </td>
+                </tr>
+                {{- range $previousNames -}}
+                    <tr>
+                        <td>{{.date_of_change}}</td>
+                        <td>{{.previous_name}}</td>
+                    </tr>
+                {{end}}
+            {{end}}
+            <br>
         </table>
     </div>
 </div>
