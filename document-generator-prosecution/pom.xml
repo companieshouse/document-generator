@@ -26,7 +26,8 @@
 
         <!--Dependencies-->
         <spring-boot-start-web.version>2.0.4.RELEASE</spring-boot-start-web.version>
-        <private-api-sdk-java.version>1.2.11</private-api-sdk-java.version>
+        <private-api-sdk-java.version>2.0.2</private-api-sdk-java.version>
+        <api-sdk-manager-java-library.version>1.0.2</api-sdk-manager-java-library.version>
         <environment-reader-library.version>1.2.0-rc1</environment-reader-library.version>
 
         <!-- JUnit Testing -->
@@ -54,6 +55,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <version>${spring-boot-start-web.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.companieshouse</groupId>
+            <artifactId>api-sdk-manager-java-library</artifactId>
+            <version>${api-sdk-manager-java-library.version}</version>
         </dependency>
 
         <!-- Testing -->
