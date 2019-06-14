@@ -76,7 +76,8 @@ class ProsecutionServiceTest {
     @InjectMocks
     private ProsecutionService prosecutionService;
 
-    @BeforeEach void setUp() {
+    @BeforeEach
+    void setUp() {
         when(apiClientService.getInternalApiClient()).thenReturn(internalApiClient);
     }
 

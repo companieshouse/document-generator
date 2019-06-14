@@ -21,6 +21,7 @@ import uk.gov.companieshouse.document.generator.prosecution.exception.Prosecutio
 import uk.gov.companieshouse.document.generator.prosecution.mapping.mappers.ApiToDefendantMapper;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.mappers.ApiToOffenceMapper;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.mappers.ApiToProsecutionCaseMapper;
+import uk.gov.companieshouse.document.generator.prosecution.mapping.model.ProsecutionDocument;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.model.defendant.Defendant;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.model.offence.Offence;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.model.prosecutioncase.ProsecutionCase;
@@ -94,6 +95,7 @@ public class ProsecutionHandlerTest {
         DocumentInfoResponse response = prosecutionHandler.getDocumentResponse(REQUEST_ID, RESOURCE_URI);
 
         assertNotNull(response);
+        assertNotNull(response.getData());
         assertEquals(response.getTemplateName(), type.getTemplate());
         assertEquals(response.getAssetId(), type.getAssetId());
         assertEquals(response.getDescriptionIdentifier(), type.getResource());
