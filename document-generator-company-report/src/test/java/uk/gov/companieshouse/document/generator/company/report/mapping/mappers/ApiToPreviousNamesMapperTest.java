@@ -30,7 +30,7 @@ public class ApiToPreviousNamesMapperTest {
     private static final LocalDate DATE_OF_CHANGE3 = LocalDate.of(2017, 05, 05);
 
     @InjectMocks
-    private ApiToPreviousNamesMapper apiToPreviousNamesMapper = new ApiToPreviousNamesMapperImpl()
+    private ApiToPreviousNamesMapper apiToPreviousNamesMapper = new ApiToPreviousNamesMapperImpl();
 
     @Test
     @DisplayName("tests previous names data maps to previous names model")
@@ -75,7 +75,7 @@ public class ApiToPreviousNamesMapperTest {
     }
 
     private PreviousCompanyNamesApi createThirdPreviousName() {
-        
+
         PreviousCompanyNamesApi previousCompanyNamesApi = new PreviousCompanyNamesApi();
         previousCompanyNamesApi.setName(PREVIOUS_NAME3);
         previousCompanyNamesApi.setCeasedOn(DATE_OF_CHANGE3);
