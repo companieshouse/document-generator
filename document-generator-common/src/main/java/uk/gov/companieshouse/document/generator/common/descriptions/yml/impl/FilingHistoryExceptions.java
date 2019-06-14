@@ -1,9 +1,10 @@
-package uk.gov.companieshouse.document.generator.common.descriptions.yml;
+package uk.gov.companieshouse.document.generator.common.descriptions.yml.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
+import uk.gov.companieshouse.document.generator.common.descriptions.yml.Descriptions;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
@@ -16,7 +17,7 @@ import java.util.Map;
 import static uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription.MODULE_NAME_SPACE;
 
 @Component
-public class FilingHistoryExceptions {
+public class FilingHistoryExceptions implements Descriptions {
 
     private Map<String, Object> filingHistoryExceptions;
 
@@ -41,11 +42,8 @@ public class FilingHistoryExceptions {
         }
     }
 
-    public Map<String, Object> getFilingHistoryExceptions() {
+    @Override
+    public Map<String, Object> getData() {
         return filingHistoryExceptions;
-    }
-
-    public void setFilingHistoryExceptions(Map<String, Object> filingHistoryExceptions) {
-        this.filingHistoryExceptions = filingHistoryExceptions;
     }
 }

@@ -1,9 +1,10 @@
-package uk.gov.companieshouse.document.generator.common.descriptions.yml;
+package uk.gov.companieshouse.document.generator.common.descriptions.yml.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
+import uk.gov.companieshouse.document.generator.common.descriptions.yml.Descriptions;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
@@ -16,11 +17,11 @@ import java.util.Map;
 import static uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription.MODULE_NAME_SPACE;
 
 @Component
-public class PscDescriptions {
+public class Errors implements Descriptions {
 
-    private Map<String, Object> pscDescriptions;
+    private Map<String, Object> errors;
 
-    private static final String PSC_DESCRIPTIONS_YML = "document-generator-api/api-enumerations/psc_descriptions.yml";
+    private static final String ERRORS_YML = "document-generator-api/api-enumerations/errors.yml";
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
@@ -28,12 +29,12 @@ public class PscDescriptions {
     public void init() throws IOException {
 
         Yaml yaml = new Yaml();
-        File descriptionsFile = new File(PSC_DESCRIPTIONS_YML);
+        File descriptionsFile = new File(ERRORS_YML);
 
         try (InputStream inputStream = new FileInputStream(descriptionsFile)) {
 
-            pscDescriptions = (Map<String, Object>) yaml.load(inputStream);
-            LOG.info("psc_descriptions.yml file pre loaded in document-generator");
+            errors = (Map<String, Object>) yaml.load(inputStream);
+            LOG.info("errors.yml file pre loaded in document-generator");
 
         } catch (FileNotFoundException e) {
             LOG.error("file not found when obtaining api enumeration " +
@@ -41,12 +42,8 @@ public class PscDescriptions {
         }
     }
 
-    public Map<String, Object> getPscDescriptions() {
-        return pscDescriptions;
-    }
-
-    public void setPscDescriptions(
-        Map<String, Object> pscDescriptions) {
-        this.pscDescriptions = pscDescriptions;
+    @Override
+    public Map<String, Object> getData() {
+        return errors;
     }
 }

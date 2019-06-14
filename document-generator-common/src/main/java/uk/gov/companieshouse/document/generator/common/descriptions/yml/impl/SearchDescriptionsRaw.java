@@ -1,12 +1,12 @@
-package uk.gov.companieshouse.document.generator.common.descriptions.yml;
+package uk.gov.companieshouse.document.generator.common.descriptions.yml.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
+import uk.gov.companieshouse.document.generator.common.descriptions.yml.Descriptions;
 
 import javax.annotation.PostConstruct;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -17,11 +17,11 @@ import java.util.Map;
 import static uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription.MODULE_NAME_SPACE;
 
 @Component
-public class Constants {
+public class SearchDescriptionsRaw implements Descriptions {
 
-    private Map<String, Object> constants;
+    private Map<String, Object> searchDescriptionsRaw;
 
-    private static final String CONSTANTS_YML = "document-generator-api/api-enumerations/constants.yml";
+    private static final String SEARCH_DESCRIPTIONS_RAW_YAML = "document-generator-api/api-enumerations/search_descriptions_raw.yaml";
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
@@ -29,12 +29,12 @@ public class Constants {
     public void init() throws IOException {
 
         Yaml yaml = new Yaml();
-        File descriptionsFile = new File(CONSTANTS_YML);
+        File descriptionsFile = new File(SEARCH_DESCRIPTIONS_RAW_YAML);
 
         try (InputStream inputStream = new FileInputStream(descriptionsFile)) {
 
-            constants = (Map<String, Object>) yaml.load(inputStream);
-            LOG.info("constants.yml file pre loaded in document-generator");
+            searchDescriptionsRaw = (Map<String, Object>) yaml.load(inputStream);
+            LOG.info("search_descriptions_raw.yml file pre loaded in document-generator");
 
         } catch (FileNotFoundException e) {
             LOG.error("file not found when obtaining api enumeration " +
@@ -42,11 +42,8 @@ public class Constants {
         }
     }
 
-    public Map<String, Object> getConstants() {
-        return constants;
-    }
-
-    public void setConstants(Map<String, Object> constants) {
-        this.constants = constants;
+    @Override
+    public Map<String, Object> getData() {
+        return searchDescriptionsRaw;
     }
 }

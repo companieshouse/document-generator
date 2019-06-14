@@ -56,7 +56,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
 
     private static final Logger LOG = LoggerFactory.getLogger(APPLICATION_NAME_SPACE);
 
-    private static final String FILING_DESCRIPTIONS_FILE_NAME = "document-generator-api/api-enumerations/filing_descriptions.yml";
+    private static final String FILING_DESCRIPTIONS = "filing_descriptions";
 
     private static final String DESCRIPTION_IDENTIFIERS_KEY = "description_identifiers";
 
@@ -287,7 +287,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
     private String getDescription(DocumentInfoResponse documentInfoResponse, Map<String, String> requestParameters) {
 
         return retrieveApiEnumerationDescription.getApiEnumerationDescription(
-            FILING_DESCRIPTIONS_FILE_NAME, DESCRIPTION_IDENTIFIERS_KEY,
+            FILING_DESCRIPTIONS, DESCRIPTION_IDENTIFIERS_KEY,
             documentInfoResponse.getDescriptionIdentifier(), requestParameters);
     }
 
