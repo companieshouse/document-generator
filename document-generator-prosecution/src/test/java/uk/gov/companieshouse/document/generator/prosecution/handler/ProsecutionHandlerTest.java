@@ -36,7 +36,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@MockitoSettings(strictness = Strictness.LENIENT)
 public class ProsecutionHandlerTest {
     private static final String REQUEST_ID = "1";
 
@@ -143,7 +142,7 @@ public class ProsecutionHandlerTest {
     @DisplayName("Tests unsuccessful get of prosecution document when trying to retrieve a list of offences")
     void testGetProsecutionDocumentUnsuccessfulOffences() throws ProsecutionServiceException {
         when(prosecutionService.getDefendant(RESOURCE_URI)).thenReturn(defendantApi);
-        when(prosecutionService.getProsecutionCase(PROSECUTION_LINK)).thenThrow(ProsecutionServiceException.class);
+        when(prosecutionService.getProsecutionCase(PROSECUTION_LINK)).thenReturn(prosecutionCaseApi);
         when(prosecutionService.getOffences(OFFENCES_LINK)).thenThrow(ProsecutionServiceException.class);
 
         assertThrows(HandlerException.class, () -> prosecutionHandler.getDocumentResponse(REQUEST_ID, RESOURCE_URI));

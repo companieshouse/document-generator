@@ -49,7 +49,8 @@ public class ProsecutionDocumentInfoService implements DocumentInfoService {
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
-    @Autowired private ProsecutionHandler handler;
+    @Autowired
+    private ProsecutionHandler handler;
 
     /**
      * Entry point from Document Generator, asking for a DocumentInfoResponse that contains info to
