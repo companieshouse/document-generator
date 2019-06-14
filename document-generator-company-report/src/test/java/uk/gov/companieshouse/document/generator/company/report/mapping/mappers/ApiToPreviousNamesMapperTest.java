@@ -2,13 +2,14 @@ package uk.gov.companieshouse.document.generator.company.report.mapping.mappers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -18,6 +19,7 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.p
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.previousnames.PreviousNames;
 
 @ExtendWith({MockitoExtension.class})
+@TestInstance(Lifecycle.PER_CLASS)
 public class ApiToPreviousNamesMapperTest {
 
     private static final String PREVIOUS_NAME = "previous name 1";
@@ -28,8 +30,7 @@ public class ApiToPreviousNamesMapperTest {
     private static final LocalDate DATE_OF_CHANGE3 = LocalDate.of(2017, 05, 05);
 
     @InjectMocks
-    private ApiToPreviousNamesMapper apiToPreviousNamesMapper = new ApiToPreviousNamesMapperImpl();
-
+    private ApiToPreviousNamesMapper apiToPreviousNamesMapper = new ApiToPreviousNamesMapperImpl()
 
     @Test
     @DisplayName("tests previous names data maps to previous names model")
@@ -74,30 +75,32 @@ public class ApiToPreviousNamesMapperTest {
     }
 
     private PreviousCompanyNamesApi createThirdPreviousName() {
+        
         PreviousCompanyNamesApi previousCompanyNamesApi = new PreviousCompanyNamesApi();
-
         previousCompanyNamesApi.setName(PREVIOUS_NAME3);
         previousCompanyNamesApi.setCeasedOn(DATE_OF_CHANGE3);
 
         return previousCompanyNamesApi;
+
     }
 
     private PreviousCompanyNamesApi createSecondPreviousName() {
-        PreviousCompanyNamesApi previousCompanyNamesApi = new PreviousCompanyNamesApi();
 
+        PreviousCompanyNamesApi previousCompanyNamesApi = new PreviousCompanyNamesApi();
         previousCompanyNamesApi.setName(PREVIOUS_NAME2);
         previousCompanyNamesApi.setCeasedOn(DATE_OF_CHANGE2);
 
         return previousCompanyNamesApi;
+
     }
 
     private PreviousCompanyNamesApi createPreviousNamesApiData() {
 
         PreviousCompanyNamesApi previousCompanyNamesApi = new PreviousCompanyNamesApi();
-
         previousCompanyNamesApi.setName(PREVIOUS_NAME);
         previousCompanyNamesApi.setCeasedOn(DATE_OF_CHANGE);
 
         return previousCompanyNamesApi;
+
     }
 }
