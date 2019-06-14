@@ -1,101 +1,77 @@
 package uk.gov.companieshouse.document.generator.prosecution;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.document.generator.interfaces.exception.DocumentInfoException;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
-import uk.gov.companieshouse.document.generator.prosecution.UltimatumDocumentInfoBuilderProvider.UltimatumDocumentInfoBuilder;
-import uk.gov.companieshouse.document.generator.prosecution.mapping.model.prosecutioncase.ProsecutionCase;
-import uk.gov.companieshouse.document.generator.prosecution.tmpclient.ProsecutionClient;
-import uk.gov.companieshouse.document.generator.prosecution.tmpclient.SdkException;
+import uk.gov.companieshouse.document.generator.prosecution.exception.HandlerException;
+import uk.gov.companieshouse.document.generator.prosecution.exception.ProsecutionServiceException;
+import uk.gov.companieshouse.document.generator.prosecution.handler.ProsecutionHandler;
+import uk.gov.companieshouse.document.generator.prosecution.mapping.model.ProsecutionDocument;
 
 @ExtendWith(MockitoExtension.class)
-@TestInstance(Lifecycle.PER_CLASS)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ProsecutionDocumentInfoServiceTest {
-    private static final String REQUEST_ID = "id1";
-    private static final String PROSECUTION_CASE_URI = "/company/006/prosecution-cases/dd908";
-    private static final String ULTIMATUM_RESOURCE_URI =
-                    "/prosecution/ultimatum" + PROSECUTION_CASE_URI;
-    private static final String SJP_RESOURCE_URI = "/prosecution/sjp" + PROSECUTION_CASE_URI;
+
+    @InjectMocks
+    private ProsecutionDocumentInfoService prosecutionDocumentInfoService;
 
     @Mock
-    private UltimatumDocumentInfoBuilderProvider docInfoBuilderProvider;
+    private ProsecutionHandler mockHandler;
 
     @Mock
-    private UltimatumDocumentInfoBuilder docInfoBuilder;
+    private ProsecutionDocument prosecutionDocument;
 
-    @Mock
-    ProsecutionClient prosecutionClient;
+    private static final String RESOURCE_URI = "uri";
+    private static final String REQUEST_ID = "1";
+    private static final String ASSET_ID = "assetId";
+    private static final String DESCRIPTION_IDENTIFIER = "descriptionIdentifier";
+    private static final String DATA = "data";
+    private static final String TEMPLATE_NAME = "templateName";
+    private static final String PATH = "path";
 
-    @Mock
-    ProsecutionCase prosecutionCase;
-
-    @DisplayName("Given a request to produce an ultimatum for a given prosecution case, "
-                    + "when the UltimatumDocumentInfoService successfully produces a DocumentInfoResponse,"
-                    + "then that response is returned.")
     @Test
-    void testGetDocumentInfoForUltimatum()
-                    throws DocumentInfoException, SdkException, DocumentInfoCreationException {
-        ProsecutionDocumentInfoService prosDocInfoService = new ProsecutionDocumentInfoService(
-                        docInfoBuilderProvider, prosecutionClient);
-        when(prosecutionClient.getProsecutionCase(PROSECUTION_CASE_URI, REQUEST_ID))
-                        .thenReturn(prosecutionCase);
-        when(docInfoBuilderProvider.builder()).thenReturn(docInfoBuilder);
-        DocumentInfoResponse responseToReturn = new DocumentInfoResponse();
-        when(docInfoBuilder.build()).thenReturn(responseToReturn);
+    @DisplayName("Tests successful retrieval of a prosecution document")
+    void testSuccessfulGetDocumentInfo() throws HandlerException, DocumentInfoException, ProsecutionServiceException {
+        when(mockHandler.getDocumentResponse(REQUEST_ID, RESOURCE_URI)).thenReturn(createDocumentInfoResponse());
 
-        DocumentInfoRequest docInfoReq = new DocumentInfoRequest();
-        docInfoReq.setResourceUri(ULTIMATUM_RESOURCE_URI);
-        docInfoReq.setRequestId(REQUEST_ID);
-        DocumentInfoResponse result = prosDocInfoService.getDocumentInfo(docInfoReq);
-        Assertions.assertSame(responseToReturn, result);
+        DocumentInfoResponse response = prosecutionDocumentInfoService.getDocumentInfo(getDocumentInfoRequest());
+        assertNotNull(response);
+        assertEquals(response, createDocumentInfoResponse());
     }
 
-    @DisplayName("Given a request to produce an ultimatum for a given prosecution case, "
-                    + "when the UltimatumDocumentInfoService successfully produces a DocumentInfoResponse,"
-                    + "then that response is returned.")
     @Test
-    void testGetDocumentInfoForUltimatumNoProsecutionCaseFound()
-                    throws SdkException {
-        ProsecutionDocumentInfoService prosDocInfoService = new ProsecutionDocumentInfoService(
-                        docInfoBuilderProvider, prosecutionClient);
-        when(prosecutionClient.getProsecutionCase(PROSECUTION_CASE_URI, REQUEST_ID))
-                        .thenThrow(SdkException.class);
+    @DisplayName("Tests unsuccessful retrieval of a prosecution document")
+    void testUnsuccessfulGetDocumentInfo() throws DocumentInfoException, HandlerException {
+        when(mockHandler.getDocumentResponse(REQUEST_ID, RESOURCE_URI)).thenThrow(HandlerException.class);
 
-        DocumentInfoRequest docInfoReq = new DocumentInfoRequest();
-        docInfoReq.setResourceUri(ULTIMATUM_RESOURCE_URI);
-        docInfoReq.setRequestId(REQUEST_ID);
-        assertThrows(DocumentInfoException.class,
-                        () -> prosDocInfoService.getDocumentInfo(docInfoReq));
+        assertThrows(DocumentInfoException.class, () -> prosecutionDocumentInfoService.getDocumentInfo(getDocumentInfoRequest()));
+    }
+    private DocumentInfoRequest getDocumentInfoRequest() {
+        DocumentInfoRequest request = new DocumentInfoRequest();
+        request.setResourceUri(RESOURCE_URI);
+        request.setRequestId(REQUEST_ID);
+        return request;
     }
 
-    @DisplayName("Given a request to produce an ultimatum for a given prosecution case, "
-                    + "when the UltimatumDocumentInfoService successfully produces a DocumentInfoResponse,"
-                    + "then that response is returned.")
-    @Test
-    void testGetDocumentInfoForUltimatumErrorBuildingDocInfo()
-                    throws SdkException, DocumentInfoCreationException {
-        ProsecutionDocumentInfoService prosDocInfoService = new ProsecutionDocumentInfoService(
-                        docInfoBuilderProvider, prosecutionClient);
-        when(prosecutionClient.getProsecutionCase(PROSECUTION_CASE_URI, REQUEST_ID))
-        .thenReturn(prosecutionCase);
-        when(docInfoBuilderProvider.builder()).thenReturn(docInfoBuilder);
-        when(docInfoBuilder.build())
-        .thenThrow(DocumentInfoCreationException.class);
-
-        DocumentInfoRequest docInfoReq = new DocumentInfoRequest();
-        docInfoReq.setResourceUri(ULTIMATUM_RESOURCE_URI);
-        docInfoReq.setRequestId(REQUEST_ID);
-        assertThrows(DocumentInfoException.class,
-                        () -> prosDocInfoService.getDocumentInfo(docInfoReq));
+    private DocumentInfoResponse createDocumentInfoResponse() {
+        DocumentInfoResponse response = new DocumentInfoResponse();
+        response.setDescriptionIdentifier(DESCRIPTION_IDENTIFIER);
+        response.setAssetId(ASSET_ID);
+        response.setData(DATA);
+        response.setTemplateName(TEMPLATE_NAME);
+        response.setPath(PATH);
+        return response;
     }
+
 }

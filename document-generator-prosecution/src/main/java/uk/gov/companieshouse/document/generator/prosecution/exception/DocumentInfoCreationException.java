@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.document.generator.prosecution;
+package uk.gov.companieshouse.document.generator.prosecution.exception;
 
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 
