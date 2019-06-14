@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.UUID;
 
 @Service
-public class ApiClientService {
+public class CompanyReportApiClientService {
 
     private static final EnvironmentReader READER = new EnvironmentReaderImpl();
 

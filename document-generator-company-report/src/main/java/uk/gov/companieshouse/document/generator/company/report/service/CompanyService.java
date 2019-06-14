@@ -13,7 +13,7 @@ import uk.gov.companieshouse.document.generator.company.report.exception.Service
 public class CompanyService {
 
     @Autowired
-    private ApiClientService apiClientService;
+    private CompanyReportApiClientService companyReportApiClientService;
 
     private static final UriTemplate GET_COMPANY_URI =
         new UriTemplate("/company/{companyNumber}");
@@ -22,7 +22,7 @@ public class CompanyService {
 
         CompanyProfileApi companyProfileApi;
 
-        ApiClient apiClient = apiClientService.getApiClient();
+        ApiClient apiClient = companyReportApiClientService.getApiClient();
 
         String uri = GET_COMPANY_URI.expand(companyNumber).toString();
 
