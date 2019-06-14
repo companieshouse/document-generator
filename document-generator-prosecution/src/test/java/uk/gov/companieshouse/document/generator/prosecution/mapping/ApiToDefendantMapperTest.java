@@ -25,20 +25,20 @@ public class ApiToDefendantMapperTest {
 
     private static final AddressApi ADDRESS =
             new AddressApi("1", "street", "area", "town", "region", "country", "postcode");
-    private static final PersonOfficerDetailsApi PERSON_OFFICER_DETAILS =
-            new PersonOfficerDetailsApi();
-    private static final CompanyOfficerDetailsApi COMPANY_OFFICER_DETAILS =
-            new CompanyOfficerDetailsApi();
+
+    private static final PersonOfficerDetailsApi PERSON_OFFICER_DETAILS = new PersonOfficerDetailsApi();
+    private static final CompanyOfficerDetailsApi COMPANY_OFFICER_DETAILS = new CompanyOfficerDetailsApi();
+
+    private static final String TITLE = "title";
+    private static final String FORENAME = "forename";
+    private static final String MIDDLENAME = "middlename";
+    private static final String SURNAME = "surname";
 
     @Test
     @DisplayName("Tests defendant API values map to defendant DocGen model for a person defendant")
     void testApiToPersonDefendantMaps() {
-        Defendant defendant = apiToDefendantMapper.apiToDefendant(
-                createPersonDefendant("title", "forename", "middlename", "surname"));
-        String defendantName =
-                PERSON_OFFICER_DETAILS.getTitle() + " " + PERSON_OFFICER_DETAILS.getForename() + " "
-                        + PERSON_OFFICER_DETAILS.getMiddleName() + " "
-                        + PERSON_OFFICER_DETAILS.getSurname();
+    	Defendant defendant = apiToDefendantMapper.apiToDefendant(createPersonDefendant(TITLE, FORENAME, MIDDLENAME, SURNAME));
+        String defendantName = TITLE + " " + FORENAME + " " + MIDDLENAME + " " + SURNAME;
 
         assertNotNull(defendant);
         assertEquals(ADDRESS.getHouseNameNumber(), defendant.getAddress().getHouseNameNumber());
@@ -70,13 +70,8 @@ public class ApiToDefendantMapperTest {
     @Test
     @DisplayName("Tests defendant API correctly formats name when extra whitespace values are submitted")
     void testApiToPersonDefendantMapsWithExtraWhitespaceValues() {
-        Defendant defendant = apiToDefendantMapper.apiToDefendant(
-                createPersonDefendant(" Title", "Forename   ", " Middlename ", " Surname"));
-
-        String defendantName =
-                PERSON_OFFICER_DETAILS.getTitle() + " " + PERSON_OFFICER_DETAILS.getForename() + " "
-                        + PERSON_OFFICER_DETAILS.getMiddleName() + " "
-                        + PERSON_OFFICER_DETAILS.getSurname();
+        Defendant defendant = apiToDefendantMapper.apiToDefendant(createPersonDefendant(TITLE, FORENAME, MIDDLENAME, SURNAME));
+        String defendantName = TITLE + " " + FORENAME + " " + MIDDLENAME + " " + SURNAME;
 
         assertNotNull(defendant);
         assertNotEquals(defendantName, defendant.getName());
@@ -114,6 +109,63 @@ public class ApiToDefendantMapperTest {
         assertEquals("", defendant.getName());
         assertNotEquals(" ", defendant.getName());
         assertEquals(0, defendant.getName().length());
+    }
+
+
+    @Test
+    @DisplayName("Tests the name is correctly formatted when the title is missing")
+    public void testMapNoTitle() {
+        Defendant defendant = apiToDefendantMapper.apiToDefendant(createPersonDefendant(null, FORENAME, MIDDLENAME, SURNAME));
+        assertEquals(FORENAME + " " + MIDDLENAME + " " + SURNAME, defendant.getName());
+    }
+
+    @Test
+    @DisplayName("Tests the name is correctly formatted when the title is empty")
+    public void testMapEmptyTitle() {
+        Defendant defendant = apiToDefendantMapper.apiToDefendant(createPersonDefendant("", FORENAME, MIDDLENAME, SURNAME));
+        assertEquals(FORENAME + " " + MIDDLENAME + " " + SURNAME, defendant.getName());
+    }
+
+    @Test
+    @DisplayName("Tests the name is correctly formatted when the forename is missing")
+    public void testMapNoForename() {
+        Defendant defendant = apiToDefendantMapper.apiToDefendant(createPersonDefendant(TITLE, null, MIDDLENAME, SURNAME));
+        assertEquals(TITLE + " " + MIDDLENAME + " " + SURNAME, defendant.getName());
+    }
+
+    @Test
+    @DisplayName("Tests the name is correctly formatted when the forename is empty")
+    public void testMapEmptyForename() {
+        Defendant defendant = apiToDefendantMapper.apiToDefendant(createPersonDefendant(TITLE, "", MIDDLENAME, SURNAME));
+        assertEquals(TITLE + " " + MIDDLENAME + " " + SURNAME, defendant.getName());
+    }
+
+    @Test
+    @DisplayName("Tests the name is correctly formatted when the middle name is missing")
+    public void testMapNoMiddleName() {
+        Defendant defendant = apiToDefendantMapper.apiToDefendant(createPersonDefendant(TITLE, FORENAME, null, SURNAME));
+        assertEquals(TITLE + " " + FORENAME + " " + SURNAME, defendant.getName());
+    }
+
+    @Test
+    @DisplayName("Tests the name is correctly formatted when the middle name is empty")
+    public void testMapEmptyMiddleName() {
+        Defendant defendant = apiToDefendantMapper.apiToDefendant(createPersonDefendant(TITLE, FORENAME, "", SURNAME));
+        assertEquals(TITLE + " " + FORENAME + " " + SURNAME, defendant.getName());
+    }
+
+    @Test
+    @DisplayName("Tests the name is correctly formatted when the surname is missing")
+    public void testMapNoSurname() {
+        Defendant defendant = apiToDefendantMapper.apiToDefendant(createPersonDefendant(TITLE, FORENAME, MIDDLENAME, null));
+        assertEquals(TITLE + " " + FORENAME + " " + MIDDLENAME, defendant.getName());
+    }
+
+    @Test
+    @DisplayName("Tests the name is correctly formatted when the surname is empty")
+    public void testMapEmptySurname() {
+        Defendant defendant = apiToDefendantMapper.apiToDefendant(createPersonDefendant(TITLE, FORENAME, MIDDLENAME, ""));
+        assertEquals(TITLE + " " + FORENAME + " " + MIDDLENAME, defendant.getName());
     }
 
     private DefendantApi createPersonDefendant(String title, String forename, String middlename,
