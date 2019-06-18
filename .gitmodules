@@ -1,3 +1,0 @@
-[submodule "document-generator-api/api-enumerations"]
-	path = document-generator-api/api-enumerations
-	url = git@github.com:companieshouse/api-enumerations.git

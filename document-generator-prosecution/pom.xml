@@ -30,9 +30,6 @@
         <api-sdk-manager-java-library.version>1.0.2</api-sdk-manager-java-library.version>
         <environment-reader-library.version>1.2.0-rc1</environment-reader-library.version>
 
-        <!-- JUnit Testing -->
-        <junit-jupiter-engine.version>5.2.0</junit-jupiter-engine.version>
-        <mockito-junit-jupiter.version>2.18.0</mockito-junit-jupiter.version>
     </properties>
 
     <dependencies>
@@ -60,20 +57,6 @@
             <groupId>uk.gov.companieshouse</groupId>
             <artifactId>api-sdk-manager-java-library</artifactId>
             <version>${api-sdk-manager-java-library.version}</version>
-        </dependency>
-
-        <!-- Testing -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit-jupiter-engine.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-junit-jupiter</artifactId>
-            <version>${mockito-junit-jupiter.version}</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 

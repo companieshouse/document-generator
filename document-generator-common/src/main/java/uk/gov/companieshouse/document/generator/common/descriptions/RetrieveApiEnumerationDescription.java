@@ -1,16 +1,9 @@
 package uk.gov.companieshouse.document.generator.common.descriptions;
 
-
-
+import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.document.generator.common.descriptions.yml.DescriptionsFactory;
-import uk.gov.companieshouse.document.generator.common.descriptions.yml.impl.FilingDescriptions;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import uk.gov.companieshouse.document.generator.common.descriptions.yml.impl.Constants;
-import uk.gov.companieshouse.document.generator.common.descriptions.yml.impl.FilingHistoryDescriptions;
-import uk.gov.companieshouse.document.generator.common.descriptions.yml.impl.MortgageDescriptions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,18 +11,6 @@ import java.util.function.Supplier;
 
 @Component
 public class RetrieveApiEnumerationDescription {
-
-    @Autowired
-    private Constants constants;
-
-    @Autowired
-    private FilingHistoryDescriptions filingHistoryDescriptions;
-
-    @Autowired
-    private FilingDescriptions filingDescriptions;
-
-    @Autowired
-    private MortgageDescriptions mortgageDescriptions;
 
     private static final String RESOURCE_URI = "resource_uri";
 
