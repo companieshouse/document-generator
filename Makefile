@@ -1,5 +1,5 @@
 artifact_name       := document-generator
-artifact_core_name  := document-generator-api
+artifact_core_name  := document-generator-common
 commit              := $(shell git rev-parse --short HEAD)
 tag                 := $(shell git tag -l 'v*-rc*' --points-at HEAD)
 version             := $(shell if [[ -n "$(tag)" ]]; then echo $(tag) | sed 's/^v//'; else echo $(commit); fi)
@@ -41,7 +41,7 @@ package:
 	cp ./start.sh $(tmpdir)
 	cp ./routes.yaml $(tmpdir)
 	mkdir $(tmpdir)/document-generator-api
-	cp -r ./document-generator-api/api-enumerations $(tmpdir)/document-generator-api
+	cp -r ./document-generator-common/api-enumerations $(tmpdir)/document-generator-common
 	cd $(tmpdir); zip -r ../$(artifact_name)-$(version).zip *
 	rm -rf $(tmpdir)
 

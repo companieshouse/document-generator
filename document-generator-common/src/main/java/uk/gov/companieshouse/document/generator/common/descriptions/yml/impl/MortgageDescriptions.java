@@ -21,7 +21,7 @@ public class MortgageDescriptions implements Descriptions {
 
     private Map<String, Object> mortgageDescriptions;
 
-    private static final String MORTGAGE_DESCRIPTIONS_YML = "document-generator-api/api-enumerations/mortgage_descriptions.yml";
+    private static final String MORTGAGE_DESCRIPTIONS_YML = "document-generator-common/api-enumerations/mortgage_descriptions.yml";
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 

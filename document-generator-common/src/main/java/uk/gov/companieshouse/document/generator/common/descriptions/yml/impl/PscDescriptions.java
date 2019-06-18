@@ -21,7 +21,7 @@ public class PscDescriptions implements Descriptions {
 
     private Map<String, Object> pscDescriptions;
 
-    private static final String PSC_DESCRIPTIONS_YML = "document-generator-api/api-enumerations/psc_descriptions.yml";
+    private static final String PSC_DESCRIPTIONS_YML = "document-generator-common/api-enumerations/psc_descriptions.yml";
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 

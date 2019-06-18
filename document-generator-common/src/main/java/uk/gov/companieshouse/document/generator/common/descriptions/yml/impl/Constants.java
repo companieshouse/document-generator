@@ -22,7 +22,7 @@ public class Constants implements Descriptions {
 
     private Map<String, Object> constants;
 
-    private static final String CONSTANTS_YML = "document-generator-api/api-enumerations/constants.yml";
+    private static final String CONSTANTS_YML = "document-generator-common/api-enumerations/constants.yml";
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 

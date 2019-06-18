@@ -21,7 +21,7 @@ public class DisqualifiedOfficerDescriptions implements Descriptions {
 
     private Map<String, Object> disqualifiedOfficerDescriptions;
 
-    private static final String DISQUALIFIED_OFFICER_DESCRIPTIONS_YML = "document-generator-api/api-enumerations/disqualified_officer_descriptions.yml";
+    private static final String DISQUALIFIED_OFFICER_DESCRIPTIONS_YML = "document-generator-common/api-enumerations/disqualified_officer_descriptions.yml";
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 

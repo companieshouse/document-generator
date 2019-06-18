@@ -21,7 +21,7 @@ public class FilingHistoryExceptions implements Descriptions {
 
     private Map<String, Object> filingHistoryExceptions;
 
-    private static final String FILING_HISTORY_EXCEPTIONS_YML = "document-generator-api/api-enumerations/filing_history_exceptions.yml";
+    private static final String FILING_HISTORY_EXCEPTIONS_YML = "document-generator-common/api-enumerations/filing_history_exceptions.yml";
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 

@@ -21,7 +21,7 @@ public class SearchDescriptionsRaw implements Descriptions {
 
     private Map<String, Object> searchDescriptionsRaw;
 
-    private static final String SEARCH_DESCRIPTIONS_RAW_YAML = "document-generator-api/api-enumerations/search_descriptions_raw.yaml";
+    private static final String SEARCH_DESCRIPTIONS_RAW_YAML = "document-generator-common/api-enumerations/search_descriptions_raw.yaml";
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 

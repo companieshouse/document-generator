@@ -21,7 +21,7 @@ public class Errors implements Descriptions {
 
     private Map<String, Object> errors;
 
-    private static final String ERRORS_YML = "document-generator-api/api-enumerations/errors.yml";
+    private static final String ERRORS_YML = "document-generator-common/api-enumerations/errors.yml";
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 

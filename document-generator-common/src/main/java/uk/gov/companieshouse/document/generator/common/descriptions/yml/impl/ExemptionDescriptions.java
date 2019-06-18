@@ -21,7 +21,7 @@ public class ExemptionDescriptions implements Descriptions {
 
     private Map<String, Object> excemptionDescriptions;
 
-    private static final String EXCEMPTION_DESCRIPTIONS_YML = "document-generator-api/api-enumerations/exemption_descriptions.yml";
+    private static final String EXCEMPTION_DESCRIPTIONS_YML = "document-generator-common/api-enumerations/exemption_descriptions.yml";
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 

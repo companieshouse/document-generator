@@ -21,7 +21,7 @@ public class FilingHistoryDescriptions implements Descriptions {
 
     private Map<String, Object> filingHistoryDescriptions;
 
-    private static final String FILING_HISTORY_DESCRIPTIONS_YML = "document-generator-api/api-enumerations/filing_history_descriptions.yml";
+    private static final String FILING_HISTORY_DESCRIPTIONS_YML = "document-generator-common/api-enumerations/filing_history_descriptions.yml";
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
