@@ -1,7 +1,9 @@
 package uk.gov.companieshouse.document.generator.common.descriptions;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.document.generator.common.descriptions.yml.DescriptionsFactory;
+import uk.gov.companieshouse.document.generator.common.descriptions.yml.impl.FilingDescriptions;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
@@ -19,6 +21,12 @@ public class RetrieveApiEnumerationDescription {
     public static final String MODULE_NAME_SPACE = "document-generator-commons";
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
+
+    @Autowired
+    private FilingDescriptions filingDescriptions;
+
+    @Autowired
+    private DescriptionsFactory descriptionsFactory;
 
     public String getApiEnumerationDescription(String descriptionType, String identifier, String descriptionValue,
         Map<String, String> requestParameters) {
@@ -59,9 +67,9 @@ public class RetrieveApiEnumerationDescription {
 
     private Map<String, Object> getApiEnumerationDescriptions(String descriptionType) {
 
-        Supplier<DescriptionsFactory> descriptionsFactory =  DescriptionsFactory::new;
+        Map<String, Object> test =  filingDescriptions.getData();
 
-        return descriptionsFactory.get().createDescription(descriptionType).getData();
+        return descriptionsFactory.createDescription(descriptionType).getData();
     }
 
     private Map<String, Object> setDebugMap(Map<String, String> requestParameters) {

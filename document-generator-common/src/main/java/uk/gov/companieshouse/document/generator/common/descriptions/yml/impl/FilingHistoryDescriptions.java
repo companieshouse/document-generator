@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
 import uk.gov.companieshouse.document.generator.common.descriptions.yml.Descriptions;
 
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -19,14 +18,13 @@ import static uk.gov.companieshouse.document.generator.common.descriptions.Retri
 @Component
 public class FilingHistoryDescriptions implements Descriptions {
 
-    private Map<String, Object> filingHistoryDescriptions;
+    private static Map<String, Object> filingHistoryDescriptions;
 
     private static final String FILING_HISTORY_DESCRIPTIONS_YML = "document-generator-common/api-enumerations/filing_history_descriptions.yml";
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
-    @PostConstruct
-    public void init() throws IOException {
+    public FilingHistoryDescriptions() throws IOException {
 
         Yaml yaml = new Yaml();
         File descriptionsFile = new File(FILING_HISTORY_DESCRIPTIONS_YML);

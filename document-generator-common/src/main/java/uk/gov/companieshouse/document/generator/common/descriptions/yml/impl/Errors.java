@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
 import uk.gov.companieshouse.document.generator.common.descriptions.yml.Descriptions;
 
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -25,8 +24,7 @@ public class Errors implements Descriptions {
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
-    @PostConstruct
-    public void init() throws IOException {
+    public Errors() throws IOException {
 
         Yaml yaml = new Yaml();
         File descriptionsFile = new File(ERRORS_YML);
