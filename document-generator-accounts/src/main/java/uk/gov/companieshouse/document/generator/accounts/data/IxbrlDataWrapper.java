@@ -1,11 +1,14 @@
 package uk.gov.companieshouse.document.generator.accounts.data;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 import uk.gov.companieshouse.document.generator.accounts.mapping.PeriodAwareIxbrl;
 import uk.gov.companieshouse.document.generator.accounts.mapping.cic.model.CicReport;
 
+@JsonInclude(Include.NON_NULL)
 public class IxbrlDataWrapper {
 
     private Map<String, PeriodAwareIxbrl> accounts;
