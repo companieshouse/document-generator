@@ -1,7 +1,6 @@
 package uk.gov.companieshouse.document.generator.descriptions;
 
-import jdk.nashorn.internal.ir.annotations.Ignore;
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -12,7 +11,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
 import uk.gov.companieshouse.document.generator.common.descriptions.yml.Descriptions;
 import uk.gov.companieshouse.document.generator.common.descriptions.yml.DescriptionsFactory;
-import uk.gov.companieshouse.document.generator.common.descriptions.yml.impl.FilingDescriptions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,45 +27,73 @@ public class RetrieveApiEnumerationDescriptionTest {
     private RetrieveApiEnumerationDescription retrieveApiEnumerationDescription;
 
     @Mock
-    private DescriptionsFactory mockDescriptionsFactory;
+    private DescriptionsFactory descriptionsFactory;
 
     @Mock
-    private Descriptions mockDescriptions;
-
-    private static final String FILING_DESCRIPTIONS_FILE_NAME_VALID = "filing_descriptions";
-
-    private static final String DESCRIPTION_IDENTIFIERS_KEY_VALID = "description_identifiers";
-
-    private static final String RESPONSE_WITH_PLACEHOLDER = "Abridged accounts made up to {period_end_on}";
+    Descriptions descriptions;
 
     private static final String RESOURCE_URI = "/transactions/091174-913515-326060/accounts/xU-6Vebn7F8AgLwa2QHBUL2yRpk=";
 
     private static final String REQUEST_ID = "requestId";
 
+    private static final String DESCRIPTIONS = "descriptions";
+    private static final String DESCRIPTION_ONE = "description_one";
+    private static final String DESC_ONE_DATA = "Data from description one";
+    private static final String DESCRIPTION_TWO = "description_two";
+    private static final String DESC_TWO_DATA = "Data from description two";
+
+    private static final String ITEMS = "items";
+    private static final String ITEM_ONE = "items_one";
+    private static final String ITEM_ONE_DATA = "Data from item one";
+    private static final String ITEM_TWO = "item_two";
+    private static final String ITEM_TWO_DATA = "Data from item two";
+
     private static Map<String, String> requestParameters;
 
-    @Disabled
-    @Test
-    @DisplayName("test that a valid response is received when retrieving api enumerations from filing_descriptions.yml")
-    public void testValidReturnValueForFilingDescriptions() {
+    @BeforeEach()
+    public void setUp() {
 
         requestParameters = new HashMap<>();
         requestParameters.put("resource_uri", RESOURCE_URI);
         requestParameters.put("request_id", REQUEST_ID);
 
-        String result = retrieveApiEnumerationDescription.getApiEnumerationDescription(FILING_DESCRIPTIONS_FILE_NAME_VALID,
-            DESCRIPTION_IDENTIFIERS_KEY_VALID,"abridged-accounts", requestParameters);
-
-        assertEquals(RESPONSE_WITH_PLACEHOLDER, result);
+        when(descriptionsFactory.createDescription(anyString())).thenReturn(descriptions);
+        when(descriptions.getData()).thenReturn(yamlTestData());
     }
 
-    private Map<String, Object> loadedYamlTestData() {
+    @Test
+    @DisplayName("test that a valid response is received when retrieving api enumerations for description two")
+    public void testValidReturnValue() {
+
+        String result = retrieveApiEnumerationDescription.getApiEnumerationDescription(anyString(),
+            DESCRIPTIONS, DESCRIPTION_TWO, requestParameters);
+
+        assertEquals(DESC_TWO_DATA, result);
+    }
+
+    @Test
+    @DisplayName("test that an empty value is returned when identifier not present in api enumerations")
+    public void testEmptyValueReturned() {
+
+        String result = retrieveApiEnumerationDescription.getApiEnumerationDescription(anyString(),
+            "invalid_tag", DESCRIPTION_TWO, requestParameters);
+
+        assertEquals("", result);
+    }
+
+    private Map<String, Object> yamlTestData() {
 
         Map<String, Object> testDataMap = new HashMap<>();
-        Map<String, String> testData = new HashMap<>();
+        Map<String, String> testDataOne = new HashMap<>();
+        Map<String, String> testDataTwo = new HashMap<>();
 
-        testData.put("abridged-accounts", "Abridged accounts made up to {period_end_on}");
-        testDataMap.put("description_identifiers", testData);
+        testDataOne.put(DESCRIPTION_ONE, DESC_ONE_DATA);
+        testDataOne.put(DESCRIPTION_TWO, DESC_TWO_DATA);
+        testDataMap.put(DESCRIPTIONS, testDataOne);
+
+        testDataTwo.put(ITEM_ONE, ITEM_ONE_DATA);
+        testDataTwo.put(ITEM_TWO, ITEM_TWO_DATA);
+        testDataMap.put(ITEMS, testDataTwo);
 
         return testDataMap;
     }
