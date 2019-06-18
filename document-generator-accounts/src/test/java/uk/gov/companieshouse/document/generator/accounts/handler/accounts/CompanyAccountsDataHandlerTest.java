@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.document.generator.accounts.handler.accounts;
 
+import java.util.Collections;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -10,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.accounts.CompanyAccountsApi;
 import uk.gov.companieshouse.api.model.accounts.CompanyAccountsLinks;
 import uk.gov.companieshouse.document.generator.accounts.AccountType;
+import uk.gov.companieshouse.document.generator.accounts.data.IxbrlDataWrapper;
 import uk.gov.companieshouse.document.generator.accounts.data.accounts.CompanyAccountsDocumentDataManager;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Resources;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
@@ -86,22 +88,25 @@ public class CompanyAccountsDataHandlerTest {
         when(accountsService.getCompanyAccounts(anyString(), anyString())).thenReturn(createCompanyAccounts());
         when(transactionService.getTransaction(anyString(), anyString())).thenReturn(createTransaction(COMPANY_ACCOUNTS_RESOURCE_URI));
         when(companyAccountsDocumentDataManager.getCompanyAccountDocumentData(any(CompanyAccountsApi.class), any(AccountType.class),
-                any(Transaction.class), anyString())).thenReturn(createCurrentSmallFullAccounts());
+                any(Transaction.class), anyString())).thenReturn(createIxbrlDataWrapper());
 
         assertNotNull(companyAccountsDataHandler.getCompanyAccountsData(COMPANY_ACCOUNTS_RESOURCE_URI, REQUEST_ID));
     }
 
-    private SmallFullAccountIxbrl createCurrentSmallFullAccounts() {
+    private IxbrlDataWrapper createIxbrlDataWrapper() {
+
+        IxbrlDataWrapper ixbrlDataWrapper = new IxbrlDataWrapper();
 
         SmallFullAccountIxbrl smallFullAccountIxbrl = new SmallFullAccountIxbrl();
-
         smallFullAccountIxbrl.setBalanceSheet(new BalanceSheet());
         smallFullAccountIxbrl.setPeriod(createPeriod());
         smallFullAccountIxbrl.setCompany(new Company());
         smallFullAccountIxbrl.setApprovalDate("2018-01-01");
         smallFullAccountIxbrl.setApprovalName("name");
 
-        return smallFullAccountIxbrl;
+        ixbrlDataWrapper.setAccounts(Collections.singletonMap("small_full_accounts", smallFullAccountIxbrl));
+
+        return ixbrlDataWrapper;
     }
 
     private Period createPeriod() {

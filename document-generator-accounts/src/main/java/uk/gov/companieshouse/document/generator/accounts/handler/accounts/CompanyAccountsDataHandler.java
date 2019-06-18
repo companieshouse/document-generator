@@ -5,12 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.api.model.accounts.CompanyAccountsApi;
 import uk.gov.companieshouse.document.generator.accounts.AccountType;
+import uk.gov.companieshouse.document.generator.accounts.data.IxbrlDataWrapper;
 import uk.gov.companieshouse.document.generator.accounts.data.accounts.CompanyAccountsDocumentDataManager;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.accounts.exception.AccountsLinkNotFoundException;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
-import uk.gov.companieshouse.document.generator.accounts.mapping.PeriodAwareIxbrl;
 import uk.gov.companieshouse.document.generator.accounts.service.AccountsService;
 import uk.gov.companieshouse.document.generator.accounts.service.TransactionService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
@@ -123,17 +123,17 @@ public class CompanyAccountsDataHandler {
         }
     }
 
-    private <T extends PeriodAwareIxbrl> DocumentInfoResponse createResponse(AccountType accountType, T accountData)
+    private DocumentInfoResponse createResponse(AccountType accountType, IxbrlDataWrapper ixbrlDataWrapper)
             throws IOException {
 
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
-        documentInfoResponse.setData(createDocumentInfoResponseData(accountData));
+        documentInfoResponse.setData(createDocumentInfoResponseData(ixbrlDataWrapper));
         documentInfoResponse.setAssetId(accountType.getAssetId());
         documentInfoResponse.setTemplateName(accountType.getTemplateName());
         documentInfoResponse.setPath(createPathString(accountType));
 
         Map<String, String> descriptionValues = new HashMap<>();
-        descriptionValues.put("period_end_on", getCurrentPeriodEndOn(accountData));
+        descriptionValues.put("period_end_on", getCurrentPeriodEndOn(ixbrlDataWrapper));
 
         documentInfoResponse.setDescriptionValues(descriptionValues);
         documentInfoResponse.setDescriptionIdentifier(accountType.getEnumerationKey());
@@ -144,14 +144,14 @@ public class CompanyAccountsDataHandler {
         return String.format("/%s/%s", accountType.getAssetId(), accountType.getUniqueFileName());
     }
 
-    private <T> String createDocumentInfoResponseData(T accountData) throws IOException {
+    private String createDocumentInfoResponseData(IxbrlDataWrapper ixbrlDataWrapper) throws IOException {
 
         ObjectMapper mapper = new ObjectMapper();
 
-        return mapper.writeValueAsString(accountData);
+        return mapper.writeValueAsString(ixbrlDataWrapper);
     }
 
-    private <T extends PeriodAwareIxbrl> String getCurrentPeriodEndOn(T accountData) {
-        return accountData.getPeriod().getCurrentPeriodEndsOn();
+    private String getCurrentPeriodEndOn(IxbrlDataWrapper ixbrlDataWrapper) {
+        return ixbrlDataWrapper.getAccounts().values().stream().findFirst().get().getPeriod().getCurrentPeriodEndsOn();
     }
 }
