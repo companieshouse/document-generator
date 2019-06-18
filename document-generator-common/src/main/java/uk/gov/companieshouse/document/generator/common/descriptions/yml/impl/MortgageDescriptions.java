@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-import static uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription.MODULE_NAME_SPACE;
+import static uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription.DESCRIPTIONS_MODULE_NAME_SPACE;
 
 @Component
 public class MortgageDescriptions implements Descriptions {
@@ -22,7 +22,7 @@ public class MortgageDescriptions implements Descriptions {
 
     private static final String MORTGAGE_DESCRIPTIONS_YML = "document-generator-common/api-enumerations/mortgage_descriptions.yml";
 
-    private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
+    private static final Logger LOG = LoggerFactory.getLogger(DESCRIPTIONS_MODULE_NAME_SPACE);
 
     public MortgageDescriptions() throws IOException {
 

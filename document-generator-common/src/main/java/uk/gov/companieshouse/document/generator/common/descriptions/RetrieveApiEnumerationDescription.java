@@ -16,9 +16,9 @@ public class RetrieveApiEnumerationDescription {
 
     private static final String REQUEST_ID = "request_id";
 
-    public static final String MODULE_NAME_SPACE = "document-generator-commons";
+    public static final String DESCRIPTIONS_MODULE_NAME_SPACE = "document-generator-commons-descriptions";
 
-    private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
+    private static final Logger LOG = LoggerFactory.getLogger(DESCRIPTIONS_MODULE_NAME_SPACE);
 
     @Autowired
     private DescriptionsFactory descriptionsFactory;
