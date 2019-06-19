@@ -28,17 +28,18 @@ public abstract class ApiToPreviousNamesMapper {
     public abstract List<PreviousNames> apiToPreviousNamesMapper(List<PreviousCompanyNamesApi> previousNames);
 
     @AfterMapping
-    protected void convertDate(PreviousCompanyNamesApi previousCompanyNamesApi, @MappingTarget PreviousNames previousNames){
+    protected void convertDate(PreviousCompanyNamesApi previousCompanyNamesApi,
+            @MappingTarget PreviousNames previousNames) {
 
-        if(previousCompanyNamesApi !=null ){
+        if (previousCompanyNamesApi != null) {
             previousNames.setDateOfChange(setDateOfChange(previousNames));
         }
     }
 
-    private String setDateOfChange( PreviousNames previousNames){
+    private String setDateOfChange(PreviousNames previousNames) {
 
         String dateOfChangeDate = previousNames.getDateOfChange();
-        if (dateOfChangeDate  != null){
+        if (dateOfChangeDate != null) {
 
             LocalDate localDate = LocalDate.parse(dateOfChangeDate);
             dateOfChangeDate = localDate.format(DateTimeFormatter.ofPattern("dd MMMM uuuu"));
