@@ -24,10 +24,13 @@ public class ApiToPreviousNamesMapperTest {
 
     private static final String PREVIOUS_NAME = "previous name 1";
     private static final LocalDate DATE_OF_CHANGE = LocalDate.of(2019, 06, 06);
+    private static final String DATE_OF_CHANGE_FORMATTED = "06 June 2019";
     private static final String PREVIOUS_NAME2 = "previous name 2";
     private static final LocalDate DATE_OF_CHANGE2 = LocalDate.of(2018, 05, 05);
+    private static final String DATE_OF_CHANGE_FORMATTED2 = "05 May 2018";
     private static final String PREVIOUS_NAME3 = "previous name 3";
-    private static final LocalDate DATE_OF_CHANGE3 = LocalDate.of(2017, 05, 05);
+    private static final LocalDate DATE_OF_CHANGE3 = LocalDate.of(2017, 04, 04);
+    private static final String DATE_OF_CHANGE_FORMATTED3 = "04 April 2017";
 
     @InjectMocks
     private ApiToPreviousNamesMapper apiToPreviousNamesMapper = new ApiToPreviousNamesMapperImpl();
@@ -43,7 +46,7 @@ public class ApiToPreviousNamesMapperTest {
 
         assertNotNull(previousNames);
         assertEquals(PREVIOUS_NAME, previousNames.getPreviousName());
-        assertEquals(DATE_OF_CHANGE, previousNames.getDateOfChange());
+        assertEquals(DATE_OF_CHANGE_FORMATTED, previousNames.getDateOfChange());
 
     }
 
@@ -64,13 +67,13 @@ public class ApiToPreviousNamesMapperTest {
         assertEquals(3, previousNamesList.size());
 
         assertEquals(previousNamesList.get(0).getPreviousName(), PREVIOUS_NAME);
-        assertEquals(previousNamesList.get(0).getDateOfChange(), DATE_OF_CHANGE);
+        assertEquals(previousNamesList.get(0).getDateOfChange(), DATE_OF_CHANGE_FORMATTED);
 
         assertEquals(previousNamesList.get(1).getPreviousName(), PREVIOUS_NAME2);
-        assertEquals(previousNamesList.get(1).getDateOfChange(), DATE_OF_CHANGE2);
+        assertEquals(previousNamesList.get(1).getDateOfChange(), DATE_OF_CHANGE_FORMATTED2);
 
         assertEquals(previousNamesList.get(2).getPreviousName(), PREVIOUS_NAME3);
-        assertEquals(previousNamesList.get(2).getDateOfChange(), DATE_OF_CHANGE3);
+        assertEquals(previousNamesList.get(2).getDateOfChange(), DATE_OF_CHANGE_FORMATTED3);
 
     }
 
