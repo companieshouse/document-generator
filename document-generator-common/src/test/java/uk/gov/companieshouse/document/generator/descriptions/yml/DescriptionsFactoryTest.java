@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.document.generator.descriptions;
+package uk.gov.companieshouse.document.generator.descriptions.yml;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

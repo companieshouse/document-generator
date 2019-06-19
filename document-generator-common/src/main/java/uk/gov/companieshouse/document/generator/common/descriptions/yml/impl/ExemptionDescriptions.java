@@ -24,7 +24,7 @@ public class ExemptionDescriptions implements Descriptions {
 
     private static final Logger LOG = LoggerFactory.getLogger(DESCRIPTIONS_MODULE_NAME_SPACE);
 
-    public ExemptionDescriptions() throws IOException {
+    public ExemptionDescriptions() {
 
         Yaml yaml = new Yaml();
         File descriptionsFile = new File(EXCEMPTION_DESCRIPTIONS_YML);
@@ -36,6 +36,9 @@ public class ExemptionDescriptions implements Descriptions {
 
         } catch (FileNotFoundException e) {
             LOG.error("file not found when obtaining api enumeration " +
+                "descriptions for file name: " + descriptionsFile, e);
+        } catch (IOException e) {
+            LOG.error("unable to read file when obtaining api enumeration " +
                 "descriptions for file name: " + descriptionsFile, e);
         }
     }

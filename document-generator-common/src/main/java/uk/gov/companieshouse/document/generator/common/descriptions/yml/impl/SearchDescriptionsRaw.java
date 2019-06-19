@@ -24,7 +24,7 @@ public class SearchDescriptionsRaw implements Descriptions {
 
     private static final Logger LOG = LoggerFactory.getLogger(DESCRIPTIONS_MODULE_NAME_SPACE);
 
-    public SearchDescriptionsRaw() throws IOException {
+    public SearchDescriptionsRaw() {
 
         Yaml yaml = new Yaml();
         File descriptionsFile = new File(SEARCH_DESCRIPTIONS_RAW_YAML);
@@ -36,6 +36,9 @@ public class SearchDescriptionsRaw implements Descriptions {
 
         } catch (FileNotFoundException e) {
             LOG.error("file not found when obtaining api enumeration " +
+                "descriptions for file name: " + descriptionsFile, e);
+        } catch (IOException e) {
+            LOG.error("unable to read file when obtaining api enumeration " +
                 "descriptions for file name: " + descriptionsFile, e);
         }
     }

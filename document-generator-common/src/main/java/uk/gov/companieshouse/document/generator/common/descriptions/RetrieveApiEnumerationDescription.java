@@ -45,7 +45,7 @@ public class RetrieveApiEnumerationDescription {
         Map<String, String> requestParameters) {
 
         LOG.infoContext(requestParameters.get(REQUEST_ID),
-            "getting value from the file descriptions file: " + descriptionType + " using key: " + key,
+            "getting descriptions value from: " + descriptionType + " using key: " + key,
             setDebugMap(requestParameters));
 
         return descriptions.entrySet().stream()
@@ -54,7 +54,7 @@ public class RetrieveApiEnumerationDescription {
             .findFirst()
             .orElseGet(() -> {
                 LOG.infoContext(requestParameters.get(REQUEST_ID),
-                    "Value not found in file descriptions file: "
+                    "Descriptions value not found for: "
                     + descriptionType + " for key: " + key, setDebugMap(requestParameters));
                 return null;
             });

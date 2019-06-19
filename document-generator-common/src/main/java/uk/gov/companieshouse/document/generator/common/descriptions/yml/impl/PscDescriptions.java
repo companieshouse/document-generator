@@ -24,7 +24,7 @@ public class PscDescriptions implements Descriptions {
 
     private static final Logger LOG = LoggerFactory.getLogger(DESCRIPTIONS_MODULE_NAME_SPACE);
 
-    public PscDescriptions() throws IOException {
+    public PscDescriptions() {
 
         Yaml yaml = new Yaml();
         File descriptionsFile = new File(PSC_DESCRIPTIONS_YML);
@@ -36,6 +36,9 @@ public class PscDescriptions implements Descriptions {
 
         } catch (FileNotFoundException e) {
             LOG.error("file not found when obtaining api enumeration " +
+                "descriptions for file name: " + descriptionsFile, e);
+        } catch (IOException e) {
+            LOG.error("unable to read file when obtaining api enumeration " +
                 "descriptions for file name: " + descriptionsFile, e);
         }
     }
