@@ -2,10 +2,12 @@ package uk.gov.companieshouse.document.generator.common.descriptions.yml.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
 import uk.gov.companieshouse.document.generator.common.descriptions.yml.Descriptions;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -20,14 +22,16 @@ public class Constants implements Descriptions {
 
     private Map<String, Object> constants;
 
-    private static final String CONSTANTS_YML = "document-generator-common/api-enumerations/constants.yml";
+    @Value("${constants.location}")
+    private String constantsYml;
 
     private static final Logger LOG = LoggerFactory.getLogger(DESCRIPTIONS_MODULE_NAME_SPACE);
 
-    public Constants() {
+    @PostConstruct
+    public void init() {
 
         Yaml yaml = new Yaml();
-        File descriptionsFile = new File(CONSTANTS_YML);
+        File descriptionsFile = new File(constantsYml);
 
         try (InputStream inputStream = new FileInputStream(descriptionsFile)) {
 
