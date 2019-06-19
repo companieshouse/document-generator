@@ -2,10 +2,12 @@ package uk.gov.companieshouse.document.generator.common.descriptions.yml.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
 import uk.gov.companieshouse.document.generator.common.descriptions.yml.Descriptions;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -20,19 +22,21 @@ public class FilingDescriptions implements Descriptions {
 
     private Map<String, Object> filingDescriptions;
 
-    private static final String FILING_DESCRIPTIONS_YML = "document-generator-common/api-enumerations/filing_descriptions.yml";
+    @Value("${filing.descriptions}")
+    private String filingDescriptionsYml;
 
     private static final Logger LOG = LoggerFactory.getLogger(DESCRIPTIONS_MODULE_NAME_SPACE);
 
-    public FilingDescriptions() {
+    @PostConstruct
+    public void init() {
 
         Yaml yaml = new Yaml();
-        File descriptionsFile = new File(FILING_DESCRIPTIONS_YML);
+        File descriptionsFile = new File(filingDescriptionsYml);
 
         try (InputStream inputStream = new FileInputStream(descriptionsFile)) {
 
             filingDescriptions = (Map<String, Object>) yaml.load(inputStream);
-            LOG.info("filing_descriptions.yml file pre loaded in document-generator");
+            LOG.info("filing_descriptions SUCCESSFULLY POPULATED");
 
         } catch (FileNotFoundException e) {
             LOG.error("file not found when obtaining api enumeration " +

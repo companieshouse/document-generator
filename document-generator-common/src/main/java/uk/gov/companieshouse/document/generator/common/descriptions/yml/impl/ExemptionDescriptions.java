@@ -2,10 +2,12 @@ package uk.gov.companieshouse.document.generator.common.descriptions.yml.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
 import uk.gov.companieshouse.document.generator.common.descriptions.yml.Descriptions;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -20,19 +22,21 @@ public class ExemptionDescriptions implements Descriptions {
 
     private Map<String, Object> excemptionDescriptions;
 
-    private static final String EXCEMPTION_DESCRIPTIONS_YML = "document-generator-common/api-enumerations/exemption_descriptions.yml";
+    @Value("${exemption.descriptions}")
+    private String exemptionDescriptionsYml;
 
     private static final Logger LOG = LoggerFactory.getLogger(DESCRIPTIONS_MODULE_NAME_SPACE);
 
-    public ExemptionDescriptions() {
+    @PostConstruct
+    public void init() {
 
         Yaml yaml = new Yaml();
-        File descriptionsFile = new File(EXCEMPTION_DESCRIPTIONS_YML);
+        File descriptionsFile = new File(exemptionDescriptionsYml);
 
         try (InputStream inputStream = new FileInputStream(descriptionsFile)) {
 
             excemptionDescriptions = (Map<String, Object>) yaml.load(inputStream);
-            LOG.info("exemption_descriptions.yml file pre loaded in document-generator");
+            LOG.info("exemption_descriptions SUCCESSFULLY POPULATED");
 
         } catch (FileNotFoundException e) {
             LOG.error("file not found when obtaining api enumeration " +

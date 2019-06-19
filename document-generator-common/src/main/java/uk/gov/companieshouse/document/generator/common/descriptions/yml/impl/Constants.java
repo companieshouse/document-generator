@@ -36,7 +36,7 @@ public class Constants implements Descriptions {
         try (InputStream inputStream = new FileInputStream(descriptionsFile)) {
 
             constants = (Map<String, Object>) yaml.load(inputStream);
-            LOG.info("constants.yml file pre loaded in document-generator");
+            LOG.info("constants descriptions SUCCESSFULLY POPULATED");
 
         } catch (FileNotFoundException e) {
             LOG.error("file not found when obtaining api enumeration " +

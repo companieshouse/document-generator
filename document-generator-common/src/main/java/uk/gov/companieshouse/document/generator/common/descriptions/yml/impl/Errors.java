@@ -2,10 +2,12 @@ package uk.gov.companieshouse.document.generator.common.descriptions.yml.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
 import uk.gov.companieshouse.document.generator.common.descriptions.yml.Descriptions;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -20,19 +22,21 @@ public class Errors implements Descriptions {
 
     private Map<String, Object> errors;
 
-    private static final String ERRORS_YML = "document-generator-common/api-enumerations/errors.yml";
+    @Value("${errors.descriptions}")
+    private String errorsYml;
 
     private static final Logger LOG = LoggerFactory.getLogger(DESCRIPTIONS_MODULE_NAME_SPACE);
 
-    public Errors() {
+    @PostConstruct
+    public void init() {
 
         Yaml yaml = new Yaml();
-        File descriptionsFile = new File(ERRORS_YML);
+        File descriptionsFile = new File(errorsYml);
 
         try (InputStream inputStream = new FileInputStream(descriptionsFile)) {
 
             errors = (Map<String, Object>) yaml.load(inputStream);
-            LOG.info("errors.yml file pre loaded in document-generator");
+            LOG.info("errors descriptions SUCCESSFULLY POPULATED");
 
         } catch (FileNotFoundException e) {
             LOG.error("file not found when obtaining api enumeration " +

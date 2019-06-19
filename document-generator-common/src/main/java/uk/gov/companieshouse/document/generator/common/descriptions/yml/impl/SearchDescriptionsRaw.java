@@ -2,10 +2,13 @@ package uk.gov.companieshouse.document.generator.common.descriptions.yml.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
 import uk.gov.companieshouse.document.generator.common.descriptions.yml.Descriptions;
 
+import javax.annotation.PostConstruct;
+import javax.validation.constraints.PastOrPresent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -20,19 +23,21 @@ public class SearchDescriptionsRaw implements Descriptions {
 
     private Map<String, Object> searchDescriptionsRaw;
 
-    private static final String SEARCH_DESCRIPTIONS_RAW_YAML = "document-generator-common/api-enumerations/search_descriptions_raw.yaml";
+    @Value("${search.descriptions.raw}")
+    private String searchDescriptionsRawYml;
 
     private static final Logger LOG = LoggerFactory.getLogger(DESCRIPTIONS_MODULE_NAME_SPACE);
 
-    public SearchDescriptionsRaw() {
+    @PostConstruct
+    public void init() {
 
         Yaml yaml = new Yaml();
-        File descriptionsFile = new File(SEARCH_DESCRIPTIONS_RAW_YAML);
+        File descriptionsFile = new File(searchDescriptionsRawYml);
 
         try (InputStream inputStream = new FileInputStream(descriptionsFile)) {
 
             searchDescriptionsRaw = (Map<String, Object>) yaml.load(inputStream);
-            LOG.info("search_descriptions_raw.yml file pre loaded in document-generator");
+            LOG.info("search_descriptions_raw SUCCESSFULLY POPULATED");
 
         } catch (FileNotFoundException e) {
             LOG.error("file not found when obtaining api enumeration " +
