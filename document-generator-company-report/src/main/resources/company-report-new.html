@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+{{$companyRegistrationInformation := .company_report.company_registration_information}}
+{{$previousNames := .company_report.previous_names}}
+<head>
+    <meta charset="UTF-8">
+    <title>{{$companyRegistrationInformation.company_name}}</title>
+    <style type="text/css">
+
+      main {
+        padding-bottom: 3em;
+      }
+
+      .pagebreak {
+        page-break-before: always;
+      }
+
+      @media print {
+
+        .page-break {
+          min-height: 400px;
+          page-break-before: always;
+        }
+        .page {
+          min-height: 25cm;
+          border-style: solid;
+          border-width: 0;
+          page-break-after: always;
+          margin: 0 auto;
+          width: 170mm;
+          position: relative;
+        }
+        @page {
+          size: A4;
+        }
+        @media print {
+          body,
+          html {
+            height: 257mm;
+            margin: 0 auto;
+            width: 170mm;
+            font-size: 12px;
+          }
+        }
+        @media screen {
+          .page {
+            margin-bottom: 5em;
+          }
+        }
+        .section-marker {
+          left: 0;
+          position: absolute;
+          top: 0;
+
+          * {
+            position: relative;
+          }
+        }
+    </style>
+    <link href="https://d11ystzvnk2sve.cloudfront.net/stylesheets/assets-digital-cabinet-office-gov-uk-static/govuk-template.css" media="screen" rel="stylesheet" type="text/css">
+    <link href="https://d11ystzvnk2sve.cloudfront.net/stylesheets/application.css" media="screen" rel="stylesheet" type="text/css">
+</head>
+<body id="page-container">
+
+<header role="banner">
+    <a href="https://beta.companieshouse.gov.uk/company/00006400">
+        <span class="visually-hidden">{{$companyRegistrationInformation.company_name}}</span><img src="https://document-render-assets-registry.s3-eu-west-1.amazonaws.com/accounts/images/ch-logo.png" alt=""></a>
+
+    <h1 class="heading-xlarge">{{$companyRegistrationInformation.company_name}}<br/>
+        {{$companyRegistrationInformation.company_number}}</h1>
+    <p class="heading-small">Created: 1 May 2019 09:28:01 THIS IS HARDCODED</p>
+    <p class="heading-small">Companies House does not verify the accuracy of the information filed</p>
+</header>
+<main role="main">
+
+    <h2 class="heading-large">Overview</h2>
+    <ul class="list list-bullet">
+        {{if $roa := $companyRegistrationInformation.registered_office}}
+        <li>Registered office:
+            {{if $roa.care_of}}
+            {{index $roa "care_of"}}
+            {{end}}
+            {{if $roa.po_box}}
+            {{index $roa "po_box"}}
+            {{end}}
+            {{if $roa.premises}}
+            {{index $roa "premises"}}
+            {{end}}
+            {{if $roa.address_line_1}}
+            {{index $roa "address_line_1"}}
+            {{end}}
+            {{if $roa.address_line_2}}
+            {{index $roa "address_line_2"}}
+            {{end}}
+            {{if $roa.locality}}
+            {{index $roa "locality"}}
+            {{end}}
+            {{if $roa.region}}
+            {{index $roa "region"}}
+            {{end}}
+            {{if $roa.country}}
+            {{index $roa "country"}}
+            {{end}}
+            {{if $roa.postal_code}}
+            {{index $roa "postal_code"}}
+            {{end}}
+        </li>}
+        {{end}}
+        <li>Company type: {{$companyRegistrationInformation.company_type.type}}/{{$companyRegistrationInformation.company_type.subtype}}</li>
+        <li>Date of incorporation: {{$companyRegistrationInformation.date_of_incorporation}}</li>
+        <li>Status:{{$companyRegistrationInformation.status.company_status}}/{{$companyRegistrationInformation.status.company_status_detail}}</li>
+    </ul>
+
+    <h3 class="heading-small">Nature of business (SIC)</h3>
+    <ul class="list list-bullet">
+        <li>85100 - Pre-primary education</li>
+        <li>85200 - Primary education</li>
+        <li>85310 - General secondary education</li>
+    </ul>
+    <h3 class="heading-small">Previous company names</h3>
+    <table>
+        <caption class="visually-hidden">Previous company names</caption>
+        <!-- this hidden caption is needed for screen-readers-->
+        <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Period</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>THE GIRLS' DAY SCHOOL TRUST (1872)</td>
+            <td scope="row">1 September 2003</td>
+        </tr>
+        <tr>
+            <td>THE GIRLS' PUBLIC DAY SCHOOL TRUST (1872)</td>
+            <td scope="row">28 April 1998</td>
+
+        </tr>
+        <tr>
+            <td>GIRL'S PUBLIC DAY SCHOOL TRUST(THE)</td>
+            <td scope="row">25 August 1993</td>
+        </tr>
+        </tbody>
+    </table>
+
+</main>
+</body>
+</html>
