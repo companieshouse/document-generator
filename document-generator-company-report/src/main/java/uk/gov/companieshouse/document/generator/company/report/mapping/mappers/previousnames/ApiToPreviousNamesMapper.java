@@ -19,7 +19,7 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 public abstract class ApiToPreviousNamesMapper {
 
     @Mappings({
-            
+
             @Mapping(source = "name", target = "previousName")
     })
 
