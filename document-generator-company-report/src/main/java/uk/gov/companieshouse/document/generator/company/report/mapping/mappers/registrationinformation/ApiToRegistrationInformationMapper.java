@@ -1,5 +1,8 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.registrationinformation;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import org.apache.tomcat.jni.Local;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -23,7 +26,6 @@ public abstract class ApiToRegistrationInformationMapper {
     @Mappings({
             @Mapping(source = "companyName", target = "companyName"),
             @Mapping(source = "companyNumber", target = "companyNumber"),
-            @Mapping(source = "dateOfCreation", target = "dateOfIncorporation"),
             @Mapping(source = "registeredOfficeAddress.addressLine1", target = "registeredOffice.addressLine1"),
             @Mapping(source = "registeredOfficeAddress.addressLine2", target = "registeredOffice.addressLine2"),
             @Mapping(source = "registeredOfficeAddress.careOf", target = "registeredOffice.careOf"),
@@ -53,6 +55,19 @@ public abstract class ApiToRegistrationInformationMapper {
                     companyProfileApi.getCompanyStatusDetail()));
         }
     }
+
+    @AfterMapping
+    protected void convertDate(CompanyProfileApi companyProfileApi, @MappingTarget RegistrationInformation registrationInformation) {
+
+        if (companyProfileApi != null) {
+
+            if (companyProfileApi.getDateOfCreation() != null) {
+
+                registrationInformation.setDateOfIncorporation(companyProfileApi.getDateOfCreation().format(DateTimeFormatter.ofPattern("dd MMMM uuuu")));
+            }
+        }
+    }
+
 
     //TODO convert companyStatus and companyStatusDetail param to api-enumeration value in constants.yml PCI-77
     private Status setCompanyStatus(String companyStatus, String companyStatusDetail) {

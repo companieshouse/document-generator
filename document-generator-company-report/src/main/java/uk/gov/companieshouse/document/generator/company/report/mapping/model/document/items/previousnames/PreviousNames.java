@@ -10,18 +10,17 @@ import java.time.LocalDate;
 @JsonInclude(Include.NON_NULL)
 public class PreviousNames {
 
-    @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonProperty("date_of_change")
-    private LocalDate dateOfChange;
+    private String dateOfChange;
 
     @JsonProperty("previous_name")
     private String previousName;
 
-    public LocalDate getDateOfChange() {
+    public String getDateOfChange() {
         return dateOfChange;
     }
 
-    public void setDateOfChange(LocalDate dateOfChange) {
+    public void setDateOfChange(String dateOfChange) {
         this.dateOfChange = dateOfChange;
     }
 
