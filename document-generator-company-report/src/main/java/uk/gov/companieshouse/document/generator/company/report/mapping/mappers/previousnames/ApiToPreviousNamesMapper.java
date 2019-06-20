@@ -19,7 +19,7 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 public abstract class ApiToPreviousNamesMapper {
 
     @Mappings({
-            @Mapping(source = "ceasedOn", target = "dateOfChange"),
+            
             @Mapping(source = "name", target = "previousName")
     })
 
@@ -32,19 +32,10 @@ public abstract class ApiToPreviousNamesMapper {
             @MappingTarget PreviousNames previousNames) {
 
         if (previousCompanyNamesApi != null) {
-            previousNames.setDateOfChange(setDateOfChange(previousNames));
+
+            String dateOfChange = previousCompanyNamesApi.getCeasedOn().format(DateTimeFormatter.ofPattern("dd MMMM uuuu"));
+
+            previousNames.setDateOfChange(dateOfChange);
         }
-    }
-
-    private String setDateOfChange(PreviousNames previousNames) {
-
-        String dateOfChangeDate = previousNames.getDateOfChange();
-        if (dateOfChangeDate != null) {
-
-            LocalDate localDate = LocalDate.parse(dateOfChangeDate);
-            dateOfChangeDate = localDate.format(DateTimeFormatter.ofPattern("dd MMMM uuuu"));
-        }
-
-        return dateOfChangeDate;
     }
 }

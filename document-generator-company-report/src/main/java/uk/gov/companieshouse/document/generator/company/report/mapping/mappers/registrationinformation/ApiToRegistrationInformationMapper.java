@@ -2,6 +2,7 @@ package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import org.apache.tomcat.jni.Local;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -25,7 +26,6 @@ public abstract class ApiToRegistrationInformationMapper {
     @Mappings({
             @Mapping(source = "companyName", target = "companyName"),
             @Mapping(source = "companyNumber", target = "companyNumber"),
-            @Mapping(source = "dateOfCreation", target = "dateOfIncorporation"),
             @Mapping(source = "registeredOfficeAddress.addressLine1", target = "registeredOffice.addressLine1"),
             @Mapping(source = "registeredOfficeAddress.addressLine2", target = "registeredOffice.addressLine2"),
             @Mapping(source = "registeredOfficeAddress.careOf", target = "registeredOffice.careOf"),
@@ -40,52 +40,47 @@ public abstract class ApiToRegistrationInformationMapper {
 
     @AfterMapping
     protected void convertEnumerationValues(CompanyProfileApi companyProfileApi,
-        @MappingTarget RegistrationInformation registrationInformation) {
+            @MappingTarget RegistrationInformation registrationInformation) {
 
         if (companyProfileApi != null) {
             registrationInformation.setCompanyType(
-                setCompanyType(companyProfileApi.getType(),
-                    companyProfileApi.getSubtype()));
+                    setCompanyType(companyProfileApi.getType(),
+                            companyProfileApi.getSubtype()));
 
             registrationInformation.setNatureOfBusiness(
-                setNatureOfBusiness(companyProfileApi.getSicCodes()));
+                    setNatureOfBusiness(companyProfileApi.getSicCodes()));
 
             registrationInformation.setStatus(
-                setCompanyStatus(companyProfileApi.getCompanyStatus(),
-                    companyProfileApi.getCompanyStatusDetail()));
+                    setCompanyStatus(companyProfileApi.getCompanyStatus(),
+                            companyProfileApi.getCompanyStatusDetail()));
         }
     }
 
     @AfterMapping
-    protected void convertDate(CompanyProfileApi companyProfileApi, @MappingTarget RegistrationInformation registrationInformation){
+    protected void convertDate(CompanyProfileApi companyProfileApi, @MappingTarget RegistrationInformation registrationInformation) {
 
-        if(companyProfileApi !=null ){
-            registrationInformation.setDateOfIncorporation(setDateOfIncorporation(registrationInformation));
+        if (companyProfileApi != null) {
+
+            if (companyProfileApi.getDateOfCreation() != null) {
+
+                String dateOfIncorporation = companyProfileApi.getDateOfCreation().format(DateTimeFormatter.ofPattern("dd MMMM uuuu"));
+
+                registrationInformation.setDateOfIncorporation(dateOfIncorporation);
+            }
         }
     }
 
-    private String setDateOfIncorporation( RegistrationInformation registrationInformation){
-
-        String dateOfIncorporation = registrationInformation.getDateOfIncorporation();
-        if (dateOfIncorporation  != null){
-
-            LocalDate localDate = LocalDate.parse(dateOfIncorporation);
-            dateOfIncorporation = localDate.format(DateTimeFormatter.ofPattern("dd MMMM uuuu"));
-        }
-
-            return dateOfIncorporation;
-        }
 
     //TODO convert companyStatus and companyStatusDetail param to api-enumeration value in constants.yml PCI-77
     private Status setCompanyStatus(String companyStatus, String companyStatusDetail) {
 
         Status status = new Status();
 
-        if (companyStatus != null && !companyStatus.isEmpty()) {
+        if (companyStatus != null && ! companyStatus.isEmpty()) {
             status.setCompanyStatus(companyStatus);
         }
 
-        if (companyStatusDetail != null && !companyStatusDetail.isEmpty()) {
+        if (companyStatusDetail != null && ! companyStatusDetail.isEmpty()) {
             status.setCompanyStatusDetail(companyStatusDetail);
         }
 
@@ -114,11 +109,11 @@ public abstract class ApiToRegistrationInformationMapper {
 
         CompanyType companyType = new CompanyType();
 
-        if (type != null && !type.isEmpty()) {
+        if (type != null && ! type.isEmpty()) {
             companyType.setType(type);
         }
 
-        if (subtype != null && !subtype.isEmpty()) {
+        if (subtype != null && ! subtype.isEmpty()) {
             companyType.setSubtype(subtype);
         }
 
