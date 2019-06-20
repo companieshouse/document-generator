@@ -2,421 +2,145 @@
 <html lang="en">
 {{$companyRegistrationInformation := .company_report.company_registration_information}}
 {{$previousNames := .company_report.previous_names}}
-{{$keyFilingDates := .company_report.key_filing_dates}}
 <head>
     <meta charset="UTF-8">
     <title>{{$companyRegistrationInformation.company_name}}</title>
     <style type="text/css">
-            body {
-            font-size: 12px;
-            }
-            .pagebreak { page-break-before: always; }
-            /*
-            * Addresses `h1` font sizes within `section` and `article` in Firefox 4+,
-            * Safari 5, and Chrome.
-            */
-            h1 {
-            font-size: 2em;
-            }
-            /*
-            * Addresses style set to `bolder` in Firefox 4+, Safari 5, and Chrome.
-            */
-            b,
-            strong {
-            font-weight: bold;
-            }
-            /* ==========================================================================
-            Tables
-            ========================================================================== */
-            /*
-            * Remove most spacing between table cells.
-            */
-            table {
-            border-spacing: 10px;
-            border-top: 1px solid;
-            }
-            /**
-            * Text alignment
-            */
-            .text--left {
-            text-align: left !important;
-            }
-            .text--center {
-            text-align: center!important;
-            }
-            .text--right {
-            text-align: right !important;
-            }
-            /**
-            * Making 'strong' text stand out.
-            */
-            .strong {
-            font-weight: bold;
-            }
-            /**
-            * Centers the content of the element.
-            */
-            .center {
-            text-align: center;
-            }
-            /**
-            * Increase the body size.
-            */
-            .body {
-            font-size: 100%;
-            }
-            /*** TYPOGRAPHY ***/
-            h1 {
-            font-weight: bold;
-            font-size: 16px;
-            }
-            h2 {
-            font-weight: bold;
-            font-size: 14px;
-            }
-            h3 {
-            font-weight: bold;
-            font-size: 12px;
-            }
-            p {
-            margin-top: 0.3125em;
-            margin-bottom: 1.25em;
-            }
-            p.accounts-upload {
-            font-size: 1.3em;
-            }
-            .accounts-body {
-            font-family: 'SourceSansPro-Regular';
-            }
-            .margin-large {
-            margin-top: 4em;
-            }
-            .margin-right {
-            margin-right: 20px;
-            }
-            .margin-xx-large {
-            margin-top: 10em;
-            }
-            .header {
-            padding: 5px;
-            }
-            .text-area-display {
-            white-space: pre-line;
-            }
-            /*** TABLE ***/
-            table {
-            font-family: 'SourceSansPro-Regular';
-            font-size: 12px;
-            width: 100%;
-            padding-bottom: 15px;
-            }
-            th {
-            font-weight: bold;
-            vertical-align: top;
-            text-align: left;
-            }
-            td {
-            vertical-align: top;
-            text-align: left;
-            }
-            .table-heading {
-            text-align: right;
-            font-style: italic
-            }
-            td.figure,
-            td.total,
-            td.total-no-top-border,
-            td.grandtotal,
-            td.total-no-top-border,
-            td.grandtotal-no-top-border,
-            th.figure {
-            vertical-align: middle;
-            text-align: right;
-            white-space: nowrap;
-            width: 14%;
-            }
-            td.description {
-            width: 50%;
-            }
-            td.total {
-            border-top: black solid 1px;
-            border-bottom: black solid 1px;
-            }
-            td.total-no-top-border {
-            border-bottom: black solid 1px;
-            }
-            td.grandtotal-no-top-border {
-            border-bottom: black double 3px;
-            }
-            td.grandtotal {
-            border-top: black solid 1px;
-            border-bottom: black double 3px;
-            }
-            td.align-right {
-            text-align: right;
-            }
-            @media print {
-            td.figure,
-            td.total,
-            td.total-no-top-border,
-            td.grandtotal,
-            td.total-no-top-border,
-            td.grandtotal-no-top-border,
-            th.figure {
-            width: 15%;
-            }
-            }
-            ol,
-            ul {
-            margin-top: 5px;
-            margin-bottom: 20px;
-            padding: 0;
-            }
-            ul,
-            ol {
-            list-style-type: none;
-            }
-            ul li {
-            margin-bottom: 5px;
-            }
-            .page-break {
-            min-height: 400px;
-            page-break-before:always;
-            }
-            .page {
-            min-height: 25cm;
-            border-style: solid;
-            border-width: 0px;
-            page-break-after: always;
-            margin: 0 auto;
-            width: 170mm;
-            position: relative;
-            }
-            @page {
-            size: A4;
-            }
-            @media print {
-            html, body {
+
+      main {
+        padding-bottom: 3em;
+      }
+
+      .pagebreak {
+        page-break-before: always;
+      }
+
+      @media print {
+
+        .page-break {
+          min-height: 400px;
+          page-break-before: always;
+        }
+        .page {
+          min-height: 25cm;
+          border-style: solid;
+          border-width: 0;
+          page-break-after: always;
+          margin: 0 auto;
+          width: 170mm;
+          position: relative;
+        }
+        @page {
+          size: A4;
+        }
+        @media print {
+          body,
+          html {
             height: 257mm;
             margin: 0 auto;
             width: 170mm;
             font-size: 12px;
-            }
-            }
-            @media screen {
-            .page {
-            margin-bottom: 5em
-            }
-            }
-            .section-marker {
-            left: 0;
-            position: absolute;
-            top: 0;
-            }
-            .draft .page-break,
-            .draft #AccountsHeader {
-            zoom: expression(this.runtimeStyle.zoom="1", this.insertBefore(document.createElement("i"), this.firstChild).className="ie-after");
-            }
-            .draft .page:after,
-            .draft .page-break:after,
-            .draft #AccountsHeader:after {
-            content: "Draft";
-            color: #888;
-            display: block;
-            font-size: 128px;
-            left: 50%;
-            line-height: 1em;
-            margin: -64px 0 0 -210px;
-            opacity: 0.5;
-            position: absolute;
-            text-transform: uppercase;
-            top: 50%;
-            -moz-transform: rotate(-30deg);
-            -webkit-transform: rotate(-30deg);
-            -o-transform: rotate(-30deg);
-            -ms-transform: rotate(-30deg);
-            transform: rotate(-30deg);
-            z-index: 5;
-            }
-            .draft .page .ie-after,
-            .draft .page-break .ie-after,
-            .draft #AccountsHeader .ie-after {
-            color: #888;
-            display: block;
-            filter: alpha(opacity=50);
-            font-size: 128px;
-            left: 50%;
-            line-height: 1em;
-            margin: -64px 0 0 -210px;
-            position: absolute;
-            text-transform: uppercase;
-            top: 50%;
-            z-index: 5;
-            zoom: expression(this.runtimeStyle.zoom="1", this.innerHTML = "DRAFT");
-            }
-            .table-margin-bottom-spacing {
-            margin-bottom: 12px;
-            }
-            .negative, .debit {
-            white-space: nowrap;
-            }
-            * {
+          }
+        }
+        @media screen {
+          .page {
+            margin-bottom: 5em;
+          }
+        }
+        .section-marker {
+          left: 0;
+          position: absolute;
+          top: 0;
+
+          * {
             position: relative;
-            }
-        </style>
+          }
+        }
+    </style>
+    <link href="https://d11ystzvnk2sve.cloudfront.net/stylesheets/assets-digital-cabinet-office-gov-uk-static/govuk-template.css" media="screen" rel="stylesheet" type="text/css">
+    <link href="https://d11ystzvnk2sve.cloudfront.net/stylesheets/application.css" media="screen" rel="stylesheet" type="text/css">
 </head>
-<body>
+<body id="page-container">
 
-<!--TITLE PAGE START-->
+<header role="banner">
+    <a href="https://beta.companieshouse.gov.uk/company/00006400">
+        <span class="visually-hidden">{{$companyRegistrationInformation.company_name}}</span><img src="https://document-render-assets-registry.s3-eu-west-1.amazonaws.com/accounts/images/ch-logo.png" alt=""></a>
 
-<div>
-    <div class="page">
-        {{$charsPerPage := 7000}}
-        {{setValue "page-number" 1}}
-        <div id="CompanyRecordHeader" class="page margin-xx-large">
+    <h1 class="heading-xlarge">{{$companyRegistrationInformation.company_name}}<br/>
+        {{$companyRegistrationInformation.company_number}}</h1>
+    <p class="heading-small">Created: 1 May 2019 09:28:01 THIS IS HARDCODED</p>
+    <p class="heading-small">Companies House does not verify the accuracy of the information filed</p>
+</header>
+<main role="main">
 
-            <div class="header">
-
-                <div class="text--center">
-                    <img src="https://document-render-assets-registry.s3-eu-west-1.amazonaws.com/accounts/images/ch-logo.png" alt="Cannot load image" >
-                </div>
-
-                <br/>
-                <h1 class="text--center">
-                    The Company Record for:
-                    <br/>
-
-                    {{$companyRegistrationInformation.company_name}}
-                    <br/>
-                    {{$companyRegistrationInformation.company_number}}
-                </h1>
-
-                <h2 class="text--center">
-                    Created: 01/05/2019 09:28:01 (THIS IS HARDCODED)
-                </h2>
-            </div>
-            <p>
-                Companies House does not verify the accuracy of the information filed.
-            </p>
-        </div>
-    </div>
-</div>
-
-<!--TITLE PAGE END-->
-
-<div class="page">
-    {{$charsPerPage := 7000}}
-    {{getValue "page-number"}}
-    <div id="CompanyRegisterInfoHeader" class="page margin-xx-large">
-        <div class="header">
-            <h1 class="text--center">
-                Company Register Information
-                <br/>
-            </h1>
-        </div>
-        <table>
-            <tr>
-                <td><b>Company Number:</b></td>
-                <td>{{$companyRegistrationInformation.company_number}}</td>
-                <td><b>Date of Incorporation:</b>{{$companyRegistrationInformation.date_of_incorporation}}</td>
-            </tr>
-            <tr>
-                <td><b>Company Name:</b></td>
-                <td>{{$companyRegistrationInformation.company_name}}</td>
-            </tr>
-            {{if $roa := $companyRegistrationInformation.registered_office}}
-            <tr>
-                <td><b>Registered Office:</b></td>
-                <td>
-                    {{if $roa.care_of}}
-                    {{index $roa "care_of"}}
-                    <br>
-                    {{end}}
-                    {{if $roa.po_box}}
-                    {{index $roa "po_box"}}
-                    <br>
-                    {{end}}
-                    {{if $roa.premises}}
-                    {{index $roa "premises"}}
-                    <br>
-                    {{end}}
-                    {{if $roa.address_line_1}}
-                    {{index $roa "address_line_1"}}
-                    <br>
-                    {{end}}
-                    {{if $roa.address_line_2}}
-                    {{index $roa "address_line_2"}}
-                    <br>
-                    {{end}}
-                    {{if $roa.locality}}
-                    {{index $roa "locality"}}
-                    <br>
-                    {{end}}
-                    {{if $roa.region}}
-                    {{index $roa "region"}}
-                    <br>
-                    {{end}}
-                    {{if $roa.country}}
-                    {{index $roa "country"}}
-                    <br>
-                    {{end}}
-                    {{if $roa.postal_code}}
-                    {{index $roa "postal_code"}}
-                    {{end}}
-                </td>
-            </tr>
+    <h2 class="heading-large">Overview</h2>
+    <ul class="list list-bullet">
+        {{if $roa := $companyRegistrationInformation.registered_office}}
+        <li>Registered office:
+            {{if $roa.care_of}}
+            {{index $roa "care_of"}}
             {{end}}
-            <tr>
-                <td><b>Company Type:</b></td>
-                <td> {{$companyRegistrationInformation.company_type.type}}/{{$companyRegistrationInformation.company_type.subtype}}</td>
-            </tr>
-            <tr>
-                <td><b>Status:</b></td>
-                <td> {{$companyRegistrationInformation.status.company_status}}/{{$companyRegistrationInformation.status.company_status_detail}}</td>
-            </tr>
-            <tr>
-                <td><b>Nature Of Business (SIC):</b></td>
-                <td>
-                    {{range $companyRegistrationInformation.nature_of_business}}
-                    {{.sic_codes}} - {{.sic_codes_description}}
-                    <br>
-                    {{end}}
-                </td>
-            </tr>
-            {{if $companyRegistrationInformation.number_of_charges}}
-            <tr>
-                <td>Number Of Charges:</td>
-                <td> {{$companyRegistrationInformation.number_of_charges}}</td>
-            </tr>
+            {{if $roa.po_box}}
+            {{index $roa "po_box"}}
             {{end}}
-            <tr>
-                <td></td>
-            </tr>
-<!--Previous Company Names-->
-            {{if $previousNames}}
-                <tr>
-                    <td>
-                        <h1>Previous Names</h1>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h3>Date of Change</h3>
-                    </td>
-                    <td>
-                        <h3>Previous Name</h3>
-                    </td>
-                </tr>
-                {{- range $previousNames -}}
-                    <tr>
-                        <td>{{.date_of_change}}</td>
-                        <td>{{.previous_name}}</td>
-                    </tr>
-                {{end}}
+            {{if $roa.premises}}
+            {{index $roa "premises"}}
             {{end}}
-            <br>
-        </table>
-    </div>
-</div>
+            {{if $roa.address_line_1}}
+            {{index $roa "address_line_1"}}
+            {{end}}
+            {{if $roa.address_line_2}}
+            {{index $roa "address_line_2"}}
+            {{end}}
+            {{if $roa.locality}}
+            {{index $roa "locality"}}
+            {{end}}
+            {{if $roa.region}}
+            {{index $roa "region"}}
+            {{end}}
+            {{if $roa.country}}
+            {{index $roa "country"}}
+            {{end}}
+            {{if $roa.postal_code}}
+            {{index $roa "postal_code"}}
+            {{end}}
+        </li>
+        {{end}}
+        <li>Company type: {{$companyRegistrationInformation.company_type.type}}
+            {{if $companyRegistrationInformation.company_type.subtype}}/{{$companyRegistrationInformation.company_type.subtype}}{{end}}</li>
+        <li>Date of incorporation: {{$companyRegistrationInformation.date_of_incorporation}}</li>
+        <li>Status:{{$companyRegistrationInformation.status.company_status}}
+            {{if $companyRegistrationInformation.status.company_status_detail}}/{{$companyRegistrationInformation.status.company_status_detail}}{{end}}</li>
+    </ul>
+
+    <h3 class="heading-small">Nature of business (SIC)</h3>
+    <ul class="list list-bullet">
+        <li>85100 - Pre-primary education</li>
+        <li>85200 - Primary education</li>
+        <li>85310 - General secondary education</li>
+    </ul>
+    {{if $previousNames}}
+    <h3 class="heading-small">Previous company names</h3>
+    <table>
+        <caption class="visually-hidden">Previous company names</caption>
+        <!-- this hidden caption is needed for screen-readers-->
+        <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Period</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{- range $previousNames -}}
+        <tr>
+            <td>{{.previous_name}}</td>
+            <td scope="row">{{.date_of_change}}</td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+    {{end}}
+
+</main>
 </body>
 </html>
