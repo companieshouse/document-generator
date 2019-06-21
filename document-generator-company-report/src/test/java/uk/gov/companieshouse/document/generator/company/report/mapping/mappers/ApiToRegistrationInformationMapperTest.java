@@ -32,7 +32,7 @@ public class ApiToRegistrationInformationMapperTest {
     private String COMPANY_TYPE = "type";
     private String COMPANY_SUB_TYPE = "subtype";
     private LocalDate DATE_OF_CREATION = LocalDate.of(2019, 06, 06);
-    private String DATE_OF_CREATION_FORMATTED = "06 June 2019";
+    private String DATE_OF_CREATION_FORMATTED = "6 June 2019";
 
     private String ADDRESS_LINE_ONE = "address line 1";
     private String ADDRESS_LINE_TWO = "address line 2";

@@ -63,7 +63,7 @@ public abstract class ApiToRegistrationInformationMapper {
 
             if (companyProfileApi.getDateOfCreation() != null) {
 
-                registrationInformation.setDateOfIncorporation(companyProfileApi.getDateOfCreation().format(DateTimeFormatter.ofPattern("dd MMMM uuuu")));
+                registrationInformation.setDateOfIncorporation(companyProfileApi.getDateOfCreation().format(DateTimeFormatter.ofPattern("d MMMM uuuu")));
             }
         }
     }
