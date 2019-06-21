@@ -24,13 +24,13 @@ public class ApiToPreviousNamesMapperTest {
 
     private static final String PREVIOUS_NAME = "previous name 1";
     private static final LocalDate DATE_OF_CHANGE = LocalDate.of(2019, 06, 06);
-    private static final String DATE_OF_CHANGE_FORMATTED = "06 June 2019";
+    private static final String DATE_OF_CHANGE_FORMATTED = "6 June 2019";
     private static final String PREVIOUS_NAME2 = "previous name 2";
     private static final LocalDate DATE_OF_CHANGE2 = LocalDate.of(2018, 05, 05);
-    private static final String DATE_OF_CHANGE_FORMATTED2 = "05 May 2018";
+    private static final String DATE_OF_CHANGE_FORMATTED2 = "5 May 2018";
     private static final String PREVIOUS_NAME3 = "previous name 3";
     private static final LocalDate DATE_OF_CHANGE3 = LocalDate.of(2017, 04, 04);
-    private static final String DATE_OF_CHANGE_FORMATTED3 = "04 April 2017";
+    private static final String DATE_OF_CHANGE_FORMATTED3 = "4 April 2017";
 
     @InjectMocks
     private ApiToPreviousNamesMapper apiToPreviousNamesMapper = new ApiToPreviousNamesMapperImpl();
