@@ -12,8 +12,12 @@ import uk.gov.companieshouse.document.generator.api.factory.DocumentInfoServiceF
 import uk.gov.companieshouse.document.generator.prosecution.ProsecutionDocumentInfoService;
 import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.environment.impl.EnvironmentReaderImpl;
+
 @Configuration
-@ComponentScan(basePackages = {"uk.gov.companieshouse.document.generator.accounts", "uk.gov.companieshouse.document.generator.prosecution"})
+@ComponentScan(basePackages = {"uk.gov.companieshouse.document.generator.accounts",
+    "uk.gov.companieshouse.document.generator.prosecution",
+    "uk.gov.companieshouse.document.generator.common" })
+
 public class DocumentGeneratorApplicationConfiguration {
 
     @Bean
