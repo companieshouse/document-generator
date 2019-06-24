@@ -8,11 +8,13 @@ import uk.gov.companieshouse.api.ApiClient;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.accounts.Accounts;
-import uk.gov.companieshouse.api.model.accounts.CompanyAccounts;
+import uk.gov.companieshouse.api.model.accounts.CompanyAccountsApi;
 import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.CreditorsAfterOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.currentassetsinvestments.CurrentAssetsInvestmentsApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.fixedassetsinvestments.FixedAssetsInvestmentsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.SmallFullApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
@@ -27,8 +29,6 @@ import uk.gov.companieshouse.document.generator.accounts.exception.ServiceExcept
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.mappers.SmallFullIXBRLMapper;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.SmallFullApiData;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.SmallFullAccountIxbrl;
-import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorsafteroneyear.CreditorsAfterOneYear;
-import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorswithinoneyear.CreditorsWithinOneYear;
 import uk.gov.companieshouse.document.generator.accounts.service.ApiClientService;
 import uk.gov.companieshouse.document.generator.accounts.service.CompanyService;
 import uk.gov.companieshouse.logging.Logger;
@@ -60,6 +60,8 @@ public class AccountsManager {
 
     private static final String NOT_FOUND_API_DATA = "No data found in %s api for link: ";
 
+    private static final String SMALL_FULL_LINK_SUFFIX = "small-full";
+
     /**
      * Get accounts resource if exists
      *
@@ -73,7 +75,7 @@ public class AccountsManager {
 
         ApiClient apiClient = apiClientService.getApiClient();
 
-        return apiClient.accounts().get(link).execute();
+        return apiClient.accounts().get(link).execute().getData();
     }
 
     /**
@@ -89,23 +91,23 @@ public class AccountsManager {
 
         ApiClient apiClient = apiClientService.getApiClient();
 
-        return apiClient.abridgedAccounts().get(link).execute();
+        return apiClient.abridgedAccounts().get(link).execute().getData();
     }
 
     /**
      * Get company-accounts resource if exists
      *
      * @param link - self link for the accounts resource
-     * @return CompanyAccounts object along with the status or not found status.
+     * @return CompanyAccountsApi object along with the status or not found status.
      * @throws ApiErrorResponseException
      * @throws URIValidationException
      */
-    public CompanyAccounts getCompanyAccounts(String link) throws ApiErrorResponseException,
+    public CompanyAccountsApi getCompanyAccounts(String link) throws ApiErrorResponseException,
             URIValidationException {
 
         ApiClient apiClient = apiClientService.getApiClient();
 
-        return apiClient.companyAccounts().get(link).execute();
+        return apiClient.companyAccounts().get(link).execute().getData();
     }
 
     /**
@@ -127,14 +129,20 @@ public class AccountsManager {
 
         try {
 
-            SmallFullApi smallFull = apiClient.smallFull().get(link).execute();
+            SmallFullApi smallFull = apiClient.smallFull().get(link).execute().getData();
+
+            errorString = "company accounts";
+
+            String companyAccountsLink = StringUtils.stripEnd(link, "/" + SMALL_FULL_LINK_SUFFIX);
+            CompanyAccountsApi companyAccountsApi = apiClient.companyAccounts().get(companyAccountsLink).execute().getData();
+            smallFullApiData.setCompanyAccounts(companyAccountsApi);
 
             if (!StringUtils.isEmpty(smallFull.getLinks().getPreviousPeriod())) {
 
                 errorString = "previous period";
 
                 PreviousPeriodApi previousPeriod = apiClient.smallFull().previousPeriod()
-                        .get(smallFull.getLinks().getPreviousPeriod()).execute();
+                        .get(smallFull.getLinks().getPreviousPeriod()).execute().getData();
                 smallFullApiData.setPreviousPeriod(previousPeriod);
             }
 
@@ -143,7 +151,7 @@ public class AccountsManager {
                 errorString = "current period";
 
                 CurrentPeriodApi currentPeriod = apiClient.smallFull().currentPeriod()
-                        .get(smallFull.getLinks().getCurrentPeriod()).execute();
+                        .get(smallFull.getLinks().getCurrentPeriod()).execute().getData();
                 smallFullApiData.setCurrentPeriod(currentPeriod);
             }
 
@@ -152,7 +160,7 @@ public class AccountsManager {
                 errorString = "approvals";
 
                 ApprovalApi approvals = apiClient.smallFull().approval()
-                        .get(smallFull.getLinks().getApproval()).execute();
+                        .get(smallFull.getLinks().getApproval()).execute().getData();
                 smallFullApiData.setApproval(approvals);
             }
 
@@ -161,7 +169,7 @@ public class AccountsManager {
                 errorString = "statements";
 
                 BalanceSheetStatementsApi statements = apiClient.smallFull().balanceSheetStatements()
-                        .get(smallFull.getLinks().getStatements()).execute();
+                        .get(smallFull.getLinks().getStatements()).execute().getData();
                 smallFullApiData.setBalanceSheetStatements(statements);
             }
 
@@ -170,7 +178,7 @@ public class AccountsManager {
                 errorString = "accounting policies";
 
                 AccountingPoliciesApi policies = apiClient.smallFull().accountingPolicies()
-                        .get(smallFull.getLinks().getAccountingPolicyNote()).execute();
+                        .get(smallFull.getLinks().getAccountingPolicyNote()).execute().getData();
                 smallFullApiData.setAccountingPolicies(policies);
             }
 
@@ -179,7 +187,7 @@ public class AccountsManager {
                 errorString = "tangible assets";
 
                 TangibleApi tangible = apiClient.smallFull().tangible()
-                        .get(smallFull.getLinks().getTangibleAssetsNote()).execute();
+                        .get(smallFull.getLinks().getTangibleAssetsNote()).execute().getData();
 
                 smallFullApiData.setTangibleAssets(tangible);
             }
@@ -190,7 +198,7 @@ public class AccountsManager {
                 errorString = "employees";
 
                 EmployeesApi employees = apiClient.smallFull().employees()
-                        .get(smallFull.getLinks().getEmployeesNote()).execute();
+                        .get(smallFull.getLinks().getEmployeesNote()).execute().getData();
 
                 smallFullApiData.setEmployees(employees);
             }
@@ -198,34 +206,62 @@ public class AccountsManager {
 
             if (!StringUtils.isEmpty(smallFull.getLinks().getStocksNote())) {
 
+                errorString = "stocks";
+
                 StocksApi stocks = apiClient.smallFull().stocks()
-                        .get(smallFull.getLinks().getStocksNote()).execute();
+                        .get(smallFull.getLinks().getStocksNote()).execute().getData();
 
                 smallFullApiData.setStocks(stocks);
             }
 
             if (!StringUtils.isEmpty(smallFull.getLinks().getDebtorsNote())) {
 
+                errorString = "debtors";
+
                 DebtorsApi debtors = apiClient.smallFull().debtors()
-                        .get(smallFull.getLinks().getDebtorsNote()).execute();
+                        .get(smallFull.getLinks().getDebtorsNote()).execute().getData();
 
                 smallFullApiData.setDebtors(debtors);
+            }
+
+            if (!StringUtils.isEmpty(smallFull.getLinks().getCurrentAssetsInvestmentsNote())) {
+
+                errorString = "current assets investments";
+
+                CurrentAssetsInvestmentsApi currentAssetsInvestmentsApi = apiClient.smallFull().currentAssetsInvestments()
+                        .get(smallFull.getLinks().getCurrentAssetsInvestmentsNote()).execute().getData();
+
+                smallFullApiData.setCurrentAssetsInvestments(currentAssetsInvestmentsApi);
             }
             
             if (!StringUtils.isEmpty(smallFull.getLinks().getCreditorsWithinOneYearNote())) {
 
+                errorString = "creditors within one year";
+
                 CreditorsWithinOneYearApi creditorsWithinOneYearApi = apiClient.smallFull().creditorsWithinOneYear()
-                        .get(smallFull.getLinks().getCreditorsWithinOneYearNote()).execute();
+                        .get(smallFull.getLinks().getCreditorsWithinOneYearNote()).execute().getData();
 
                 smallFullApiData.setCreditorsWithinOneYear(creditorsWithinOneYearApi);
             }
             
             if (!StringUtils.isEmpty(smallFull.getLinks().getCreditorsAfterMoreThanOneYearNote())) {
 
+                errorString = "creditors after one year";
+
                 CreditorsAfterOneYearApi creditorsAfterOneYearApi = apiClient.smallFull().creditorsAfterOneYear()
-                        .get(smallFull.getLinks().getCreditorsAfterMoreThanOneYearNote()).execute();
+                        .get(smallFull.getLinks().getCreditorsAfterMoreThanOneYearNote()).execute().getData();
 
                 smallFullApiData.setCreditorsAfterOneYear(creditorsAfterOneYearApi);
+            }
+            
+            if (!StringUtils.isEmpty(smallFull.getLinks().getFixedAssetsInvestmentsNote())) {
+
+                errorString = "fixed assets investments";
+                
+                FixedAssetsInvestmentsApi fixedAssetsInvestmentsApi = apiClient.smallFull().fixedAssetsInvestments()
+                        .get(smallFull.getLinks().getFixedAssetsInvestmentsNote()).execute().getData();
+
+                smallFullApiData.setFixedAssetsInvestments(fixedAssetsInvestmentsApi);
             }
 
         } catch (ApiErrorResponseException e) {

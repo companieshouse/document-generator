@@ -13,6 +13,7 @@ import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.company.CompanyResourceHandler;
 import uk.gov.companieshouse.api.handler.company.request.CompanyGet;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
+import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.accounts.service.ApiClientService;
@@ -38,6 +39,9 @@ public class CompanyServiceImplTest {
     @Mock
     private CompanyGet mockCompanyGet;
 
+    @Mock
+    private ApiResponse<CompanyProfileApi> responseWithData;
+
     @InjectMocks
     private CompanyService companyService = new CompanyServiceImpl();
 
@@ -55,7 +59,8 @@ public class CompanyServiceImplTest {
     @DisplayName("Get Company Profile - Success Path")
     void getCompanyProfileSuccess() throws Exception {
 
-        when(mockCompanyGet.execute()).thenReturn(new CompanyProfileApi());
+        when(mockCompanyGet.execute()).thenReturn(responseWithData);
+        when(responseWithData.getData()).thenReturn(new CompanyProfileApi());
         CompanyProfileApi companyProfile = companyService.getCompanyProfile(COMPANY_NUMBER);
 
         assertNotNull(companyProfile);

@@ -19,6 +19,9 @@ public class Company {
     @JsonProperty("jurisdiction")
     private String jurisdiction;
 
+    @JsonProperty("is_lbg")
+    private Boolean isLBG;
+
     public String getCompanyNumber() {
         return companyNumber;
     }
@@ -43,6 +46,10 @@ public class Company {
         this.jurisdiction = jurisdiction;
     }
 
+    public Boolean getIsLBG() { return isLBG; }
+
+    public void setIsLBG(Boolean LBG) { isLBG = LBG; }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -50,13 +57,14 @@ public class Company {
         Company company = (Company) o;
         return Objects.equals(getCompanyNumber(), company.getCompanyNumber()) &&
                 Objects.equals(getCompanyName(), company.getCompanyName()) &&
-                Objects.equals(getJurisdiction(), company.getJurisdiction());
+                Objects.equals(getJurisdiction(), company.getJurisdiction()) &&
+                Objects.equals(getIsLBG(), company.getIsLBG());
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(getCompanyNumber(), getCompanyName(), getJurisdiction());
+        return Objects.hash(getCompanyNumber(), getCompanyName(), getJurisdiction(), getIsLBG());
     }
 
     @Override

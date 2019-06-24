@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.Gson;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.currentassets.items.CashAtBankAndInHand;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.currentassets.items.Debtors;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.currentassets.items.Investments;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.currentassets.items.Stocks;
 
 import java.util.Objects;
@@ -27,6 +28,17 @@ public class CurrentAssets {
 
     @JsonProperty("previous_total")
     private Long previousTotal;
+
+    @JsonProperty("investments")
+    private Investments investments;
+
+    public Investments getInvestments() {
+        return investments;
+    }
+
+    public void setInvestments(Investments investments) {
+        this.investments = investments;
+    }
 
     public Stocks getStocks() {
         return stocks;
@@ -70,24 +82,21 @@ public class CurrentAssets {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof CurrentAssets)) return false;
+        if (this == o)
+            return true;
+        if (! (o instanceof CurrentAssets))
+            return false;
         CurrentAssets that = (CurrentAssets) o;
         return Objects.equals(getStocks(), that.getStocks()) &&
                 Objects.equals(getDebtors(), that.getDebtors()) &&
                 Objects.equals(getCashAtBankAndInHand(), that.getCashAtBankAndInHand()) &&
                 Objects.equals(getCurrentTotal(), that.getCurrentTotal()) &&
-                Objects.equals(getPreviousTotal(), that.getPreviousTotal());
+                Objects.equals(getPreviousTotal(), that.getPreviousTotal()) &&
+                Objects.equals(getInvestments(), that.getInvestments());
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(getStocks(), getDebtors(), getCashAtBankAndInHand(), getCurrentTotal(), getPreviousTotal());
-    }
-
-    @Override
-    public String toString() {
-        return new Gson().toJson(this);
+        return Objects.hash(getStocks(), getDebtors(), getCashAtBankAndInHand(), getCurrentTotal(), getPreviousTotal(), getInvestments());
     }
 }
