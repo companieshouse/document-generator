@@ -30,7 +30,7 @@ public class CicReportServiceImpl implements CicReportService {
             return cicReportManager.getCicReport(cicReportLink);
         } catch (URIValidationException | ApiErrorResponseException e) {
             LOG.errorContext(requestId,"Failed to retrieve cic report data: ", e, getDebugMap(cicReportLink));
-            throw new ServiceException(e.getMessage(), e.getCause());
+            throw new ServiceException(e.getMessage(), e);
         }
     }
 

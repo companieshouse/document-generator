@@ -71,7 +71,7 @@ public class CompanyAccountsDataHandler {
             logMap.put(ACCOUNT_TYPE, accountType);
             LOG.errorContext(requestId, "Error in service layer when obtaining accounts data for resource: "
                     + resourceUri, e, logMap);
-            throw new HandlerException(e.getMessage(), e.getCause());
+            throw new HandlerException(e.getMessage(), e);
         }
     }
 

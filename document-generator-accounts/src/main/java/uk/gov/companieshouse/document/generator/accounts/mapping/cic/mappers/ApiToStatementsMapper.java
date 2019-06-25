@@ -12,8 +12,6 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.cic.model.State
 @Mapper(componentModel = "spring")
 public interface ApiToStatementsMapper {
 
-    ApiToStatementsMapper INSTANCE = Mappers.getMapper(ApiToStatementsMapper.class);
-
     @Mappings({
             @Mapping(source = "reportStatements.companyActivitiesAndImpact",
                     target = "companyActivitiesAndImpact"),

@@ -18,8 +18,6 @@ public interface ApiToApprovalMapper {
 
     AccountsDatesHelper accountsDatesHelper = new AccountsDatesHelperImpl();
 
-    ApiToApprovalMapper INSTANCE = Mappers.getMapper(ApiToApprovalMapper.class);
-
     @Mappings({
             @Mapping(source = "name",
                     target = "name"),
