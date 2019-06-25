@@ -1,15 +1,17 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.registrationinformation;
 
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import org.apache.tomcat.jni.Local;
+import java.util.HashMap;
+import java.util.Map;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Mappings;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.annotation.RequestScope;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
+import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.RegistrationInformation;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.items.CompanyType;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.items.SicCodes;
@@ -22,6 +24,15 @@ import java.util.List;
 @RequestScope
 @Mapper(componentModel = "spring")
 public abstract class ApiToRegistrationInformationMapper {
+
+    public static final String CONSTANTS = "CONSTANTS";
+    public static final String COMPANY_STATUS = "company_status";
+    public static final String COMPANY_STATUS_DETAIL = "company_status_detail";
+    public static final String COMPANY_TYPE = "company_type";
+    public static final String COMPANY_SUBTYPE = "company_subtype";
+    public static final String SIC_DESCRIPTIONS = "sic_descriptions";
+    public static final String REPORT_DATE_FORMAT = "d MMMM uuuu";
+    public static final String ENUMERATION_MAPPING = "Enumeration mapping :";
 
     @Mappings({
             @Mapping(source = "companyName", target = "companyName"),
@@ -38,21 +49,24 @@ public abstract class ApiToRegistrationInformationMapper {
     })
     public abstract RegistrationInformation apiToRegistrationInformation(CompanyProfileApi companyProfileApi) throws IOException;
 
+    private static final String RESOURCE_URI = "resource_uri";
+
+    @Autowired
+    private RetrieveApiEnumerationDescription retrieveApiEnumerationDescription;
+
     @AfterMapping
     protected void convertEnumerationValues(CompanyProfileApi companyProfileApi,
-        @MappingTarget RegistrationInformation registrationInformation) {
+            @MappingTarget RegistrationInformation registrationInformation) {
 
         if (companyProfileApi != null) {
-            registrationInformation.setCompanyType(
-                setCompanyType(companyProfileApi.getType(),
-                    companyProfileApi.getSubtype()));
 
-            registrationInformation.setNatureOfBusiness(
-                setNatureOfBusiness(companyProfileApi.getSicCodes()));
+            CompanyType companyType = setCompanyType(companyProfileApi.getType(), companyProfileApi.getSubtype());
+            registrationInformation.setCompanyType(companyType);
 
-            registrationInformation.setStatus(
-                setCompanyStatus(companyProfileApi.getCompanyStatus(),
-                    companyProfileApi.getCompanyStatusDetail()));
+            registrationInformation.setNatureOfBusiness(setNatureOfBusiness(companyProfileApi.getSicCodes()));
+
+            registrationInformation.setStatus(setCompanyStatus(companyProfileApi.getCompanyStatus(), companyProfileApi.getCompanyStatusDetail()));
+
         }
     }
 
@@ -63,29 +77,39 @@ public abstract class ApiToRegistrationInformationMapper {
 
             if (companyProfileApi.getDateOfCreation() != null) {
 
-                registrationInformation.setDateOfIncorporation(companyProfileApi.getDateOfCreation().format(DateTimeFormatter.ofPattern("d MMMM uuuu")));
+                registrationInformation.setDateOfIncorporation(companyProfileApi.getDateOfCreation().
+                        format(DateTimeFormatter.ofPattern(REPORT_DATE_FORMAT)));
             }
         }
     }
 
+    private Map<String, String> getDebugMap(String debugString) {
 
-    //TODO convert companyStatus and companyStatusDetail param to api-enumeration value in constants.yml PCI-77
+        Map<String, String> debugMap = new HashMap<>();
+        debugMap.put(ENUMERATION_MAPPING, debugString);
+
+        return debugMap;
+    }
+
     private Status setCompanyStatus(String companyStatus, String companyStatusDetail) {
 
         Status status = new Status();
 
-        if (companyStatus != null && !companyStatus.isEmpty()) {
-            status.setCompanyStatus(companyStatus);
+        if (companyStatus != null && ! companyStatus.isEmpty()) {
+
+            String companyStatusMapped = retrieveApiEnumerationDescription.
+                    getApiEnumerationDescription(CONSTANTS, COMPANY_STATUS, companyStatus, getDebugMap(companyStatus));
+            status.setCompanyStatus(companyStatusMapped);
         }
 
-        if (companyStatusDetail != null && !companyStatusDetail.isEmpty()) {
-            status.setCompanyStatusDetail(companyStatusDetail);
+        if (companyStatusDetail != null && ! companyStatusDetail.isEmpty()) {
+            status.setCompanyStatusDetail(retrieveApiEnumerationDescription.
+                    getApiEnumerationDescription(CONSTANTS, COMPANY_STATUS_DETAIL, companyStatusDetail, getDebugMap(companyStatusDetail)));
         }
 
         return status;
     }
 
-    //TODO convert sicCodes to obtain SicCodesDescription from api-enumeration value in constants.yml PCI-77
     private List<SicCodes> setNatureOfBusiness(String[] sicCodes) {
 
         List<SicCodes> listNatureOfBusiness = new ArrayList<>();
@@ -94,7 +118,8 @@ public abstract class ApiToRegistrationInformationMapper {
             for (String sicCode : sicCodes) {
                 SicCodes codes = new SicCodes();
                 codes.setSicCodes(sicCode);
-                codes.setSicCodesDescription(sicCode + "To be converted to api enumeration value PCI-77");
+                String SicCodeDescription = retrieveApiEnumerationDescription.getApiEnumerationDescription(CONSTANTS, SIC_DESCRIPTIONS, sicCode, getDebugMap(sicCode));
+                codes.setSicCodesDescription(SicCodeDescription);
                 listNatureOfBusiness.add(codes);
             }
         }
@@ -102,17 +127,18 @@ public abstract class ApiToRegistrationInformationMapper {
         return listNatureOfBusiness;
     }
 
-    //TODO convert type and subtype param to api-enumeration value in constants.yml PCI-77
     private CompanyType setCompanyType(String type, String subtype) {
 
         CompanyType companyType = new CompanyType();
 
-        if (type != null && !type.isEmpty()) {
-            companyType.setType(type);
+        if (type != null && ! type.isEmpty()) {
+            String test = retrieveApiEnumerationDescription.getApiEnumerationDescription(CONSTANTS, COMPANY_TYPE, type, getDebugMap(type));
+
+            companyType.setType(test);
         }
 
-        if (subtype != null && !subtype.isEmpty()) {
-            companyType.setSubtype(subtype);
+        if (subtype != null && ! subtype.isEmpty()) {
+            companyType.setSubtype(retrieveApiEnumerationDescription.getApiEnumerationDescription(CONSTANTS, COMPANY_SUBTYPE, subtype, getDebugMap(subtype)));
         }
 
         return companyType;
