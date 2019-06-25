@@ -36,6 +36,17 @@ public class RegistrationInformation {
     @JsonProperty("nature_of_business")
     private List<SicCodes> natureOfBusiness;
 
+    @JsonProperty("date_of_incorporation_label")
+    private String dateOfincorporationLabel;
+
+    public String getDateOfincorporationLabel() {
+        return dateOfincorporationLabel;
+    }
+
+    public void setDateOfincorporationLabel(String dateOfincorporationLabel) {
+        this.dateOfincorporationLabel = dateOfincorporationLabel;
+    }
+
     public String getDateOfIncorporation() {
         return dateOfIncorporation;
     }

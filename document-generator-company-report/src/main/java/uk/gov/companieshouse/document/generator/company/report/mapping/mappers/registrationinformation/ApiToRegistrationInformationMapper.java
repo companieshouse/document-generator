@@ -33,6 +33,7 @@ public abstract class ApiToRegistrationInformationMapper {
     public static final String SIC_DESCRIPTIONS = "sic_descriptions";
     public static final String REPORT_DATE_FORMAT = "d MMMM uuuu";
     public static final String ENUMERATION_MAPPING = "Enumeration mapping :";
+    public static final String COMPANY_BIRTH_TYPE = "company_birth_type";
 
     @Mappings({
             @Mapping(source = "companyName", target = "companyName"),
@@ -83,6 +84,18 @@ public abstract class ApiToRegistrationInformationMapper {
         }
     }
 
+
+    @AfterMapping
+    protected void setIncorporationDateLabel(CompanyProfileApi companyProfileApi, @MappingTarget RegistrationInformation registrationInformation) {
+
+        if (companyProfileApi != null) {
+            if (companyProfileApi.getDateOfCreation() != null) {
+
+                registrationInformation.setDateOfincorporationLabel(retrieveApiEnumerationDescription.getApiEnumerationDescription(CONSTANTS, COMPANY_BIRTH_TYPE, companyProfileApi.getType(), getDebugMap(companyProfileApi.getType())));
+            }
+        }
+    }
+
     private Map<String, String> getDebugMap(String debugString) {
 
         Map<String, String> debugMap = new HashMap<>();
@@ -95,11 +108,10 @@ public abstract class ApiToRegistrationInformationMapper {
 
         Status status = new Status();
 
-        if (companyStatus != null && ! companyStatus.isEmpty()) {
+        if (companyStatus != null && !companyStatus.isEmpty()) {
 
-            String companyStatusMapped = retrieveApiEnumerationDescription.
-                    getApiEnumerationDescription(CONSTANTS, COMPANY_STATUS, companyStatus, getDebugMap(companyStatus));
-            status.setCompanyStatus(companyStatusMapped);
+            status.setCompanyStatus(retrieveApiEnumerationDescription.
+                    getApiEnumerationDescription(CONSTANTS, COMPANY_STATUS, companyStatus, getDebugMap(companyStatus)));
         }
 
         if (companyStatusDetail != null && ! companyStatusDetail.isEmpty()) {
@@ -132,9 +144,7 @@ public abstract class ApiToRegistrationInformationMapper {
         CompanyType companyType = new CompanyType();
 
         if (type != null && ! type.isEmpty()) {
-            String test = retrieveApiEnumerationDescription.getApiEnumerationDescription(CONSTANTS, COMPANY_TYPE, type, getDebugMap(type));
-
-            companyType.setType(test);
+            companyType.setType(retrieveApiEnumerationDescription.getApiEnumerationDescription(CONSTANTS, COMPANY_TYPE, type, getDebugMap(type)));
         }
 
         if (subtype != null && ! subtype.isEmpty()) {
