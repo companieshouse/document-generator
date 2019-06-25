@@ -119,7 +119,7 @@ public class CompanyAccountsDataHandler {
             logMap.put(RESOURCE_URI, resourceUri);
             LOG.errorContext(requestId,"Error in service layer when obtaining company-accounts data for resource: "
                     + resourceUri, e, logMap);
-            throw new HandlerException(e.getMessage(), e.getCause());
+            throw new HandlerException(e.getMessage(), e);
         }
     }
 
