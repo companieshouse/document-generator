@@ -10,7 +10,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.document.generator.api.document.DocumentType;
-import uk.gov.companieshouse.document.generator.api.document.description.RetrieveApiEnumerationDescription;
 import uk.gov.companieshouse.document.generator.api.document.render.RenderDocumentRequestHandler;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentRequest;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentResponse;
@@ -24,6 +23,7 @@ import uk.gov.companieshouse.document.generator.api.service.DocumentGeneratorSer
 import uk.gov.companieshouse.document.generator.api.service.DocumentTypeService;
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseObject;
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseStatus;
+import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
 import uk.gov.companieshouse.document.generator.interfaces.exception.DocumentInfoException;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
@@ -56,7 +56,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
 
     private static final Logger LOG = LoggerFactory.getLogger(APPLICATION_NAME_SPACE);
 
-    private static final String FILING_DESCRIPTIONS_FILE_NAME = "document-generator-api/api-enumerations/filing_descriptions.yml";
+    private static final String FILING_DESCRIPTIONS = "filing_descriptions";
 
     private static final String DESCRIPTION_IDENTIFIERS_KEY = "description_identifiers";
 
@@ -286,17 +286,9 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
      */
     private String getDescription(DocumentInfoResponse documentInfoResponse, Map<String, String> requestParameters) {
 
-        String description = null;
-        try {
-            description = retrieveApiEnumerationDescription.getApiEnumerationDescription(
-                    FILING_DESCRIPTIONS_FILE_NAME, DESCRIPTION_IDENTIFIERS_KEY,
-                    documentInfoResponse.getDescriptionIdentifier(), requestParameters);
-        } catch (IOException ioe) {
-            createAndLogErrorMessage("Error retrieving description from api-enumeration from: "
-                    + FILING_DESCRIPTIONS_FILE_NAME, ioe, requestParameters);
-        }
-
-        return description;
+        return retrieveApiEnumerationDescription.getApiEnumerationDescription(
+            FILING_DESCRIPTIONS, DESCRIPTION_IDENTIFIERS_KEY,
+            documentInfoResponse.getDescriptionIdentifier(), requestParameters);
     }
 
 
