@@ -59,6 +59,8 @@
         <!-- Structured logging -->
         <structured-logging.version>1.4.0-rc2</structured-logging.version>
 
+        <environment-reader-library.version>1.2.0-rc1</environment-reader-library.version>
+
         <!-- JUnit Testing -->
         <junit-jupiter-engine.version>5.2.0</junit-jupiter-engine.version>
         <mockito-junit-jupiter.version>2.18.0</mockito-junit-jupiter.version>
