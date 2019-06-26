@@ -50,8 +50,6 @@ public abstract class ApiToRegistrationInformationMapper {
     })
     public abstract RegistrationInformation apiToRegistrationInformation(CompanyProfileApi companyProfileApi) throws IOException;
 
-    private static final String RESOURCE_URI = "resource_uri";
-
     @Autowired
     private RetrieveApiEnumerationDescription retrieveApiEnumerationDescription;
 
@@ -60,13 +58,12 @@ public abstract class ApiToRegistrationInformationMapper {
             @MappingTarget RegistrationInformation registrationInformation) {
 
         if (companyProfileApi != null) {
-
-            CompanyType companyType = setCompanyType(companyProfileApi.getType(), companyProfileApi.getSubtype());
-            registrationInformation.setCompanyType(companyType);
-
-            registrationInformation.setNatureOfBusiness(setNatureOfBusiness(companyProfileApi.getSicCodes()));
-
-            registrationInformation.setStatus(setCompanyStatus(companyProfileApi.getCompanyStatus(), companyProfileApi.getCompanyStatusDetail()));
+            registrationInformation
+                    .setCompanyType(setCompanyType(companyProfileApi.getType(), companyProfileApi.getSubtype()));
+            registrationInformation
+                    .setNatureOfBusiness(setNatureOfBusiness(companyProfileApi.getSicCodes()));
+            registrationInformation
+                    .setStatus(setCompanyStatus(companyProfileApi.getCompanyStatus(), companyProfileApi.getCompanyStatusDetail()));
 
         }
     }
@@ -77,7 +74,6 @@ public abstract class ApiToRegistrationInformationMapper {
         if (companyProfileApi != null) {
 
             if (companyProfileApi.getDateOfCreation() != null) {
-
                 registrationInformation.setDateOfIncorporation(companyProfileApi.getDateOfCreation().
                         format(DateTimeFormatter.ofPattern(REPORT_DATE_FORMAT)));
             }
@@ -91,7 +87,8 @@ public abstract class ApiToRegistrationInformationMapper {
         if (companyProfileApi != null) {
             if (companyProfileApi.getDateOfCreation() != null) {
 
-                registrationInformation.setDateOfincorporationLabel(retrieveApiEnumerationDescription.getApiEnumerationDescription(CONSTANTS, COMPANY_BIRTH_TYPE, companyProfileApi.getType(), getDebugMap(companyProfileApi.getType())));
+                registrationInformation.setDateOfincorporationLabel(retrieveApiEnumerationDescription
+                        .getApiEnumerationDescription(CONSTANTS, COMPANY_BIRTH_TYPE, companyProfileApi.getType(), getDebugMap(companyProfileApi.getType())));
             }
         }
     }
@@ -108,15 +105,14 @@ public abstract class ApiToRegistrationInformationMapper {
 
         Status status = new Status();
 
-        if (companyStatus != null && !companyStatus.isEmpty()) {
-
+        if (companyStatus != null && ! companyStatus.isEmpty()) {
             status.setCompanyStatus(retrieveApiEnumerationDescription.
                     getApiEnumerationDescription(CONSTANTS, COMPANY_STATUS, companyStatus, getDebugMap(companyStatus)));
         }
 
         if (companyStatusDetail != null && ! companyStatusDetail.isEmpty()) {
-            status.setCompanyStatusDetail(retrieveApiEnumerationDescription.
-                    getApiEnumerationDescription(CONSTANTS, COMPANY_STATUS_DETAIL, companyStatusDetail, getDebugMap(companyStatusDetail)));
+            status.setCompanyStatusDetail(retrieveApiEnumerationDescription
+                    .getApiEnumerationDescription(CONSTANTS, COMPANY_STATUS_DETAIL, companyStatusDetail, getDebugMap(companyStatusDetail)));
         }
 
         return status;
@@ -130,7 +126,8 @@ public abstract class ApiToRegistrationInformationMapper {
             for (String sicCode : sicCodes) {
                 SicCodes codes = new SicCodes();
                 codes.setSicCodes(sicCode);
-                String SicCodeDescription = retrieveApiEnumerationDescription.getApiEnumerationDescription(CONSTANTS, SIC_DESCRIPTIONS, sicCode, getDebugMap(sicCode));
+                String SicCodeDescription = retrieveApiEnumerationDescription
+                        .getApiEnumerationDescription(CONSTANTS, SIC_DESCRIPTIONS, sicCode, getDebugMap(sicCode));
                 codes.setSicCodesDescription(SicCodeDescription);
                 listNatureOfBusiness.add(codes);
             }
@@ -144,11 +141,13 @@ public abstract class ApiToRegistrationInformationMapper {
         CompanyType companyType = new CompanyType();
 
         if (type != null && ! type.isEmpty()) {
-            companyType.setType(retrieveApiEnumerationDescription.getApiEnumerationDescription(CONSTANTS, COMPANY_TYPE, type, getDebugMap(type)));
+            companyType.setType(retrieveApiEnumerationDescription
+                    .getApiEnumerationDescription(CONSTANTS, COMPANY_TYPE, type, getDebugMap(type)));
         }
 
         if (subtype != null && ! subtype.isEmpty()) {
-            companyType.setSubtype(retrieveApiEnumerationDescription.getApiEnumerationDescription(CONSTANTS, COMPANY_SUBTYPE, subtype, getDebugMap(subtype)));
+            companyType.setSubtype(retrieveApiEnumerationDescription
+                    .getApiEnumerationDescription(CONSTANTS, COMPANY_SUBTYPE, subtype, getDebugMap(subtype)));
         }
 
         return companyType;
