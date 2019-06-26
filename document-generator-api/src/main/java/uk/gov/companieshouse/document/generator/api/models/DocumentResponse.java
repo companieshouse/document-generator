@@ -1,11 +1,13 @@
 package uk.gov.companieshouse.document.generator.api.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.Gson;
 
 
 import java.util.Map;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class DocumentResponse {
 
     @JsonProperty("description")
