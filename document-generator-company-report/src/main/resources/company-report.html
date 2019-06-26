@@ -127,7 +127,7 @@
     <h3 class="heading-small">Nature of business (SIC)</h3>
     <ul class="list list-bullet">
         {{range $companyRegistrationInformation.nature_of_business}}
-        <li>{{.sic_codes_description}}</li>
+        <li>{{.sic_codes}} {{.sic_codes_description}}</li>
         {{end}}
     </ul>
 
