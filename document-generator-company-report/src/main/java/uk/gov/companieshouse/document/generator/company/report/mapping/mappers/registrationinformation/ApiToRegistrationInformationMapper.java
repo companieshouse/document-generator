@@ -25,15 +25,15 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public abstract class ApiToRegistrationInformationMapper {
 
-    public static final String CONSTANTS = "CONSTANTS";
-    public static final String COMPANY_STATUS = "company_status";
-    public static final String COMPANY_STATUS_DETAIL = "company_status_detail";
-    public static final String COMPANY_TYPE = "company_type";
-    public static final String COMPANY_SUBTYPE = "company_subtype";
-    public static final String SIC_DESCRIPTIONS = "sic_descriptions";
-    public static final String REPORT_DATE_FORMAT = "d MMMM uuuu";
-    public static final String ENUMERATION_MAPPING = "Enumeration mapping :";
-    public static final String COMPANY_BIRTH_TYPE = "company_birth_type";
+    private static final String CONSTANTS = "CONSTANTS";
+    private static final String COMPANY_STATUS = "company_status";
+    private static final String COMPANY_STATUS_DETAIL = "company_status_detail";
+    private static final String COMPANY_TYPE = "company_type";
+    private static final String COMPANY_SUBTYPE = "company_subtype";
+    private static final String SIC_DESCRIPTIONS = "sic_descriptions";
+    private static final String REPORT_DATE_FORMAT = "d MMMM uuuu";
+    private static final String ENUMERATION_MAPPING = "Enumeration mapping :";
+    private static final String COMPANY_BIRTH_TYPE = "company_birth_type";
 
     @Mappings({
             @Mapping(source = "companyName", target = "companyName"),
@@ -71,25 +71,19 @@ public abstract class ApiToRegistrationInformationMapper {
     @AfterMapping
     protected void convertDate(CompanyProfileApi companyProfileApi, @MappingTarget RegistrationInformation registrationInformation) {
 
-        if (companyProfileApi != null) {
-
-            if (companyProfileApi.getDateOfCreation() != null) {
-                registrationInformation.setDateOfIncorporation(companyProfileApi.getDateOfCreation().
-                        format(DateTimeFormatter.ofPattern(REPORT_DATE_FORMAT)));
-            }
+        if (companyProfileApi != null && companyProfileApi.getDateOfCreation() != null) {
+            registrationInformation.setDateOfIncorporation(companyProfileApi.getDateOfCreation().
+                    format(DateTimeFormatter.ofPattern(REPORT_DATE_FORMAT)));
         }
     }
-
 
     @AfterMapping
     protected void setIncorporationDateLabel(CompanyProfileApi companyProfileApi, @MappingTarget RegistrationInformation registrationInformation) {
 
-        if (companyProfileApi != null) {
-            if (companyProfileApi.getDateOfCreation() != null) {
+        if (companyProfileApi != null && companyProfileApi.getDateOfCreation() != null) {
 
-                registrationInformation.setDateOfincorporationLabel(retrieveApiEnumerationDescription
-                        .getApiEnumerationDescription(CONSTANTS, COMPANY_BIRTH_TYPE, companyProfileApi.getType(), getDebugMap(companyProfileApi.getType())));
-            }
+            registrationInformation.setDateOfincorporationLabel(retrieveApiEnumerationDescription
+                    .getApiEnumerationDescription(CONSTANTS, COMPANY_BIRTH_TYPE, companyProfileApi.getType(), getDebugMap(companyProfileApi.getType())));
         }
     }
 
@@ -126,9 +120,9 @@ public abstract class ApiToRegistrationInformationMapper {
             for (String sicCode : sicCodes) {
                 SicCodes codes = new SicCodes();
                 codes.setSicCodes(sicCode);
-                String SicCodeDescription = retrieveApiEnumerationDescription
+                String sicCodeDescription = retrieveApiEnumerationDescription
                         .getApiEnumerationDescription(CONSTANTS, SIC_DESCRIPTIONS, sicCode, getDebugMap(sicCode));
-                codes.setSicCodesDescription(SicCodeDescription);
+                codes.setSicCodesDescription(sicCodeDescription);
                 listNatureOfBusiness.add(codes);
             }
         }
