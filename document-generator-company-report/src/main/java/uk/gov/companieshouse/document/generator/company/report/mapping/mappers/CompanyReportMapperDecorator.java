@@ -1,7 +1,6 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers;
 
 import java.util.List;
-import javax.swing.KeyStroke;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
@@ -45,10 +44,8 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
                 companyReport.setPreviousNames(setPreviousNames(companyReportApiData.getCompanyProfileApi().getPreviousCompanyNames()));
             }
 
-            if(companyReportApiData.getCompanyProfileApi().getAccounts() != null) {
-                if (companyReportApiData.getCompanyProfileApi().getAccounts() != null) {
-                    companyReport.setKeyFilingDates(setKeyFilingDates(companyReportApiData.getCompanyProfileApi()));
-                }
+            if (companyReportApiData.getCompanyProfileApi().getAccounts() != null) {
+                companyReport.setKeyFilingDates(setKeyFilingDates(companyReportApiData.getCompanyProfileApi()));
             }
         }
 
@@ -59,7 +56,8 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
         try {
             return apiToRegistrationInformationMapper.apiToRegistrationInformation(companyProfileApi);
         } catch (IOException e) {
-            throw new MapperException("An error occurred when mapping to registration information", e);
+            throw new MapperException("An error occurred when mapping to registration " +
+                    "information", e);
         }
     }
 
