@@ -34,14 +34,16 @@ public abstract class ApiToKeyFilingDatesMapper {
 
             if (companyProfileApi.getAccounts() != null) {
 
-                if (companyProfileApi.getAccounts().getLastAccounts().getMadeUpTo() != null) {
+                if (companyProfileApi.getAccounts().getLastAccounts() != null &&
+                        companyProfileApi.getAccounts().getLastAccounts().getMadeUpTo() != null) {
 
                     LocalDate lastAccounts =
                             companyProfileApi.getAccounts().getLastAccounts().getMadeUpTo();
                     keyFilingDates.setLastAccountsMadeUpTo(lastAccounts.format(getFormatter()));
                 }
 
-                if (companyProfileApi.getAccounts().getNextAccounts().getDueOn() != null) {
+                if (companyProfileApi.getAccounts().getNextAccounts() != null &&
+                        companyProfileApi.getAccounts().getNextAccounts().getDueOn() != null) {
 
                     LocalDate nextAccountsDue = companyProfileApi.getAccounts().getNextAccounts().getDueOn();
                     keyFilingDates.setNextAccountsDue(nextAccountsDue.format(getFormatter()));
