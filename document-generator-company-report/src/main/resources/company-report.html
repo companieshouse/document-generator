@@ -2,6 +2,7 @@
 <html lang="en">
 {{$companyRegistrationInformation := .company_report.company_registration_information}}
 {{$previousNames := .company_report.previous_names}}
+{{$keyFilingDates := .company_report.key_filing_dates}}
 <head>
     <meta charset="UTF-8">
     <title>{{$companyRegistrationInformation.company_name}}</title>
@@ -112,6 +113,28 @@
         <li>Status:{{$companyRegistrationInformation.status.company_status}}
             {{if $companyRegistrationInformation.status.company_status_detail}}/{{$companyRegistrationInformation.status.company_status_detail}}{{end}}</li>
     </ul>
+
+    <h3 class="heading-small">Key filing dates</h3>
+        <ul class="list list-bullet">
+            {{if $keyFilingDates.accounting_reference_date.day}}
+            <li>Accounting reference date: {{$keyFilingDates.accounting_reference_date.day}}/{{$keyFilingDates.accounting_reference_date.month}} </li>
+            {{end}}
+            {{if $keyFilingDates.last_accounts_made_up_to}}
+            <li>Last accounts made up to: {{$keyFilingDates.last_accounts_made_up_to}}</li>
+            {{end}}
+            {{if $keyFilingDates.next_accounts_due}}
+            <li>Next accounts due: {{$keyFilingDates.next_accounts_due}}</li>
+            {{end}}
+            {{if $keyFilingDates.last_confirmation_statement}}
+            <li>Last confirmation statement date: {{$keyFilingDates.last_confirmation_statement}}</li>
+            {{end}}
+            {{if $keyFilingDates.next_confirmation_statement}}
+            <li>Next confirmation statement due: {{$keyFilingDates.next_confirmation_statement}}</li>
+            {{end}}
+            {{if $keyFilingDates.last_members_list}}
+            <li>Last members list: {{$keyFilingDates.last_members_list}}</li>
+            {{end}}
+        </ul>
 
     <h3 class="heading-small">Nature of business (SIC)</h3>
     <ul class="list list-bullet">
