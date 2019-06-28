@@ -8,26 +8,26 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 @JsonInclude(Include.NON_NULL)
 public class KeyFilingDates {
 
-        @JsonProperty("accounting_reference_date")
-        private AccountingReferenceDate accountingReferenceDate;
+    @JsonProperty("accounting_reference_date")
+    private AccountingReferenceDate accountingReferenceDate;
 
-        @JsonProperty("last_accounts_made_up_to")
-        private String lastAccountsMadeUpTo;
+    @JsonProperty("last_accounts_made_up_to")
+    private String lastAccountsMadeUpTo;
 
-        @JsonProperty("accounts_type")
-        private String accountsType;
+    @JsonProperty("accounts_type")
+    private String accountsType;
 
-        @JsonProperty("next_accounts_due")
-        private String nextAccountsDue;
+    @JsonProperty("next_accounts_due")
+    private String nextAccountsDue;
 
-        @JsonProperty("last_confirmation_statement")
-        private String lastConfirmationStatement;
+    @JsonProperty("last_confirmation_statement")
+    private String lastConfirmationStatement;
 
-        @JsonProperty("next_confirmation_statement")
-        private String nextConfirmationStatement;
+    @JsonProperty("next_confirmation_statement")
+    private String nextConfirmationStatement;
 
-        @JsonProperty("last_members_list")
-        private String lastMembersList;
+    @JsonProperty("last_members_list")
+    private String lastMembersList;
 
     public AccountingReferenceDate getAccountingReferenceDate() {
         return accountingReferenceDate;
