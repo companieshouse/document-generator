@@ -33,6 +33,7 @@ public class ApiToRegistrationInformationMapperTest {
     private String COMPANY_SUB_TYPE = "subtype";
     private LocalDate DATE_OF_CREATION = LocalDate.of(2019, 06, 06);
     private String DATE_OF_CREATION_FORMATTED = "6 June 2019";
+    private String CHARITY_NUMBER = "12345";
 
     private String ADDRESS_LINE_ONE = "address line 1";
     private String ADDRESS_LINE_TWO = "address line 2";
@@ -63,6 +64,7 @@ public class ApiToRegistrationInformationMapperTest {
         assertEquals(DATE_OF_CREATION_FORMATTED, registrationInformation.getDateOfIncorporation());
         assertEquals(COMPANY_STATUS, registrationInformation.getStatus().getCompanyStatus());
         assertEquals(COMPANY_STATUS_DETAILS, registrationInformation.getStatus().getCompanyStatusDetail());
+        assertEquals(CHARITY_NUMBER,registrationInformation.getExternalRegistrationNumber());
 
     }
 
@@ -79,6 +81,7 @@ public class ApiToRegistrationInformationMapperTest {
         companyProfileApi.setSicCodes(SIC_CODES);
         companyProfileApi.setDateOfCreation(DATE_OF_CREATION);
         companyProfileApi.setRegisteredOfficeAddress(setAddress());
+        companyProfileApi.setExternalRegistrationNumber(CHARITY_NUMBER);
 
         return  companyProfileApi;
     }
