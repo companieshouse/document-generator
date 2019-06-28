@@ -7,7 +7,6 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.companieshouse.document.generator.api.document.description.RetrieveApiEnumerationDescription;
 import uk.gov.companieshouse.document.generator.api.document.render.RenderDocumentRequestHandler;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentRequest;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentResponse;
@@ -19,6 +18,7 @@ import uk.gov.companieshouse.document.generator.api.service.impl.DocumentGenerat
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseObject;
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseStatus;
 import uk.gov.companieshouse.document.generator.api.document.DocumentType;
+import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
 import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
 import uk.gov.companieshouse.document.generator.interfaces.exception.DocumentInfoException;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
