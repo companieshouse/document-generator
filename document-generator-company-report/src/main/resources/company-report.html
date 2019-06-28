@@ -107,11 +107,20 @@
             {{end}}
         </li>
         {{end}}
-        <li>Company type: {{$companyRegistrationInformation.company_type.type}}
-            {{if $companyRegistrationInformation.company_type.subtype}}/{{$companyRegistrationInformation.company_type.subtype}}{{end}}</li>
-        <li>Date of incorporation: {{$companyRegistrationInformation.date_of_incorporation}}</li>
-        <li>Status:{{$companyRegistrationInformation.status.company_status}}
-            {{if $companyRegistrationInformation.status.company_status_detail}}/{{$companyRegistrationInformation.status.company_status_detail}}{{end}}</li>
+
+        {{if $companyRegistrationInformation.company_type.type}}
+            <li>Company type: {{$companyRegistrationInformation.company_type.type}}
+                {{if $companyRegistrationInformation.company_type.subtype}}/{{$companyRegistrationInformation.company_type.subtype}}{{end}}</li>
+        {{end}}
+
+        {{if $companyRegistrationInformation.date_of_incorporation}}
+            <li>Date of incorporation: {{$companyRegistrationInformation.date_of_incorporation}}</li>
+        {{end}}
+
+        {{if $companyRegistrationInformation.status.company_status}}
+            <li>Status: {{$companyRegistrationInformation.status.company_status}}
+                {{if $companyRegistrationInformation.status.company_status_detail}}/{{$companyRegistrationInformation.status.company_status_detail}}{{end}}</li>
+        {{end}}
     </ul>
 
     <h3 class="heading-small">Key filing dates</h3>
@@ -136,12 +145,16 @@
             {{end}}
         </ul>
 
+{{if $companyRegistrationInformation.nature_of_business}}
     <h3 class="heading-small">Nature of business (SIC)</h3>
     <ul class="list list-bullet">
-        <li>85100 - Pre-primary education</li>
-        <li>85200 - Primary education</li>
-        <li>85310 - General secondary education</li>
+        {{range $companyRegistrationInformation.nature_of_business}}
+        <li>{{.sic_codes_description}}</li>
+        {{end}}
     </ul>
+
+    {{end}}
+
     {{if $previousNames}}
     <h3 class="heading-small">Previous company names</h3>
     <table>

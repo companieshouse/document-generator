@@ -30,7 +30,7 @@ public abstract class ApiToPreviousNamesMapper {
 
         if (previousCompanyNamesApi != null) {
 
-            previousNames.setDateOfChange(previousCompanyNamesApi.getCeasedOn().format(DateTimeFormatter.ofPattern("dd MMMM uuuu")));
+            previousNames.setDateOfChange(previousCompanyNamesApi.getCeasedOn().format(DateTimeFormatter.ofPattern("d MMMM uuuu")));
         }
     }
 }

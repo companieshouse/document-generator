@@ -35,6 +35,16 @@
     <dependencies>
         <dependency>
             <groupId>uk.gov.companieshouse</groupId>
+            <artifactId>environment-reader-library</artifactId>
+            <version>${environment-reader-library.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.companieshouse</groupId>
+            <artifactId>structured-logging</artifactId>
+            <version>${structured-logging.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.companieshouse</groupId>
             <artifactId>document-generator-interfaces</artifactId>
             <version>unversioned</version>
         </dependency>
@@ -43,8 +53,6 @@
             <artifactId>spring-boot-starter-web</artifactId>
             <version>${spring-boot-start-web.version}</version>
         </dependency>
-
-        <!-- Testing -->
         <dependency>
             <groupId>uk.gov.companieshouse</groupId>
             <artifactId>company-accounts-library</artifactId>
