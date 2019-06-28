@@ -21,9 +21,8 @@ public class RegistrationInformation {
     @JsonProperty("company_name")
     private String companyName;
 
-    @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonProperty("date_of_incorporation")
-    private LocalDate dateOfIncorporation;
+    private String dateOfIncorporation;
 
     @JsonProperty("registered_office")
     private RegisteredOffice registeredOffice;
@@ -37,11 +36,11 @@ public class RegistrationInformation {
     @JsonProperty("nature_of_business")
     private List<SicCodes> natureOfBusiness;
 
-    public LocalDate getDateOfIncorporation() {
+    public String getDateOfIncorporation() {
         return dateOfIncorporation;
     }
 
-    public void setDateOfIncorporation(LocalDate dateOfIncorporation) {
+    public void setDateOfIncorporation(String dateOfIncorporation) {
         this.dateOfIncorporation = dateOfIncorporation;
     }
 
