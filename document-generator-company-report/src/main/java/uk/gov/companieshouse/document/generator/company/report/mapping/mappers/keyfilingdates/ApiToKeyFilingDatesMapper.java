@@ -1,7 +1,5 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.keyfilingdates;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
@@ -12,7 +10,6 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.Mappings;
 import org.springframework.web.context.annotation.RequestScope;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
-import uk.gov.companieshouse.api.model.company.account.AccountingReferenceDateApi;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.keyfilingdates.KeyFilingDates;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.keyfilingdates.items.AccountingReferenceDate;
 
@@ -40,30 +37,18 @@ public abstract class ApiToKeyFilingDatesMapper {
                 if (companyProfileApi.getAccounts().getLastAccounts() != null &&
                         companyProfileApi.getAccounts().getLastAccounts().getMadeUpTo() != null) {
 
-                    LocalDate lastAccounts =
-                            companyProfileApi.getAccounts().getLastAccounts().getMadeUpTo();
-                    keyFilingDates.setLastAccountsMadeUpTo(lastAccounts.format(getFormatter()));
+                    formatLastAccountsMadeUpTo(companyProfileApi, keyFilingDates);
                 }
 
                 if (companyProfileApi.getAccounts().getNextAccounts() != null &&
                         companyProfileApi.getAccounts().getNextAccounts().getDueOn() != null) {
 
-                    LocalDate nextAccountsDue = companyProfileApi.getAccounts().getNextAccounts().getDueOn();
-                    keyFilingDates.setNextAccountsDue(nextAccountsDue.format(getFormatter()));
+                    formatNextAccountsMadeUpTo(companyProfileApi, keyFilingDates);
                 }
 
                 if (companyProfileApi.getAccounts().getAccountingReferenceDate() != null) {
 
-                    AccountingReferenceDate accountingReferenceDate = new AccountingReferenceDate();
-                    String monthString = getNameOfMonth(companyProfileApi);
-
-                    accountingReferenceDate.setDay(companyProfileApi.getAccounts().getAccountingReferenceDate().getDay());
-                    //Sentence case month string
-                    accountingReferenceDate.setMonth(monthString.substring(0,1).toUpperCase()
-                            + monthString.substring(1).toLowerCase());
-
-                    keyFilingDates.setAccountingReferenceDate(accountingReferenceDate);
-
+                    formatAccountingReferenceDate(companyProfileApi, keyFilingDates);
                 }
             }
 
@@ -71,25 +56,61 @@ public abstract class ApiToKeyFilingDatesMapper {
 
                 if (companyProfileApi.getConfirmationStatement().getLastMadeUpTo() != null) {
 
-                    LocalDate lastConfirmationStatement =
-                            companyProfileApi.getConfirmationStatement().getLastMadeUpTo();
-                    keyFilingDates.setLastConfirmationStatement(lastConfirmationStatement.format(getFormatter()));
+                    formatConfirmationStatementLastMadeUpTo(companyProfileApi, keyFilingDates);
                 }
 
                 if (companyProfileApi.getConfirmationStatement().getNextDue() != null) {
 
-                    LocalDate nextConfirmationStatement =
-                            companyProfileApi.getConfirmationStatement().getNextDue();
-                    keyFilingDates.setNextConfirmationStatement(nextConfirmationStatement.format(getFormatter()));
+                    formatConfirmationStatementNextDue(companyProfileApi, keyFilingDates);
                 }
             }
 
             if (companyProfileApi.getLastFullMembersListDate() != null) {
 
-                LocalDate lastMembersList = companyProfileApi.getLastFullMembersListDate();
-                keyFilingDates.setLastMembersList(lastMembersList.format(getFormatter()));
+                formatLastMembersList(companyProfileApi, keyFilingDates);
             }
         }
+    }
+
+    private void formatLastMembersList(CompanyProfileApi companyProfileApi, @MappingTarget KeyFilingDates keyFilingDates) {
+        LocalDate lastMembersList = companyProfileApi.getLastFullMembersListDate();
+        keyFilingDates.setLastMembersList(lastMembersList.format(getFormatter()));
+    }
+
+    private void formatConfirmationStatementNextDue(CompanyProfileApi companyProfileApi, @MappingTarget KeyFilingDates keyFilingDates) {
+        LocalDate nextConfirmationStatement =
+                companyProfileApi.getConfirmationStatement().getNextDue();
+        keyFilingDates.setNextConfirmationStatement(nextConfirmationStatement.format(getFormatter()));
+    }
+
+    private void formatConfirmationStatementLastMadeUpTo(CompanyProfileApi companyProfileApi,
+            @MappingTarget KeyFilingDates keyFilingDates) {
+        LocalDate lastConfirmationStatement =
+                companyProfileApi.getConfirmationStatement().getLastMadeUpTo();
+        keyFilingDates.setLastConfirmationStatement(lastConfirmationStatement.format(getFormatter()));
+    }
+
+    private void formatAccountingReferenceDate(CompanyProfileApi companyProfileApi, @MappingTarget KeyFilingDates keyFilingDates) {
+        AccountingReferenceDate accountingReferenceDate = new AccountingReferenceDate();
+        String monthString = getNameOfMonth(companyProfileApi);
+
+        accountingReferenceDate.setDay(companyProfileApi.getAccounts().getAccountingReferenceDate().getDay());
+        //Sentence case month string
+        accountingReferenceDate.setMonth(monthString.substring(0,1).toUpperCase()
+                + monthString.substring(1).toLowerCase());
+
+        keyFilingDates.setAccountingReferenceDate(accountingReferenceDate);
+    }
+
+    private void formatNextAccountsMadeUpTo(CompanyProfileApi companyProfileApi, @MappingTarget KeyFilingDates keyFilingDates) {
+        LocalDate nextAccountsDue = companyProfileApi.getAccounts().getNextAccounts().getDueOn();
+        keyFilingDates.setNextAccountsDue(nextAccountsDue.format(getFormatter()));
+    }
+
+    private void formatLastAccountsMadeUpTo(CompanyProfileApi companyProfileApi, @MappingTarget KeyFilingDates keyFilingDates) {
+        LocalDate lastAccounts =
+                companyProfileApi.getAccounts().getLastAccounts().getMadeUpTo();
+        keyFilingDates.setLastAccountsMadeUpTo(lastAccounts.format(getFormatter()));
     }
 
     private String getNameOfMonth(CompanyProfileApi companyProfileApi) {
