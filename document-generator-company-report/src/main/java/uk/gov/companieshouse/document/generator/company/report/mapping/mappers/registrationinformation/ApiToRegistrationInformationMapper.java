@@ -1,8 +1,5 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.registrationinformation;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import org.apache.tomcat.jni.Local;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -16,6 +13,7 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.items.Status;
 
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +32,8 @@ public abstract class ApiToRegistrationInformationMapper {
             @Mapping(source = "registeredOfficeAddress.poBox", target = "registeredOffice.poBox"),
             @Mapping(source = "registeredOfficeAddress.postalCode", target = "registeredOffice.postalCode"),
             @Mapping(source = "registeredOfficeAddress.premises", target = "registeredOffice.premises"),
-            @Mapping(source = "registeredOfficeAddress.region", target = "registeredOffice.region")
+            @Mapping(source = "registeredOfficeAddress.region", target = "registeredOffice.region"),
+            @Mapping(source = "externalRegistrationNumber", target = "externalRegistrationNumber")
     })
     public abstract RegistrationInformation apiToRegistrationInformation(CompanyProfileApi companyProfileApi) throws IOException;
 
