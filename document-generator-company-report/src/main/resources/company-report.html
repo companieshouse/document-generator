@@ -113,8 +113,12 @@
                 {{if $companyRegistrationInformation.company_type.subtype}}/{{$companyRegistrationInformation.company_type.subtype}}{{end}}</li>
         {{end}}
 
+        {{if $companyRegistrationInformation.external_registration_number}}
+            <li>Charity number: {{$companyRegistrationInformation.external_registration_number}}</li>
+        {{end}}
+
         {{if $companyRegistrationInformation.date_of_incorporation}}
-            <li>Date of incorporation: {{$companyRegistrationInformation.date_of_incorporation}}</li>
+            <li>{{$companyRegistrationInformation.date_of_incorporation_label}}: {{$companyRegistrationInformation.date_of_incorporation}}</li>
         {{end}}
 
         {{if $companyRegistrationInformation.status.company_status}}
@@ -151,7 +155,7 @@
     <h3 class="heading-small">Nature of business (SIC)</h3>
     <ul class="list list-bullet">
         {{range $companyRegistrationInformation.nature_of_business}}
-        <li>{{.sic_codes_description}}</li>
+        <li>{{.sic_codes}} {{.sic_codes_description}}</li>
         {{end}}
     </ul>
 

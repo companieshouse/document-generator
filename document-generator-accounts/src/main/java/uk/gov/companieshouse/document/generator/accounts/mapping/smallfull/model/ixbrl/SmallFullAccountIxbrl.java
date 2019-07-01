@@ -3,9 +3,6 @@ package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.mode
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.gson.Gson;
 import uk.gov.companieshouse.document.generator.accounts.mapping.PeriodAwareIxbrl;
@@ -18,8 +15,6 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import java.util.Objects;
 
 @JsonInclude(Include.NON_NULL)
-@JsonTypeName("small_full_accounts")
-@JsonTypeInfo(include = As.WRAPPER_OBJECT, use = Id.NAME)
 public class SmallFullAccountIxbrl implements PeriodAwareIxbrl {
 
     @JsonProperty("period")
