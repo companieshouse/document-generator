@@ -29,13 +29,14 @@ public class OfficerService {
             OfficersList officersList = apiClient.officers().list(uri);
             officersList.addQueryParams("items_per_page", "100");
 
-            officersList.execute().getData();
-        }catch (ApiErrorResponseException e) {
+            officersApi = officersList.execute().getData();
+        } catch (ApiErrorResponseException e) {
 
             throw new ServiceException("Error retrieving officers", e);
         } catch (URIValidationException e) {
 
             throw new ServiceException("Invalid URI for officers resource", e);
         }
+        return officersApi;
     }
 }
