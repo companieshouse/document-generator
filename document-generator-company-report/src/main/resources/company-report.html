@@ -127,7 +127,7 @@
         {{end}}
     </ul>
 
-    {{if $keyFilingDates}}
+    {{if or ($keyFilingDates.last_accounts_made_up_to) ($keyFilingDates.next_accounts_due) ($keyFilingDates.accounting_reference_date.day) }}
         <h3 class="heading-small">Key filing dates</h3>
         <ul class="list list-bullet">
             {{if $keyFilingDates.accounting_reference_date.day}}
