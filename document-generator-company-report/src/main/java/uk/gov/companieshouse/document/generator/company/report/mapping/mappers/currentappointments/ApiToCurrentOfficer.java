@@ -18,7 +18,9 @@ import uk.gov.companieshouse.document.generator.company.report.exception.MapperE
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.items.CurrentOfficer;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyReportApiClientService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequestScope
 @Mapper(componentModel = "spring")
@@ -80,5 +82,13 @@ public abstract class ApiToCurrentOfficer {
         return companyOfficerApi.getLinks() != null &&
             companyOfficerApi.getLinks().getOfficer() != null &&
             companyOfficerApi.getLinks().getOfficer().getAppointments() != null;
+    }
+
+    private Map<String, String> getDebugMap(String debugString) {
+
+        Map<String, String> debugMap = new HashMap<>();
+        debugMap.put("Enumeration mapping :", debugString);
+
+        return debugMap;
     }
 }
