@@ -7,7 +7,7 @@ public class CompanyReportApiData {
 
     private CompanyProfileApi companyProfileApi;
 
-    private OfficersApi officerApi;
+    private OfficersApi officersApi;
 
     public CompanyProfileApi getCompanyProfileApi() {
         return companyProfileApi;
@@ -17,11 +17,11 @@ public class CompanyReportApiData {
         this.companyProfileApi = companyProfileApi;
     }
 
-    public OfficersApi getOfficerApi() {
-        return officerApi;
+    public OfficersApi getOfficersApi() {
+        return officersApi;
     }
 
-    public void setOfficerApi(OfficersApi officerApi) {
-        this.officerApi = officerApi;
+    public void setOfficersApi(OfficersApi officerApi) {
+        this.officersApi = officerApi;
     }
 }
