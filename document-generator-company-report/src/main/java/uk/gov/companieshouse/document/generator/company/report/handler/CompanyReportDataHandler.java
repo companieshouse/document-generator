@@ -7,7 +7,9 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import uk.gov.companieshouse.api.handler.officers.request.OfficersList;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
+import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.company.report.exception.MapperException;
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
@@ -15,6 +17,7 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.C
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
+import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
@@ -33,6 +36,9 @@ public class CompanyReportDataHandler {
 
     @Autowired
     private CompanyService companyService;
+
+    @Autowired
+    private OfficerService officerService;
 
     @Autowired
     private CompanyReportMapper companyReportMapper;
@@ -74,7 +80,10 @@ public class CompanyReportDataHandler {
 
         CompanyProfileApi companyProfileApi = getCompanyProfile(companyNumber, requestId);
 
+        OfficersApi officersApi = getOfficers(companyNumber, requestId);
+
         companyReportApiData.setCompanyProfileApi(companyProfileApi);
+        companyReportApiData.setOfficerApi(officersApi);
 
         return toJson(companyReportMapper
             .mapCompanyReport(companyReportApiData),
@@ -114,6 +123,15 @@ public class CompanyReportDataHandler {
         try {
             LOG.infoContext(requestId,"Attempting to retrieve company profile", getDebugMap(companyNumber));
             return companyService.getCompanyProfile(companyNumber);
+        } catch (ServiceException se) {
+            throw new HandlerException("error occurred obtaining the company profile", se);
+        }
+    }
+
+    private OfficersApi getOfficers(String companyNumber, String requestId) throws HandlerException {
+        try {
+            LOG.infoContext(requestId,"Attempting to retrieve company profile", getDebugMap(companyNumber));
+            return officerService.getOfficers(companyNumber);
         } catch (ServiceException se) {
             throw new HandlerException("error occurred obtaining the company profile", se);
         }
