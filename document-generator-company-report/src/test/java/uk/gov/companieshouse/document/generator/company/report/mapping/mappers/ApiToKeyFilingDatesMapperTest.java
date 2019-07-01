@@ -74,7 +74,7 @@ public class ApiToKeyFilingDatesMapperTest {
         assertEquals(LAST_MADE_UP_TO_FORMATTED, keyFilingDates.getLastAccountsMadeUpTo());
         assertEquals(NEXT_DUE_ON_FORMATTED, keyFilingDates.getNextAccountsDue());
         assertEquals("5", keyFilingDates.getAccountingReferenceDate().getDay());
-        assertEquals("5", keyFilingDates.getAccountingReferenceDate().getMonth());
+        assertEquals("May", keyFilingDates.getAccountingReferenceDate().getMonth());
 
         assertEquals(CONF_STATEMENT_LAST_MADE_UP_TO_FORMATTED, keyFilingDates.getLastConfirmationStatement());
         assertEquals(CONF_STATEMENT_NEXT_DUE_ON_FORMATTED, keyFilingDates.getNextConfirmationStatement());
