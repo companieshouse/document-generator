@@ -25,26 +25,27 @@ public class ApiToRegistrationInformationMapperTest {
     @InjectMocks
     private ApiToRegistrationInformationMapper apiToRegistrationInformationMapper = new ApiToRegistrationInformationMapperImpl();
 
-    private String COMPANY_NUMBER = "00004598";
-    private String COMPANY_NAME = "Test Company LTD";
-    private String COMPANY_STATUS = "status";
-    private String COMPANY_STATUS_DETAILS = "status detail";
-    private String COMPANY_TYPE = "type";
-    private String COMPANY_SUB_TYPE = "subtype";
-    private LocalDate DATE_OF_CREATION = LocalDate.of(2019, 06, 06);
-    private String DATE_OF_CREATION_FORMATTED = "6 June 2019";
+    private static final String COMPANY_NUMBER = "00004598";
+    private static final String COMPANY_NAME = "Test Company LTD";
+    private static final String COMPANY_STATUS = "status";
+    private static final String COMPANY_STATUS_DETAILS = "status detail";
+    private static final String COMPANY_TYPE = "type";
+    private static final String COMPANY_SUB_TYPE = "subtype";
+    private static final LocalDate DATE_OF_CREATION = LocalDate.of(2019, 06, 06);
+    private static final String DATE_OF_CREATION_FORMATTED = "6 June 2019";
+    private static final String CHARITY_NUMBER = "12345";
 
-    private String ADDRESS_LINE_ONE = "address line 1";
-    private String ADDRESS_LINE_TWO = "address line 2";
-    private String CARE_OF = "care of";
-    private String COUNTRY = "country";
-    private String LOCALITY = "locality";
-    private String PO_BOX = "po box";
-    private String POSTAL_CODE = "postal code";
-    private String REGION = "region";
-    private String PREMISE = "premise";
+    private static final String ADDRESS_LINE_ONE = "address line 1";
+    private static final String ADDRESS_LINE_TWO = "address line 2";
+    private static final String CARE_OF = "care of";
+    private static final String COUNTRY = "country";
+    private static final String LOCALITY = "locality";
+    private static final String PO_BOX = "po box";
+    private static final String POSTAL_CODE = "postal code";
+    private static final String REGION = "region";
+    private static final String PREMISE = "premise";
 
-    private String[] SIC_CODES = new String[]{"6000", "6001", "6002"};
+    private static final String[] SIC_CODES = new String[]{"6000", "6001", "6002"};
 
     @Test
     @DisplayName("tests company profile data maps to registration information model")
@@ -63,6 +64,7 @@ public class ApiToRegistrationInformationMapperTest {
         assertEquals(DATE_OF_CREATION_FORMATTED, registrationInformation.getDateOfIncorporation());
         assertEquals(COMPANY_STATUS, registrationInformation.getStatus().getCompanyStatus());
         assertEquals(COMPANY_STATUS_DETAILS, registrationInformation.getStatus().getCompanyStatusDetail());
+        assertEquals(CHARITY_NUMBER,registrationInformation.getExternalRegistrationNumber());
 
     }
 
@@ -79,6 +81,7 @@ public class ApiToRegistrationInformationMapperTest {
         companyProfileApi.setSicCodes(SIC_CODES);
         companyProfileApi.setDateOfCreation(DATE_OF_CREATION);
         companyProfileApi.setRegisteredOfficeAddress(setAddress());
+        companyProfileApi.setExternalRegistrationNumber(CHARITY_NUMBER);
 
         return  companyProfileApi;
     }
