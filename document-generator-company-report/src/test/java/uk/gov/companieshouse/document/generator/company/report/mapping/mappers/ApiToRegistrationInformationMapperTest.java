@@ -33,15 +33,16 @@ public class ApiToRegistrationInformationMapperTest {
 
     @Mock
     private RetrieveApiEnumerationDescription mockRetrieveApiEnumerations;
-
+  
     private static final String COMPANY_NUMBER = "00004598";
     private static final String COMPANY_NAME = "Test Company LTD";
-    private static final String COMPANY_STATUS = "active-proposal-to-strike-off";
-    private static final String COMPANY_STATUS_DETAILS = "community-interest-company";
-    private static final String COMPANY_TYPE = "private-unlimited";
-    private static final String COMPANY_SUB_TYPE = "community-interest-company";
+    private static final String COMPANY_STATUS = "status";
+    private static final String COMPANY_STATUS_DETAILS = "status detail";
+    private static final String COMPANY_TYPE = "type";
+    private static final String COMPANY_SUB_TYPE = "subtype";
     private static final LocalDate DATE_OF_CREATION = LocalDate.of(2019, 06, 06);
     private static final String DATE_OF_CREATION_FORMATTED = "6 June 2019";
+    private static final String CHARITY_NUMBER = "12345";
 
     private static final String ADDRESS_LINE_ONE = "address line 1";
     private static final String ADDRESS_LINE_TWO = "address line 2";
@@ -75,7 +76,7 @@ public class ApiToRegistrationInformationMapperTest {
         assertEquals(MAPPED_VALUE, registrationInformation.getStatus().getCompanyStatus());
         assertEquals(MAPPED_VALUE, registrationInformation.getStatus().getCompanyStatusDetail());
         assertEquals(MAPPED_VALUE, registrationInformation.getDateOfincorporationLabel());
-
+        assertEquals(CHARITY_NUMBER,registrationInformation.getExternalRegistrationNumber());
     }
 
     private CompanyProfileApi createCompanyReportApiData() {
@@ -91,6 +92,7 @@ public class ApiToRegistrationInformationMapperTest {
         companyProfileApi.setSicCodes(SIC_CODES);
         companyProfileApi.setDateOfCreation(DATE_OF_CREATION);
         companyProfileApi.setRegisteredOfficeAddress(setAddress());
+        companyProfileApi.setExternalRegistrationNumber(CHARITY_NUMBER);
 
         return  companyProfileApi;
     }
