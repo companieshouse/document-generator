@@ -65,7 +65,7 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
 
     private CurrentAppointments setCurrentAppointments(OfficersApi officersApi) throws MapperException {
         try {
-            return apiToCurrentAppointmentsMapper.mapCurrentAppointments(officersApi);
+            return apiToCurrentAppointmentsMapper.apiToCurrentAppointmentsMapper(officersApi);
         } catch (MapperException e) {
             throw new MapperException("An error occurred when mapping to current appointments", e);
         }

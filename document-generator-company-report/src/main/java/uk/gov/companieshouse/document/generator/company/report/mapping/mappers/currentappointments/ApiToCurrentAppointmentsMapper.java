@@ -11,10 +11,10 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 
 @RequestScope
 @Mapper(componentModel = "spring", uses = {ApiToCurrentOfficer.class})
-public interface ApiToCurrentAppointmentsMapper {
+public abstract class ApiToCurrentAppointmentsMapper {
 
     @Mappings({
         @Mapping(source = "activeCount", target = "numberOfCurrentAppointments")
     })
-    CurrentAppointments mapCurrentAppointments(OfficersApi officerApi) throws MapperException;
+    public abstract CurrentAppointments apiToCurrentAppointmentsMapper(OfficersApi officerApi) throws MapperException;
 }
