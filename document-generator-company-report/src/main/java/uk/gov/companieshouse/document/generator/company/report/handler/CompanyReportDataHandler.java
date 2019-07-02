@@ -76,7 +76,7 @@ public class CompanyReportDataHandler {
         OfficersApi officersApi = getOfficers(companyNumber, requestId);
 
         companyReportApiData.setCompanyProfileApi(companyProfileApi);
-        companyReportApiData.setOfficerApi(officersApi);
+        companyReportApiData.setOfficersApi(officersApi);
 
         return toJson(companyReportMapper
             .mapCompanyReport(companyReportApiData),

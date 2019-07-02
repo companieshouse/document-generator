@@ -8,10 +8,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
+import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.CompanyReportMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
+import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,6 +34,9 @@ public class CompanyReportDataHandlerTest {
     @Mock
     private CompanyReport mockCompanyReport;
 
+    @Mock
+    private OfficerService mockOfficerService;
+
     @InjectMocks
     private CompanyReportDataHandler companyReportDataHandler;
 
@@ -43,11 +48,14 @@ public class CompanyReportDataHandlerTest {
     void testGetDocumentInfoSuccessful() throws Exception {
 
         CompanyProfileApi companyProfileApi = createCompanyProfile();
+        OfficersApi officersApi = createOfficers();
+
         CompanyReportApiData companyReportApiData = new CompanyReportApiData();
 
         companyReportApiData.setCompanyProfileApi(companyProfileApi);
 
         when(mockCompanyService.getCompanyProfile(any(String.class))).thenReturn(companyProfileApi);
+        when(mockOfficerService.getOfficers(any(String.class))).thenReturn(officersApi);
 
         DocumentInfoResponse documentInfoResponse = companyReportDataHandler.getCompanyReport(RESOURCE_URI, REQUEST_ID);
 
@@ -81,5 +89,12 @@ public class CompanyReportDataHandlerTest {
         companyProfileApi.setCompanyName("GIRLS SCHOOL TRUST");
 
         return companyProfileApi;
+    }
+
+    private OfficersApi createOfficers() {
+        OfficersApi officersApi = new OfficersApi();
+        officersApi.setActiveCount(1L);
+
+        return officersApi;
     }
 }
