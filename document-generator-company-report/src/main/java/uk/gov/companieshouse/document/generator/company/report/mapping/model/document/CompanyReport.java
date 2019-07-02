@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.List;
 
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.CurrentAppointments;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.keyfilingdates.KeyFilingDates;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.previousnames.PreviousNames;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.RegistrationInformation;
 
@@ -26,6 +27,9 @@ public class CompanyReport {
 
     @JsonProperty("current_appointments")
     private CurrentAppointments currentAppointments;
+
+    @JsonProperty("key_filing_dates")
+    private KeyFilingDates keyFilingDates;
 
     public List<PreviousNames> getPreviousNames() {
         return previousNames;
@@ -49,5 +53,13 @@ public class CompanyReport {
 
     public void setCurrentAppointments(CurrentAppointments currentAppointments) {
         this.currentAppointments = currentAppointments;
+    }
+
+    public KeyFilingDates getKeyFilingDates() {
+        return keyFilingDates;
+    }
+
+    public void setKeyFilingDates(KeyFilingDates keyFilingDates) {
+        this.keyFilingDates = keyFilingDates;
     }
 }

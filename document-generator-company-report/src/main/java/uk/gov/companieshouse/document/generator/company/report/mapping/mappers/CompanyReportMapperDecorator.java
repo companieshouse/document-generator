@@ -8,11 +8,13 @@ import uk.gov.companieshouse.api.model.company.PreviousCompanyNamesApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.MapperException;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.currentappointments.ApiToCurrentAppointmentsMapper;
+import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.keyfilingdates.ApiToKeyFilingDatesMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.previousnames.ApiToPreviousNamesMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.registrationinformation.ApiToRegistrationInformationMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.CurrentAppointments;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.keyfilingdates.KeyFilingDates;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.previousnames.PreviousNames;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.RegistrationInformation;
 
@@ -31,6 +33,9 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
     private ApiToPreviousNamesMapper apiToPreviousNamesMapper;
 
     @Autowired
+    private ApiToKeyFilingDatesMapper apiToKeyFilingDatesMapper;
+
+    @Autowired
     private ApiToCurrentAppointmentsMapper apiToCurrentAppointmentsMapper;
 
     @Override
@@ -46,6 +51,10 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
             }
 
             companyReport.setCurrentAppointments(setCurrentAppointments(companyReportApiData.getOfficersApi()));
+
+            if (companyReportApiData.getCompanyProfileApi().getAccounts() != null) {
+                companyReport.setKeyFilingDates(setKeyFilingDates(companyReportApiData.getCompanyProfileApi()));
+            }
         }
 
         return companyReport;
@@ -55,8 +64,13 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
         try {
             return apiToRegistrationInformationMapper.apiToRegistrationInformation(companyProfileApi);
         } catch (IOException e) {
-            throw new MapperException("An error occurred when mapping to registration information", e);
+            throw new MapperException("An error occurred when mapping to registration " +
+                    "information", e);
         }
+    }
+
+    private KeyFilingDates setKeyFilingDates(CompanyProfileApi companyProfileApi) {
+        return apiToKeyFilingDatesMapper.apiToKeyFilingDates(companyProfileApi);
     }
 
     private List<PreviousNames> setPreviousNames(List<PreviousCompanyNamesApi> previousCompanyNames) {
