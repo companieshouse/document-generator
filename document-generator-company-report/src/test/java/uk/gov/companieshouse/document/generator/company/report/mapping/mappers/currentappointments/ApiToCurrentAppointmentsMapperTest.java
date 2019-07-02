@@ -30,8 +30,8 @@ public class ApiToCurrentAppointmentsMapperTest {
     private ApiToCurrentAppointmentsMapper apiToCurrentAppointmentsMapper = new ApiToCurrentAppointmentsMapperImpl();
 
     @Test
-    @DisplayName("tests previous names data maps to previous names model")
-    void testApiToPreviousNamesMaps() throws Exception{
+    @DisplayName("tests officer api data maps to current appointments model")
+    void testApiToCurrentAppointmentsMaps() throws Exception{
 
         OfficersApi officersApi = createOfficersApi();
 
