@@ -76,8 +76,8 @@ public class ApiToCurrentOfficerTest {
         assertEquals(POSTAL_CODE, currentOfficer.getAddress().getPostalCode());
         assertEquals(REGION, currentOfficer.getAddress().getRegion());
         assertEquals(PREMISE, currentOfficer.getAddress().getPremises());
-        assertEquals(MONTH, currentOfficer.getDateOfBirth().getMonth());
-        assertEquals(YEAR, currentOfficer.getDateOfBirth().getYear());
+        assertEquals("January", currentOfficer.getDateOfBirth().getMonth());
+        assertEquals(1993L, currentOfficer.getDateOfBirth().getYear().longValue());
         assertEquals(COUNTRY_OF_RESIDENCE, currentOfficer.getCountryOfResidence());
         assertEquals("6 June 2019", currentOfficer.getAppointed());
         assertEquals("5 May 2019", currentOfficer.getResigned());

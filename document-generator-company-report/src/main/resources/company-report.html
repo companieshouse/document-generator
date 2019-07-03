@@ -213,7 +213,7 @@
                 {{end}}
 
                 {{if .date_of_birth}}
-                <li>Date of birth: {{.date_of_birth}}</li>
+                <li>Date of birth: {{index .date_of_birth "month"}} {{index .date_of_birth "year"}} </li>
                 {{end}}
 
                 {{if .resigned_on}}

@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.currentappointments;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -18,6 +19,7 @@ import uk.gov.companieshouse.api.model.officers.CompanyOfficerApi;
 import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
 import uk.gov.companieshouse.document.generator.company.report.exception.MapperException;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.items.CurrentOfficer;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.items.DateOfBirth;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyReportApiClientService;
 
 import java.util.HashMap;
@@ -39,7 +41,7 @@ public abstract class ApiToCurrentOfficer {
 
     @Mappings({
             @Mapping(source = "appointedOn", target = "appointed"),
-            @Mapping(source= "countryOfResidence", target = "countryOfResidence")
+            @Mapping(source = "countryOfResidence", target = "countryOfResidence")
     })
 
     public abstract CurrentOfficer apiToCurrentOfficer(CompanyOfficerApi companyOfficerApi) throws MapperException;
@@ -47,17 +49,38 @@ public abstract class ApiToCurrentOfficer {
     public abstract List<CurrentOfficer> apiToCurrentOfficer(List<CompanyOfficerApi> companyOfficerApis) throws MapperException;
 
     @AfterMapping
-    protected void convertOfficerRole(CompanyOfficerApi companyOfficerApi, @MappingTarget CurrentOfficer currentOfficer) {
+    protected void convertOfficerRole(CompanyOfficerApi companyOfficerApi,
+            @MappingTarget CurrentOfficer currentOfficer) {
 
         if (hasOfficerRole(companyOfficerApi)) {
             currentOfficer.setOfficerRole(retrieveApiEnumerationDescription
-                .getApiEnumerationDescription(CONSTANTS, "officer_role",
-                    companyOfficerApi.getOfficer_role().getOfficerRole(), getDebugMap(companyOfficerApi.getOfficer_role().getOfficerRole())));
+                    .getApiEnumerationDescription(CONSTANTS, "officer_role",
+                            companyOfficerApi.getOfficer_role().getOfficerRole(),
+                            getDebugMap(companyOfficerApi.getOfficer_role().getOfficerRole())));
         }
     }
 
     @AfterMapping
-    protected void formatAppointedOnDate(CompanyOfficerApi companyOfficerApi, @MappingTarget CurrentOfficer currentOfficer) {
+    protected void formatOfficerDateOfBirth(CompanyOfficerApi companyOfficerApi,
+            @MappingTarget CurrentOfficer currentOfficer) {
+
+        if (companyOfficerApi.getDateOfBirth() != null) {
+
+            DateOfBirth dob = new DateOfBirth();
+            String monthString = getNameOfMonth(companyOfficerApi);
+
+            dob.setYear(companyOfficerApi.getDateOfBirth().getYear());
+            //Sentence case month string
+            dob.setMonth(monthString.substring(0, 1).toUpperCase()
+                    + monthString.substring(1).toLowerCase());
+
+            currentOfficer.setDateOfBirth(dob);
+        }
+    }
+
+    @AfterMapping
+    protected void formatAppointedOnDate(CompanyOfficerApi companyOfficerApi,
+            @MappingTarget CurrentOfficer currentOfficer) {
 
         if (companyOfficerApi != null && companyOfficerApi.getAppointedOn() != null) {
             LocalDate appointedOn = companyOfficerApi.getAppointedOn();
@@ -66,7 +89,8 @@ public abstract class ApiToCurrentOfficer {
     }
 
     @AfterMapping
-    protected void formatResignedOnDate(CompanyOfficerApi companyOfficerApi, @MappingTarget CurrentOfficer currentOfficer){
+    protected void formatResignedOnDate(CompanyOfficerApi companyOfficerApi,
+            @MappingTarget CurrentOfficer currentOfficer) {
         if (companyOfficerApi != null && companyOfficerApi.getResignedOn() != null) {
             LocalDate resignedOn = companyOfficerApi.getResignedOn();
             currentOfficer.setResigned(resignedOn.format(getFormatter()));
@@ -74,7 +98,8 @@ public abstract class ApiToCurrentOfficer {
     }
 
     @AfterMapping
-    protected void setOfficerAppointments(CompanyOfficerApi companyOfficerApi, @MappingTarget CurrentOfficer currentOfficer) throws MapperException {
+    protected void setOfficerAppointments(CompanyOfficerApi companyOfficerApi,
+            @MappingTarget CurrentOfficer currentOfficer) throws MapperException {
 
         if (hasAppointmentLink(companyOfficerApi)) {
 
@@ -83,9 +108,10 @@ public abstract class ApiToCurrentOfficer {
 
             try {
                 officerAppointmentsApi = apiClient.officerAppointment()
-                    .get(new UriTemplate(companyOfficerApi.getLinks().getOfficer().getAppointments()).toString()).execute().getData();
+                        .get(new UriTemplate(companyOfficerApi.getLinks().getOfficer().getAppointments()).toString()).execute().getData();
             } catch (ApiErrorResponseException | URIValidationException e) {
-                throw new MapperException("An error occurred when retrieving officer appointments", e);
+                throw new MapperException("An error occurred when retrieving officer " +
+                        "appointments", e);
             }
 
             if (officerAppointmentsApi != null) {
@@ -96,13 +122,13 @@ public abstract class ApiToCurrentOfficer {
 
     private boolean hasOfficerRole(CompanyOfficerApi companyOfficerApi) {
         return companyOfficerApi.getOfficer_role() != null &&
-            companyOfficerApi.getOfficer_role().getOfficerRole() != null;
+                companyOfficerApi.getOfficer_role().getOfficerRole() != null;
     }
 
     private boolean hasAppointmentLink(CompanyOfficerApi companyOfficerApi) {
         return companyOfficerApi.getLinks() != null &&
-            companyOfficerApi.getLinks().getOfficer() != null &&
-            companyOfficerApi.getLinks().getOfficer().getAppointments() != null;
+                companyOfficerApi.getLinks().getOfficer() != null &&
+                companyOfficerApi.getLinks().getOfficer().getAppointments() != null;
     }
 
     private Map<String, String> getDebugMap(String debugString) {
@@ -115,5 +141,10 @@ public abstract class ApiToCurrentOfficer {
 
     private DateTimeFormatter getFormatter() {
         return DateTimeFormatter.ofPattern(D_MMMM_UUUU);
+    }
+
+    private String getNameOfMonth(CompanyOfficerApi companyOfficerApi) {
+        int month = Math.toIntExact(companyOfficerApi.getDateOfBirth().getMonth());
+        return Month.of(month).name();
     }
 }
