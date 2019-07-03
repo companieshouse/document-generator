@@ -75,8 +75,12 @@ public class CompanyReportDataHandler {
         companyReportApiData.setCompanyProfileApi(companyProfileApi);
 
          if (companyProfileApi.getLinks().containsKey(OFFICERS_KEY)) {
-             OfficersApi officersApi = getOfficers(companyNumber, requestId);
-             companyReportApiData.setOfficersApi(officersApi);
+             try {
+                 OfficersApi officersApi = getOfficers(companyNumber, requestId);
+                 companyReportApiData.setOfficersApi(officersApi);
+             } catch (HandlerException he) {
+                 LOG.infoContext(requestId,"Failed to get company officers", getDebugMap(companyNumber));
+             }
          }
 
         return toJson(companyReportMapper
