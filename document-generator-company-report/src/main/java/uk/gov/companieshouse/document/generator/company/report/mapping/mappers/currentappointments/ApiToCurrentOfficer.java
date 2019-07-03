@@ -43,9 +43,7 @@ public abstract class ApiToCurrentOfficer {
             @Mapping(source = "appointedOn", target = "appointed"),
             @Mapping(source = "countryOfResidence", target = "countryOfResidence")
     })
-
     public abstract CurrentOfficer apiToCurrentOfficer(CompanyOfficerApi companyOfficerApi) throws MapperException;
-
     public abstract List<CurrentOfficer> apiToCurrentOfficer(List<CompanyOfficerApi> companyOfficerApis) throws MapperException;
 
     @AfterMapping
