@@ -38,6 +38,8 @@ public class CompanyReportDataHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
+    private static final String OFFICERS_KEY = "officers";
+
     public DocumentInfoResponse getCompanyReport(String resourceUri, String requestId)
         throws HandlerException {
 
@@ -70,11 +72,12 @@ public class CompanyReportDataHandler {
         CompanyReportApiData companyReportApiData = new CompanyReportApiData();
 
         CompanyProfileApi companyProfileApi = getCompanyProfile(companyNumber, requestId);
-
-        OfficersApi officersApi = getOfficers(companyNumber, requestId);
-
         companyReportApiData.setCompanyProfileApi(companyProfileApi);
-        companyReportApiData.setOfficersApi(officersApi);
+
+         if (companyProfileApi.getLinks().containsKey(OFFICERS_KEY)) {
+             OfficersApi officersApi = getOfficers(companyNumber, requestId);
+             companyReportApiData.setOfficersApi(officersApi);
+         }
 
         return toJson(companyReportMapper
             .mapCompanyReport(companyReportApiData),
