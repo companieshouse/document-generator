@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.document.generator.company.report.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriTemplate;
 import uk.gov.companieshouse.api.ApiClient;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
@@ -9,6 +10,7 @@ import uk.gov.companieshouse.api.handler.officers.request.OfficersList;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
 
+@Service
 public class OfficerService {
 
     @Autowired
