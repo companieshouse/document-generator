@@ -2,6 +2,8 @@
 <html lang="en">
 {{$companyRegistrationInformation := .company_report.company_registration_information}}
 {{$previousNames := .company_report.previous_names}}
+{{$keyFilingDates := .company_report.key_filing_dates}}
+{{$officers := .company_report.current_appointments}}
 <head>
     <meta charset="UTF-8">
     <title>{{$companyRegistrationInformation.company_name}}</title>
@@ -126,8 +128,31 @@
         {{end}}
     </ul>
 
-{{if $companyRegistrationInformation.nature_of_business}}
+    {{if or ($keyFilingDates.last_accounts_made_up_to) ($keyFilingDates.next_accounts_due) ($keyFilingDates.accounting_reference_date.day) }}
+        <h3 class="heading-small">Key filing dates</h3>
+        <ul class="list list-bullet">
+            {{if $keyFilingDates.accounting_reference_date.day}}
+                <li>Accounting reference date: {{$keyFilingDates.accounting_reference_date.day}} {{$keyFilingDates.accounting_reference_date.month}} </li>
+            {{end}}
+            {{if $keyFilingDates.last_accounts_made_up_to}}
+                <li>Last accounts made up to: {{$keyFilingDates.last_accounts_made_up_to}}</li>
+            {{end}}
+            {{if $keyFilingDates.next_accounts_due}}
+                <li>Next accounts due: {{$keyFilingDates.next_accounts_due}}</li>
+            {{end}}
+            {{if $keyFilingDates.last_confirmation_statement}}
+                <li>Last confirmation statement date: {{$keyFilingDates.last_confirmation_statement}}</li>
+            {{end}}
+            {{if $keyFilingDates.next_confirmation_statement}}
+                <li>Next confirmation statement due: {{$keyFilingDates.next_confirmation_statement}}</li>
+            {{end}}
+            {{if $keyFilingDates.last_members_list}}
+                <li>Last members list: {{$keyFilingDates.last_members_list}}</li>
+            {{end}}
+        </ul>
+    {{end}}
 
+{{if $companyRegistrationInformation.nature_of_business}}
     <h3 class="heading-small">Nature of business (SIC)</h3>
     <ul class="list list-bullet">
         {{range $companyRegistrationInformation.nature_of_business}}
@@ -159,6 +184,86 @@
     </table>
     {{end}}
 
+    <h2 class="heading-large">People</h2>
+
+    <h2 class="heading-medium">Officers:<br>
+        {{$officers.total_count}} officers / {{$officers.resigned_count}} resignations
+    </h2>
+
+    {{if $officers}}
+        {{range $officers.current_officers}}
+            <ul class="list list-bullet">
+
+                <li>{{.officer_role}}
+                    <span id="officer-name-tag-1"{{.name}}></span>
+
+                    {{ if .resigned_on }}
+                    <span id="officer-status-tag-resigned" class="status-tag ceased-tag">Resigned</span>
+                    {{else}}
+                    <span id="officer-status-tag-active" class="status-tag">Active</span>
+                    {{end}}
+                </li>
+                {{if .appointed_on}}
+                    <li>Appointed: {{.appointed_on}}</li>
+                {{end}}
+
+                {{if .resigned_on}}
+                    <li>Resigned: {{.resigned_on}}</li>
+                {{end}}
+
+                {{if .number_of_appointments}}
+                    <li>Number of appointments: {{.number_of_appointments}}</li>
+                {{end}}
+
+                {{if .address}}
+                <li>Address:
+
+                        {{if .address.care_of}}
+                        {{index .address "care_of"}}
+                        {{end}}
+
+                        {{if .address.po_box}}
+                        {{index .address "po_box"}}
+                        {{end}}
+
+                        {{if .address.premises}}
+                        {{index .address "premises"}}
+                        {{end}}
+
+                        {{if .address.address_line_1}}
+                        {{index .address "address_line_1"}}
+                        {{end}}
+
+                        {{if .address.address_line_2}}
+                        {{index .address "address_line_2"}}
+                        {{end}}
+
+                        {{if .address.locality}}
+                        {{index .address "locality"}}
+                        {{end}}
+
+                        {{if .address.region}}
+                        {{index .address "region"}}
+                        {{end}}
+
+                        {{if .address.country}}
+                        {{index .address "country"}}
+                        {{end}}
+
+                        {{if .address.postal_code}}
+                        {{index .address "postal_code"}}
+                        {{end}}
+
+                    </li>
+                {{end}}
+
+                {{ if .country_of_residence}}
+                     <li>Country/State of Residence: {{.country_of_residence}}</li>
+                {{end}}
+            </ul>
+            <hr>
+        {{end}}
+    {{end}}
 </main>
 </body>
 </html>
