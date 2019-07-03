@@ -198,7 +198,7 @@
                     <span id="officer-name-tag-1"{{.name}}></span>
 
                     {{ if .resigned_on }}
-                    <span id="officer-status-tag-resigned" class="status-tag">Resigned</span>
+                    <span id="officer-status-tag-resigned" class="status-tag ceased-tag">Resigned</span>
                     {{else}}
                     <span id="officer-status-tag-active" class="status-tag">Active</span>
                     {{end}}
@@ -258,7 +258,7 @@
                 {{end}}
 
                 {{ if .country_of_residence}}
-                     <li>Country/State of Residence: [{.country_of_residence}}</li>
+                     <li>Country/State of Residence: {{.country_of_residence}}</li>
                 {{end}}
             </ul>
             <hr>
