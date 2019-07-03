@@ -123,10 +123,10 @@ public class CompanyReportDataHandler {
 
     private OfficersApi getOfficers(String companyNumber, String requestId) throws HandlerException {
         try {
-            LOG.infoContext(requestId,"Attempting to retrieve company profile", getDebugMap(companyNumber));
+            LOG.infoContext(requestId,"Attempting to retrieve company officers", getDebugMap(companyNumber));
             return officerService.getOfficers(companyNumber);
         } catch (ServiceException se) {
-            throw new HandlerException("error occurred obtaining the company profile", se);
+            throw new HandlerException("error occurred obtaining the company officers", se);
         }
     }
 
