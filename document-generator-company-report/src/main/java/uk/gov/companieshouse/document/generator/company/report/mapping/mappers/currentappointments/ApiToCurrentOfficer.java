@@ -1,5 +1,7 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.currentappointments;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -32,12 +34,15 @@ public abstract class ApiToCurrentOfficer {
     @Autowired
     private CompanyReportApiClientService companyReportApiClientService;
 
-    private static final String CONSTANTS = "constants.yml";
+    private static final String CONSTANTS = "CONSTANTS";
+    private static final String D_MMMM_UUUU = "d MMMM uuuu";
+
 
     @Mappings({
-        @Mapping(source = "appointedOn", target = "appointed"),
-        @Mapping(ignore = true, target = "officerRole")
+            @Mapping(source = "appointedOn", target = "appointed"),
+            @Mapping(source= "countryOfResidence", target = "countryOfResidence")
     })
+
     public abstract CurrentOfficer apiToCurrentOfficer(CompanyOfficerApi companyOfficerApi) throws MapperException;
 
     public abstract List<CurrentOfficer> apiToCurrentOfficer(List<CompanyOfficerApi> companyOfficerApis) throws MapperException;
@@ -48,7 +53,24 @@ public abstract class ApiToCurrentOfficer {
         if (hasOfficerRole(companyOfficerApi)) {
             currentOfficer.setOfficerRole(retrieveApiEnumerationDescription
                 .getApiEnumerationDescription(CONSTANTS, "officer_role",
-                    (companyOfficerApi.getOfficer_role().getOfficerRole().toLowerCase()), null));
+                    companyOfficerApi.getOfficer_role().getOfficerRole(), getDebugMap(companyOfficerApi.getOfficer_role().getOfficerRole())));
+        }
+    }
+
+    @AfterMapping
+    protected void formatAppointedOnDate(CompanyOfficerApi companyOfficerApi, @MappingTarget CurrentOfficer currentOfficer) {
+
+        if (companyOfficerApi != null && companyOfficerApi.getAppointedOn() != null) {
+            LocalDate appointedOn = companyOfficerApi.getAppointedOn();
+            currentOfficer.setAppointed(appointedOn.format(getFormatter()));
+        }
+    }
+
+    @AfterMapping
+    protected void formatResignedOnDate(CompanyOfficerApi companyOfficerApi, @MappingTarget CurrentOfficer currentOfficer){
+        if (companyOfficerApi != null && companyOfficerApi.getResignedOn() != null) {
+            LocalDate resignedOn = companyOfficerApi.getResignedOn();
+            currentOfficer.setResigned(resignedOn.format(getFormatter()));
         }
     }
 
@@ -90,5 +112,9 @@ public abstract class ApiToCurrentOfficer {
         debugMap.put("Enumeration mapping :", debugString);
 
         return debugMap;
+    }
+
+    private DateTimeFormatter getFormatter() {
+        return DateTimeFormatter.ofPattern(D_MMMM_UUUU);
     }
 }

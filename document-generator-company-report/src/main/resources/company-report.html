@@ -203,8 +203,17 @@
                     <span id="officer-status-tag-active" class="status-tag">Active</span>
                     {{end}}
                 </li>
+
+                {{if .nationality}}
+                <li>Nationality: {{.nationality}}</li>
+                {{end}}
+
                 {{if .appointed_on}}
                     <li>Appointed: {{.appointed_on}}</li>
+                {{end}}
+
+                {{if .date_of_birth}}
+                <li>Date of birth: {{.date_of_birth}}</li>
                 {{end}}
 
                 {{if .resigned_on}}
@@ -259,6 +268,10 @@
 
                 {{ if .country_of_residence}}
                      <li>Country/State of Residence: {{.country_of_residence}}</li>
+                {{end}}
+
+                {{if .occupation}}
+                <li>Occupation: {{.occupation}}</li>
                 {{end}}
             </ul>
             <hr>

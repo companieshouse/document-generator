@@ -22,9 +22,11 @@ public class CurrentOfficer {
     @JsonProperty("address")
     private Address address;
 
-    @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonProperty("appointed_on")
-    private LocalDate appointed;
+    private String appointed;
+
+    @JsonProperty("resigned_on")
+    private String resigned;
 
     @JsonProperty("date_of_birth")
     private DateOfBirth dateOfBirth;
@@ -41,6 +43,14 @@ public class CurrentOfficer {
 
     public void setOfficerRole(String officerRole) {
         this.officerRole = officerRole;
+    }
+
+    public String getResigned() {
+        return resigned;
+    }
+
+    public void setResigned(String resigned) {
+        this.resigned = resigned;
     }
 
     public String getName() {
@@ -67,11 +77,11 @@ public class CurrentOfficer {
         this.address = address;
     }
 
-    public LocalDate getAppointed() {
+    public String getAppointed() {
         return appointed;
     }
 
-    public void setAppointed(LocalDate appointed) {
+    public void setAppointed(String appointed) {
         this.appointed = appointed;
     }
 

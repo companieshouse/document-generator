@@ -21,6 +21,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith({MockitoExtension.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -32,7 +33,8 @@ public class ApiToCurrentOfficerTest {
     private static final String NAME = "name";
     private static final LocalDate APPOINTED_ON = LocalDate.of(
         2019, 06, 06);
-
+    private static final LocalDate RESIGNED_ON = LocalDate.of(
+            2019, 05, 05);
     private static final String COUNTRY_OF_RESIDENCE = "country of residence";
     private static final String ADDRESS_LINE_ONE = "address line 1";
     private static final String ADDRESS_LINE_TWO = "address line 2";
@@ -63,6 +65,7 @@ public class ApiToCurrentOfficerTest {
             apiToCurrentOfficer.apiToCurrentOfficer(companyOfficerApi);
 
         assertNotNull(currentOfficer);
+
         assertEquals(NAME, currentOfficer.getName());
         assertEquals(ADDRESS_LINE_ONE, currentOfficer.getAddress().getAddressLine1());
         assertEquals(ADDRESS_LINE_TWO, currentOfficer.getAddress().getAddressLine2());
@@ -76,7 +79,9 @@ public class ApiToCurrentOfficerTest {
         assertEquals(MONTH, currentOfficer.getDateOfBirth().getMonth());
         assertEquals(YEAR, currentOfficer.getDateOfBirth().getYear());
         assertEquals(COUNTRY_OF_RESIDENCE, currentOfficer.getCountryOfResidence());
-        assertEquals(APPOINTED_ON, currentOfficer.getAppointed());
+        assertEquals("6 June 2019", currentOfficer.getAppointed());
+        assertEquals("5 May 2019", currentOfficer.getResigned());
+
     }
 
     private CompanyOfficerApi createCompanyOfficerApi() {
@@ -87,6 +92,7 @@ public class ApiToCurrentOfficerTest {
         companyOfficerApi.setDateOfBirth(createDateOfBirth());
         companyOfficerApi.setCountryOfResidence(COUNTRY_OF_RESIDENCE);
         companyOfficerApi.setAppointedOn(APPOINTED_ON);
+        companyOfficerApi.setResignedOn(RESIGNED_ON);
         companyOfficerApi.setIdentification(createIdentification());
 
         return companyOfficerApi;
