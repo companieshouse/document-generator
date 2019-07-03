@@ -1,12 +1,8 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.items;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import uk.gov.companieshouse.api.model.common.Address;
 import uk.gov.companieshouse.api.model.common.DateOfBirth;
-
-import java.time.LocalDate;
 
 public class CurrentOfficer {
 

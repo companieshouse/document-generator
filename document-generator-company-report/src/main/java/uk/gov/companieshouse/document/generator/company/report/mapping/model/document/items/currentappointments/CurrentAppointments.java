@@ -13,6 +13,12 @@ public class CurrentAppointments {
     @JsonProperty("current_officers")
     private List<CurrentOfficer> items;
 
+    @JsonProperty("total_results")
+    private int totalResults;
+
+    @JsonProperty("resigned_count")
+    private int resignedCount;
+
     public Long getNumberOfCurrentAppointments() {
         return numberOfCurrentAppointments;
     }
@@ -27,5 +33,21 @@ public class CurrentAppointments {
 
     public void setItems(List<CurrentOfficer> items) {
         this.items = items;
+    }
+
+    public int getTotalResults() {
+        return totalResults;
+    }
+
+    public void setTotalResults(int totalResults) {
+        this.totalResults = totalResults;
+    }
+
+    public int getResignedCount() {
+        return resignedCount;
+    }
+
+    public void setResignedCount(int resignedCount) {
+        this.resignedCount = resignedCount;
     }
 }

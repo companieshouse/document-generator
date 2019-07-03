@@ -37,7 +37,6 @@ public abstract class ApiToCurrentOfficer {
     private static final String CONSTANTS = "CONSTANTS";
     private static final String D_MMMM_UUUU = "d MMMM uuuu";
 
-
     @Mappings({
             @Mapping(source = "appointedOn", target = "appointed"),
             @Mapping(source= "countryOfResidence", target = "countryOfResidence")
