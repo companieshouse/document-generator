@@ -38,8 +38,6 @@ public class CompanyReportDataHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
-    private static final String DATE_TIME_FORMAT = "dd-MMMM-yyyy";
-
     public DocumentInfoResponse getCompanyReport(String resourceUri, String requestId)
         throws HandlerException {
 
