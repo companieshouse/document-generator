@@ -187,61 +187,82 @@
     <h2 class="heading-large">People</h2>
 
     <h2 class="heading-medium">Officers:<br>
-        {{$officers.active_count}} officers / {{$officers.resigned_count}} resignations
+        {{$officers.total_count}} officers / {{$officers.resigned_count}} resignations
     </h2>
 
-    {{range $officers.current_officers}}
-        <ul class="list list-bullet">
+    {{if $officers}}
+        {{range $officers.current_officers}}
+            <ul class="list list-bullet">
 
-            <li>{{.officer_role}}
-                <span id="officer-name-tag-1"{{.name}}></span>
-                <span id="officer-status-tag-1" class="status-tag">Active</span>
-            </li>
-            <li>Appointed: {{.appointed_on}}</li>
-            <li>Number of appointments: {{.number_of_appointments}}</li>
-            
-            <li>Address:
+                <li>{{.officer_role}}
+                    <span id="officer-name-tag-1"{{.name}}></span>
 
-                {{if .address.care_of}}
-                {{index .address "care_of"}}
-                {{end}}
-                {{if .address.po_box}}
-                {{index .address "po_box"}}
+                    {{ if .resigned_on }}
+                    <span id="officer-status-tag-resigned" class="status-tag">Resigned</span>
+                    {{else}}
+                    <span id="officer-status-tag-active" class="status-tag">Active</span>
+                    {{end}}
+                </li>
+                {{if .appointed_on}}
+                    <li>Appointed: {{.appointed_on}}</li>
                 {{end}}
 
-                {{if .address.premises}}
-                {{index .address "premises"}}
+                {{if .resigned_on}}
+                    <li>Resigned: {{.resigned_on}}</li>
                 {{end}}
 
-                {{if .address.address_line_1}}
-                {{index .address "address_line_1"}}
+                {{if .number_of_appointments}}
+                    <li>Number of appointments: {{.number_of_appointments}}</li>
                 {{end}}
 
-                {{if .address.address_line_2}}
-                {{index .address "address_line_2"}}
+                {{if .address}}
+                <li>Address:
+
+                        {{if .address.care_of}}
+                        {{index .address "care_of"}}
+                        {{end}}
+
+                        {{if .address.po_box}}
+                        {{index .address "po_box"}}
+                        {{end}}
+
+                        {{if .address.premises}}
+                        {{index .address "premises"}}
+                        {{end}}
+
+                        {{if .address.address_line_1}}
+                        {{index .address "address_line_1"}}
+                        {{end}}
+
+                        {{if .address.address_line_2}}
+                        {{index .address "address_line_2"}}
+                        {{end}}
+
+                        {{if .address.locality}}
+                        {{index .address "locality"}}
+                        {{end}}
+
+                        {{if .address.region}}
+                        {{index .address "region"}}
+                        {{end}}
+
+                        {{if .address.country}}
+                        {{index .address "country"}}
+                        {{end}}
+
+                        {{if .address.postal_code}}
+                        {{index .address "postal_code"}}
+                        {{end}}
+
+                    </li>
                 {{end}}
 
-                {{if .address.locality}}
-                {{index .address "locality"}}
+                {{ if .country_of_residence}}
+                     <li>Country/State of Residence: [{.country_of_residence}}</li>
                 {{end}}
-
-                {{if .address.region}}
-                {{index .address "region"}}
-                {{end}}
-
-                {{if .address.country}}
-                {{index .address "country"}}
-                {{end}}
-
-                {{if .address.postal_code}}
-                {{index .address "postal_code"}}
-                {{end}}
-
-            </li>
-
-            <li>Country/State of Residence: [{.country_of_residence}}</li>
-        </ul>
-        <hr>
+            </ul>
+            <hr>
+        {{end}}
     {{end}}
 </main>
 </body>
