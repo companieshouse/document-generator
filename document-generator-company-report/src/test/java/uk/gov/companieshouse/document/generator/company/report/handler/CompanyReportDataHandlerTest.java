@@ -16,6 +16,9 @@ import uk.gov.companieshouse.document.generator.company.report.service.CompanySe
 import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -87,6 +90,12 @@ public class CompanyReportDataHandlerTest {
         CompanyProfileApi companyProfileApi = new CompanyProfileApi();
         companyProfileApi.setCompanyNumber("00006400");
         companyProfileApi.setCompanyName("GIRLS SCHOOL TRUST");
+
+        Map<String, String> links = new HashMap<>();
+
+        links.put("officers", "/officers");
+
+        companyProfileApi.setLinks(links);
 
         return companyProfileApi;
     }
