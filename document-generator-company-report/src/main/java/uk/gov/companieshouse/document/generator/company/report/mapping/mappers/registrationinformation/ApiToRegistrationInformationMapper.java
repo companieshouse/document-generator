@@ -1,8 +1,5 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.registrationinformation;
 
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -12,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.annotation.RequestScope;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
+import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.foreigncompanydetails.ApiToForeignCompanyDetailsMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.RegistrationInformation;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.items.CompanyType;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.items.SicCodes;
@@ -20,10 +18,12 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequestScope
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses={ApiToForeignCompanyDetailsMapper.class})
 public abstract class ApiToRegistrationInformationMapper {
 
     private static final String CONSTANTS = "CONSTANTS";
@@ -84,7 +84,7 @@ public abstract class ApiToRegistrationInformationMapper {
 
         if (companyProfileApi != null && companyProfileApi.getDateOfCreation() != null) {
 
-            registrationInformation.setDateOfincorporationLabel(retrieveApiEnumerationDescription
+            registrationInformation.setDateOfIncorporationLabel(retrieveApiEnumerationDescription
                     .getApiEnumerationDescription(CONSTANTS, COMPANY_BIRTH_TYPE, companyProfileApi.getType(), getDebugMap(companyProfileApi.getType())));
         }
     }

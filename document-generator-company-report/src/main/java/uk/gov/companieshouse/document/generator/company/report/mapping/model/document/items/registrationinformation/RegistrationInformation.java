@@ -3,6 +3,7 @@ package uk.gov.companieshouse.document.generator.company.report.mapping.model.do
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.ForeignCompanyDetails;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.items.CompanyType;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.items.RegisteredOffice;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.items.SicCodes;
@@ -35,17 +36,20 @@ public class RegistrationInformation {
     private List<SicCodes> natureOfBusiness;
 
     @JsonProperty("date_of_incorporation_label")
-    private String dateOfincorporationLabel;
+    private String dateOfIncorporationLabel;
   
     @JsonProperty("external_registration_number")
     private String externalRegistrationNumber;
 
-    public String getDateOfincorporationLabel() {
-        return dateOfincorporationLabel;
+    @JsonProperty("foreign_company_details")
+    private ForeignCompanyDetails foreignCompanyDetails;
+
+    public String getDateOfIncorporationLabel() {
+        return dateOfIncorporationLabel;
     }
 
-    public void setDateOfincorporationLabel(String dateOfincorporationLabel) {
-        this.dateOfincorporationLabel = dateOfincorporationLabel;
+    public void setDateOfIncorporationLabel(String dateOfIncorporationLabel) {
+        this.dateOfIncorporationLabel = dateOfIncorporationLabel;
     }
 
     public String getDateOfIncorporation() {
@@ -110,5 +114,13 @@ public class RegistrationInformation {
 
     public void setExternalRegistrationNumber(String externalRegistrationNumber) {
         this.externalRegistrationNumber = externalRegistrationNumber;
+    }
+
+    public ForeignCompanyDetails getForeignCompanyDetails() {
+        return foreignCompanyDetails;
+    }
+
+    public void setForeignCompanyDetails(ForeignCompanyDetails foreignCompanyDetails) {
+        this.foreignCompanyDetails = foreignCompanyDetails;
     }
 }

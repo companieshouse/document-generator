@@ -1,13 +1,5 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -21,6 +13,15 @@ import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiE
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.registrationinformation.ApiToRegistrationInformationMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.registrationinformation.ApiToRegistrationInformationMapperImpl;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.RegistrationInformation;
+
+import java.io.IOException;
+import java.time.LocalDate;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -75,7 +76,7 @@ public class ApiToRegistrationInformationMapperTest {
         assertEquals(DATE_OF_CREATION_FORMATTED, registrationInformation.getDateOfIncorporation());
         assertEquals(MAPPED_VALUE, registrationInformation.getStatus().getCompanyStatus());
         assertEquals(MAPPED_VALUE, registrationInformation.getStatus().getCompanyStatusDetail());
-        assertEquals(MAPPED_VALUE, registrationInformation.getDateOfincorporationLabel());
+        assertEquals(MAPPED_VALUE, registrationInformation.getDateOfIncorporationLabel());
         assertEquals(CHARITY_NUMBER,registrationInformation.getExternalRegistrationNumber());
     }
 
