@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.items;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.LocalDate;
 import uk.gov.companieshouse.api.model.common.Address;
 
 
@@ -32,6 +33,86 @@ public class CurrentOfficer {
 
     @JsonProperty("country_of_residence")
     private String countryOfResidence;
+
+    @JsonProperty("appointed_before")
+    private LocalDate appointedBefore;
+
+    @JsonProperty("is_pre_1992_appointment")
+    private Boolean isPre92;
+
+    @JsonProperty("company_number")
+    private String companyNumber;
+
+    @JsonProperty("company_name")
+    private String companyName;
+
+    @JsonProperty("service_address")
+    private Address serviceAddress;
+
+    @JsonProperty("other_forenames")
+    private String otherForenames;
+
+    @JsonProperty("service_address_is_same_as_registered_office_address")
+    private Boolean  servicaAddressSameAsOfficeAddress;
+
+    @JsonProperty("identification")
+    private Identification identification;
+
+    public LocalDate getAppointedBefore() {
+        return appointedBefore;
+    }
+
+    public void setAppointedBefore(LocalDate appointedBefore) {
+        this.appointedBefore = appointedBefore;
+    }
+
+    public Boolean getPre92() {
+        return isPre92;
+    }
+
+    public void setPre92(Boolean pre92) {
+        isPre92 = pre92;
+    }
+
+    public String getCompanyNumber() {
+        return companyNumber;
+    }
+
+    public void setCompanyNumber(String companyNumber) {
+        this.companyNumber = companyNumber;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public Address getServiceAddress() {
+        return serviceAddress;
+    }
+
+    public void setServiceAddress(Address serviceAddress) {
+        this.serviceAddress = serviceAddress;
+    }
+
+    public String getOtherForenames() {
+        return otherForenames;
+    }
+
+    public void setOtherForenames(String otherForenames) {
+        this.otherForenames = otherForenames;
+    }
+
+    public Boolean getServicaAddressSameAsOfficeAddress() {
+        return servicaAddressSameAsOfficeAddress;
+    }
+
+    public void setServicaAddressSameAsOfficeAddress(Boolean servicaAddressSameAsOfficeAddress) {
+        this.servicaAddressSameAsOfficeAddress = servicaAddressSameAsOfficeAddress;
+    }
 
     public String getOfficerRole() {
         return officerRole;
