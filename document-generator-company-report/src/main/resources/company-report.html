@@ -225,7 +225,7 @@
                 {{end}}
 
                 {{if .address}}
-                <li>Address:
+                <li>Correspondence address:
 
                         {{if .address.care_of}}
                         {{index .address "care_of"}}
@@ -273,6 +273,31 @@
                 {{if .occupation}}
                 <li>Occupation: {{.occupation}}</li>
                 {{end}}
+
+                {{if .identification}}
+
+                {{if .identification.identification_type}}
+                <li>{{.identification.identification_type}}</li>
+                {{end}}
+
+                {{if .identification.place_registered}}
+                <li>Place registered: {{.identification.place_registered}}</li>
+                {{end}}
+
+                {{if .identification.registration_number}}
+                <li>Registration number: {{.identification.registration_number}}</li>
+                {{end}}
+
+                {{if .identification.legal_authority}}
+                <li>Legal authority: {{.identification.legal_authority}}</li>
+                {{end}}
+
+                {{if .identification.legal_form}}
+                <li>Legal form: {{.identification.legal_form}}</li>
+                {{end}}
+
+                {{end}}
+
             </ul>
             <hr>
         {{end}}
