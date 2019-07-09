@@ -5,27 +5,29 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.common.Address;
 import uk.gov.companieshouse.api.model.common.DateOfBirth;
 import uk.gov.companieshouse.api.model.officers.CompanyOfficerApi;
-import uk.gov.companieshouse.api.model.officers.FormerNamesApi;
 import uk.gov.companieshouse.api.model.officers.IdentificationApi;
-import uk.gov.companieshouse.api.model.officers.OfficerRoleApi;
+import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.items.CurrentOfficer;
 
-import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ApiToCurrentOfficerTest {
+
+    @Mock
+    private RetrieveApiEnumerationDescription mockRetrieveApiEnumerations;
 
     @InjectMocks
     private ApiToCurrentOfficer apiToCurrentOfficer = new ApiToCurrentOfficerImpl();
@@ -61,6 +63,8 @@ public class ApiToCurrentOfficerTest {
 
         CompanyOfficerApi companyOfficerApi = createCompanyOfficerApi();
 
+        when(mockRetrieveApiEnumerations.getApiEnumerationDescription(anyString(), anyString(), anyString(), any())).thenReturn(IDENTIFICATION_TYPE);
+
         CurrentOfficer currentOfficer =
             apiToCurrentOfficer.apiToCurrentOfficer(companyOfficerApi);
 
@@ -81,6 +85,11 @@ public class ApiToCurrentOfficerTest {
         assertEquals(COUNTRY_OF_RESIDENCE, currentOfficer.getCountryOfResidence());
         assertEquals("6 June 2019", currentOfficer.getAppointed());
         assertEquals("5 May 2019", currentOfficer.getResigned());
+        assertEquals(IDENTIFICATION_TYPE, currentOfficer.getIdentification().getIdentificationType());
+        assertEquals(LEGAL_AUTHORITY, currentOfficer.getIdentification().getLegalAuthority());
+        assertEquals(LEGAL_FORM, currentOfficer.getIdentification().getLegalForm());
+        assertEquals(PLACE_REGISTRATION, currentOfficer.getIdentification().getPlaceRegistration());
+        assertEquals(REGISTRATION_NUMBER, currentOfficer.getIdentification().getRegistrationNumber());
 
     }
 
