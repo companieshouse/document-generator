@@ -1,8 +1,5 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.currentappointments;
 
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.format.DateTimeFormatter;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -22,6 +19,9 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.items.DateOfBirth;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyReportApiClientService;
 
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +77,18 @@ public abstract class ApiToCurrentOfficer {
     }
 
     @AfterMapping
+    protected void convertIdentificationType(CompanyOfficerApi companyOfficerApi,
+                                             @MappingTarget CurrentOfficer currentOfficer) {
+
+        if (hasIdentificationType(companyOfficerApi)) {
+            currentOfficer.getIdentification().setIdentificationType(retrieveApiEnumerationDescription
+                .getApiEnumerationDescription(CONSTANTS, "identification_type",
+                    companyOfficerApi.getIdentification().getIdentificationType(),
+                    getDebugMap(companyOfficerApi.getIdentification().getIdentificationType())));
+        }
+    }
+
+    @AfterMapping
     protected void formatAppointedOnDate(CompanyOfficerApi companyOfficerApi,
             @MappingTarget CurrentOfficer currentOfficer) {
 
@@ -127,6 +139,11 @@ public abstract class ApiToCurrentOfficer {
         return companyOfficerApi.getLinks() != null &&
                 companyOfficerApi.getLinks().getOfficer() != null &&
                 companyOfficerApi.getLinks().getOfficer().getAppointments() != null;
+    }
+
+    private boolean hasIdentificationType(CompanyOfficerApi companyOfficerApi) {
+        return companyOfficerApi.getIdentification() != null &&
+                 companyOfficerApi.getIdentification().getIdentificationType() != null;
     }
 
     private Map<String, String> getDebugMap(String debugString) {

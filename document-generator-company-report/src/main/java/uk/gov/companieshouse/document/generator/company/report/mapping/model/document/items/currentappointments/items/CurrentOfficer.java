@@ -185,4 +185,12 @@ public class CurrentOfficer {
     public void setCountryOfResidence(String countryOfResidence) {
         this.countryOfResidence = countryOfResidence;
     }
+
+    public Identification getIdentification() {
+        return identification;
+    }
+
+    public void setIdentification(Identification identification) {
+        this.identification = identification;
+    }
 }
