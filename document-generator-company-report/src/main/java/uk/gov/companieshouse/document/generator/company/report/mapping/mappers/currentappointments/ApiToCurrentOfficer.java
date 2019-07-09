@@ -53,8 +53,8 @@ public abstract class ApiToCurrentOfficer {
         if (hasOfficerRole(companyOfficerApi)) {
             currentOfficer.setOfficerRole(retrieveApiEnumerationDescription
                     .getApiEnumerationDescription(CONSTANTS, "officer_role",
-                            companyOfficerApi.getOfficer_role().getOfficerRole(),
-                            getDebugMap(companyOfficerApi.getOfficer_role().getOfficerRole())));
+                            companyOfficerApi.getOfficerRole().getOfficerRole(),
+                            getDebugMap(companyOfficerApi.getOfficerRole().getOfficerRole())));
         }
     }
 
@@ -131,8 +131,8 @@ public abstract class ApiToCurrentOfficer {
     }
 
     private boolean hasOfficerRole(CompanyOfficerApi companyOfficerApi) {
-        return companyOfficerApi.getOfficer_role() != null &&
-                companyOfficerApi.getOfficer_role().getOfficerRole() != null;
+        return companyOfficerApi.getOfficerRole() != null &&
+                companyOfficerApi.getOfficerRole().getOfficerRole() != null;
     }
 
     private boolean hasAppointmentLink(CompanyOfficerApi companyOfficerApi) {
