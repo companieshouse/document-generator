@@ -194,8 +194,7 @@
         {{range $officers.current_officers}}
             <ul class="list list-bullet">
 
-                <li>{{.officer_role}}
-                    <a href="javascript:void(0)">{{.name}}</a>
+                <li>{{.officer_role}} {{.name}}
 
                     {{ if .resigned_on }}
                     <span id="officer-status-tag-resigned" class="status-tag ceased-tag">Resigned</span>
