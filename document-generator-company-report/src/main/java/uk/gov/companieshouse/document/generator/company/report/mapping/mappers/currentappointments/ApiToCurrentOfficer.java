@@ -1,8 +1,5 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.currentappointments;
 
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.format.DateTimeFormatter;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -22,6 +19,9 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.items.DateOfBirth;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyReportApiClientService;
 
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,8 +53,8 @@ public abstract class ApiToCurrentOfficer {
         if (hasOfficerRole(companyOfficerApi)) {
             currentOfficer.setOfficerRole(retrieveApiEnumerationDescription
                     .getApiEnumerationDescription(CONSTANTS, "officer_role",
-                            companyOfficerApi.getOfficer_role().getOfficerRole(),
-                            getDebugMap(companyOfficerApi.getOfficer_role().getOfficerRole())));
+                            companyOfficerApi.getOfficerRole().getOfficerRole(),
+                            getDebugMap(companyOfficerApi.getOfficerRole().getOfficerRole())));
         }
     }
 
@@ -73,6 +73,18 @@ public abstract class ApiToCurrentOfficer {
                     + monthString.substring(1).toLowerCase());
 
             currentOfficer.setDateOfBirth(dob);
+        }
+    }
+
+    @AfterMapping
+    protected void convertIdentificationType(CompanyOfficerApi companyOfficerApi,
+                                             @MappingTarget CurrentOfficer currentOfficer) {
+
+        if (hasIdentificationType(companyOfficerApi)) {
+            currentOfficer.getIdentification().setIdentificationType(retrieveApiEnumerationDescription
+                .getApiEnumerationDescription(CONSTANTS, "identification_type",
+                    companyOfficerApi.getIdentification().getIdentificationType(),
+                    getDebugMap(companyOfficerApi.getIdentification().getIdentificationType())));
         }
     }
 
@@ -119,14 +131,19 @@ public abstract class ApiToCurrentOfficer {
     }
 
     private boolean hasOfficerRole(CompanyOfficerApi companyOfficerApi) {
-        return companyOfficerApi.getOfficer_role() != null &&
-                companyOfficerApi.getOfficer_role().getOfficerRole() != null;
+        return companyOfficerApi.getOfficerRole() != null &&
+                companyOfficerApi.getOfficerRole().getOfficerRole() != null;
     }
 
     private boolean hasAppointmentLink(CompanyOfficerApi companyOfficerApi) {
         return companyOfficerApi.getLinks() != null &&
                 companyOfficerApi.getLinks().getOfficer() != null &&
                 companyOfficerApi.getLinks().getOfficer().getAppointments() != null;
+    }
+
+    private boolean hasIdentificationType(CompanyOfficerApi companyOfficerApi) {
+        return companyOfficerApi.getIdentification() != null &&
+                 companyOfficerApi.getIdentification().getIdentificationType() != null;
     }
 
     private Map<String, String> getDebugMap(String debugString) {

@@ -279,6 +279,10 @@
                 <li>{{.identification.identification_type}}</li>
                 {{end}}
 
+                {{if .identification.place_registration}}
+                <li>Place of registration: {{.identification.place_registration}}</li>
+                {{end}}
+
                 {{if .identification.place_registered}}
                 <li>Place registered: {{.identification.place_registered}}</li>
                 {{end}}

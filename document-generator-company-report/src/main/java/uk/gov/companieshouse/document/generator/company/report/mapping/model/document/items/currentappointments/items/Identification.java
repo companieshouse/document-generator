@@ -16,6 +16,9 @@ public class Identification {
     @JsonProperty("place_registration")
     private String placeRegistration;
 
+    @JsonProperty("place_registered")
+    private String placeRegistered;
+
     @JsonProperty("registration_number")
     private String registrationNumber;
 
@@ -49,6 +52,14 @@ public class Identification {
 
     public void setPlaceRegistration(String placeRegistration) {
         this.placeRegistration = placeRegistration;
+    }
+
+    public String getPlaceRegistered() {
+        return placeRegistered;
+    }
+
+    public void setPlaceRegistered(String placeRegistered) {
+        this.placeRegistered = placeRegistered;
     }
 
     public String getRegistrationNumber() {

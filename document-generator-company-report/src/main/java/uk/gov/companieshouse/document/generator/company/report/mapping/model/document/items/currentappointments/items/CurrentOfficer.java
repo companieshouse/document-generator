@@ -53,7 +53,7 @@ public class CurrentOfficer {
     private String otherForenames;
 
     @JsonProperty("service_address_is_same_as_registered_office_address")
-    private Boolean  servicaAddressSameAsOfficeAddress;
+    private Boolean  serviceAddressSameAsOfficeAddress;
 
     @JsonProperty("identification")
     private Identification identification;
@@ -107,11 +107,11 @@ public class CurrentOfficer {
     }
 
     public Boolean getServicaAddressSameAsOfficeAddress() {
-        return servicaAddressSameAsOfficeAddress;
+        return serviceAddressSameAsOfficeAddress;
     }
 
-    public void setServicaAddressSameAsOfficeAddress(Boolean servicaAddressSameAsOfficeAddress) {
-        this.servicaAddressSameAsOfficeAddress = servicaAddressSameAsOfficeAddress;
+    public void setServicaAddressSameAsOfficeAddress(Boolean serviceAddressSameAsOfficeAddress) {
+        this.serviceAddressSameAsOfficeAddress = serviceAddressSameAsOfficeAddress;
     }
 
     public String getOfficerRole() {
@@ -184,5 +184,13 @@ public class CurrentOfficer {
 
     public void setCountryOfResidence(String countryOfResidence) {
         this.countryOfResidence = countryOfResidence;
+    }
+
+    public Identification getIdentification() {
+        return identification;
+    }
+
+    public void setIdentification(Identification identification) {
+        this.identification = identification;
     }
 }
