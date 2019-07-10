@@ -79,7 +79,7 @@ public class CompanyReportDataHandler {
                  OfficersApi officersApi = getOfficers(companyNumber, requestId);
                  companyReportApiData.setOfficersApi(officersApi);
              } catch (HandlerException he) {
-                 LOG.infoContext(requestId,"Failed to get company officers: " + he, getDebugMap(companyNumber));
+                 LOG.infoContext(requestId,"Failed to get company officers: ", getDebugMap(companyNumber));
              }
          }
 
