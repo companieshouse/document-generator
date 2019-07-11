@@ -83,7 +83,6 @@ public abstract class ApiToRegistrationInformationMapper {
     protected void setIncorporationDateLabel(CompanyProfileApi companyProfileApi, @MappingTarget RegistrationInformation registrationInformation) {
 
         if (companyProfileApi != null && companyProfileApi.getDateOfCreation() != null) {
-
             registrationInformation.setDateOfIncorporationLabel(retrieveApiEnumerationDescription
                     .getApiEnumerationDescription(CONSTANTS, COMPANY_BIRTH_TYPE, companyProfileApi.getType(), getDebugMap(companyProfileApi.getType())));
         }
