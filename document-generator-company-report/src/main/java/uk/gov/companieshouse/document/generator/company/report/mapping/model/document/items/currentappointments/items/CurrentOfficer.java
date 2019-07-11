@@ -31,6 +31,9 @@ public class CurrentOfficer {
     @JsonProperty("nationality")
     private String nationality;
 
+    @JsonProperty("occupation")
+    private String occupation;
+
     @JsonProperty("country_of_residence")
     private String countryOfResidence;
 
@@ -57,6 +60,22 @@ public class CurrentOfficer {
 
     @JsonProperty("identification")
     private Identification identification;
+
+    public String getOccupation() {
+        return occupation;
+    }
+
+    public void setOccupation(String occupation) {
+        this.occupation = occupation;
+    }
+
+    public Boolean getServiceAddressSameAsOfficeAddress() {
+        return serviceAddressSameAsOfficeAddress;
+    }
+
+    public void setServiceAddressSameAsOfficeAddress(Boolean serviceAddressSameAsOfficeAddress) {
+        this.serviceAddressSameAsOfficeAddress = serviceAddressSameAsOfficeAddress;
+    }
 
     public LocalDate getAppointedBefore() {
         return appointedBefore;
