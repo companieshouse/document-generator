@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.annotation.RequestScope;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
-import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.foreigncompanydetails.ApiToForeignCompanyDetailsMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.RegistrationInformation;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.items.CompanyType;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.items.SicCodes;
@@ -23,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 @RequestScope
-@Mapper(componentModel = "spring", uses={ApiToForeignCompanyDetailsMapper.class})
+@Mapper(componentModel = "spring")
 public abstract class ApiToRegistrationInformationMapper {
 
     private static final String CONSTANTS = "CONSTANTS";
