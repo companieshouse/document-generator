@@ -184,13 +184,13 @@
     </table>
     {{end}}
 
+    {{if $officers}}
     <h2 class="heading-large">People</h2>
 
     <h2 class="heading-medium">Officers:<br>
         {{$officers.total_results}} officers / {{$officers.resigned_count}} resignations
     </h2>
 
-    {{if $officers}}
         {{range $officers.current_officers}}
             <ul class="list list-bullet">
 
