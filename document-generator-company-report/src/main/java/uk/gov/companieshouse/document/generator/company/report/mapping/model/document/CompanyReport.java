@@ -7,10 +7,12 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import java.util.List;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.ForeignCompanyDetails;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.keyfilingdates.KeyFilingDates;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.previousnames.PreviousNames;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.RegistrationInformation;
+
+import java.util.List;
 
 @JsonInclude(Include.NON_NULL)
 @JsonTypeName("company_report")
@@ -25,6 +27,9 @@ public class CompanyReport {
 
     @JsonProperty("key_filing_dates")
     private KeyFilingDates keyFilingDates;
+
+    @JsonProperty("foreign_company_details")
+    private ForeignCompanyDetails foreignCompanyDetails;
 
     public List<PreviousNames> getPreviousNames() {
         return previousNames;
@@ -48,5 +53,13 @@ public class CompanyReport {
 
     public void setKeyFilingDates(KeyFilingDates keyFilingDates) {
         this.keyFilingDates = keyFilingDates;
+    }
+
+    public ForeignCompanyDetails getForeignCompanyDetails() {
+        return foreignCompanyDetails;
+    }
+
+    public void setForeignCompanyDetails(ForeignCompanyDetails foreignCompanyDetails) {
+        this.foreignCompanyDetails = foreignCompanyDetails;
     }
 }

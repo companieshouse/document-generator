@@ -3,6 +3,7 @@
 {{$companyRegistrationInformation := .company_report.company_registration_information}}
 {{$previousNames := .company_report.previous_names}}
 {{$keyFilingDates := .company_report.key_filing_dates}}
+{{$foreignCompanyDetails := .company_report.foreign_company_details}}
 <head>
     <meta charset="UTF-8">
     <title>{{$companyRegistrationInformation.company_name}}</title>
@@ -14,6 +15,10 @@
 
       .pagebreak {
         page-break-before: always;
+      }
+
+      .foreign-company-details-table {
+        margin-bottom: 1em;
       }
 
       @media print {
@@ -183,6 +188,42 @@
     </table>
     {{end}}
 
+    {{if $foreignCompanyDetails}}
+    <h3 class="heading-small">Company details in the country of incorporation</h3>
+    <table class="foreign-company-details-table">
+        <thead>
+            <tr>
+                <th scope="col">Incorporated in</th>
+                <th scope="col">Registration number</th>
+                <th scope="col">Legal form</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                {{if $foreignCompanyDetails.country}}
+                    <td>{{$foreignCompanyDetails.country}}</td>
+                {{end}}
+                {{if $foreignCompanyDetails.registration_number}}
+                    <td>{{$foreignCompanyDetails.registration_number}}</td>
+                {{end}}
+                {{if $foreignCompanyDetails.legal_form}}
+                    <td>{{$foreignCompanyDetails.legal_form}}</td>
+                {{end}}
+            </tr>
+        </tbody>
+    </table>
+    <ul class="list list-bullet">
+        {{if $foreignCompanyDetails.name}}
+            <li>Parent registry: {{$foreignCompanyDetails.name}}</li>
+        {{end}}
+        {{if $foreignCompanyDetails.governed_by}}
+            <li>Governing Law: {{$foreignCompanyDetails.governed_by}}</li>
+        {{end}}
+        {{if $foreignCompanyDetails.business_activity}}
+            <li>Objects of the company: {{$foreignCompanyDetails.business_activity}}</li>
+        {{end}}
+    </ul>
+    {{end}}
 </main>
 </body>
 </html>
