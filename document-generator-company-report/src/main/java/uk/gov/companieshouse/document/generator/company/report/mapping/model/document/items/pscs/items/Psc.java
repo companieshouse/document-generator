@@ -35,36 +35,72 @@ public class Psc {
     @JsonProperty("identification")
     private Identification identification;
 
+    public Address getAddress() {
+        return address;
+    }
+
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public LocalDate getCeasedOn() {
+        return ceasedOn;
     }
 
     public void setCeasedOn(LocalDate ceasedOn) {
         this.ceasedOn = ceasedOn;
     }
 
+    public String getCountryOfResidence() {
+        return countryOfResidence;
+    }
+
     public void setCountryOfResidence(String countryOfResidence) {
         this.countryOfResidence = countryOfResidence;
+    }
+
+    public DateOfBirth getDateOfBirth() {
+        return dateOfBirth;
     }
 
     public void setDateOfBirth(DateOfBirth dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getNationality() {
+        return nationality;
     }
 
     public void setNationality(String nationality) {
         this.nationality = nationality;
     }
 
+    public String[] getNaturesOfControl() {
+        return naturesOfControl;
+    }
+
     public void setNaturesOfControl(String[] naturesOfControl) {
         this.naturesOfControl = naturesOfControl;
     }
 
+    public LocalDate getNotifiedOn() {
+        return notifiedOn;
+    }
+
     public void setNotifiedOn(LocalDate notifiedOn) {
         this.notifiedOn = notifiedOn;
+    }
+
+    public Identification getIdentification() {
+        return identification;
     }
 
     public void setIdentification(Identification identification) {

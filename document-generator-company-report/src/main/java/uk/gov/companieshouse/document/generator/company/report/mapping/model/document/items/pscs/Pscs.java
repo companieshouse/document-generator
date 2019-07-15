@@ -15,6 +15,9 @@ public class Pscs {
     @JsonProperty("items")
     private List<Psc> items;
 
+    @JsonProperty("kind")
+    private String kind;
+
     public Long getActiveCount() {
         return activeCount;
     }
@@ -37,5 +40,13 @@ public class Pscs {
 
     public void setItems(List<Psc> items) {
         this.items = items;
+    }
+
+    public String getKind() {
+        return kind;
+    }
+
+    public void setKind(String kind) {
+        this.kind = kind;
     }
 }

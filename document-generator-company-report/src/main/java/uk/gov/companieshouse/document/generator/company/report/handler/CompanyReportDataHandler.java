@@ -8,6 +8,8 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
+import uk.gov.companieshouse.api.model.psc.PscApi;
+import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.company.report.exception.MapperException;
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
@@ -15,6 +17,7 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.C
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
+import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
@@ -35,9 +38,14 @@ public class CompanyReportDataHandler {
     private CompanyService companyService;
 
     @Autowired
+    private PscsService pscsService;
+
+    @Autowired
     private CompanyReportMapper companyReportMapper;
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
+
+    private static final String PSCS_KEY = "persons_with_significant_control";
 
     private static final String DATE_TIME_FORMAT = "dd-MMMM-yyyy";
 
@@ -76,12 +84,20 @@ public class CompanyReportDataHandler {
 
         companyReportApiData.setCompanyProfileApi(companyProfileApi);
 
+        if (companyProfileApi.getLinks().containsKey(PSCS_KEY)) {
+            try {
+                PscsApi pscsApi = getPscs(companyNumber, requestId);
+                companyReportApiData.setPscsApi(pscsApi);
+            } catch (HandlerException he) {
+                LOG.infoContext(requestId,"Failed to get PSCs: ", getDebugMap(companyNumber));
+            }
+        }
+
         return toJson(companyReportMapper
             .mapCompanyReport(companyReportApiData),
             companyNumber,
             requestId);
     }
-
 
     private String toJson(CompanyReport companyReport, String companyNumber,
                           String requestId) throws HandlerException {
@@ -89,12 +105,12 @@ public class CompanyReportDataHandler {
         String reportToJson;
         ObjectMapper mapper = new ObjectMapper();
 
-        //TODO - Remove when definitly not required for any date mapping in company report
-        JavaTimeModule javaTimeModule = new JavaTimeModule();
-        javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)));
-        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)));
-        mapper.registerModule(javaTimeModule);
-        mapper.setDateFormat(new SimpleDateFormat(DATE_TIME_FORMAT));
+//        //TODO - Remove when definitly not required for any date mapping in company report
+//        JavaTimeModule javaTimeModule = new JavaTimeModule();
+//        javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)));
+//        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)));
+//        mapper.registerModule(javaTimeModule);
+//        mapper.setDateFormat(new SimpleDateFormat(DATE_TIME_FORMAT));
 
         try {
             LOG.infoContext(requestId,"Attempting to convert company report to JSON",  getDebugMap(companyNumber));
@@ -137,5 +153,15 @@ public class CompanyReportDataHandler {
         logMap.put("COMPANY_NUMBER", companyNumber);
 
         return logMap;
+    }
+
+    private PscsApi getPscs(String companyNumber, String requestId) throws HandlerException {
+
+        try {
+            LOG.infoContext(requestId,"Attempting to retrieve company PSCSs", getDebugMap(companyNumber));
+            return pscsService.getPscs(companyNumber);
+        } catch (ServiceException se) {
+            throw new HandlerException("error occurred obtaining the company PSCSs", se);
+        }
     }
 }
