@@ -1,5 +1,7 @@
 package uk.gov.companieshouse.document.generator.company.report.handler;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -8,10 +10,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
+import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.CompanyReportMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
+import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,6 +36,9 @@ public class CompanyReportDataHandlerTest {
     @Mock
     private CompanyReport mockCompanyReport;
 
+    @Mock
+    private PscsService mockPscService;
+
     @InjectMocks
     private CompanyReportDataHandler companyReportDataHandler;
 
@@ -43,11 +50,13 @@ public class CompanyReportDataHandlerTest {
     void testGetDocumentInfoSuccessful() throws Exception {
 
         CompanyProfileApi companyProfileApi = createCompanyProfile();
-        CompanyReportApiData companyReportApiData = new CompanyReportApiData();
+        PscsApi pscsApi = createPscsApi();
 
+        CompanyReportApiData companyReportApiData = new CompanyReportApiData();
         companyReportApiData.setCompanyProfileApi(companyProfileApi);
 
         when(mockCompanyService.getCompanyProfile(any(String.class))).thenReturn(companyProfileApi);
+        when(mockPscService.getPscs(any(String.class))).thenReturn(pscsApi);
 
         DocumentInfoResponse documentInfoResponse = companyReportDataHandler.getCompanyReport(RESOURCE_URI, REQUEST_ID);
 
@@ -74,11 +83,25 @@ public class CompanyReportDataHandlerTest {
         assertEquals("112234554",result);
     }
 
+    private PscsApi createPscsApi() {
+        PscsApi pscsApi = new PscsApi();
+        pscsApi.setActiveCount(1L);
+
+        return pscsApi;
+    }
+
+
     private CompanyProfileApi createCompanyProfile() {
 
         CompanyProfileApi companyProfileApi = new CompanyProfileApi();
         companyProfileApi.setCompanyNumber("00006400");
         companyProfileApi.setCompanyName("GIRLS SCHOOL TRUST");
+
+        Map<String, String> links = new HashMap<>();
+
+        links.put("persons_with_significant_control", "/persons-with-significant-control");
+
+        companyProfileApi.setLinks(links);
 
         return companyProfileApi;
     }
