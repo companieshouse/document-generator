@@ -80,28 +80,28 @@
         {{if $roa := $companyRegistrationInformation.registered_office}}
         <li>Registered office:
             {{if $roa.care_of}}
-            {{index $roa "care_of"}}
+            {{index $roa "care_of"}},
             {{end}}
             {{if $roa.po_box}}
-            {{index $roa "po_box"}}
+            {{index $roa "po_box"}},
             {{end}}
             {{if $roa.premises}}
-            {{index $roa "premises"}}
+            {{index $roa "premises"}},
             {{end}}
             {{if $roa.address_line_1}}
-            {{index $roa "address_line_1"}}
+            {{index $roa "address_line_1"}},
             {{end}}
             {{if $roa.address_line_2}}
-            {{index $roa "address_line_2"}}
+            {{index $roa "address_line_2"}},
             {{end}}
             {{if $roa.locality}}
-            {{index $roa "locality"}}
+            {{index $roa "locality"}},
             {{end}}
             {{if $roa.region}}
-            {{index $roa "region"}}
+            {{index $roa "region"}},
             {{end}}
             {{if $roa.country}}
-            {{index $roa "country"}}
+            {{index $roa "country"}},
             {{end}}
             {{if $roa.postal_code}}
             {{index $roa "postal_code"}}
@@ -223,35 +223,35 @@
                 <li>Correspondence address:
 
                         {{if .address.care_of}}
-                        {{index .address "care_of"}}
+                        {{index .address "care_of"}},
                         {{end}}
 
                         {{if .address.po_box}}
-                        {{index .address "po_box"}}
+                        {{index .address "po_box"}},
                         {{end}}
 
                         {{if .address.premises}}
-                        {{index .address "premises"}}
+                        {{index .address "premises"}},
                         {{end}}
 
                         {{if .address.address_line_1}}
-                        {{index .address "address_line_1"}}
+                        {{index .address "address_line_1"}},
                         {{end}}
 
                         {{if .address.address_line_2}}
-                        {{index .address "address_line_2"}}
+                        {{index .address "address_line_2"}},
                         {{end}}
 
                         {{if .address.locality}}
-                        {{index .address "locality"}}
+                        {{index .address "locality"}},
                         {{end}}
 
                         {{if .address.region}}
-                        {{index .address "region"}}
+                        {{index .address "region"}},
                         {{end}}
 
                         {{if .address.country}}
-                        {{index .address "country"}}
+                        {{index .address "country"}},
                         {{end}}
 
                         {{if .address.postal_code}}
