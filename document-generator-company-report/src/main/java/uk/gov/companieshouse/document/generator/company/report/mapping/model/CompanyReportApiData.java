@@ -27,11 +27,13 @@ public class CompanyReportApiData {
     public void setPscsApi(PscsApi pscsApi) {
         this.pscsApi = pscsApi;
 
+    }
+
     public OfficersApi getOfficersApi() {
         return officersApi;
     }
 
-    public void setOfficersApi(OfficersApi officerApi) {
-        this.officersApi = officerApi;
+    public void setOfficersApi(OfficersApi officersApi) {
+        this.officersApi = officersApi;
     }
 }
