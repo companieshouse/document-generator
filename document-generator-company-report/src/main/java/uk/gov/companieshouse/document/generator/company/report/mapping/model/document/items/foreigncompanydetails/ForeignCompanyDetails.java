@@ -26,8 +26,8 @@ public class ForeignCompanyDetails {
     @JsonProperty("business_activity")
     private String businessActivity;
 
-    @JsonProperty("is_a_credit_finance_institution")
-    private boolean isACreditFinanceInstitution;
+    @JsonProperty("is_a_credit_financial_institution")
+    private boolean isACreditFinancialInstitution;
 
     @JsonProperty("accounts")
     private Accounts accounts;
@@ -80,12 +80,12 @@ public class ForeignCompanyDetails {
         this.businessActivity = businessActivity;
     }
 
-    public boolean isACreditFinanceInstitution() {
-        return isACreditFinanceInstitution;
+    public boolean isACreditFinancialInstitution() {
+        return isACreditFinancialInstitution;
     }
 
-    public void setACreditFinanceInstitution(boolean ACreditFinanceInstitution) {
-        isACreditFinanceInstitution = ACreditFinanceInstitution;
+    public void setACreditFinancialInstitution(boolean ACreditFinancialInstitution) {
+        isACreditFinancialInstitution = ACreditFinancialInstitution;
     }
 
     public Accounts getAccounts() {

@@ -165,6 +165,10 @@
     </ul>
     {{end}}
 
+    {{if (eq $foreignCompanyDetails.is_a_credit_financial_institution true)}}
+        This company is a credit/financial institution
+    {{end}}
+
     {{if $foreignCompanyDetails.accounts}}
     <h3 class="heading-small">Accounts</h3>
     <p>Required to publish accounts from {{$foreignCompanyDetails.accounts.account_period_from.day}}
