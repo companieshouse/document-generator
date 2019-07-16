@@ -13,9 +13,6 @@ public class CurrentOfficer {
     @JsonProperty("name")
     private String name;
 
-    @JsonProperty("number_of_appointments")
-    private Long numberOfAppointments;
-
     @JsonProperty("address")
     private Address address;
 
@@ -155,14 +152,6 @@ public class CurrentOfficer {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Long getNumberOfAppointments() {
-        return numberOfAppointments;
-    }
-
-    public void setNumberOfAppointments(Long numberOfAppointments) {
-        this.numberOfAppointments = numberOfAppointments;
     }
 
     public Address getAddress() {

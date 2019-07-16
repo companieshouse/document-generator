@@ -107,38 +107,9 @@ public abstract class ApiToCurrentOfficer {
         }
     }
 
-    @AfterMapping
-    protected void setOfficerAppointments(CompanyOfficerApi companyOfficerApi,
-            @MappingTarget CurrentOfficer currentOfficer) throws MapperException {
-
-        if (hasAppointmentLink(companyOfficerApi)) {
-
-            ApiClient apiClient = companyReportApiClientService.getApiClient();
-            OfficerAppointmentsApi officerAppointmentsApi;
-
-            try {
-                officerAppointmentsApi = apiClient.officerAppointment()
-                        .get(new UriTemplate(companyOfficerApi.getLinks().getOfficer().getAppointments()).toString()).execute().getData();
-            } catch (ApiErrorResponseException | URIValidationException e) {
-                throw new MapperException("An error occurred when retrieving officer " +
-                        "appointments", e);
-            }
-
-            if (officerAppointmentsApi != null) {
-                currentOfficer.setNumberOfAppointments(officerAppointmentsApi.getTotalResults());
-            }
-        }
-    }
-
     private boolean hasOfficerRole(CompanyOfficerApi companyOfficerApi) {
         return companyOfficerApi.getOfficerRole() != null &&
                 companyOfficerApi.getOfficerRole().getOfficerRole() != null;
-    }
-
-    private boolean hasAppointmentLink(CompanyOfficerApi companyOfficerApi) {
-        return companyOfficerApi.getLinks() != null &&
-                companyOfficerApi.getLinks().getOfficer() != null &&
-                companyOfficerApi.getLinks().getOfficer().getAppointments() != null;
     }
 
     private boolean hasIdentificationType(CompanyOfficerApi companyOfficerApi) {
