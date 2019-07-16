@@ -1,6 +1,9 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.pscs;
 
 
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +18,7 @@ import org.springframework.web.context.annotation.RequestScope;
 import uk.gov.companieshouse.api.model.psc.PscApi;
 import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
 import uk.gov.companieshouse.document.generator.company.report.exception.MapperException;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.DateOfBirth;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.pscs.items.NaturesOfControl;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.pscs.items.Psc;
 
@@ -25,13 +29,16 @@ public abstract class ApiToPscMapper {
     private static final String ENUMERATION_MAPPING = "Enumeration mapping :";
     private static final String PSC_DESCRIPTIONS = "PSC_DESCRIPTIONS";
     private static final String IDENTIFIER = "description";
+    private static final String D_MMMM_UUUU = "d MMMM uuuu";
 
     @Mappings({
 
-            @Mapping(target = "naturesOfControl", ignore = true)
+            @Mapping(target = "naturesOfControl", ignore = true),
+            @Mapping(target = "dateOfBirth", ignore = true)
     })
 
     public abstract Psc apiToPsc(PscApi pscApi) throws MapperException;
+
     public abstract List<Psc> apiToPsc(List<PscApi> pscApi) throws MapperException;
 
     @Autowired
@@ -41,9 +48,43 @@ public abstract class ApiToPscMapper {
     protected void setNaturesOfControl(PscApi pscApi, @MappingTarget Psc psc) {
 
         if (pscApi != null && pscApi.getNaturesOfControl() != null) {
-                psc.setNaturesOfControl(setNaturesOfControl(pscApi.getNaturesOfControl()));
-            }
+            psc.setNaturesOfControl(setNaturesOfControl(pscApi.getNaturesOfControl()));
         }
+    }
+
+    @AfterMapping
+    protected void setCeasedOnDate(PscApi pscApi, @MappingTarget Psc psc) {
+
+        if (pscApi != null && pscApi.getCeasedOn() != null) {
+            LocalDate ceasedOn = pscApi.getCeasedOn();
+            psc.setCeasedOn(ceasedOn.format(getFormatter()));
+        }
+    }
+
+    @AfterMapping
+    protected void setDateOfBirth(PscApi pscApi, @MappingTarget Psc psc) {
+
+        if (pscApi != null && pscApi.getDateOfBirth() != null) {
+            DateOfBirth dob = new DateOfBirth();
+            String monthString = getNameOfMonth(pscApi);
+
+            dob.setYear(pscApi.getDateOfBirth().getYear());
+            //Sentence case month string
+            dob.setMonth(monthString.substring(0, 1).toUpperCase()
+                    + monthString.substring(1).toLowerCase());
+
+            psc.setDateOfBirth(dob);
+        }
+    }
+
+    @AfterMapping
+    protected void setNotifiedOn(PscApi pscApi, @MappingTarget Psc psc) {
+
+        if (pscApi != null && pscApi.getNotifiedOn() != null) {
+            LocalDate notifiedOn = pscApi.getNotifiedOn();
+            psc.setNotifiedOn(notifiedOn.format(getFormatter()));
+        }
+    }
 
     private List<NaturesOfControl> setNaturesOfControl(String[] naturesOfControl) {
 
@@ -64,12 +105,22 @@ public abstract class ApiToPscMapper {
         return naturesOfControlList;
     }
 
+
     private Map<String, String> getDebugMap(String debugString) {
 
         Map<String, String> debugMap = new HashMap<>();
         debugMap.put(ENUMERATION_MAPPING, debugString);
 
         return debugMap;
+    }
+
+    private String getNameOfMonth(PscApi pscApi) {
+        int month = Math.toIntExact(pscApi.getDateOfBirth().getMonth());
+        return Month.of(month).name();
+    }
+
+    private DateTimeFormatter getFormatter() {
+        return DateTimeFormatter.ofPattern(D_MMMM_UUUU);
     }
 
 }

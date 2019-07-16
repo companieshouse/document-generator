@@ -1,19 +1,18 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.pscs.items;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.time.LocalDate;
 import java.util.List;
-import uk.gov.companieshouse.api.model.common.Address;
-import uk.gov.companieshouse.api.model.common.DateOfBirth;
-import uk.gov.companieshouse.api.model.psc.Identification;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.Address;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.DateOfBirth;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.Identification;
 
 public class Psc {
 
     @JsonProperty("address")
-    private Address address;
+    private uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.Address address;
 
     @JsonProperty("ceased_on")
-    private LocalDate ceasedOn;
+    private String ceasedOn;
 
     @JsonProperty("country_of_residence")
     private String countryOfResidence;
@@ -31,10 +30,10 @@ public class Psc {
     private List<NaturesOfControl> naturesOfControl;
 
     @JsonProperty("notified_on")
-    private LocalDate notifiedOn;
+    private String notifiedOn;
 
     @JsonProperty("identification")
-    private Identification identification;
+    private uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.Identification identification;
 
     public Address getAddress() {
         return address;
@@ -42,14 +41,6 @@ public class Psc {
 
     public void setAddress(Address address) {
         this.address = address;
-    }
-
-    public LocalDate getCeasedOn() {
-        return ceasedOn;
-    }
-
-    public void setCeasedOn(LocalDate ceasedOn) {
-        this.ceasedOn = ceasedOn;
     }
 
     public String getCountryOfResidence() {
@@ -84,11 +75,27 @@ public class Psc {
         this.nationality = nationality;
     }
 
-    public LocalDate getNotifiedOn() {
+    public List<NaturesOfControl> getNaturesOfControl() {
+        return naturesOfControl;
+    }
+
+    public void setNaturesOfControl(List<NaturesOfControl> naturesOfControl) {
+        this.naturesOfControl = naturesOfControl;
+    }
+
+    public String getCeasedOn() {
+        return ceasedOn;
+    }
+
+    public void setCeasedOn(String ceasedOn) {
+        this.ceasedOn = ceasedOn;
+    }
+
+    public String getNotifiedOn() {
         return notifiedOn;
     }
 
-    public void setNotifiedOn(LocalDate notifiedOn) {
+    public void setNotifiedOn(String notifiedOn) {
         this.notifiedOn = notifiedOn;
     }
 
@@ -98,14 +105,6 @@ public class Psc {
 
     public void setIdentification(Identification identification) {
         this.identification = identification;
-    }
-
-    public List<NaturesOfControl> getNaturesOfControl() {
-        return naturesOfControl;
-    }
-
-    public void setNaturesOfControl(List<NaturesOfControl> naturesOfControl) {
-        this.naturesOfControl = naturesOfControl;
     }
 }
 

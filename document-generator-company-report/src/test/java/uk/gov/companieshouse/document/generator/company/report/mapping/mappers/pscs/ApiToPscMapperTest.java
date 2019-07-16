@@ -7,6 +7,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -58,8 +60,33 @@ public class ApiToPscMapperTest {
     @Mock
    RetrieveApiEnumerationDescription mockRetrieveApiEnumerations;
 
-
     @Test
+    @DisplayName("tests multiple PSC data maps to PSC model")
+    void testApiToMulitplePSCMaps() throws Exception {
+
+        List<PscApi> pscList = new ArrayList<>();
+
+        PscApi psc1 = new PscApi();
+        psc1.setName(NAME);
+        PscApi psc2 = new PscApi();
+        psc2.setCeasedOn(CEASED_ON);
+        PscApi psc3 = new PscApi();
+        psc3.setNotifiedOn(NOTIFIED_ON);
+
+        pscList.add(psc1);
+        pscList.add(psc2);
+        pscList.add(psc3);
+
+        List<Psc> psc = apiToPscMapper.apiToPsc(pscList);
+
+        assertNotNull(psc);
+        assertEquals(NAME, psc.get(0).getName());
+        assertEquals("6 June 2019", psc.get(1).getCeasedOn());
+        assertEquals("5 May 2019", psc.get(2).getNotifiedOn());
+
+    }
+
+        @Test
     @DisplayName("tests single PSC data maps to PSC model")
     void testApiToPSCMaps() throws Exception {
 
@@ -83,12 +110,11 @@ public class ApiToPscMapperTest {
         assertEquals(POSTAL_CODE, psc.getAddress().getPostalCode());
         assertEquals(REGION, psc.getAddress().getRegion());
         assertEquals(PREMISE, psc.getAddress().getPremises());
-        assertEquals(1L, psc.getDateOfBirth().getMonth().longValue());
+        assertEquals("January", psc.getDateOfBirth().getMonth());
         assertEquals(1993L, psc.getDateOfBirth().getYear().longValue());
         assertEquals(COUNTRY_OF_RESIDENCE, psc.getCountryOfResidence());
-//        assertEquals(2019-06-06, psc.getCeasedOn());
-//        assertEquals(2019-05-05, psc.getNotifiedOn());
-        assertEquals(COUNTRY, psc.getIdentification().getCountryRegistered());
+        assertEquals("6 June 2019", psc.getCeasedOn());
+        assertEquals("5 May 2019", psc.getNotifiedOn());
         assertEquals(LEGAL_AUTHORITY, psc.getIdentification().getLegalAuthority());
         assertEquals(LEGAL_FORM, psc.getIdentification().getLegalForm());
         assertEquals(PLACE_REGISTRATION, psc.getIdentification().getPlaceRegistered());
