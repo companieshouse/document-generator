@@ -156,14 +156,21 @@
         </ul>
     {{end}}
 
-{{if $companyRegistrationInformation.nature_of_business}}
+    {{if $companyRegistrationInformation.nature_of_business}}
     <h3 class="heading-small">Nature of business (SIC)</h3>
     <ul class="list list-bullet">
         {{range $companyRegistrationInformation.nature_of_business}}
         <li>{{.sic_codes}} {{.sic_codes_description}}</li>
         {{end}}
     </ul>
+    {{end}}
 
+    {{if $foreignCompanyDetails.accounts}}
+    <h3 class="heading-small">Accounts</h3>
+    <p>Required to publish accounts from {{$foreignCompanyDetails.accounts.account_period_from.day}}
+        {{$foreignCompanyDetails.accounts.account_period_from.month}} to {{$foreignCompanyDetails.accounts.account_period_to.day}}
+        {{$foreignCompanyDetails.accounts.account_period_to.month}} <br>within {{$foreignCompanyDetails.accounts.must_file_within.months}}
+        months under parent law</p>
     {{end}}
 
     {{if $previousNames}}

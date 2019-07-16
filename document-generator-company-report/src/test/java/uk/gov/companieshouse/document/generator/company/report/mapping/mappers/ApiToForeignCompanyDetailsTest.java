@@ -8,11 +8,10 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.company.foreigncompany.ForeignCompanyDetailsApi;
 import uk.gov.companieshouse.api.model.company.foreigncompany.OriginatingRegistryApi;
+import uk.gov.companieshouse.document.generator.company.report.exception.MapperException;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.foreigncompanydetails.ApiToForeignCompanyDetailsMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.foreigncompanydetails.ApiToForeignCompanyDetailsMapperImpl;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.ForeignCompanyDetails;
-
-import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -35,7 +34,7 @@ public class ApiToForeignCompanyDetailsTest {
 
     @Test
     @DisplayName("test foreign company details data maps to foreign company details model")
-    void testApiToForeignCompanyDetailsMaps() throws IOException {
+    void testApiToForeignCompanyDetailsMaps() throws MapperException {
 
         ForeignCompanyDetailsApi foreignCompanyDetailsApi = createForeignCompanyDetailsApi();
 
@@ -53,7 +52,7 @@ public class ApiToForeignCompanyDetailsTest {
 
     @Test
     @DisplayName("test foreign company with null value to foreign company details api model")
-    void testApiToForeignCompanyDetailsMapsWithNullApiModel() throws IOException {
+    void testApiToForeignCompanyDetailsMapsWithNullApiModel() throws MapperException {
 
         ForeignCompanyDetailsApi foreignCompanyDetailsApi = null;
 
@@ -65,7 +64,7 @@ public class ApiToForeignCompanyDetailsTest {
 
     @Test
     @DisplayName("test foreign company details data maps with null values to foreign company details model")
-    void testApiToForeignCompanyDetailsMapsWithNullValues() throws IOException {
+    void testApiToForeignCompanyDetailsMapsWithNullValues() throws MapperException {
 
         ForeignCompanyDetailsApi foreignCompanyDetailsApi = createForeignCompanyDetailsApiWithNullValues();
 
@@ -79,7 +78,7 @@ public class ApiToForeignCompanyDetailsTest {
 
     @Test
     @DisplayName("test foreign company details data maps to foreign company details model")
-    void testApiToForeignCompanyDetailsMapsWithNullOriginatingRegistryObject() throws IOException {
+    void testApiToForeignCompanyDetailsMapsWithNullOriginatingRegistryObject() throws MapperException {
 
         ForeignCompanyDetailsApi foreignCompanyDetailsApi =
             createForeignCompanyDetailsApiWithNullOriginatingRegistryObject();
