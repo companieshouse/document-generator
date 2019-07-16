@@ -1,6 +1,5 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.pscs;
 
-
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
@@ -34,7 +33,9 @@ public abstract class ApiToPscMapper {
     @Mappings({
 
             @Mapping(target = "naturesOfControl", ignore = true),
-            @Mapping(target = "dateOfBirth", ignore = true)
+            @Mapping(target = "dateOfBirth", ignore = true),
+            @Mapping(target = "ceasedOn", ignore = true),
+            @Mapping(target = "notifiedOn", ignore = true)
     })
 
     public abstract Psc apiToPsc(PscApi pscApi) throws MapperException;
@@ -105,7 +106,6 @@ public abstract class ApiToPscMapper {
         return naturesOfControlList;
     }
 
-
     private Map<String, String> getDebugMap(String debugString) {
 
         Map<String, String> debugMap = new HashMap<>();
@@ -122,5 +122,4 @@ public abstract class ApiToPscMapper {
     private DateTimeFormatter getFormatter() {
         return DateTimeFormatter.ofPattern(D_MMMM_UUUU);
     }
-
 }

@@ -13,7 +13,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
-
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -26,7 +25,6 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 @ExtendWith({MockitoExtension.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ApiToPscMapperTest {
-
 
     @InjectMocks
     private ApiToPscMapper apiToPscMapper = new ApiToPscMapperImpl();
@@ -58,24 +56,13 @@ public class ApiToPscMapperTest {
     private String[] NATURE_OF_CONTROL = new String[]{"test1", "test2", "test3"};
 
     @Mock
-   RetrieveApiEnumerationDescription mockRetrieveApiEnumerations;
+    RetrieveApiEnumerationDescription mockRetrieveApiEnumerations;
 
     @Test
     @DisplayName("tests multiple PSC data maps to PSC model")
-    void testApiToMulitplePSCMaps() throws Exception {
+    void testApiToMultiplePSCMaps() throws Exception {
 
-        List<PscApi> pscList = new ArrayList<>();
-
-        PscApi psc1 = new PscApi();
-        psc1.setName(NAME);
-        PscApi psc2 = new PscApi();
-        psc2.setCeasedOn(CEASED_ON);
-        PscApi psc3 = new PscApi();
-        psc3.setNotifiedOn(NOTIFIED_ON);
-
-        pscList.add(psc1);
-        pscList.add(psc2);
-        pscList.add(psc3);
+        List<PscApi> pscList = createPscList();
 
         List<Psc> psc = apiToPscMapper.apiToPsc(pscList);
 
@@ -86,15 +73,14 @@ public class ApiToPscMapperTest {
 
     }
 
-        @Test
+    @Test
     @DisplayName("tests single PSC data maps to PSC model")
     void testApiToPSCMaps() throws Exception {
 
         PscApi pscApi = createPscApi();
 
-
         when(mockRetrieveApiEnumerations.getApiEnumerationDescription(anyString(), anyString(),
- anyString(), any())).thenReturn("mapped value");
+                anyString(), any())).thenReturn("mapped value");
 
         Psc psc = apiToPscMapper.apiToPsc(pscApi);
 
@@ -119,9 +105,12 @@ public class ApiToPscMapperTest {
         assertEquals(LEGAL_FORM, psc.getIdentification().getLegalForm());
         assertEquals(PLACE_REGISTRATION, psc.getIdentification().getPlaceRegistered());
         assertEquals(REGISTRATION_NUMBER, psc.getIdentification().getRegistrationNumber());
-        assertEquals("mapped value", psc.getNaturesOfControl().get(0).getNaturesOfControlDescription());
-        assertEquals("mapped value", psc.getNaturesOfControl().get(1).getNaturesOfControlDescription());
-        assertEquals("mapped value", psc.getNaturesOfControl().get(2).getNaturesOfControlDescription());
+        assertEquals("mapped value",
+                psc.getNaturesOfControl().get(0).getNaturesOfControlDescription());
+        assertEquals("mapped value",
+                psc.getNaturesOfControl().get(1).getNaturesOfControlDescription());
+        assertEquals("mapped value",
+                psc.getNaturesOfControl().get(2).getNaturesOfControlDescription());
     }
 
     private PscApi createPscApi() {
@@ -176,5 +165,21 @@ public class ApiToPscMapperTest {
         identification.setRegistrationNumber(REGISTRATION_NUMBER);
 
         return identification;
+    }
+
+    private List<PscApi> createPscList() {
+        List<PscApi> pscList = new ArrayList<>();
+
+        PscApi psc1 = new PscApi();
+        psc1.setName(NAME);
+        PscApi psc2 = new PscApi();
+        psc2.setCeasedOn(CEASED_ON);
+        PscApi psc3 = new PscApi();
+        psc3.setNotifiedOn(NOTIFIED_ON);
+
+        pscList.add(psc1);
+        pscList.add(psc2);
+        pscList.add(psc3);
+        return pscList;
     }
 }
