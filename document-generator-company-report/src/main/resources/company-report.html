@@ -78,7 +78,21 @@
     <h2 class="heading-large">Overview</h2>
     <ul class="list list-bullet">
         {{if $roa := $companyRegistrationInformation.registered_office}}
-        <li>Registered office:
+        <li>
+
+            {{if eq $companyRegistrationInformation.company_type.type "UK establishment company"}}
+                UK establishment office address:
+
+            {{else if eq $companyRegistrationInformation.company_type.type "Overseas company"}}
+                Overseas company address:
+
+            {{else if eq $companyRegistrationInformation.company_type.type "Scottish qualifying partnership"}}
+                Service address:
+
+            {{else}}
+                Registered office address:
+            {{end}}
+
             {{if $roa.care_of}}
             {{index $roa "care_of"}},
             {{end}}
