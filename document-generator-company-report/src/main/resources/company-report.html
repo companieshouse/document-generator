@@ -114,8 +114,10 @@
                 {{if $companyRegistrationInformation.company_type.subtype}}/{{$companyRegistrationInformation.company_type.subtype}}{{end}}</li>
         {{end}}
 
-        {{if $companyRegistrationInformation.external_registration_number}}
-            <li>Charity number: {{$companyRegistrationInformation.external_registration_number}}</li>
+        {{if ne $companyRegistrationInformation.company_type.type "Overseas company"}}
+            {{if $companyRegistrationInformation.external_registration_number}}
+                <li>Charity number: {{$companyRegistrationInformation.external_registration_number}}</li>
+            {{end}}
         {{end}}
 
         {{if $companyRegistrationInformation.date_of_incorporation}}
@@ -126,6 +128,7 @@
             <li>Status: {{$companyRegistrationInformation.status.company_status}}
                 {{if $companyRegistrationInformation.status.company_status_detail}}/{{$companyRegistrationInformation.status.company_status_detail}}{{end}}</li>
         {{end}}
+
     </ul>
 
     {{if or ($keyFilingDates.last_accounts_made_up_to) ($keyFilingDates.next_accounts_due) ($keyFilingDates.accounting_reference_date.day) }}
