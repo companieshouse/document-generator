@@ -2,14 +2,12 @@ package uk.gov.companieshouse.document.generator.company.report.handler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.psc.PscApi;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
+import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.company.report.exception.MapperException;
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
@@ -18,13 +16,11 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.Com
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
 import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
+import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -41,13 +37,15 @@ public class CompanyReportDataHandler {
     private PscsService pscsService;
 
     @Autowired
+    private OfficerService officerService;
+
+    @Autowired
     private CompanyReportMapper companyReportMapper;
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
-
     private static final String PSCS_KEY = "persons_with_significant_control";
-
     private static final String DATE_TIME_FORMAT = "dd-MMMM-yyyy";
+    private static final String OFFICERS_KEY = "officers";
 
     public DocumentInfoResponse getCompanyReport(String resourceUri, String requestId)
         throws HandlerException {
@@ -81,7 +79,6 @@ public class CompanyReportDataHandler {
         CompanyReportApiData companyReportApiData = new CompanyReportApiData();
 
         CompanyProfileApi companyProfileApi = getCompanyProfile(companyNumber, requestId);
-
         companyReportApiData.setCompanyProfileApi(companyProfileApi);
 
         if (companyProfileApi.getLinks().containsKey(PSCS_KEY)) {
@@ -92,6 +89,15 @@ public class CompanyReportDataHandler {
                 LOG.infoContext(requestId,"Failed to get PSCs: ", getDebugMap(companyNumber));
             }
         }
+
+         if (companyProfileApi.getLinks().containsKey(OFFICERS_KEY)) {
+             try {
+                 OfficersApi officersApi = getOfficers(companyNumber, requestId);
+                 companyReportApiData.setOfficersApi(officersApi);
+             } catch (HandlerException he) {
+                 LOG.infoContext(requestId,"Failed to get company officers: ", getDebugMap(companyNumber));
+             }
+         }
 
         return toJson(companyReportMapper
             .mapCompanyReport(companyReportApiData),
@@ -105,7 +111,9 @@ public class CompanyReportDataHandler {
         String reportToJson;
         ObjectMapper mapper = new ObjectMapper();
 
+
 //        //TODO - Remove when definitly not required for any date mapping in company report
+
 //        JavaTimeModule javaTimeModule = new JavaTimeModule();
 //        javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)));
 //        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)));
@@ -132,6 +140,15 @@ public class CompanyReportDataHandler {
             return companyService.getCompanyProfile(companyNumber);
         } catch (ServiceException se) {
             throw new HandlerException("error occurred obtaining the company profile", se);
+        }
+    }
+
+    private OfficersApi getOfficers(String companyNumber, String requestId) throws HandlerException {
+        try {
+            LOG.infoContext(requestId,"Attempting to retrieve company officers", getDebugMap(companyNumber));
+            return officerService.getOfficers(companyNumber);
+        } catch (ServiceException se) {
+            throw new HandlerException("error occurred obtaining the company officers", se);
         }
     }
 

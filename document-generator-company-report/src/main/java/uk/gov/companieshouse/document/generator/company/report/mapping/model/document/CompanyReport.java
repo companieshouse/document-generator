@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.List;
+
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.CurrentAppointments;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.keyfilingdates.KeyFilingDates;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.previousnames.PreviousNames;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.pscs.Pscs;
@@ -23,6 +25,9 @@ public class CompanyReport {
 
     @JsonProperty("previous_names")
     private List<PreviousNames> previousNames;
+
+    @JsonProperty("current_appointments")
+    private CurrentAppointments currentAppointments;
 
     @JsonProperty("key_filing_dates")
     private KeyFilingDates keyFilingDates;
@@ -44,6 +49,14 @@ public class CompanyReport {
 
     public void setRegistrationInformation(RegistrationInformation registrationInformation) {
         this.registrationInformation = registrationInformation;
+    }
+
+    public CurrentAppointments getCurrentAppointments() {
+        return currentAppointments;
+    }
+
+    public void setCurrentAppointments(CurrentAppointments currentAppointments) {
+        this.currentAppointments = currentAppointments;
     }
 
     public KeyFilingDates getKeyFilingDates() {

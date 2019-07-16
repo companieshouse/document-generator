@@ -11,12 +11,17 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
+import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.CompanyReportMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
 import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
+import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -39,6 +44,9 @@ public class CompanyReportDataHandlerTest {
     @Mock
     private PscsService mockPscService;
 
+    @Mock
+    private OfficerService mockOfficerService;
+
     @InjectMocks
     private CompanyReportDataHandler companyReportDataHandler;
 
@@ -51,12 +59,14 @@ public class CompanyReportDataHandlerTest {
 
         CompanyProfileApi companyProfileApi = createCompanyProfile();
         PscsApi pscsApi = createPscsApi();
+        OfficersApi officersApi = createOfficers();
 
         CompanyReportApiData companyReportApiData = new CompanyReportApiData();
         companyReportApiData.setCompanyProfileApi(companyProfileApi);
 
         when(mockCompanyService.getCompanyProfile(any(String.class))).thenReturn(companyProfileApi);
         when(mockPscService.getPscs(any(String.class))).thenReturn(pscsApi);
+        when(mockOfficerService.getOfficers(any(String.class))).thenReturn(officersApi);
 
         DocumentInfoResponse documentInfoResponse = companyReportDataHandler.getCompanyReport(RESOURCE_URI, REQUEST_ID);
 
@@ -100,9 +110,17 @@ public class CompanyReportDataHandlerTest {
         Map<String, String> links = new HashMap<>();
 
         links.put("persons_with_significant_control", "/persons-with-significant-control");
+        links.put("officers", "/officers");
 
         companyProfileApi.setLinks(links);
 
         return companyProfileApi;
+    }
+
+    private OfficersApi createOfficers() {
+        OfficersApi officersApi = new OfficersApi();
+        officersApi.setActiveCount(1L);
+
+        return officersApi;
     }
 }
