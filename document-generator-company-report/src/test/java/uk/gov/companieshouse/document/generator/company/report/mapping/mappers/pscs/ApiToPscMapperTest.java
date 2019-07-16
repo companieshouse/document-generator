@@ -2,6 +2,9 @@ package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
@@ -10,10 +13,12 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.common.Address;
 import uk.gov.companieshouse.api.model.common.DateOfBirth;
 import uk.gov.companieshouse.api.model.psc.PscApi;
+import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.pscs.items.Psc;
 
 @ExtendWith({MockitoExtension.class})
@@ -50,15 +55,19 @@ public class ApiToPscMapperTest {
 
     private String[] NATURE_OF_CONTROL = new String[]{"test1", "test2", "test3"};
 
+    @Mock
+   RetrieveApiEnumerationDescription mockRetrieveApiEnumerations;
+
 
     @Test
     @DisplayName("tests single PSC data maps to PSC model")
     void testApiToPSCMaps() throws Exception {
 
         PscApi pscApi = createPscApi();
-//
-//        when(mockRetrieveApiEnumerations.getApiEnumerationDescription(anyString(), anyString(),
-// anyString(), any())).thenReturn(IDENTIFICATION_TYPE);
+
+
+        when(mockRetrieveApiEnumerations.getApiEnumerationDescription(anyString(), anyString(),
+ anyString(), any())).thenReturn("mapped value");
 
         Psc psc = apiToPscMapper.apiToPsc(pscApi);
 
@@ -84,7 +93,9 @@ public class ApiToPscMapperTest {
         assertEquals(LEGAL_FORM, psc.getIdentification().getLegalForm());
         assertEquals(PLACE_REGISTRATION, psc.getIdentification().getPlaceRegistered());
         assertEquals(REGISTRATION_NUMBER, psc.getIdentification().getRegistrationNumber());
-        assertEquals(3, psc.getNaturesOfControl().length);
+        assertEquals("mapped value", psc.getNaturesOfControl().get(0).getNaturesOfControlDescription());
+        assertEquals("mapped value", psc.getNaturesOfControl().get(1).getNaturesOfControlDescription());
+        assertEquals("mapped value", psc.getNaturesOfControl().get(2).getNaturesOfControlDescription());
     }
 
     private PscApi createPscApi() {

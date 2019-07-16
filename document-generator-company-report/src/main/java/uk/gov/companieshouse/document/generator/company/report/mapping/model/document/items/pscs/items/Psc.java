@@ -2,6 +2,7 @@ package uk.gov.companieshouse.document.generator.company.report.mapping.model.do
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
+import java.util.List;
 import uk.gov.companieshouse.api.model.common.Address;
 import uk.gov.companieshouse.api.model.common.DateOfBirth;
 import uk.gov.companieshouse.api.model.psc.Identification;
@@ -27,7 +28,7 @@ public class Psc {
     private String nationality;
 
     @JsonProperty("natures_of_control")
-    private String[] naturesOfControl;
+    private List<NaturesOfControl> naturesOfControl;
 
     @JsonProperty("notified_on")
     private LocalDate notifiedOn;
@@ -83,14 +84,6 @@ public class Psc {
         this.nationality = nationality;
     }
 
-    public String[] getNaturesOfControl() {
-        return naturesOfControl;
-    }
-
-    public void setNaturesOfControl(String[] naturesOfControl) {
-        this.naturesOfControl = naturesOfControl;
-    }
-
     public LocalDate getNotifiedOn() {
         return notifiedOn;
     }
@@ -105,6 +98,14 @@ public class Psc {
 
     public void setIdentification(Identification identification) {
         this.identification = identification;
+    }
+
+    public List<NaturesOfControl> getNaturesOfControl() {
+        return naturesOfControl;
+    }
+
+    public void setNaturesOfControl(List<NaturesOfControl> naturesOfControl) {
+        this.naturesOfControl = naturesOfControl;
     }
 }
 
