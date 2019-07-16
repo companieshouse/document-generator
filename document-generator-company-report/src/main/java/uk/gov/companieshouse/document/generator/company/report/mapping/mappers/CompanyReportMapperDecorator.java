@@ -5,12 +5,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.company.PreviousCompanyNamesApi;
+import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.MapperException;
+import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.currentappointments.ApiToCurrentAppointmentsMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.keyfilingdates.ApiToKeyFilingDatesMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.previousnames.ApiToPreviousNamesMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.registrationinformation.ApiToRegistrationInformationMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.CurrentAppointments;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.keyfilingdates.KeyFilingDates;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.previousnames.PreviousNames;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.RegistrationInformation;
@@ -32,6 +35,9 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
     @Autowired
     private ApiToKeyFilingDatesMapper apiToKeyFilingDatesMapper;
 
+    @Autowired
+    private ApiToCurrentAppointmentsMapper apiToCurrentAppointmentsMapper;
+
     @Override
     public CompanyReport mapCompanyReport(CompanyReportApiData companyReportApiData) throws MapperException {
 
@@ -43,6 +49,8 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
             if (companyReportApiData.getCompanyProfileApi().getPreviousCompanyNames() != null) {
                 companyReport.setPreviousNames(setPreviousNames(companyReportApiData.getCompanyProfileApi().getPreviousCompanyNames()));
             }
+
+            companyReport.setCurrentAppointments(setCurrentAppointments(companyReportApiData.getOfficersApi()));
 
             if (companyReportApiData.getCompanyProfileApi().getAccounts() != null) {
                 companyReport.setKeyFilingDates(setKeyFilingDates(companyReportApiData.getCompanyProfileApi()));
@@ -67,5 +75,13 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
 
     private List<PreviousNames> setPreviousNames(List<PreviousCompanyNamesApi> previousCompanyNames) {
         return apiToPreviousNamesMapper.apiToPreviousNamesMapper(previousCompanyNames);
+    }
+
+    private CurrentAppointments setCurrentAppointments(OfficersApi officersApi) throws MapperException {
+        try {
+            return apiToCurrentAppointmentsMapper.apiToCurrentAppointmentsMapper(officersApi);
+        } catch (MapperException e) {
+            throw new MapperException("An error occurred when mapping to current appointments", e);
+        }
     }
 }
