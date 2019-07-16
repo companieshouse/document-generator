@@ -65,8 +65,7 @@ public class ProsecutionHandler {
      * @return the path to store the finished document
      */
     private String createLocationLink(ProsecutionType type) {
-        String documentId = String.format("%s-<number>", type.getResource());
-        return String.format("/%s/%s/%s", type.getAssetId(), type.getResource(), documentId);
+        return String.format("/%s/%s", type.getAssetId(), type.getResource());
     }
 
     /**
