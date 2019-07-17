@@ -40,38 +40,40 @@ public abstract class ApiToForeignCompanyDetailsMapper {
                 foreignAccountApi.getAccountPeriodFrom().getMonth() !=null &&
                 foreignAccountApi.getAccountPeriodFrom().getDay() !=null) {
 
-                formatAccountPeriod(foreignAccountApi, accounts);
+                formatAccountPeriodTo(foreignAccountApi, accounts);
             }
 
             if(foreignAccountApi.getAccountPeriodTo() != null &&
                 foreignAccountApi.getAccountPeriodTo().getMonth() !=null &&
                 foreignAccountApi.getAccountPeriodTo().getDay() !=null) {
 
-                formatAccountPeriod(foreignAccountApi, accounts);
+                formatAccountPeriodFrom(foreignAccountApi, accounts);
             }
         }
     }
 
-    private void formatAccountPeriod(ForeignAccountApi foreignAccountApi, Accounts accounts) {
+    private void formatAccountPeriodTo(ForeignAccountApi foreignAccountApi, Accounts accounts) {
 
         AccountPeriodTo accountPeriodTo = new AccountPeriodTo();
-        AccountPeriodFrom accountPeriodFrom = new AccountPeriodFrom();
-
-        String monthPeriodFromString = getNameOfMonthAccountPeriodFrom(foreignAccountApi);
         String monthPeriodToString = getNameOfMonthAccountPeriodTo(foreignAccountApi);
-
-        accountPeriodFrom.setDay((foreignAccountApi.getAccountPeriodFrom().getDay()));
-        //Sentence case month string
-        accountPeriodFrom.setMonth(monthPeriodFromString.substring(0,1).toUpperCase()
-            + monthPeriodFromString.substring(1).toLowerCase());
-
         accountPeriodTo.setDay((foreignAccountApi.getAccountPeriodTo().getDay()));
         //Sentence case month string
         accountPeriodTo.setMonth(monthPeriodToString.substring(0,1).toUpperCase()
             + monthPeriodToString.substring(1).toLowerCase());
 
-        accounts.setAccountPeriodFrom(accountPeriodFrom);
         accounts.setAccountPeriodTo(accountPeriodTo);
+    }
+
+    private void formatAccountPeriodFrom(ForeignAccountApi foreignAccountApi, Accounts accounts) {
+
+        AccountPeriodFrom accountPeriodFrom = new AccountPeriodFrom();
+        String monthPeriodFromString = getNameOfMonthAccountPeriodFrom(foreignAccountApi);
+        accountPeriodFrom.setDay((foreignAccountApi.getAccountPeriodFrom().getDay()));
+        //Sentence case month string
+        accountPeriodFrom.setMonth(monthPeriodFromString.substring(0,1).toUpperCase()
+            + monthPeriodFromString.substring(1).toLowerCase());
+
+        accounts.setAccountPeriodFrom(accountPeriodFrom);
     }
 
     private String getNameOfMonthAccountPeriodFrom(ForeignAccountApi foreignAccountApi) {
