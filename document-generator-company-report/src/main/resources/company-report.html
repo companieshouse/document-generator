@@ -4,6 +4,8 @@
 {{$previousNames := .company_report.previous_names}}
 {{$keyFilingDates := .company_report.key_filing_dates}}
 {{$officers := .company_report.current_appointments}}
+{{$pscs := .company_report.pscs}}
+
 <head>
     <meta charset="UTF-8">
     <title>{{$companyRegistrationInformation.company_name}}</title>
@@ -201,121 +203,238 @@
     </table>
     {{end}}
 
+    {{if or $officers $pscs}}
+        <h2 class="heading-large">People</h2>
+    {{end}}
+
     {{if $officers}}
-    <h2 class="heading-large">People</h2>
+        <h2 class="heading-medium">Officers:<br>
+            {{$officers.total_results}} officers / {{$officers.resigned_count}} resignations
+        </h2>
 
-    <h2 class="heading-medium">Officers:<br>
-        {{$officers.total_results}} officers / {{$officers.resigned_count}} resignations
-    </h2>
+            {{range $officers.current_officers}}
+                <ul class="list list-bullet">
 
-        {{range $officers.current_officers}}
-            <ul class="list list-bullet">
+                    <li>{{.officer_role}} {{.name}}
 
-                <li>{{.officer_role}} {{.name}}
-
-                    {{ if .resigned_on }}
-                    <span id="officer-status-tag-resigned" class="status-tag ceased-tag">Resigned</span>
-                    {{else}}
-                    <span id="officer-status-tag-active" class="status-tag">Active</span>
-                    {{end}}
-                </li>
-
-                {{if .nationality}}
-                <li>Nationality: {{.nationality}}</li>
-                {{end}}
-
-                {{if .appointed_on}}
-                    <li>Appointed: {{.appointed_on}}</li>
-                {{end}}
-
-                {{if .date_of_birth}}
-                <li>Date of birth: {{index .date_of_birth "month"}} {{index .date_of_birth "year"}} </li>
-                {{end}}
-
-                {{if .resigned_on}}
-                    <li>Resigned: {{.resigned_on}}</li>
-                {{end}}
-
-                {{if .address}}
-                <li>Correspondence address:
-
-                        {{if .address.care_of}}
-                        {{index .address "care_of"}},
+                        {{ if .resigned_on }}
+                        <span id="officer-status-tag-resigned" class="status-tag ceased-tag">Resigned</span>
+                        {{else}}
+                        <span id="officer-status-tag-active" class="status-tag">Active</span>
                         {{end}}
-
-                        {{if .address.po_box}}
-                        {{index .address "po_box"}},
-                        {{end}}
-
-                        {{if .address.premises}}
-                        {{index .address "premises"}},
-                        {{end}}
-
-                        {{if .address.address_line_1}}
-                        {{index .address "address_line_1"}},
-                        {{end}}
-
-                        {{if .address.address_line_2}}
-                        {{index .address "address_line_2"}},
-                        {{end}}
-
-                        {{if .address.locality}}
-                        {{index .address "locality"}},
-                        {{end}}
-
-                        {{if .address.region}}
-                        {{index .address "region"}},
-                        {{end}}
-
-                        {{if .address.country}}
-                        {{index .address "country"}},
-                        {{end}}
-
-                        {{if .address.postal_code}}
-                        {{index .address "postal_code"}}
-                        {{end}}
-
                     </li>
-                {{end}}
 
-                {{ if .country_of_residence}}
-                     <li>Country/State of Residence: {{.country_of_residence}}</li>
-                {{end}}
+                    {{if .nationality}}
+                    <li>Nationality: {{.nationality}}</li>
+                    {{end}}
 
-                {{if .occupation}}
-                <li>Occupation: {{.occupation}}</li>
-                {{end}}
+                    {{if .appointed_on}}
+                        <li>Appointed: {{.appointed_on}}</li>
+                    {{end}}
 
-                {{if .identification}}
+                    {{if .date_of_birth}}
+                    <li>Date of birth: {{index .date_of_birth "month"}} {{index .date_of_birth "year"}} </li>
+                    {{end}}
 
-                {{if .identification.identification_type}}
-                <li>{{.identification.identification_type}}</li>
-                {{end}}
+                    {{if .resigned_on}}
+                        <li>Resigned: {{.resigned_on}}</li>
+                    {{end}}
 
-                {{if .identification.place_registration}}
-                <li>Place of registration: {{.identification.place_registration}}</li>
-                {{end}}
+                    {{if .address}}
+                    <li>Correspondence address:
 
-                {{if .identification.place_registered}}
-                <li>Place registered: {{.identification.place_registered}}</li>
-                {{end}}
+                            {{if .address.care_of}}
+                            {{index .address "care_of"}},
+                            {{end}}
 
-                {{if .identification.registration_number}}
-                <li>Registration number: {{.identification.registration_number}}</li>
-                {{end}}
+                            {{if .address.po_box}}
+                            {{index .address "po_box"}},
+                            {{end}}
 
-                {{if .identification.legal_authority}}
-                <li>Legal authority: {{.identification.legal_authority}}</li>
-                {{end}}
+                            {{if .address.premises}}
+                            {{index .address "premises"}},
+                            {{end}}
 
-                {{if .identification.legal_form}}
-                <li>Legal form: {{.identification.legal_form}}</li>
-                {{end}}
+                            {{if .address.address_line_1}}
+                            {{index .address "address_line_1"}},
+                            {{end}}
+
+                            {{if .address.address_line_2}}
+                            {{index .address "address_line_2"}},
+                            {{end}}
+
+                            {{if .address.locality}}
+                            {{index .address "locality"}},
+                            {{end}}
+
+                            {{if .address.region}}
+                            {{index .address "region"}},
+                            {{end}}
+
+                            {{if .address.country}}
+                            {{index .address "country"}},
+                            {{end}}
+
+                            {{if .address.postal_code}}
+                            {{index .address "postal_code"}}
+                            {{end}}
+
+                        </li>
+                    {{end}}
+
+                    {{ if .country_of_residence}}
+                         <li>Country/State of Residence: {{.country_of_residence}}</li>
+                    {{end}}
+
+                    {{if .occupation}}
+                    <li>Occupation: {{.occupation}}</li>
+                    {{end}}
+
+                    {{if .identification}}
+
+                    {{if .identification.identification_type}}
+                    <li>{{.identification.identification_type}}</li>
+                    {{end}}
+
+                    {{if .identification.place_registration}}
+                    <li>Place of registration: {{.identification.place_registration}}</li>
+                    {{end}}
+
+                    {{if .identification.place_registered}}
+                    <li>Place registered: {{.identification.place_registered}}</li>
+                    {{end}}
+
+                    {{if .identification.registration_number}}
+                    <li>Registration number: {{.identification.registration_number}}</li>
+                    {{end}}
+
+                    {{if .identification.legal_authority}}
+                    <li>Legal authority: {{.identification.legal_authority}}</li>
+                    {{end}}
+
+                    {{if .identification.legal_form}}
+                    <li>Legal form: {{.identification.legal_form}}</li>
+                    {{end}}
 
                 {{end}}
 
             </ul>
             <hr>
+        {{end}}
+
+    <!--PSCS-->
+
+        {{if $pscs}}
+            <h2 class="heading-medium">Persons with significant control:<br>
+                {{if $pscs.active_count}} {{$pscs.active_count}} active person with significant control {{end}} / 0 active statements
+            </h2>
+
+    {{range $psc}}
+        <ul class="list list-bullet">
+
+            <li>{{.name}}
+
+                {{ if .ceased_on_on }}
+                <span id="officer-status-tag-resigned" class="status-tag ceased-tag">Ceased</span>
+                {{else}}
+                <span id="officer-status-tag-active" class="status-tag">Active</span>
+                {{end}}
+            </li>
+
+            {{if .address}}
+            <li>Correspondence address:
+
+                {{if .address.care_of}}
+                {{index .address "care_of"}},
+                {{end}}
+
+                {{if .address.po_box}}
+                {{index .address "po_box"}},
+                {{end}}
+
+                {{if .address.premises}}
+                {{index .address "premises"}},
+                {{end}}
+
+                {{if .address.address_line_1}}
+                {{index .address "address_line_1"}},
+                {{end}}
+
+                {{if .address.address_line_2}}
+                {{index .address "address_line_2"}},
+                {{end}}
+
+                {{if .address.locality}}
+                {{index .address "locality"}},
+                {{end}}
+
+                {{if .address.region}}
+                {{index .address "region"}},
+                {{end}}
+
+                {{if .address.country}}
+                {{index .address "country"}},
+                {{end}}
+
+                {{if .address.postal_code}}
+                {{index .address "postal_code"}}
+                {{end}}
+
+            </li>
+            {{end}}
+
+            {{if .notified_on}}
+            <li> Notified on: [{.notified_on}} </li>
+            {{end}}
+
+            {{if .ceaased_on}}
+            <li>Ceased on: {{.ceased_om}} </li>
+            {{end}}
+
+            {{if .date_of_birth}}
+            <li>Date of birth: {{.date_of_birth}}</li>
+            {{end}}
+
+            {{if .nationality}}
+            <li>Nationality: {{.nationality}}</li>
+            {{end}}
+
+            {{if .country_of_residence}}
+            <li>Country of residence: {{.country_of_residence}}</li>
+            {{end}}
+
+            {{if .identification.legal_authority}}
+            <li>Governing law: {{.identification.legal_authority}}</li>
+            {{end}}
+
+            {{if .identification.legal_form}}
+            <li>Governing law: {{.identification.legal_form}}</li>
+            {{end}}
+
+            {{if .identification.place_registration}}
+            <li>Place registered: {{.identification.place_registration}}</li>
+            {{end}}
+
+            {{if .identification.registration_number}}
+            <li>Registration number: {{.identification.registration_number}}</li>
+            {{end}}
+
+            {{if .natures_of_control}}
+            <li>Nature of control:
+
+                <ul class="list list-bullet">
+                    {{range .natures_of_control}}
+                    <li> {{.natures_of_control_descriptions}}</li>
+                    {{end}}
+                </ul>
+
+            </li>
+            {{end}}
+
+            {{if .identification.country_registered}}
+            <li>Incorporated in: {{.identification.country_registered}}</li>
+            {{end}}
+
         {{end}}
     {{end}}
 </main>
