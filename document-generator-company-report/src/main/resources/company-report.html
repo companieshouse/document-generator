@@ -324,10 +324,10 @@
 
     <!--PSCS-->
 
-        {{if $pscs}}
-            <h2 class="heading-medium">Persons with significant control:<br>
-                {{if $pscs.active_count}} {{$pscs.active_count}} active person with significant control {{end}} / 0 active statements
-            </h2>
+    {{if $pscs}}
+        <h2 class="heading-medium">Persons with significant control:<br>
+            {{if $pscs.active_count}} {{$pscs.active_count}} active person with significant control {{end}} / 0 active statements
+        </h2>
 
     {{range $pscs.items}}
         <ul class="list list-bullet">
@@ -421,7 +421,6 @@
                 <li>Registration number: {{.identification.registration_number}}</li>
                 {{end}}
 
-
                 {{if .identification.country_registered}}
                 <li>Incorporated in: {{.identification.country_registered}}</li>
                 {{end}}
@@ -442,7 +441,7 @@
     <hr>
     {{end}}
 
-        {{end}}
+    {{end}}
     {{end}}
 
 </main>
