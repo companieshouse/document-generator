@@ -56,15 +56,16 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
                 companyReport.setPreviousNames(setPreviousNames(companyReportApiData.getCompanyProfileApi().getPreviousCompanyNames()));
             }
 
-            if (companyReport.getCurrentAppointments() != null) {
-                companyReport.setCurrentAppointments(setCurrentAppointments(companyReportApiData.getOfficersApi()));
+            if(companyReportApiData.getOfficersApi() != null) {
+                if (companyReportApiData.getOfficersApi().getItems().size() > 0) {
+                    companyReport.setCurrentAppointments(setCurrentAppointments(companyReportApiData.getOfficersApi()));
+                }
             }
 
             if (companyReportApiData.getCompanyProfileApi().getAccounts() != null) {
                 companyReport.setKeyFilingDates(setKeyFilingDates(companyReportApiData.getCompanyProfileApi()));
             }
-
-            if (companyReport.getPscs() != null){
+            if(companyReportApiData.getPscsApi() != null) {
                 companyReport.setPscs(setPscs(companyReportApiData.getPscsApi()));
             }
         }
