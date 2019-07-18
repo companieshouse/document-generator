@@ -7,12 +7,13 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import java.util.List;
-
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.CurrentAppointments;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.keyfilingdates.KeyFilingDates;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.previousnames.PreviousNames;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.recentfilinghistory.RecentFilingHistory;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.RegistrationInformation;
+
+import java.util.List;
 
 @JsonInclude(Include.NON_NULL)
 @JsonTypeName("company_report")
@@ -30,6 +31,9 @@ public class CompanyReport {
 
     @JsonProperty("key_filing_dates")
     private KeyFilingDates keyFilingDates;
+
+    @JsonProperty("recent_filing_history")
+    private List<RecentFilingHistory> recentFilingHistory;
 
     public List<PreviousNames> getPreviousNames() {
         return previousNames;
@@ -61,5 +65,13 @@ public class CompanyReport {
 
     public void setKeyFilingDates(KeyFilingDates keyFilingDates) {
         this.keyFilingDates = keyFilingDates;
+    }
+
+    public List<RecentFilingHistory> getRecentFilingHistory() {
+        return recentFilingHistory;
+    }
+
+    public void setRecentFilingHistory(List<RecentFilingHistory> recentFilingHistory) {
+        this.recentFilingHistory = recentFilingHistory;
     }
 }

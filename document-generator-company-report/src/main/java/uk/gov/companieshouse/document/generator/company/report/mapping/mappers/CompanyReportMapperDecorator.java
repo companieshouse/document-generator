@@ -1,24 +1,27 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers;
 
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.company.PreviousCompanyNamesApi;
+import uk.gov.companieshouse.api.model.filinghistory.FilingApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.MapperException;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.currentappointments.ApiToCurrentAppointmentsMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.keyfilingdates.ApiToKeyFilingDatesMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.previousnames.ApiToPreviousNamesMapper;
+import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.recentfilinghistory.ApiToRecentFilingHistoryMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.registrationinformation.ApiToRegistrationInformationMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.CurrentAppointments;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.keyfilingdates.KeyFilingDates;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.previousnames.PreviousNames;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.recentfilinghistory.RecentFilingHistory;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.RegistrationInformation;
 
 import java.io.IOException;
+import java.util.List;
 
 public class CompanyReportMapperDecorator implements CompanyReportMapper {
 
@@ -38,6 +41,9 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
     @Autowired
     private ApiToCurrentAppointmentsMapper apiToCurrentAppointmentsMapper;
 
+    @Autowired
+    private ApiToRecentFilingHistoryMapper apiToRecentFilingHistoryMapper;
+
     @Override
     public CompanyReport mapCompanyReport(CompanyReportApiData companyReportApiData) throws MapperException {
 
@@ -54,6 +60,10 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
 
             if (companyReportApiData.getCompanyProfileApi().getAccounts() != null) {
                 companyReport.setKeyFilingDates(setKeyFilingDates(companyReportApiData.getCompanyProfileApi()));
+            }
+
+            if (companyReportApiData.getFilingApi() !=null) {
+                companyReport.setRecentFilingHistory(setRecentFilingHistory(companyReportApiData.getFilingApi()));
             }
         }
 
@@ -83,5 +93,9 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
         } catch (MapperException e) {
             throw new MapperException("An error occurred when mapping to current appointments", e);
         }
+    }
+
+    private List<RecentFilingHistory> setRecentFilingHistory(List<FilingApi> filingApi) throws MapperException {
+        return apiToRecentFilingHistoryMapper.apiToRecentFilingHistoryMapper(filingApi);
     }
 }
