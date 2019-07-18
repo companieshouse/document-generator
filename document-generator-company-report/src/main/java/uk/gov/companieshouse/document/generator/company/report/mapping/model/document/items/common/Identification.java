@@ -22,6 +22,9 @@ public class Identification {
     @JsonProperty("registration_number")
     private String registrationNumber;
 
+    @JsonProperty("country_registered")
+    private String countryRegistered;
+
     public String getIdentificationType() {
         return identificationType;
     }
@@ -68,5 +71,13 @@ public class Identification {
 
     public void setRegistrationNumber(String registrationNumber) {
         this.registrationNumber = registrationNumber;
+    }
+
+    public String getCountryRegistered() {
+        return countryRegistered;
+    }
+
+    public void setCountryRegistered(String countryRegistered) {
+        this.countryRegistered = countryRegistered;
     }
 }

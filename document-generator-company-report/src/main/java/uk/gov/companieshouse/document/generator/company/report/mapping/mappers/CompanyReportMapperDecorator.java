@@ -11,7 +11,6 @@ import uk.gov.companieshouse.document.generator.company.report.exception.MapperE
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.currentappointments.ApiToCurrentAppointmentsMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.keyfilingdates.ApiToKeyFilingDatesMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.previousnames.ApiToPreviousNamesMapper;
-import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.pscs.ApiToPscMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.pscs.ApiToPscsMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.registrationinformation.ApiToRegistrationInformationMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
@@ -57,13 +56,18 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
                 companyReport.setPreviousNames(setPreviousNames(companyReportApiData.getCompanyProfileApi().getPreviousCompanyNames()));
             }
 
-            companyReport.setCurrentAppointments(setCurrentAppointments(companyReportApiData.getOfficersApi()));
+            if(companyReportApiData.getOfficersApi() != null) {
+                if (companyReportApiData.getOfficersApi().getItems().size() > 0) {
+                    companyReport.setCurrentAppointments(setCurrentAppointments(companyReportApiData.getOfficersApi()));
+                }
+            }
 
             if (companyReportApiData.getCompanyProfileApi().getAccounts() != null) {
                 companyReport.setKeyFilingDates(setKeyFilingDates(companyReportApiData.getCompanyProfileApi()));
             }
-
-            companyReport.setPscs(setPscs(companyReportApiData.getPscsApi()));
+            if(companyReportApiData.getPscsApi() != null) {
+                companyReport.setPscs(setPscs(companyReportApiData.getPscsApi()));
+            }
         }
 
         return companyReport;
