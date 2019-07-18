@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
-import uk.gov.companieshouse.api.model.psc.PscApi;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.HandlerException;
@@ -44,7 +43,6 @@ public class CompanyReportDataHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
     private static final String PSCS_KEY = "persons_with_significant_control";
-    private static final String DATE_TIME_FORMAT = "dd-MMMM-yyyy";
     private static final String OFFICERS_KEY = "officers";
 
     public DocumentInfoResponse getCompanyReport(String resourceUri, String requestId)
