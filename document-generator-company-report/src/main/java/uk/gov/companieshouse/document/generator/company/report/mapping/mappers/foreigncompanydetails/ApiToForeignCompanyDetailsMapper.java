@@ -25,7 +25,8 @@ public abstract class ApiToForeignCompanyDetailsMapper {
         @Mapping(source = "originatingRegistry.country", target = "country"),
         @Mapping(source = "originatingRegistry.name", target = "name"),
         @Mapping(target = "accounts.accountPeriodFrom", ignore = true),
-        @Mapping(target = "accounts.accountPeriodTo", ignore = true),
+        @Mapping(target = "accounts.accountPeriodTo", ignore = true)
+
     })
 
     public abstract ForeignCompanyDetails apiToForeignCompanyDetails(ForeignCompanyDetailsApi foreignCompanyDetailsApi) throws MapperException;

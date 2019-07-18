@@ -81,6 +81,10 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
     }
 
     private ForeignCompanyDetails setForeignCompanyDetails(ForeignCompanyDetailsApi foreignCompanyDetailsApi) throws MapperException {
+        try {
         return apiToForeignCompanyDetailsMapper.apiToForeignCompanyDetails(foreignCompanyDetailsApi);
+        } catch (MapperException e) {
+            throw new MapperException("An error occurred when mapping to foreign company details", e);
+        }
     }
 }

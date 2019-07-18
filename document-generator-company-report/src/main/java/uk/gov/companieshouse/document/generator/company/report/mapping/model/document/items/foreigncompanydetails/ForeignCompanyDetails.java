@@ -3,6 +3,7 @@ package uk.gov.companieshouse.document.generator.company.report.mapping.model.do
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.items.AccountingRequirement;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.items.Accounts;
 
 @JsonInclude(Include.NON_NULL)
@@ -31,6 +32,9 @@ public class ForeignCompanyDetails {
 
     @JsonProperty("accounts")
     private Accounts accounts;
+
+    @JsonProperty("accounting_requirements")
+    private AccountingRequirement accountingRequirement;
 
     public String getCountry() {
         return country;
@@ -94,6 +98,14 @@ public class ForeignCompanyDetails {
 
     public void setAccounts(Accounts accounts) {
         this.accounts = accounts;
+    }
+
+    public AccountingRequirement getAccountingRequirement() {
+        return accountingRequirement;
+    }
+
+    public void setAccountingRequirement(AccountingRequirement accountingRequirement) {
+        this.accountingRequirement = accountingRequirement;
     }
 }
 
