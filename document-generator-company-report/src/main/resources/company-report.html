@@ -392,7 +392,7 @@
             {{end}}
 
             {{if .date_of_birth}}
-            <li>Date of birth: {{.date_of_birth}}</li>
+            <li>Date of birth: {{index .date_of_birth "month"}} {{index .date_of_birth "year"}} </li>
             {{end}}
 
             {{if .nationality}}
@@ -403,25 +403,29 @@
             <li>Country of residence: {{.country_of_residence}}</li>
             {{end}}
 
-            {{if .identification.legal_authority}}
-            <li>Governing law: {{.identification.legal_authority}}</li>
-            {{end}}
+            {{if .identification}}
 
-            {{if .identification.legal_form}}
-            <li>Governing law: {{.identification.legal_form}}</li>
-            {{end}}
+                {{if .identification.legal_authority}}
+                <li>Governing law: {{.identification.legal_authority}}</li>
+                {{end}}
 
-            {{if .identification.place_registration}}
-            <li>Place registered: {{.identification.place_registration}}</li>
-            {{end}}
+                {{if .identification.legal_form}}
+                <li>Governing law: {{.identification.legal_form}}</li>
+                {{end}}
 
-            {{if .identification.registration_number}}
-            <li>Registration number: {{.identification.registration_number}}</li>
-            {{end}}
+                {{if .identification.place_registration}}
+                <li>Place registered: {{.identification.place_registration}}</li>
+                {{end}}
+
+                {{if .identification.registration_number}}
+                <li>Registration number: {{.identification.registration_number}}</li>
+                {{end}}
 
 
-            {{if .identification.country_registered}}
-            <li>Incorporated in: {{.identification.country_registered}}</li>
+                {{if .identification.country_registered}}
+                <li>Incorporated in: {{.identification.country_registered}}</li>
+                {{end}}
+
             {{end}}
         </ul>
 
@@ -435,6 +439,7 @@
     </ul>
 
     </li>
+    <hr>
     {{end}}
 
         {{end}}
