@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(Include.NON_NULL)
-public class AccountPeriodTo {
+public class AccountPeriodDayMonth {
 
     @JsonProperty("day")
     private String day;
@@ -29,3 +29,4 @@ public class AccountPeriodTo {
         this.month = month;
     }
 }
+

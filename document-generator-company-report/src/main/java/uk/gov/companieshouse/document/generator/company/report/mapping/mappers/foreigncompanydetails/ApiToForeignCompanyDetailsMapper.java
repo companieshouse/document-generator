@@ -12,20 +12,19 @@ import uk.gov.companieshouse.api.model.company.foreigncompany.account.ForeignAcc
 import uk.gov.companieshouse.document.generator.company.report.exception.MapperException;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.ForeignCompanyDetails;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.items.Accounts;
-import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.items.accountsItems.AccountPeriodFrom;
-import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.items.accountsItems.AccountPeriodTo;
 
 import java.time.Month;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.items.accountsItems.AccountPeriodDayMonth;
 
 @RequestScope
 @Mapper(componentModel = "spring")
 public abstract class ApiToForeignCompanyDetailsMapper {
 
     @Mappings({
-        @Mapping(source = "originatingRegistry.country", target = "country"),
-        @Mapping(source = "originatingRegistry.name", target = "name"),
-        @Mapping(target = "accounts.accountPeriodFrom", ignore = true),
-        @Mapping(target = "accounts.accountPeriodTo", ignore = true)
+            @Mapping(source = "originatingRegistry.country", target = "country"),
+            @Mapping(source = "originatingRegistry.name", target = "name"),
+            @Mapping(target = "accounts.accountPeriodFrom", ignore = true),
+            @Mapping(target = "accounts.accountPeriodTo", ignore = true)
 
     })
 
@@ -33,55 +32,39 @@ public abstract class ApiToForeignCompanyDetailsMapper {
 
     @AfterMapping
     protected void convertForeignCompanyDetailsAccountsDates(ForeignAccountApi foreignAccountApi,
-                                                             @MappingTarget Accounts accounts) {
+            @MappingTarget Accounts accounts) {
 
-        if(foreignAccountApi != null) {
+        if (foreignAccountApi != null) {
 
-            if(foreignAccountApi.getAccountPeriodFrom() != null &&
-                foreignAccountApi.getAccountPeriodFrom().getMonth() !=null &&
-                foreignAccountApi.getAccountPeriodFrom().getDay() !=null) {
+            if (foreignAccountApi.getAccountPeriodFrom() != null &&
+                    foreignAccountApi.getAccountPeriodFrom().getMonth() != null &&
+                    foreignAccountApi.getAccountPeriodFrom().getDay() != null) {
 
-                formatAccountPeriodTo(foreignAccountApi, accounts);
+                accounts.setAccountPeriodFrom(formatAccountPeriod(foreignAccountApi.getAccountPeriodFrom().getDay(), foreignAccountApi.getAccountPeriodFrom().getMonth()));
             }
 
-            if(foreignAccountApi.getAccountPeriodTo() != null &&
-                foreignAccountApi.getAccountPeriodTo().getMonth() !=null &&
-                foreignAccountApi.getAccountPeriodTo().getDay() !=null) {
+            if (foreignAccountApi.getAccountPeriodTo() != null &&
+                    foreignAccountApi.getAccountPeriodTo().getMonth() != null &&
+                    foreignAccountApi.getAccountPeriodTo().getDay() != null) {
 
-                formatAccountPeriodFrom(foreignAccountApi, accounts);
+                accounts.setAccountPeriodTo(formatAccountPeriod(foreignAccountApi.getAccountPeriodTo().getDay(), foreignAccountApi.getAccountPeriodTo().getMonth()));
             }
         }
     }
 
-    private void formatAccountPeriodTo(ForeignAccountApi foreignAccountApi, Accounts accounts) {
+    private AccountPeriodDayMonth formatAccountPeriod(String day, String month) {
 
-        AccountPeriodTo accountPeriodTo = new AccountPeriodTo();
-        String monthPeriodToString = getNameOfMonthAccountPeriodTo(foreignAccountApi);
-        accountPeriodTo.setDay((foreignAccountApi.getAccountPeriodTo().getDay()));
+        AccountPeriodDayMonth accountPeriod = new AccountPeriodDayMonth();
+        String monthPeriodToString = getNameOfMonth(month);
+        accountPeriod.setDay(day);
         //Sentence case month string
-        accountPeriodTo.setMonth(monthPeriodToString.substring(0,1).toUpperCase()
-            + monthPeriodToString.substring(1).toLowerCase());
+        accountPeriod.setMonth(monthPeriodToString.substring(0, 1).toUpperCase()
+                + monthPeriodToString.substring(1).toLowerCase());
 
-        accounts.setAccountPeriodTo(accountPeriodTo);
+        return accountPeriod;
     }
 
-    private void formatAccountPeriodFrom(ForeignAccountApi foreignAccountApi, Accounts accounts) {
-
-        AccountPeriodFrom accountPeriodFrom = new AccountPeriodFrom();
-        String monthPeriodFromString = getNameOfMonthAccountPeriodFrom(foreignAccountApi);
-        accountPeriodFrom.setDay((foreignAccountApi.getAccountPeriodFrom().getDay()));
-        //Sentence case month string
-        accountPeriodFrom.setMonth(monthPeriodFromString.substring(0,1).toUpperCase()
-            + monthPeriodFromString.substring(1).toLowerCase());
-
-        accounts.setAccountPeriodFrom(accountPeriodFrom);
-    }
-
-    private String getNameOfMonthAccountPeriodFrom(ForeignAccountApi foreignAccountApi) {
-        return Month.of(Integer.valueOf(foreignAccountApi.getAccountPeriodFrom().getMonth())).name();
-    }
-
-    private String getNameOfMonthAccountPeriodTo(ForeignAccountApi foreignAccountApi) {
-        return Month.of(Integer.valueOf(foreignAccountApi.getAccountPeriodTo().getMonth())).name();
+    private String getNameOfMonth(String name) {
+        return String.valueOf(Month.of(Integer.valueOf(name)));
     }
 }
