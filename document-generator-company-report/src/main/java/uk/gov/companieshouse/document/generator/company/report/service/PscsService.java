@@ -23,7 +23,6 @@ public class PscsService {
 
     public PscsApi getPscs(String companyNumber) throws ServiceException {
 
-        PscsApi pscsApi;
 
         ApiClient apiClient = companyReportApiClientService.getApiClient();
 
@@ -34,13 +33,12 @@ public class PscsService {
             PscsList pscsList = apiClient.pscs().list(uri);
             pscsList.addQueryParams("items_per_page", "100");
 
-            pscsApi = pscsList.execute().getData();
+            return pscsList.execute().getData();
         } catch (ApiErrorResponseException e) {
             throw new ServiceException("Error retrieving pscs", e);
         } catch (URIValidationException e) {
 
             throw new ServiceException("Invalid URI for pscs resource", e);
         }
-        return pscsApi;
     }
 }

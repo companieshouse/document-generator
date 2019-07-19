@@ -81,8 +81,7 @@ public class CompanyReportDataHandler {
 
         if (companyProfileApi.getLinks().containsKey(PSCS_KEY)) {
             try {
-                PscsApi pscsApi = getPscs(companyNumber, requestId);
-                companyReportApiData.setPscsApi(pscsApi);
+                companyReportApiData.setPscsApi(getPscs(companyNumber, requestId));
             } catch (HandlerException he) {
                 LOG.infoContext(requestId,"Failed to get PSCs: ", getDebugMap(companyNumber));
             }
@@ -108,15 +107,6 @@ public class CompanyReportDataHandler {
 
         String reportToJson;
         ObjectMapper mapper = new ObjectMapper();
-
-
-//        //TODO - Remove when definitly not required for any date mapping in company report
-
-//        JavaTimeModule javaTimeModule = new JavaTimeModule();
-//        javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)));
-//        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)));
-//        mapper.registerModule(javaTimeModule);
-//        mapper.setDateFormat(new SimpleDateFormat(DATE_TIME_FORMAT));
 
         try {
             LOG.infoContext(requestId,"Attempting to convert company report to JSON",  getDebugMap(companyNumber));

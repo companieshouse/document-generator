@@ -9,7 +9,7 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 public class Psc {
 
     @JsonProperty("address")
-    private uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.Address address;
+    private Address address;
 
     @JsonProperty("ceased_on")
     private String ceasedOn;
@@ -33,7 +33,7 @@ public class Psc {
     private String notifiedOn;
 
     @JsonProperty("identification")
-    private uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.Identification identification;
+    private Identification identification;
 
     public Address getAddress() {
         return address;
