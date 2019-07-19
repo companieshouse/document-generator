@@ -4,6 +4,7 @@
 {{$previousNames := .company_report.previous_names}}
 {{$keyFilingDates := .company_report.key_filing_dates}}
 {{$foreignCompanyDetails := .company_report.foreign_company_details}}
+{{$foreignCompanyAccounts := .company_report.foreign_company_details.accounts}}
 <head>
     <meta charset="UTF-8">
     <title>{{$companyRegistrationInformation.company_name}}</title>
@@ -131,65 +132,65 @@
                 {{if $companyRegistrationInformation.status.company_status_detail}}/{{$companyRegistrationInformation.status.company_status_detail}}{{end}}</li>
         {{end}}
     </ul>
-
-
+    
     {{if $foreignCompanyDetails}}
 
         {{if (eq $foreignCompanyDetails.is_a_credit_financial_institution true)}}
             This company is a credit/financial institution
         {{end}}
 
-        {{if and $foreignCompanyDetails.accounting_requirement.foreign_account_type $foreignCompanyDetails.accounting_requirement.terms_of_account_publication}}
+        {{if and $foreignCompanyDetails.accounting_requirements.foreign_account_type $foreignCompanyDetails.accounting_requirements.terms_of_account_publication}}
 
-                {{if eq $foreignCompanyDetails.accounting_requirement.foreign_account_type "accounting-requirements-of-originating-country-apply"}}
+            {{if eq $foreignCompanyDetails.accounting_requirements.foreign_account_type "accounting-requirements-of-originating-country-apply"}}
 
-                     {{if eq $foreignCompanyDetails.accounting_requirement.terms_of_account_publication "accounting-publication-date-does-not-need-to-be-supplied-by-company"}}
+                {{if eq $foreignCompanyDetails.accounting_requirements.terms_of_account_publication "accounting-publication-date-does-not-need-to-be-supplied-by-company"}}
 
-                            <h3 class="heading-small">Accounts</h3>
-                            {{if $keyFilingDates.last_accounts_made_up_to}}
-                                Last accounts made up to: {{$keyFilingDates.last_accounts_made_up_to}}
-                            {{end}}
+                    {{if $keyFilingDates.last_accounts_made_up_to}}
+                        <h3 class="heading-small">Accounts</h3>
+                        Last accounts made up to: {{$keyFilingDates.last_accounts_made_up_to}}
+                    {{end}}
 
-                      {{end}}
-
-                      {{ if eq $foreignCompanyDetails.accounting_requirement.terms_of_account_publication "accounting-publication-date-supplied-by-company"}}
-
-                            <h3 class="heading-small">Accounts</h3>
-                            {{if $foreignCompanyDetails.accounts}}
-                                <p>Required to publish accounts from {{$foreignCompanyDetails.accounts.account_period_from.day}}
-                                    {{$foreignCompanyDetails.accounts.account_period_from.month}} to {{$foreignCompanyDetails.accounts.account_period_to.day}}
-                                    {{$foreignCompanyDetails.accounts.account_period_to.month}}<br>within {{$foreignCompanyDetails.accounts.must_file_within.months}}
-                                    months under parent law</p>
-                            {{end}}
-
-                            {{if $keyFilingDates.last_accounts_made_up_to}}
-                                Last accounts made up to: {{$keyFilingDates.last_accounts_made_up_to}}
-                            {{end}}
-
-                      {{end}}
                 {{end}}
 
+                {{if eq $foreignCompanyDetails.accounting_requirements.terms_of_account_publication "accounts-publication-date-supplied-by-company"}}
 
-                {{if eq $foreignCompanyDetails.accounting_requirement.foreign_account_type "accounting-requirements-of-originating-country-do-not-apply"}}
-                    {{ if eq $foreignCompanyDetails.accounting_requirement.terms_of_account_publication "accounting-reference-date-allocated-by-companies-house"}}
+                    <h3 class="heading-small">Accounts</h3>
+                    {{if $foreignCompanyDetails.accounts}}
+                        <p>Required to publish accounts from {{$foreignCompanyDetails.accounts.account_period_from.day}}
+                            {{$foreignCompanyDetails.accounts.account_period_from.month}} to {{$foreignCompanyDetails.accounts.account_period_to.day}}
+                            {{$foreignCompanyDetails.accounts.account_period_to.month}}<br>within {{$foreignCompanyDetails.accounts.must_file_within.months}}
+                            months under parent law</p>
+                    {{end}}
 
+                    {{if $keyFilingDates.last_accounts_made_up_to}}
+                        Last accounts made up to: {{$keyFilingDates.last_accounts_made_up_to}}
+                    {{end}}
+
+                {{end}}
+            {{end}}
+
+            {{if eq $foreignCompanyDetails.accounting_requirements.foreign_account_type "accounting-requirements-of-originating-country-do-not-apply"}}
+                {{ if eq $foreignCompanyDetails.accounting_requirements.terms_of_account_publication "accounting-reference-date-allocated-by-companies-house"}}
+
+                    {{if or $keyFilingDates.next_made_up_to $keyFilingDates.last_accounts_made_up_to}}
                         <h3 class="heading-small">Accounts</h3>
+                    {{end}}
 
-                        {{if $keyFilingDates.last_accounts_made_up_to}}
-                            Last accounts made up to: {{$keyFilingDates.last_accounts_made_up_to}}
-                        {{end}}
-
-                        {{if $keyFilingDates.next_accounts_due}}
-                            Next accounts due: {{$keyFilingDates.next_accounts_due}}
-                        {{end}}
+                    {{if $keyFilingDates.next_made_up_to}}
+                        Next accounts made up to: {{$keyFilingDates.next_made_up_to}}
+                    {{end}}
+                         <br>
+                    {{if $keyFilingDates.last_accounts_made_up_to}}
+                        Last accounts made up to: {{$keyFilingDates.last_accounts_made_up_to}}
                     {{end}}
                 {{end}}
+            {{end}}
         {{end}}
     {{end}}
 
     {{if not $foreignCompanyDetails }}
 
-        (if or ($keyFilingDates.last_accounts_made_up_to) ($keyFilingDates.next_accounts_due) ($keyFilingDates.accounting_reference_date.day) }}
+        {{if or ($keyFilingDates.last_accounts_made_up_to) ($keyFilingDates.next_accounts_due) ($keyFilingDates.accounting_reference_date.day) }}
             <h3 class="heading-small">Key filing dates</h3>
             <ul class="list list-bullet">
                 {{if $keyFilingDates.accounting_reference_date.day}}
