@@ -45,7 +45,6 @@ public abstract class ApiToRecentFilingHistoryMapper {
 
     private String setFilingDescripton(String description, Map<String, Object> descriptionValues) {
 
-        //TODO refactor for better implementation
         if (description.equals("legacy")) {
             return descriptionValues.get("description").toString();
         }

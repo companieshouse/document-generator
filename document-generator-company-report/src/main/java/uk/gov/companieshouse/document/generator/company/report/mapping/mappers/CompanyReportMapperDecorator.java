@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.company.PreviousCompanyNamesApi;
-import uk.gov.companieshouse.api.model.filinghistory.FilingApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.MapperException;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.currentappointments.ApiToCurrentAppointmentsMapper;
@@ -17,13 +16,10 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.CurrentAppointments;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.keyfilingdates.KeyFilingDates;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.previousnames.PreviousNames;
-import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.recentfilinghistory.RecentFilingHistory;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.RegistrationInformation;
 
 import java.io.IOException;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CompanyReportMapperDecorator implements CompanyReportMapper {
 
@@ -65,7 +61,7 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
             }
 
             if (companyReportApiData.getFilingHistoryApi() !=null) {
-                companyReport.setRecentFilingHistory(setRecentFilingHistory(companyReportApiData.getFilingHistoryApi().getItems()));
+                companyReport.setRecentFilingHistory(apiToRecentFilingHistoryMapper.apiToRecentFilingHistoryMapperList(companyReportApiData.getFilingHistoryApi().getItems()));
             }
         }
 
@@ -95,14 +91,5 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
         } catch (MapperException e) {
             throw new MapperException("An error occurred when mapping to current appointments", e);
         }
-    }
-
-    private List<RecentFilingHistory> setRecentFilingHistory(List<FilingApi> items) throws MapperException {
-
-        List<RecentFilingHistory> mappedFiling = apiToRecentFilingHistoryMapper.apiToRecentFilingHistoryMapperList(items);
-
-        return mappedFiling.stream()
-            .sorted(Comparator.comparing(RecentFilingHistory::getDate, Comparator.nullsLast(Comparator.reverseOrder())))
-            .collect(Collectors.toList());
     }
 }

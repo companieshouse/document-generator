@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
+import uk.gov.companieshouse.api.model.filinghistory.FilingApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.HandlerException;
@@ -22,9 +23,12 @@ import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRes
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static uk.gov.companieshouse.document.generator.company.report.CompanyReportDocumentInfoServiceImpl.MODULE_NAME_SPACE;
 
@@ -106,13 +110,6 @@ public class CompanyReportDataHandler {
         String reportToJson;
         ObjectMapper mapper = new ObjectMapper();
 
-        //TODO - Remove when definitly not required for any date mapping in company report
-//        JavaTimeModule javaTimeModule = new JavaTimeModule();
-//        javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)));
-//        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)));
-//        mapper.registerModule(javaTimeModule);
-//        mapper.setDateFormat(new SimpleDateFormat(DATE_TIME_FORMAT));
-
         try {
             LOG.infoContext(requestId,"Attempting to convert company report to JSON",  getDebugMap(companyNumber));
             reportToJson = mapper.writeValueAsString(companyReport);
@@ -148,10 +145,23 @@ public class CompanyReportDataHandler {
     private FilingHistoryApi getFilingHistory(String companyNumber, String requestId) throws HandlerException {
         try {
             LOG.infoContext(requestId, "Attempting to retrieve company filing history", getDebugMap(companyNumber));
-            return recentFilingHistoryService.getFilingHistory(companyNumber);
+            return sortFilingHistory(recentFilingHistoryService.getFilingHistory(companyNumber));
         } catch (ServiceException | ApiErrorResponseException | URIValidationException se) {
             throw new HandlerException("error occurred obtaining the company filing history", se);
         }
+    }
+
+    private FilingHistoryApi sortFilingHistory(FilingHistoryApi filingHistory) {
+
+        FilingHistoryApi filingHistoryApi = new FilingHistoryApi();
+
+        List<FilingApi> filings = filingHistory.getItems().stream()
+            .sorted(Comparator.comparing(FilingApi::getDate, Comparator.nullsLast(Comparator.reverseOrder())))
+            .collect(Collectors.toList());
+
+        filingHistoryApi.setItems(filings);
+
+        return filingHistoryApi;
     }
 
     private String createPathString() {
