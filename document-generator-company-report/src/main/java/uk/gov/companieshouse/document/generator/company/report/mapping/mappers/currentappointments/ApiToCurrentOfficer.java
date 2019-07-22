@@ -7,16 +7,11 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.Mappings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.annotation.RequestScope;
-import org.springframework.web.util.UriTemplate;
-import uk.gov.companieshouse.api.ApiClient;
-import uk.gov.companieshouse.api.error.ApiErrorResponseException;
-import uk.gov.companieshouse.api.handler.exception.URIValidationException;
-import uk.gov.companieshouse.api.model.officerappointments.OfficerAppointmentsApi;
 import uk.gov.companieshouse.api.model.officers.CompanyOfficerApi;
 import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
 import uk.gov.companieshouse.document.generator.company.report.exception.MapperException;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.DateDayMonthYear;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.items.CurrentOfficer;
-import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.items.DateOfBirth;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyReportApiClientService;
 
 import java.time.LocalDate;
@@ -64,7 +59,7 @@ public abstract class ApiToCurrentOfficer {
 
         if (companyOfficerApi.getDateOfBirth() != null) {
 
-            DateOfBirth dob = new DateOfBirth();
+            DateDayMonthYear dob = new DateDayMonthYear();
             String monthString = getNameOfMonth(companyOfficerApi);
 
             dob.setYear(companyOfficerApi.getDateOfBirth().getYear());

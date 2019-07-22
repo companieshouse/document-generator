@@ -17,7 +17,7 @@ import org.springframework.web.context.annotation.RequestScope;
 import uk.gov.companieshouse.api.model.psc.PscApi;
 import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
 import uk.gov.companieshouse.document.generator.company.report.exception.MapperException;
-import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.DateOfBirth;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.DateDayMonthYear;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.pscs.items.NaturesOfControl;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.pscs.items.Psc;
 
@@ -66,7 +66,7 @@ public abstract class ApiToPscMapper {
     protected void setDateOfBirth(PscApi pscApi, @MappingTarget Psc psc) {
 
         if (pscApi != null && pscApi.getDateOfBirth() != null) {
-            DateOfBirth dob = new DateOfBirth();
+            DateDayMonthYear dob = new DateDayMonthYear();
             String monthString = getNameOfMonth(pscApi);
 
             dob.setYear(pscApi.getDateOfBirth().getYear());

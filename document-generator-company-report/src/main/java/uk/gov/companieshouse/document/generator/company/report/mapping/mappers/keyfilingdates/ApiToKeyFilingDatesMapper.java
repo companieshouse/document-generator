@@ -10,8 +10,8 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.Mappings;
 import org.springframework.web.context.annotation.RequestScope;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.DateDayMonthYear;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.keyfilingdates.KeyFilingDates;
-import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.keyfilingdates.items.AccountingReferenceDate;
 
 @RequestScope
 @Mapper(componentModel = "spring")
@@ -91,7 +91,7 @@ public abstract class ApiToKeyFilingDatesMapper {
     }
 
     private void formatAccountingReferenceDate(CompanyProfileApi companyProfileApi, @MappingTarget KeyFilingDates keyFilingDates) {
-        AccountingReferenceDate accountingReferenceDate = new AccountingReferenceDate();
+        DateDayMonthYear accountingReferenceDate = new DateDayMonthYear();
         String monthString = getNameOfMonth(companyProfileApi);
 
         accountingReferenceDate.setDay(companyProfileApi.getAccounts().getAccountingReferenceDate().getDay());

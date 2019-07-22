@@ -3,7 +3,7 @@ package uk.gov.companieshouse.document.generator.company.report.mapping.model.do
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.Address;
-import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.DateOfBirth;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.DateDayMonthYear;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.Identification;
 
 public class Psc {
@@ -18,7 +18,7 @@ public class Psc {
     private String countryOfResidence;
 
     @JsonProperty("date_of_birth")
-    private DateOfBirth dateOfBirth;
+    private DateDayMonthYear dateOfBirth;
 
     @JsonProperty("name")
     private String name;
@@ -51,11 +51,11 @@ public class Psc {
         this.countryOfResidence = countryOfResidence;
     }
 
-    public DateOfBirth getDateOfBirth() {
+    public DateDayMonthYear getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(DateOfBirth dateOfBirth) {
+    public void setDateOfBirth(DateDayMonthYear dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 

@@ -2,7 +2,7 @@ package uk.gov.companieshouse.document.generator.company.report.mapping.model.do
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class DateOfBirth {
+public class DateDayMonthYear {
 
     @JsonProperty("day")
     private String day;
