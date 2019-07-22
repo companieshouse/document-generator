@@ -320,28 +320,29 @@
         {{end}}
     {{end}}
 
-
-    <h3 class="heading-small">Recent Filing History</h3>
-    <table>
-        <caption class="visually-hidden">Recent Filing History</caption>
-        <!-- this hidden caption is needed for screen-readers-->
-        <thead>
-        <tr>
-            <th scope="col">Date</th>
-            <th scope="col">Form</th>
-            <th scope="col">Description</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{- range $recentFilingHistory -}}
-        <tr>
-            <td>{{.date}}</td>
-            <td scope="row">{{.form}}</td>
-            <td>{{.description}}</td>
-        </tr>
-        {{end}}
-        </tbody>
-    </table>
+    {{if $recentFilingHistory}}
+        <h3 class="heading-small">Recent Filing History</h3>
+        <table>
+            <caption class="visually-hidden">Recent Filing History</caption>
+            <!-- this hidden caption is needed for screen-readers-->
+            <thead>
+            <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Form</th>
+                <th scope="col">Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{- range $recentFilingHistory -}}
+            <tr>
+                <td>{{.date}}</td>
+                <td scope="row">{{.form}}</td>
+                <td>{{.description}}</td>
+            </tr>
+            {{end}}
+            </tbody>
+        </table>
+    {{end}}
 
 </main>
 </body>
