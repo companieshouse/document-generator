@@ -1,8 +1,5 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.registrationinformation;
 
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -20,7 +17,9 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequestScope
 @Mapper(componentModel = "spring")
@@ -83,8 +82,7 @@ public abstract class ApiToRegistrationInformationMapper {
     protected void setIncorporationDateLabel(CompanyProfileApi companyProfileApi, @MappingTarget RegistrationInformation registrationInformation) {
 
         if (companyProfileApi != null && companyProfileApi.getDateOfCreation() != null) {
-
-            registrationInformation.setDateOfincorporationLabel(retrieveApiEnumerationDescription
+            registrationInformation.setDateOfIncorporationLabel(retrieveApiEnumerationDescription
                     .getApiEnumerationDescription(CONSTANTS, COMPANY_BIRTH_TYPE, companyProfileApi.getType(), getDebugMap(companyProfileApi.getType())));
         }
     }

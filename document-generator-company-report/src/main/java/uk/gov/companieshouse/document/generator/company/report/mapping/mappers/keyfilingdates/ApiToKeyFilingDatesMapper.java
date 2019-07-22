@@ -34,6 +34,10 @@ public abstract class ApiToKeyFilingDatesMapper {
 
             if (companyProfileApi.getAccounts() != null) {
 
+                if(companyProfileApi.getAccounts().getNextMadeUpTo() != null) {
+                    formatNextMadeupTo(companyProfileApi, keyFilingDates);
+                }
+
                 if (companyProfileApi.getAccounts().getLastAccounts() != null &&
                         companyProfileApi.getAccounts().getLastAccounts().getMadeUpTo() != null) {
 
@@ -43,7 +47,7 @@ public abstract class ApiToKeyFilingDatesMapper {
                 if (companyProfileApi.getAccounts().getNextAccounts() != null &&
                         companyProfileApi.getAccounts().getNextAccounts().getDueOn() != null) {
 
-                    formatNextAccountsMadeUpTo(companyProfileApi, keyFilingDates);
+                    formatNextAccountsDueOn(companyProfileApi, keyFilingDates);
                 }
 
                 if (companyProfileApi.getAccounts().getAccountingReferenceDate() != null) {
@@ -102,9 +106,14 @@ public abstract class ApiToKeyFilingDatesMapper {
         keyFilingDates.setAccountingReferenceDate(accountingReferenceDate);
     }
 
-    private void formatNextAccountsMadeUpTo(CompanyProfileApi companyProfileApi, @MappingTarget KeyFilingDates keyFilingDates) {
+    private void formatNextAccountsDueOn(CompanyProfileApi companyProfileApi, @MappingTarget KeyFilingDates keyFilingDates) {
         LocalDate nextAccountsDue = companyProfileApi.getAccounts().getNextAccounts().getDueOn();
         keyFilingDates.setNextAccountsDue(nextAccountsDue.format(getFormatter()));
+    }
+
+    private void formatNextMadeupTo(CompanyProfileApi companyProfileApi, @MappingTarget KeyFilingDates keyFilingDates) {
+        LocalDate nextMadeUpTo = companyProfileApi.getAccounts().getNextMadeUpTo();
+        keyFilingDates.setNextMadeUpTo(nextMadeUpTo.format(getFormatter()));
     }
 
     private void formatLastAccountsMadeUpTo(CompanyProfileApi companyProfileApi, @MappingTarget KeyFilingDates keyFilingDates) {
