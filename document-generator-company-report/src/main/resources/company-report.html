@@ -4,6 +4,7 @@
 {{$previousNames := .company_report.previous_names}}
 {{$keyFilingDates := .company_report.key_filing_dates}}
 {{$officers := .company_report.current_appointments}}
+{{$recentFilingHistory := .company_report.recent_filing_history}}
 <head>
     <meta charset="UTF-8">
     <title>{{$companyRegistrationInformation.company_name}}</title>
@@ -318,6 +319,30 @@
             <hr>
         {{end}}
     {{end}}
+
+
+    <h3 class="heading-small">Recent Filing History</h3>
+    <table>
+        <caption class="visually-hidden">Recent Filing History</caption>
+        <!-- this hidden caption is needed for screen-readers-->
+        <thead>
+        <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Form</th>
+            <th scope="col">Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{- range $recentFilingHistory -}}
+        <tr>
+            <td>{{.date}}</td>
+            <td scope="row">{{.form}}</td>
+            <td>{{.description}}</td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+
 </main>
 </body>
 </html>

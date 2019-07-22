@@ -21,7 +21,9 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.RegistrationInformation;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CompanyReportMapperDecorator implements CompanyReportMapper {
 
@@ -62,8 +64,8 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
                 companyReport.setKeyFilingDates(setKeyFilingDates(companyReportApiData.getCompanyProfileApi()));
             }
 
-            if (companyReportApiData.getFilingApi() !=null) {
-                companyReport.setRecentFilingHistory(setRecentFilingHistory(companyReportApiData.getFilingApi()));
+            if (companyReportApiData.getFilingHistoryApi() !=null) {
+                companyReport.setRecentFilingHistory(setRecentFilingHistory(companyReportApiData.getFilingHistoryApi().getItems()));
             }
         }
 
@@ -95,7 +97,12 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
         }
     }
 
-    private List<RecentFilingHistory> setRecentFilingHistory(List<FilingApi> filingApi) throws MapperException {
-        return apiToRecentFilingHistoryMapper.apiToRecentFilingHistoryMapper(filingApi);
+    private List<RecentFilingHistory> setRecentFilingHistory(List<FilingApi> items) throws MapperException {
+
+        List<RecentFilingHistory> mappedFiling = apiToRecentFilingHistoryMapper.apiToRecentFilingHistoryMapperList(items);
+
+        return mappedFiling.stream()
+            .sorted(Comparator.comparing(RecentFilingHistory::getDate, Comparator.nullsLast(Comparator.reverseOrder())))
+            .collect(Collectors.toList());
     }
 }

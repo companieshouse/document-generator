@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.recentfilinghistory;
 
+import org.apache.commons.lang.text.StrSubstitutor;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -34,16 +35,25 @@ public abstract class ApiToRecentFilingHistoryMapper {
         @Mapping(source = "type", target = "form")
     })
     public abstract RecentFilingHistory apiToRecentFilingHistoryMapper(FilingApi filingApi) throws MapperException;
-    public abstract List<RecentFilingHistory> apiToRecentFilingHistoryMapperList(List<FilingApi> filingApis) throws MapperException;
+    public abstract List<RecentFilingHistory> apiToRecentFilingHistoryMapperList(List<FilingApi> filingApi) throws MapperException;
 
     @AfterMapping
     protected void convertFilingDescription(FilingApi filingApi, @MappingTarget RecentFilingHistory recentFilingHistory) {
-        if (filingApi != null && filingApi.getDescription() !=null) {
-            recentFilingHistory.setDescription(retrieveApiEnumerationDescription
-                .getApiEnumerationDescription(FILING_HISTORY_DESCRIPTIONS, "description",
-                    filingApi.getDescription(),
-                    getDebugMap(filingApi.getDescription())));
+
+        recentFilingHistory.setDescription(setFilingDescripton(filingApi.getDescription(), filingApi.getDescriptionValues()));
+    }
+
+    private String setFilingDescripton(String description, Map<String, Object> descriptionValues) {
+
+        //TODO refactor for better implementation
+        if (description.equals("legacy")) {
+            return descriptionValues.get("description").toString();
         }
+
+        String filingDescription = retrieveApiEnumerationDescription
+            .getApiEnumerationDescription(FILING_HISTORY_DESCRIPTIONS, "description", description, getDebugMap(description) );
+
+        return populateParameters(filingDescription, descriptionValues);
     }
 
     @AfterMapping
@@ -55,6 +65,15 @@ public abstract class ApiToRecentFilingHistoryMapper {
         }
     }
 
+    private DateTimeFormatter getFormatter() {
+        return DateTimeFormatter.ofPattern(D_MMMM_UUU);
+    }
+
+    private String populateParameters(Object description, Map<String, Object> parameters) {
+        StrSubstitutor sub = new StrSubstitutor(parameters, "{", "}");
+        return sub.replace(description);
+    }
+
     private Map<String, String> getDebugMap(String debugString) {
 
         Map<String, String> debugMap = new HashMap<>();
@@ -63,7 +82,4 @@ public abstract class ApiToRecentFilingHistoryMapper {
         return debugMap;
     }
 
-    private DateTimeFormatter getFormatter() {
-        return DateTimeFormatter.ofPattern(D_MMMM_UUU);
-    }
 }

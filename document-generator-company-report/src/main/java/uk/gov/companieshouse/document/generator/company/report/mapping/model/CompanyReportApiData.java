@@ -1,7 +1,7 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.model;
 
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
-import uk.gov.companieshouse.api.model.filinghistory.FilingApi;
+import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
 
 public class CompanyReportApiData {
@@ -10,7 +10,7 @@ public class CompanyReportApiData {
 
     private OfficersApi officersApi;
 
-    private FilingApi filingApi;
+    private FilingHistoryApi filingHistoryApi;
 
     public CompanyProfileApi getCompanyProfileApi() {
         return companyProfileApi;
@@ -28,11 +28,11 @@ public class CompanyReportApiData {
         this.officersApi = officerApi;
     }
 
-    public FilingApi getFilingApi() {
-        return filingApi;
+    public FilingHistoryApi getFilingHistoryApi() {
+        return filingHistoryApi;
     }
 
-    public void setFilingApi(FilingApi filingApi) {
-        this.filingApi = filingApi;
+    public void setFilingHistoryApi(FilingHistoryApi filingHistoryApi) {
+        this.filingHistoryApi = filingHistoryApi;
     }
 }

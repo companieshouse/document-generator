@@ -1,12 +1,11 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.recentfilinghistory;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class RecentFilingHistory {
+
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonProperty("date")
