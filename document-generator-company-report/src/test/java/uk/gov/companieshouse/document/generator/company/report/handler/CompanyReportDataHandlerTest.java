@@ -8,15 +8,21 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
+import uk.gov.companieshouse.api.model.filinghistory.FilingApi;
+import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.CompanyReportMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
 import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
+import uk.gov.companieshouse.document.generator.company.report.service.RecentFilingHistoryService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,11 +46,16 @@ public class CompanyReportDataHandlerTest {
     @Mock
     private OfficerService mockOfficerService;
 
+    @Mock
+    private RecentFilingHistoryService mockRecentFilingHistoryService;
+
     @InjectMocks
     private CompanyReportDataHandler companyReportDataHandler;
 
     private static final String RESOURCE_URI = "/company-number/000064000";
     private static final String REQUEST_ID = "request-id";
+    private static final String FILING_DESCRIPTION = "filing description";
+    private static final String FORM_TYPE = "form type";
 
     @Test
     @DisplayName("Test get company report successful")
@@ -52,6 +63,7 @@ public class CompanyReportDataHandlerTest {
 
         CompanyProfileApi companyProfileApi = createCompanyProfile();
         OfficersApi officersApi = createOfficers();
+        FilingHistoryApi filingHistoryApi = createFilingHistory();
 
         CompanyReportApiData companyReportApiData = new CompanyReportApiData();
 
@@ -59,6 +71,7 @@ public class CompanyReportDataHandlerTest {
 
         when(mockCompanyService.getCompanyProfile(any(String.class))).thenReturn(companyProfileApi);
         when(mockOfficerService.getOfficers(any(String.class))).thenReturn(officersApi);
+        when(mockRecentFilingHistoryService.getFilingHistory(any(String.class))).thenReturn(filingHistoryApi);
 
         DocumentInfoResponse documentInfoResponse = companyReportDataHandler.getCompanyReport(RESOURCE_URI, REQUEST_ID);
 
@@ -105,5 +118,20 @@ public class CompanyReportDataHandlerTest {
         officersApi.setActiveCount(1L);
 
         return officersApi;
+    }
+
+    private FilingHistoryApi createFilingHistory(){
+        FilingHistoryApi filingHistoryApi = new FilingHistoryApi();
+        List <FilingApi> filingApiList = new ArrayList<>();
+        FilingApi filingApi = new FilingApi();
+
+        filingApi.setDate(new Date(1999,01,01));
+        filingApi.setDescription(FILING_DESCRIPTION);
+        filingApi.setType(FORM_TYPE);
+
+        filingApiList.add(filingApi);
+        filingHistoryApi.setItems(filingApiList);
+
+        return filingHistoryApi;
     }
 }
