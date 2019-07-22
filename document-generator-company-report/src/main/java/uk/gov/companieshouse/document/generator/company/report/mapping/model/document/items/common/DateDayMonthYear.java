@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class DateOfBirth {
 
+    @JsonProperty("day")
+    private String day;
+
     @JsonProperty("month")
     private String month;
 
@@ -26,4 +29,11 @@ public class DateOfBirth {
         this.year = year;
     }
 
+    public String getDay() {
+        return day;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
+    }
 }
