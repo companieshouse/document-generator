@@ -18,6 +18,9 @@ import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRes
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -45,21 +48,23 @@ public class CompanyReportDataHandler {
 
         String companyNumber = getCompanyNumberFromUri(resourceUri);
 
+        ZonedDateTime timeStamp = ZonedDateTime.now();
+
         try {
             LOG.infoContext(requestId, "Getting data for report for company number: " + companyNumber, getDebugMap(companyNumber));
-            return createDocumentInfoResponse(companyNumber, requestId);
+            return createDocumentInfoResponse(companyNumber, requestId, timeStamp);
         } catch (MapperException e) {
             LOG.errorContext(requestId,"Failed to get data for report for company number " + companyNumber, e, getDebugMap(companyNumber));
             throw new HandlerException(e.getMessage(), e.getCause());
         }
     }
 
-    private DocumentInfoResponse createDocumentInfoResponse(String companyNumber, String requestId)
-        throws HandlerException, MapperException {
+    private DocumentInfoResponse createDocumentInfoResponse(String companyNumber,
+        String requestId, ZonedDateTime timeStamp) throws HandlerException, MapperException {
 
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
 
-        documentInfoResponse.setData(getCompanyReportData(companyNumber, requestId));
+        documentInfoResponse.setData(getCompanyReportData(companyNumber, requestId, timeStamp));
         documentInfoResponse.setAssetId("company-report");
         documentInfoResponse.setPath(createPathString());
         documentInfoResponse.setTemplateName("company-report.html");
@@ -67,7 +72,8 @@ public class CompanyReportDataHandler {
         return documentInfoResponse;
     }
 
-    private String getCompanyReportData(String companyNumber,  String requestId) throws HandlerException, MapperException {
+    private String getCompanyReportData(String companyNumber,  String requestId,
+        ZonedDateTime timeStamp) throws HandlerException, MapperException {
 
         CompanyReportApiData companyReportApiData = new CompanyReportApiData();
 
@@ -86,22 +92,18 @@ public class CompanyReportDataHandler {
         return toJson(companyReportMapper
             .mapCompanyReport(companyReportApiData),
             companyNumber,
-            requestId);
+            requestId,
+            timeStamp);
     }
 
 
     private String toJson(CompanyReport companyReport, String companyNumber,
-                          String requestId) throws HandlerException {
+                          String requestId, ZonedDateTime timeStamp) throws HandlerException {
 
         String reportToJson;
         ObjectMapper mapper = new ObjectMapper();
 
-        //TODO - Remove when definitly not required for any date mapping in company report
-//        JavaTimeModule javaTimeModule = new JavaTimeModule();
-//        javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)));
-//        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)));
-//        mapper.registerModule(javaTimeModule);
-//        mapper.setDateFormat(new SimpleDateFormat(DATE_TIME_FORMAT));
+        companyReport.setTimeStampCreated(timeStamp.format(DateTimeFormatter.ofPattern("d MMMM uuuu HH:mm:ss")));
 
         try {
             LOG.infoContext(requestId,"Attempting to convert company report to JSON",  getDebugMap(companyNumber));
