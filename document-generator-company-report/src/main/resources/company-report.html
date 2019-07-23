@@ -334,7 +334,7 @@
 
             <li>{{.name}}
 
-                {{ if .ceased_on_on }}
+                {{ if .ceased_on }}
                 <span id="officer-status-tag-resigned" class="status-tag ceased-tag">Ceased</span>
                 {{else}}
                 <span id="officer-status-tag-active" class="status-tag">Active</span>
@@ -387,8 +387,8 @@
             <li> Notified on: {{.notified_on}} </li>
             {{end}}
 
-            {{if .ceaased_on}}
-            <li>Ceased on: {{.ceased_om}} </li>
+            {{if .ceased_on}}
+            <li>Ceased on: {{.ceased_on}} </li>
             {{end}}
 
             {{if .date_of_birth}}
