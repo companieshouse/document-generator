@@ -13,8 +13,7 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.keyfilingdates.KeyFilingDates;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.previousnames.PreviousNames;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.RegistrationInformation;
-
-import java.util.List;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.statements.Statements;
 
 @JsonInclude(Include.NON_NULL)
 @JsonTypeName("company_report")
@@ -35,6 +34,9 @@ public class CompanyReport {
 
     @JsonProperty("foreign_company_details")
     private ForeignCompanyDetails foreignCompanyDetails;
+
+    @JsonProperty("psc_statements")
+    private Statements statements;
 
     public List<PreviousNames> getPreviousNames() {
         return previousNames;
@@ -74,5 +76,13 @@ public class CompanyReport {
 
     public void setForeignCompanyDetails(ForeignCompanyDetails foreignCompanyDetails) {
         this.foreignCompanyDetails = foreignCompanyDetails;
+    }
+
+    public Statements getStatements() {
+        return statements;
+    }
+
+    public void setStatements(Statements statements) {
+        this.statements = statements;
     }
 }

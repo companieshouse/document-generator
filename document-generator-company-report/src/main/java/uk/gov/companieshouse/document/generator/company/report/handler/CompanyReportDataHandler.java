@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
+import uk.gov.companieshouse.api.model.statements.StatementsApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.company.report.exception.MapperException;
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
@@ -14,6 +15,7 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.Com
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
 import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
+import uk.gov.companieshouse.document.generator.company.report.service.StatementsService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
@@ -36,9 +38,14 @@ public class CompanyReportDataHandler {
     @Autowired
     private CompanyReportMapper companyReportMapper;
 
+    @Autowired
+    private StatementsService statementsService;
+
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
     private static final String OFFICERS_KEY = "officers";
+
+    private static final String STATEMENTS_KEY = "persons_with_significant_control_statements";
 
     public DocumentInfoResponse getCompanyReport(String resourceUri, String requestId)
         throws HandlerException {
@@ -83,6 +90,15 @@ public class CompanyReportDataHandler {
              }
          }
 
+        if (companyProfileApi.getLinks().containsKey(STATEMENTS_KEY)) {
+            try {
+                StatementsApi statementsApi = getStatements(companyNumber, requestId);
+                companyReportApiData.setStatementsApi(statementsApi);
+            } catch (HandlerException he) {
+                LOG.infoContext(requestId,"Failed to get psc statements: ", getDebugMap(companyNumber));
+            }
+        }
+
         return toJson(companyReportMapper
             .mapCompanyReport(companyReportApiData),
             companyNumber,
@@ -95,13 +111,6 @@ public class CompanyReportDataHandler {
 
         String reportToJson;
         ObjectMapper mapper = new ObjectMapper();
-
-        //TODO - Remove when definitly not required for any date mapping in company report
-//        JavaTimeModule javaTimeModule = new JavaTimeModule();
-//        javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)));
-//        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)));
-//        mapper.registerModule(javaTimeModule);
-//        mapper.setDateFormat(new SimpleDateFormat(DATE_TIME_FORMAT));
 
         try {
             LOG.infoContext(requestId,"Attempting to convert company report to JSON",  getDebugMap(companyNumber));
@@ -132,6 +141,15 @@ public class CompanyReportDataHandler {
             return officerService.getOfficers(companyNumber);
         } catch (ServiceException se) {
             throw new HandlerException("error occurred obtaining the company officers", se);
+        }
+    }
+
+    private StatementsApi getStatements(String companyNumber, String requestId) throws HandlerException {
+        try {
+            LOG.infoContext(requestId,"Attempting to retrieve company psc statements", getDebugMap(companyNumber));
+            return statementsService.getStatements(companyNumber);
+        } catch (ServiceException se) {
+            throw new HandlerException("error occurred obtaining the company psc statements", se);
         }
     }
 

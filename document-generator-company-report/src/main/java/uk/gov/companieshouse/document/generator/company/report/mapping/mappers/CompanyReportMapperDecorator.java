@@ -5,14 +5,15 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.company.PreviousCompanyNamesApi;
 import uk.gov.companieshouse.api.model.company.foreigncompany.ForeignCompanyDetailsApi;
+import uk.gov.companieshouse.api.model.statements.StatementsApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.MapperException;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.foreigncompanydetails.ApiToForeignCompanyDetailsMapper;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
-import uk.gov.companieshouse.document.generator.company.report.exception.MapperException;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.currentappointments.ApiToCurrentAppointmentsMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.keyfilingdates.ApiToKeyFilingDatesMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.previousnames.ApiToPreviousNamesMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.registrationinformation.ApiToRegistrationInformationMapper;
+import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.statements.ApiToPscStatementsMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.ForeignCompanyDetails;
@@ -23,6 +24,7 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 
 import java.io.IOException;
 import java.util.List;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.statements.Statements;
 
 public class CompanyReportMapperDecorator implements CompanyReportMapper {
 
@@ -44,6 +46,9 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
 
     @Autowired
     private ApiToCurrentAppointmentsMapper apiToCurrentAppointmentsMapper;
+
+    @Autowired
+    private ApiToPscStatementsMapper apiToPscStatementsMapper;
 
 
     @Override
@@ -68,6 +73,8 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
                 companyReport.setForeignCompanyDetails(setForeignCompanyDetails(companyReportApiData
                     .getCompanyProfileApi().getForeignCompanyDetails()));
             }
+
+            companyReport.setStatements(setStatements(companyReportApiData.getStatementsApi()));
         }
 
         return companyReport;
@@ -103,6 +110,14 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
             return apiToCurrentAppointmentsMapper.apiToCurrentAppointmentsMapper(officersApi);
         } catch (MapperException e) {
             throw new MapperException("An error occurred when mapping to current appointments", e);
+        }
+    }
+
+    private Statements setStatements(StatementsApi statementsApi) throws MapperException {
+        try {
+            return apiToPscStatementsMapper.ApiToStatementsMapper(statementsApi);
+        } catch (MapperException e) {
+            throw new MapperException("An error occurred when mapping to psc statementss", e);
         }
     }
 }
