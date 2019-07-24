@@ -14,6 +14,7 @@ public interface ApiToProsecutionCaseMapper {
     @Mappings({
             @Mapping(source = "prosecutionCase.companyIncorporationNumber", target = "companyIncorporationNumber"),
             @Mapping(source = "prosecutionCase.companyName", target = "companyName"),
+            @Mapping(source = "prosecutionCase.caseReferenceNumber", target = "caseReferenceNumber")
     })
     ProsecutionCase apiToProsecutionCase(ProsecutionCaseApi prosecutionCase);
 }
