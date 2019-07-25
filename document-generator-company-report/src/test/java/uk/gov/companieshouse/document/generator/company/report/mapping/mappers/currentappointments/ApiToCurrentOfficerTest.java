@@ -59,7 +59,7 @@ public class ApiToCurrentOfficerTest {
 
     @Test
     @DisplayName("tests company profile data maps to registration information model")
-    void testApiToRegistrationInformationMaps() throws Exception {
+    void testApiToRegistrationInformationMaps() {
 
         CompanyOfficerApi companyOfficerApi = createCompanyOfficerApi();
 

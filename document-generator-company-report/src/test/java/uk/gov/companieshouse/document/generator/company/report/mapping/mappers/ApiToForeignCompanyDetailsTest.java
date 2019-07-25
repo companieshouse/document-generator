@@ -11,7 +11,6 @@ import uk.gov.companieshouse.api.model.company.foreigncompany.OriginatingRegistr
 import uk.gov.companieshouse.api.model.company.foreigncompany.account.AccountPeriodApi;
 import uk.gov.companieshouse.api.model.company.foreigncompany.account.ForeignAccountApi;
 import uk.gov.companieshouse.api.model.company.foreigncompany.account.MustFileWithinApi;
-import uk.gov.companieshouse.document.generator.company.report.exception.MapperException;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.foreigncompanydetails.ApiToForeignCompanyDetailsMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.foreigncompanydetails.ApiToForeignCompanyDetailsMapperImpl;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.ForeignCompanyDetails;
@@ -44,7 +43,7 @@ public class ApiToForeignCompanyDetailsTest {
 
     @Test
     @DisplayName("test foreign company details data maps to foreign company details model")
-    void testApiToForeignCompanyDetailsMaps() throws MapperException {
+    void testApiToForeignCompanyDetailsMaps() {
 
         ForeignCompanyDetailsApi foreignCompanyDetailsApi = createForeignCompanyDetailsApi();
 
@@ -67,7 +66,7 @@ public class ApiToForeignCompanyDetailsTest {
 
     @Test
     @DisplayName("test foreign company with null value to foreign company details api model")
-    void testApiToForeignCompanyDetailsMapsWithNullApiModel() throws MapperException {
+    void testApiToForeignCompanyDetailsMapsWithNullApiModel() {
 
         ForeignCompanyDetailsApi foreignCompanyDetailsApi = null;
 
@@ -79,7 +78,7 @@ public class ApiToForeignCompanyDetailsTest {
 
     @Test
     @DisplayName("test foreign company details data maps with null values to foreign company details model")
-    void testApiToForeignCompanyDetailsMapsWithNullValues() throws MapperException {
+    void testApiToForeignCompanyDetailsMapsWithNullValues() {
 
         ForeignCompanyDetailsApi foreignCompanyDetailsApi = createForeignCompanyDetailsApiWithNullValues();
 
@@ -93,7 +92,7 @@ public class ApiToForeignCompanyDetailsTest {
 
     @Test
     @DisplayName("test foreign company details data maps to foreign company details model")
-    void testApiToForeignCompanyDetailsMapsWithNullOriginatingRegistryObject() throws MapperException {
+    void testApiToForeignCompanyDetailsMapsWithNullOriginatingRegistryObject() {
 
         ForeignCompanyDetailsApi foreignCompanyDetailsApi =
             createForeignCompanyDetailsApiWithNullOriginatingRegistryObject();

@@ -5,18 +5,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
-import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
+import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.api.model.statements.StatementsApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.HandlerException;
-import uk.gov.companieshouse.document.generator.company.report.exception.MapperException;
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.CompanyReportMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
-import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
 import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
+import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
 import uk.gov.companieshouse.document.generator.company.report.service.StatementsService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.logging.Logger;
@@ -57,17 +56,12 @@ public class CompanyReportDataHandler {
 
         String companyNumber = getCompanyNumberFromUri(resourceUri);
 
-        try {
-            LOG.infoContext(requestId, "Getting data for report for company number: " + companyNumber, getDebugMap(companyNumber));
-            return createDocumentInfoResponse(companyNumber, requestId);
-        } catch (MapperException e) {
-            LOG.errorContext(requestId,"Failed to get data for report for company number " + companyNumber, e, getDebugMap(companyNumber));
-            throw new HandlerException(e.getMessage(), e.getCause());
-        }
+        LOG.infoContext(requestId, "Getting data for report for company number: " + companyNumber, getDebugMap(companyNumber));
+        return createDocumentInfoResponse(companyNumber, requestId);
     }
 
     private DocumentInfoResponse createDocumentInfoResponse(String companyNumber,
-        String requestId) throws HandlerException, MapperException {
+        String requestId) throws HandlerException {
 
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
 
@@ -79,7 +73,7 @@ public class CompanyReportDataHandler {
         return documentInfoResponse;
     }
 
-    private String getCompanyReportData(String companyNumber,  String requestId) throws HandlerException, MapperException {
+    private String getCompanyReportData(String companyNumber,  String requestId) throws HandlerException {
 
         CompanyReportApiData companyReportApiData = new CompanyReportApiData();
 

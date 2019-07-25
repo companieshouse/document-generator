@@ -4,9 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.springframework.web.context.annotation.RequestScope;
-
 import uk.gov.companieshouse.api.model.statements.StatementsApi;
-import uk.gov.companieshouse.document.generator.company.report.exception.MapperException;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.statements.Statements;
 
 @RequestScope
@@ -17,6 +15,6 @@ public interface ApiToPscStatementsMapper {
             @Mapping(source = "activeCount", target = "activeStatements"),
             @Mapping(source = "ceasedCount", target = "ceasedStatements"),
     })
-    Statements ApiToStatementsMapper(StatementsApi statementsApi) throws MapperException;
+    Statements ApiToStatementsMapper(StatementsApi statementsApi);
 }
 

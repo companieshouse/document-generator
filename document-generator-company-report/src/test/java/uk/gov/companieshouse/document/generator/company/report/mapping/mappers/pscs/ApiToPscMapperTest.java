@@ -60,7 +60,7 @@ public class ApiToPscMapperTest {
 
     @Test
     @DisplayName("tests multiple PSC data maps to PSC model")
-    void testApiToMultiplePSCMaps() throws Exception {
+    void testApiToMultiplePSCMaps() {
 
         List<PscApi> pscList = createPscList();
 
@@ -75,7 +75,7 @@ public class ApiToPscMapperTest {
 
     @Test
     @DisplayName("tests single PSC data maps to PSC model")
-    void testApiToPSCMaps() throws Exception {
+    void testApiToPSCMaps() {
 
         PscApi pscApi = createPscApi();
 
