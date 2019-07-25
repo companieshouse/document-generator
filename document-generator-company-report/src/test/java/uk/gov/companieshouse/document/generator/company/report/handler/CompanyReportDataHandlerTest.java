@@ -19,8 +19,8 @@ import uk.gov.companieshouse.document.generator.company.report.service.OfficerSe
 import uk.gov.companieshouse.document.generator.company.report.service.RecentFilingHistoryService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +60,6 @@ public class CompanyReportDataHandlerTest {
     @Test
     @DisplayName("Test get company report successful")
     void testGetDocumentInfoSuccessful() throws Exception {
-
         CompanyProfileApi companyProfileApi = createCompanyProfile();
         OfficersApi officersApi = createOfficers();
         FilingHistoryApi filingHistoryApi = createFilingHistory();
@@ -121,15 +120,17 @@ public class CompanyReportDataHandlerTest {
     }
 
     private FilingHistoryApi createFilingHistory(){
+
         FilingHistoryApi filingHistoryApi = new FilingHistoryApi();
         List <FilingApi> filingApiList = new ArrayList<>();
-        FilingApi filingApi = new FilingApi();
 
-        filingApi.setDate(new Date(1999,01,01));
+        FilingApi filingApi = new FilingApi();
+        filingApi.setDate(LocalDate.of(1999,01,01));
         filingApi.setDescription(FILING_DESCRIPTION);
         filingApi.setType(FORM_TYPE);
 
         filingApiList.add(filingApi);
+
         filingHistoryApi.setItems(filingApiList);
 
         return filingHistoryApi;

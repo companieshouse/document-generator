@@ -61,7 +61,7 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
             }
 
             if (companyReportApiData.getFilingHistoryApi() !=null) {
-                companyReport.setRecentFilingHistory(apiToRecentFilingHistoryMapper.apiToRecentFilingHistoryMapperList(companyReportApiData.getFilingHistoryApi().getItems()));
+                companyReport.setRecentFilingHistory(apiToRecentFilingHistoryMapper.apiToRecentFilingHistoryMapper(companyReportApiData.getFilingHistoryApi().getItems()));
             }
         }
 

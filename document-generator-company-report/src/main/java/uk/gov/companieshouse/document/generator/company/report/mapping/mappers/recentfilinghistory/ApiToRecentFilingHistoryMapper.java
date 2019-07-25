@@ -14,9 +14,7 @@ import uk.gov.companieshouse.document.generator.company.report.exception.MapperE
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.recentfilinghistory.RecentFilingHistory;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +33,7 @@ public abstract class ApiToRecentFilingHistoryMapper {
         @Mapping(source = "type", target = "form")
     })
     public abstract RecentFilingHistory apiToRecentFilingHistoryMapper(FilingApi filingApi) throws MapperException;
-    public abstract List<RecentFilingHistory> apiToRecentFilingHistoryMapperList(List<FilingApi> filingApi) throws MapperException;
+    public abstract List<RecentFilingHistory> apiToRecentFilingHistoryMapper(List<FilingApi> filingApi) throws MapperException;
 
     @AfterMapping
     protected void convertFilingDescription(FilingApi filingApi, @MappingTarget RecentFilingHistory recentFilingHistory) {
@@ -58,9 +56,8 @@ public abstract class ApiToRecentFilingHistoryMapper {
     @AfterMapping
     protected void formatFilingDate(FilingApi filingApi, @MappingTarget RecentFilingHistory recentFilingHistory) {
         if (filingApi != null && filingApi.getDate() != null) {
-            Date filingDate = filingApi.getDate();
-            LocalDate date = filingDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            recentFilingHistory.setDate(date.format(getFormatter()));
+            LocalDate filingDate = filingApi.getDate();
+            recentFilingHistory.setDate(filingDate.format(getFormatter()));
         }
     }
 
