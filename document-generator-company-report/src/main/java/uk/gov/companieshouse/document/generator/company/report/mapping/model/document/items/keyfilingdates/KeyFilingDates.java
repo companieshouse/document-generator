@@ -29,11 +29,15 @@ public class KeyFilingDates {
     @JsonProperty("last_members_list")
     private String lastMembersList;
 
+    @JsonProperty("next_made_up_to")
+    private String nextMadeUpTo;
+
     public DateDayMonthYear getAccountingReferenceDate() {
         return accountingReferenceDate;
     }
 
-    public void setAccountingReferenceDate(DateDayMonthYear accountingReferenceDate) {
+    public void setAccountingReferenceDate(
+        DateDayMonthYear accountingReferenceDate) {
         this.accountingReferenceDate = accountingReferenceDate;
     }
 
@@ -83,5 +87,13 @@ public class KeyFilingDates {
 
     public void setLastMembersList(String lastMembersList) {
         this.lastMembersList = lastMembersList;
+    }
+
+    public String getNextMadeUpTo() {
+        return nextMadeUpTo;
+    }
+
+    public void setNextMadeUpTo(String nextMadeUpTo) {
+        this.nextMadeUpTo = nextMadeUpTo;
     }
 }

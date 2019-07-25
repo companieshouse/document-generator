@@ -59,8 +59,8 @@ public class CompanyReportDataHandler {
         }
     }
 
-    private DocumentInfoResponse createDocumentInfoResponse(String companyNumber, String requestId)
-        throws HandlerException, MapperException {
+    private DocumentInfoResponse createDocumentInfoResponse(String companyNumber,
+        String requestId) throws HandlerException, MapperException {
 
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
 
@@ -140,6 +140,16 @@ public class CompanyReportDataHandler {
         }
     }
 
+    private PscsApi getPscs(String companyNumber, String requestId) throws HandlerException {
+
+        try {
+            LOG.infoContext(requestId,"Attempting to retrieve company PSCSs", getDebugMap(companyNumber));
+            return pscsService.getPscs(companyNumber);
+        } catch (ServiceException se) {
+            throw new HandlerException("error occurred obtaining the company PSCSs", se);
+        }
+    }
+
     private String createPathString() {
         return String.format("/%s/%s", "company-report", getUniqueFileName());
     }
@@ -158,15 +168,5 @@ public class CompanyReportDataHandler {
         logMap.put("COMPANY_NUMBER", companyNumber);
 
         return logMap;
-    }
-
-    private PscsApi getPscs(String companyNumber, String requestId) throws HandlerException {
-
-        try {
-            LOG.infoContext(requestId,"Attempting to retrieve company PSCSs", getDebugMap(companyNumber));
-            return pscsService.getPscs(companyNumber);
-        } catch (ServiceException se) {
-            throw new HandlerException("error occurred obtaining the company PSCSs", se);
-        }
     }
 }

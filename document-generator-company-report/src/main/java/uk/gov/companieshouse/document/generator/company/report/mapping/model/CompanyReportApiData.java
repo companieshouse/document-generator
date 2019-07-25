@@ -26,7 +26,6 @@ public class CompanyReportApiData {
 
     public void setPscsApi(PscsApi pscsApi) {
         this.pscsApi = pscsApi;
-
     }
 
     public OfficersApi getOfficersApi() {
