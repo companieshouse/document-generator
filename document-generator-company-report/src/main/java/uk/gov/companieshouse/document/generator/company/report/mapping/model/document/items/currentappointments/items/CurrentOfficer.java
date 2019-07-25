@@ -3,6 +3,7 @@ package uk.gov.companieshouse.document.generator.company.report.mapping.model.do
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 import uk.gov.companieshouse.api.model.common.Address;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.DateDayMonthYear;
 
 
 public class CurrentOfficer {
@@ -23,7 +24,7 @@ public class CurrentOfficer {
     private String resigned;
 
     @JsonProperty("date_of_birth")
-    private DateOfBirth dateOfBirth;
+    private DateDayMonthYear dateOfBirth;
 
     @JsonProperty("nationality")
     private String nationality;
@@ -170,11 +171,11 @@ public class CurrentOfficer {
         this.appointed = appointed;
     }
 
-    public DateOfBirth getDateOfBirth() {
+    public DateDayMonthYear getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(DateOfBirth dateOfBirth) {
+    public void setDateOfBirth(DateDayMonthYear dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 

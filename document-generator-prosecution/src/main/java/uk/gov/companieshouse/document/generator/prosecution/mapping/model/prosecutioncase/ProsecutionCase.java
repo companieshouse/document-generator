@@ -11,6 +11,9 @@ public class ProsecutionCase {
     @JsonProperty("CompanyName")
     private String companyName;
 
+    @JsonProperty("CaseReferenceNumber")
+    private String caseReferenceNumber;
+
     public String getCompanyIncorporationNumber() {
         return companyIncorporationNumber;
     }
@@ -25,5 +28,13 @@ public class ProsecutionCase {
 
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
+    }
+
+    public String getCaseReferenceNumber() {
+        return caseReferenceNumber;
+    }
+
+    public void setCaseReferenceNumber(String caseReferenceNumber) {
+        this.caseReferenceNumber = caseReferenceNumber;
     }
 }

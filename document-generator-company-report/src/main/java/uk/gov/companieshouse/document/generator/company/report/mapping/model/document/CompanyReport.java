@@ -12,6 +12,7 @@ import java.util.List;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.CurrentAppointments;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.keyfilingdates.KeyFilingDates;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.previousnames.PreviousNames;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.pscs.Pscs;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.RegistrationInformation;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.statements.Statements;
 
@@ -32,33 +33,39 @@ public class CompanyReport {
     @JsonProperty("key_filing_dates")
     private KeyFilingDates keyFilingDates;
 
+    @JsonProperty("pscs")
+    private Pscs pscs;
+
     @JsonProperty("foreign_company_details")
     private ForeignCompanyDetails foreignCompanyDetails;
 
     @JsonProperty("psc_statements")
     private Statements statements;
 
-    public List<PreviousNames> getPreviousNames() {
-        return previousNames;
-    }
-
-    public void setPreviousNames(List<PreviousNames> previousNames) {
-        this.previousNames = previousNames;
-    }
-
     public RegistrationInformation getRegistrationInformation() {
         return registrationInformation;
     }
 
-    public void setRegistrationInformation(RegistrationInformation registrationInformation) {
+    public void setRegistrationInformation(
+        RegistrationInformation registrationInformation) {
         this.registrationInformation = registrationInformation;
+    }
+
+    public List<PreviousNames> getPreviousNames() {
+        return previousNames;
+    }
+
+    public void setPreviousNames(
+        List<PreviousNames> previousNames) {
+        this.previousNames = previousNames;
     }
 
     public CurrentAppointments getCurrentAppointments() {
         return currentAppointments;
     }
 
-    public void setCurrentAppointments(CurrentAppointments currentAppointments) {
+    public void setCurrentAppointments(
+        CurrentAppointments currentAppointments) {
         this.currentAppointments = currentAppointments;
     }
 
@@ -66,15 +73,26 @@ public class CompanyReport {
         return keyFilingDates;
     }
 
-    public void setKeyFilingDates(KeyFilingDates keyFilingDates) {
+    public void setKeyFilingDates(
+        KeyFilingDates keyFilingDates) {
         this.keyFilingDates = keyFilingDates;
+    }
+
+    public Pscs getPscs() {
+        return pscs;
+    }
+
+    public void setPscs(
+        Pscs pscs) {
+        this.pscs = pscs;
     }
 
     public ForeignCompanyDetails getForeignCompanyDetails() {
         return foreignCompanyDetails;
     }
 
-    public void setForeignCompanyDetails(ForeignCompanyDetails foreignCompanyDetails) {
+    public void setForeignCompanyDetails(
+        ForeignCompanyDetails foreignCompanyDetails) {
         this.foreignCompanyDetails = foreignCompanyDetails;
     }
 

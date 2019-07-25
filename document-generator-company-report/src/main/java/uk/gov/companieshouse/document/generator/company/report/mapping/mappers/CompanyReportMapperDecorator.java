@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.company.PreviousCompanyNamesApi;
+import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.api.model.company.foreigncompany.ForeignCompanyDetailsApi;
 import uk.gov.companieshouse.api.model.statements.StatementsApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.MapperException;
@@ -12,6 +13,7 @@ import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.currentappointments.ApiToCurrentAppointmentsMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.keyfilingdates.ApiToKeyFilingDatesMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.previousnames.ApiToPreviousNamesMapper;
+import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.pscs.ApiToPscsMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.registrationinformation.ApiToRegistrationInformationMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.statements.ApiToPscStatementsMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
@@ -20,6 +22,7 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.CurrentAppointments;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.keyfilingdates.KeyFilingDates;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.previousnames.PreviousNames;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.pscs.Pscs;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.RegistrationInformation;
 
 import java.io.IOException;
@@ -40,6 +43,9 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
 
     @Autowired
     private ApiToKeyFilingDatesMapper apiToKeyFilingDatesMapper;
+
+    @Autowired
+    private ApiToPscsMapper apiToPscsMapper;
 
     @Autowired
     private ApiToForeignCompanyDetailsMapper apiToForeignCompanyDetailsMapper;
@@ -63,10 +69,16 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
                 companyReport.setPreviousNames(setPreviousNames(companyReportApiData.getCompanyProfileApi().getPreviousCompanyNames()));
             }
 
-            companyReport.setCurrentAppointments(setCurrentAppointments(companyReportApiData.getOfficersApi()));
+            if(companyReportApiData.getOfficersApi() != null && companyReportApiData.getOfficersApi().getItems().size() > 0) {
+                    companyReport.setCurrentAppointments(setCurrentAppointments(companyReportApiData.getOfficersApi()));
+            }
 
             if (companyReportApiData.getCompanyProfileApi().getAccounts() != null) {
                 companyReport.setKeyFilingDates(setKeyFilingDates(companyReportApiData.getCompanyProfileApi()));
+            }
+
+            if(companyReportApiData.getPscsApi() != null) {
+                companyReport.setPscs(setPscs(companyReportApiData.getPscsApi()));
             }
 
             if (companyReportApiData.getCompanyProfileApi().getForeignCompanyDetails() != null) {
@@ -78,6 +90,14 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
         }
 
         return companyReport;
+    }
+
+    private Pscs setPscs(PscsApi pscsApi) throws MapperException {
+        try {
+            return apiToPscsMapper.apiToPscsMapper(pscsApi);
+        } catch (MapperException e) {
+            throw new MapperException("An error occurred when mapping to PSCs", e);
+        }
     }
 
     private RegistrationInformation setRegistrationInformation(CompanyProfileApi companyProfileApi) throws MapperException {
@@ -121,3 +141,5 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
         }
     }
 }
+
+
