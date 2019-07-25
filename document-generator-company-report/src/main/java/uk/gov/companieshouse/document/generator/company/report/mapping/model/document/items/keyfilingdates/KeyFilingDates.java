@@ -3,13 +3,13 @@ package uk.gov.companieshouse.document.generator.company.report.mapping.model.do
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.keyfilingdates.items.AccountingReferenceDate;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.DateDayMonthYear;
 
 @JsonInclude(Include.NON_NULL)
 public class KeyFilingDates {
 
     @JsonProperty("accounting_reference_date")
-    private AccountingReferenceDate accountingReferenceDate;
+    private DateDayMonthYear accountingReferenceDate;
 
     @JsonProperty("last_accounts_made_up_to")
     private String lastAccountsMadeUpTo;
@@ -29,11 +29,15 @@ public class KeyFilingDates {
     @JsonProperty("last_members_list")
     private String lastMembersList;
 
-    public AccountingReferenceDate getAccountingReferenceDate() {
+    @JsonProperty("next_made_up_to")
+    private String nextMadeUpTo;
+
+    public DateDayMonthYear getAccountingReferenceDate() {
         return accountingReferenceDate;
     }
 
-    public void setAccountingReferenceDate(AccountingReferenceDate accountingReferenceDate) {
+    public void setAccountingReferenceDate(
+        DateDayMonthYear accountingReferenceDate) {
         this.accountingReferenceDate = accountingReferenceDate;
     }
 
@@ -83,5 +87,13 @@ public class KeyFilingDates {
 
     public void setLastMembersList(String lastMembersList) {
         this.lastMembersList = lastMembersList;
+    }
+
+    public String getNextMadeUpTo() {
+        return nextMadeUpTo;
+    }
+
+    public void setNextMadeUpTo(String nextMadeUpTo) {
+        this.nextMadeUpTo = nextMadeUpTo;
     }
 }

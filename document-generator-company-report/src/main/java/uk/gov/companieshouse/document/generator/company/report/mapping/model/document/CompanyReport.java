@@ -8,8 +8,10 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.CurrentAppointments;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.ForeignCompanyDetails;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.keyfilingdates.KeyFilingDates;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.previousnames.PreviousNames;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.pscs.Pscs;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.recentfilinghistory.RecentFilingHistory;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.RegistrationInformation;
 
@@ -35,13 +37,11 @@ public class CompanyReport {
     @JsonProperty("recent_filing_history")
     private List<RecentFilingHistory> recentFilingHistory;
 
-    public List<PreviousNames> getPreviousNames() {
-        return previousNames;
-    }
+    @JsonProperty("pscs")
+    private Pscs pscs;
 
-    public void setPreviousNames(List<PreviousNames> previousNames) {
-        this.previousNames = previousNames;
-    }
+    @JsonProperty("foreign_company_details")
+    private ForeignCompanyDetails foreignCompanyDetails;
 
     public RegistrationInformation getRegistrationInformation() {
         return registrationInformation;
@@ -49,6 +49,14 @@ public class CompanyReport {
 
     public void setRegistrationInformation(RegistrationInformation registrationInformation) {
         this.registrationInformation = registrationInformation;
+    }
+
+    public List<PreviousNames> getPreviousNames() {
+        return previousNames;
+    }
+
+    public void setPreviousNames(List<PreviousNames> previousNames) {
+        this.previousNames = previousNames;
     }
 
     public CurrentAppointments getCurrentAppointments() {
@@ -73,5 +81,21 @@ public class CompanyReport {
 
     public void setRecentFilingHistory(List<RecentFilingHistory> recentFilingHistory) {
         this.recentFilingHistory = recentFilingHistory;
+    }
+
+    public Pscs getPscs() {
+        return pscs;
+    }
+
+    public void setPscs(Pscs pscs) {
+        this.pscs = pscs;
+    }
+
+    public ForeignCompanyDetails getForeignCompanyDetails() {
+        return foreignCompanyDetails;
+    }
+
+    public void setForeignCompanyDetails(ForeignCompanyDetails foreignCompanyDetails) {
+        this.foreignCompanyDetails = foreignCompanyDetails;
     }
 }

@@ -1,11 +1,11 @@
-package uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.keyfilingdates.items;
+package uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.items.accountsItems;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(Include.NON_NULL)
-public class AccountingReferenceDate {
+public class AccountPeriodDayMonth {
 
     @JsonProperty("day")
     private String day;
@@ -29,3 +29,4 @@ public class AccountingReferenceDate {
         this.month = month;
     }
 }
+

@@ -3,8 +3,12 @@
 {{$companyRegistrationInformation := .company_report.company_registration_information}}
 {{$previousNames := .company_report.previous_names}}
 {{$keyFilingDates := .company_report.key_filing_dates}}
+{{$foreignCompanyDetails := .company_report.foreign_company_details}}
+{{$foreignCompanyAccounts := .company_report.foreign_company_details.accounts}}
 {{$officers := .company_report.current_appointments}}
 {{$recentFilingHistory := .company_report.recent_filing_history}}
+{{$pscs := .company_report.pscs}}
+
 <head>
     <meta charset="UTF-8">
     <title>{{$companyRegistrationInformation.company_name}}</title>
@@ -16,6 +20,10 @@
 
       .pagebreak {
         page-break-before: always;
+      }
+
+      .foreign-company-details-table {
+        margin-bottom: 1em;
       }
 
       @media print {
@@ -145,39 +153,96 @@
         {{end}}
 
     </ul>
+    
+    {{if $foreignCompanyDetails}}
 
-    {{if or ($keyFilingDates.last_accounts_made_up_to) ($keyFilingDates.next_accounts_due) ($keyFilingDates.accounting_reference_date.day) }}
-        <h3 class="heading-small">Key filing dates</h3>
-        <ul class="list list-bullet">
-            {{if $keyFilingDates.accounting_reference_date.day}}
-                <li>Accounting reference date: {{$keyFilingDates.accounting_reference_date.day}} {{$keyFilingDates.accounting_reference_date.month}} </li>
+        {{if (eq $foreignCompanyDetails.is_a_credit_financial_institution true)}}
+            This company is a credit/financial institution
+        {{end}}
+
+        {{if and $foreignCompanyDetails.accounting_requirements.foreign_account_type $foreignCompanyDetails.accounting_requirements.terms_of_account_publication}}
+
+            {{if eq $foreignCompanyDetails.accounting_requirements.foreign_account_type "accounting-requirements-of-originating-country-apply"}}
+
+                {{if eq $foreignCompanyDetails.accounting_requirements.terms_of_account_publication "accounting-publication-date-does-not-need-to-be-supplied-by-company"}}
+
+                    {{if $keyFilingDates.last_accounts_made_up_to}}
+                        <h3 class="heading-small">Accounts</h3>
+                        Last accounts made up to: {{$keyFilingDates.last_accounts_made_up_to}}
+                    {{end}}
+
+                {{end}}
+
+                {{if eq $foreignCompanyDetails.accounting_requirements.terms_of_account_publication "accounts-publication-date-supplied-by-company"}}
+
+                    <h3 class="heading-small">Accounts</h3>
+                    {{if $foreignCompanyDetails.accounts}}
+                        <p>Required to publish accounts from {{$foreignCompanyDetails.accounts.account_period_from.day}}
+                            {{$foreignCompanyDetails.accounts.account_period_from.month}} to {{$foreignCompanyDetails.accounts.account_period_to.day}}
+                            {{$foreignCompanyDetails.accounts.account_period_to.month}}<br>within {{$foreignCompanyDetails.accounts.must_file_within.months}}
+                            months under parent law</p>
+                    {{end}}
+
+                    {{if $keyFilingDates.last_accounts_made_up_to}}
+                        Last accounts made up to: {{$keyFilingDates.last_accounts_made_up_to}}
+                    {{end}}
+
+                {{end}}
             {{end}}
-            {{if $keyFilingDates.last_accounts_made_up_to}}
-                <li>Last accounts made up to: {{$keyFilingDates.last_accounts_made_up_to}}</li>
+
+            {{if eq $foreignCompanyDetails.accounting_requirements.foreign_account_type "accounting-requirements-of-originating-country-do-not-apply"}}
+                {{ if eq $foreignCompanyDetails.accounting_requirements.terms_of_account_publication "accounting-reference-date-allocated-by-companies-house"}}
+
+                    {{if or $keyFilingDates.next_made_up_to $keyFilingDates.last_accounts_made_up_to}}
+                        <h3 class="heading-small">Accounts</h3>
+                    {{end}}
+
+                    {{if $keyFilingDates.next_made_up_to}}
+                        Next accounts made up to: {{$keyFilingDates.next_made_up_to}}
+                    {{end}}
+                         <br>
+                    {{if $keyFilingDates.last_accounts_made_up_to}}
+                        Last accounts made up to: {{$keyFilingDates.last_accounts_made_up_to}}
+                    {{end}}
+                {{end}}
             {{end}}
-            {{if $keyFilingDates.next_accounts_due}}
-                <li>Next accounts due: {{$keyFilingDates.next_accounts_due}}</li>
-            {{end}}
-            {{if $keyFilingDates.last_confirmation_statement}}
-                <li>Last confirmation statement date: {{$keyFilingDates.last_confirmation_statement}}</li>
-            {{end}}
-            {{if $keyFilingDates.next_confirmation_statement}}
-                <li>Next confirmation statement due: {{$keyFilingDates.next_confirmation_statement}}</li>
-            {{end}}
-            {{if $keyFilingDates.last_members_list}}
-                <li>Last members list: {{$keyFilingDates.last_members_list}}</li>
-            {{end}}
-        </ul>
+        {{end}}
     {{end}}
 
-{{if $companyRegistrationInformation.nature_of_business}}
+    {{if not $foreignCompanyDetails }}
+
+        {{if or ($keyFilingDates.last_accounts_made_up_to) ($keyFilingDates.next_accounts_due) ($keyFilingDates.accounting_reference_date.day) }}
+            <h3 class="heading-small">Key filing dates</h3>
+            <ul class="list list-bullet">
+                {{if $keyFilingDates.accounting_reference_date.day}}
+                    <li>Accounting reference date: {{$keyFilingDates.accounting_reference_date.day}} {{$keyFilingDates.accounting_reference_date.month}} </li>
+                {{end}}
+                {{if $keyFilingDates.last_accounts_made_up_to}}
+                    <li>Last accounts made up to: {{$keyFilingDates.last_accounts_made_up_to}}</li>
+                {{end}}
+                {{if $keyFilingDates.next_accounts_due}}
+                    <li>Next accounts due: {{$keyFilingDates.next_accounts_due}}</li>
+                {{end}}
+                {{if $keyFilingDates.last_confirmation_statement}}
+                    <li>Last confirmation statement date: {{$keyFilingDates.last_confirmation_statement}}</li>
+                {{end}}
+                {{if $keyFilingDates.next_confirmation_statement}}
+                    <li>Next confirmation statement due: {{$keyFilingDates.next_confirmation_statement}}</li>
+                {{end}}
+                {{if $keyFilingDates.last_members_list}}
+                    <li>Last members list: {{$keyFilingDates.last_members_list}}</li>
+                {{end}}
+            </ul>
+        {{end}}
+    {{end}}
+
+    {{if $companyRegistrationInformation.nature_of_business}}
     <h3 class="heading-small">Nature of business (SIC)</h3>
     <ul class="list list-bullet">
         {{range $companyRegistrationInformation.nature_of_business}}
         <li>{{.sic_codes}} {{.sic_codes_description}}</li>
         {{end}}
     </ul>
-
     {{end}}
 
     {{if $previousNames}}
@@ -202,43 +267,182 @@
     </table>
     {{end}}
 
-    {{if $officers}}
-    <h2 class="heading-large">People</h2>
+    {{if $foreignCompanyDetails}}
+    <h3 class="heading-small">Company details in the country of incorporation</h3>
+    <table class="foreign-company-details-table">
+        <thead>
+        <tr>
+            <th scope="col">Incorporated in</th>
+            <th scope="col">Registration number</th>
+            <th scope="col">Legal form</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            {{if $foreignCompanyDetails.country}}
+            <td>{{$foreignCompanyDetails.country}}</td>
+            {{end}}
+            {{if $foreignCompanyDetails.registration_number}}
+            <td>{{$foreignCompanyDetails.registration_number}}</td>
+            {{end}}
+            {{if $foreignCompanyDetails.legal_form}}
+            <td>{{$foreignCompanyDetails.legal_form}}</td>
+            {{end}}
+        </tr>
+        </tbody>
+    </table>
+    <ul class="list list-bullet">
+        {{if $foreignCompanyDetails.name}}
+        <li>Parent registry: {{$foreignCompanyDetails.name}}</li>
+        {{end}}
+        {{if $foreignCompanyDetails.governed_by}}
+        <li>Governing Law: {{$foreignCompanyDetails.governed_by}}</li>
+        {{end}}
+        {{if $foreignCompanyDetails.business_activity}}
+        <li>Objects of the company: {{$foreignCompanyDetails.business_activity}}</li>
+        {{end}}
+    </ul>
+    {{end}}
 
-    <h2 class="heading-medium">Officers:<br>
-        {{$officers.total_results}} officers / {{$officers.resigned_count}} resignations
-    </h2>
+    {{if or $officers $pscs}}
+        <h2 class="heading-large">People</h2>
 
-        {{range $officers.current_officers}}
-            <ul class="list list-bullet">
+        {{if $officers}}
+            <h2 class="heading-medium">Officers:<br>
+                {{$officers.total_results}} officers / {{$officers.resigned_count}} resignations
+            </h2>
 
-                <li>{{.officer_role}} {{.name}}
+            {{range $officers.current_officers}}
+                <ul class="list list-bullet">
 
-                    {{ if .resigned_on }}
-                    <span id="officer-status-tag-resigned" class="status-tag ceased-tag">Resigned</span>
-                    {{else}}
-                    <span id="officer-status-tag-active" class="status-tag">Active</span>
-                    {{end}}
-                </li>
+                    <li>{{.officer_role}} {{.name}}
 
-                {{if .nationality}}
-                <li>Nationality: {{.nationality}}</li>
-                {{end}}
+                        {{ if .resigned_on }}
+                            <span id="officer-status-tag-resigned" class="status-tag ceased-tag">Resigned</span>
+                            {{else}}
+                            <span id="officer-status-tag-active" class="status-tag">Active</span>
+                            {{end}}
+                        </li>
 
-                {{if .appointed_on}}
-                    <li>Appointed: {{.appointed_on}}</li>
-                {{end}}
+                        {{if .nationality}}
+                            <li>Nationality: {{.nationality}}</li>
+                        {{end}}
 
-                {{if .date_of_birth}}
-                <li>Date of birth: {{index .date_of_birth "month"}} {{index .date_of_birth "year"}} </li>
-                {{end}}
+                        {{if .appointed_on}}
+                            <li>Appointed: {{.appointed_on}}</li>
+                        {{end}}
 
-                {{if .resigned_on}}
-                    <li>Resigned: {{.resigned_on}}</li>
-                {{end}}
+                        {{if .date_of_birth}}
+                            <li>Date of birth: {{index .date_of_birth "month"}} {{index .date_of_birth "year"}} </li>
+                        {{end}}
 
-                {{if .address}}
-                <li>Correspondence address:
+                        {{if .resigned_on}}
+                            <li>Resigned: {{.resigned_on}}</li>
+                        {{end}}
+
+                        {{if .address}}
+                            <li>Correspondence address:
+                                {{if .address.care_of}}
+                                    {{index .address "care_of"}},
+                                {{end}}
+
+                                {{if .address.po_box}}
+                                    {{index .address "po_box"}},
+                                {{end}}
+
+                                {{if .address.premises}}
+                                    {{index .address "premises"}},
+                                {{end}}
+
+                                {{if .address.address_line_1}}
+                                    {{index .address "address_line_1"}},
+                                {{end}}
+
+                                {{if .address.address_line_2}}
+                                    {{index .address "address_line_2"}},
+                                {{end}}
+
+                                {{if .address.locality}}
+                                    {{index .address "locality"}},
+                                {{end}}
+
+                                {{if .address.region}}
+                                    {{index .address "region"}},
+                                {{end}}
+
+                                {{if .address.country}}
+                                    {{index .address "country"}},
+                                {{end}}
+
+                                {{if .address.postal_code}}
+                                    {{index .address "postal_code"}}
+                                {{end}}
+
+                            </li>
+                        {{end}}
+
+                        {{if .country_of_residence}}
+                             <li>Country/State of Residence: {{.country_of_residence}}</li>
+                        {{end}}
+
+                        {{if .occupation}}
+                            <li>Occupation: {{.occupation}}</li>
+                        {{end}}
+
+                        {{if .identification}}
+
+                            {{if .identification.identification_type}}
+                            <li>{{.identification.identification_type}}</li>
+                            {{end}}
+
+                            {{if .identification.place_registration}}
+                            <li>Place of registration: {{.identification.place_registration}}</li>
+                            {{end}}
+
+                            {{if .identification.place_registered}}
+                            <li>Place registered: {{.identification.place_registered}}</li>
+                            {{end}}
+
+                            {{if .identification.registration_number}}
+                            <li>Registration number: {{.identification.registration_number}}</li>
+                            {{end}}
+
+                            {{if .identification.legal_authority}}
+                            <li>Legal authority: {{.identification.legal_authority}}</li>
+                            {{end}}
+
+                            {{if .identification.legal_form}}
+                            <li>Legal form: {{.identification.legal_form}}</li>
+                            {{end}}
+
+                        {{end}}
+
+                     </ul>
+                <hr>
+            {{end}}
+        {{end}}
+
+    <!--PSCS-->
+
+        {{if $pscs}}
+            <h2 class="heading-medium">Persons with significant control:<br>
+                {{if $pscs.active_count}} {{$pscs.active_count}} active person with significant control {{end}} / 0 active statements
+            </h2>
+
+            {{range $pscs.items}}
+                <ul class="list list-bullet">
+
+                    <li>{{.name}}
+
+                        {{ if .ceased_on }}
+                        <span id="officer-status-tag-resigned" class="status-tag ceased-tag">Ceased</span>
+                        {{else}}
+                        <span id="officer-status-tag-active" class="status-tag">Active</span>
+                        {{end}}
+                    </li>
+
+                    {{if .address}}
+                    <li>Correspondence address:
 
                         {{if .address.care_of}}
                         {{index .address "care_of"}},
@@ -277,46 +481,66 @@
                         {{end}}
 
                     </li>
+                    {{end}}
+
+                    {{if .notified_on}}
+                    <li> Notified on: {{.notified_on}} </li>
+                    {{end}}
+
+                    {{if .ceased_on}}
+                    <li>Ceased on: {{.ceased_on}} </li>
+                    {{end}}
+
+                    {{if .date_of_birth}}
+                    <li>Date of birth: {{index .date_of_birth "month"}} {{index .date_of_birth "year"}} </li>
+                    {{end}}
+
+                    {{if .nationality}}
+                    <li>Nationality: {{.nationality}}</li>
+                    {{end}}
+
+                    {{if .country_of_residence}}
+                    <li>Country of residence: {{.country_of_residence}}</li>
+                    {{end}}
+
+                    {{if .identification}}
+
+                        {{if .identification.legal_authority}}
+                        <li>Governing law: {{.identification.legal_authority}}</li>
+                        {{end}}
+
+                        {{if .identification.legal_form}}
+                        <li>Legal form: {{.identification.legal_form}}</li>
+                        {{end}}
+
+                        {{if .identification.place_registered}}
+                        <li>Place registered: {{.identification.place_registered}}</li>
+                        {{end}}
+
+                        {{if .identification.registration_number}}
+                        <li>Registration number: {{.identification.registration_number}}</li>
+                        {{end}}
+
+                        {{if .identification.country_registered}}
+                        <li>Incorporated in: {{.identification.country_registered}}</li>
+                        {{end}}
+
+                    {{end}}
+                </ul>
+
+                {{if .natures_of_control}}
+                <h3 class="heading-small">Nature of control:</h3>
+
+                <ul class="list list-bullet">
+                    {{range .natures_of_control}}
+                    <li> {{.natures_of_control_descriptions}}</li>
+                    {{end}}
+                </ul>
+
+                </li>
+                <hr>
                 {{end}}
-
-                {{ if .country_of_residence}}
-                     <li>Country/State of Residence: {{.country_of_residence}}</li>
-                {{end}}
-
-                {{if .occupation}}
-                <li>Occupation: {{.occupation}}</li>
-                {{end}}
-
-                {{if .identification}}
-
-                {{if .identification.identification_type}}
-                <li>{{.identification.identification_type}}</li>
-                {{end}}
-
-                {{if .identification.place_registration}}
-                <li>Place of registration: {{.identification.place_registration}}</li>
-                {{end}}
-
-                {{if .identification.place_registered}}
-                <li>Place registered: {{.identification.place_registered}}</li>
-                {{end}}
-
-                {{if .identification.registration_number}}
-                <li>Registration number: {{.identification.registration_number}}</li>
-                {{end}}
-
-                {{if .identification.legal_authority}}
-                <li>Legal authority: {{.identification.legal_authority}}</li>
-                {{end}}
-
-                {{if .identification.legal_form}}
-                <li>Legal form: {{.identification.legal_form}}</li>
-                {{end}}
-
-                {{end}}
-
-            </ul>
-            <hr>
+            {{end}}
         {{end}}
     {{end}}
 

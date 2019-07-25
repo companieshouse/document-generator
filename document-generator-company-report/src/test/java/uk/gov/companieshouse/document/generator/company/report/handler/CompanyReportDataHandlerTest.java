@@ -1,5 +1,7 @@
 package uk.gov.companieshouse.document.generator.company.report.handler;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -8,13 +10,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
+<<<<<<< HEAD
 import uk.gov.companieshouse.api.model.filinghistory.FilingApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
+=======
+import uk.gov.companieshouse.api.model.psc.PscsApi;
+>>>>>>> feature/generate-company-report
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.CompanyReportMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
+import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
 import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
 import uk.gov.companieshouse.document.generator.company.report.service.RecentFilingHistoryService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
@@ -44,6 +51,9 @@ public class CompanyReportDataHandlerTest {
     private CompanyReport mockCompanyReport;
 
     @Mock
+    private PscsService mockPscService;
+
+    @Mock
     private OfficerService mockOfficerService;
 
     @Mock
@@ -61,14 +71,15 @@ public class CompanyReportDataHandlerTest {
     @DisplayName("Test get company report successful")
     void testGetDocumentInfoSuccessful() throws Exception {
         CompanyProfileApi companyProfileApi = createCompanyProfile();
+        PscsApi pscsApi = createPscsApi();
         OfficersApi officersApi = createOfficers();
         FilingHistoryApi filingHistoryApi = createFilingHistory();
 
         CompanyReportApiData companyReportApiData = new CompanyReportApiData();
-
         companyReportApiData.setCompanyProfileApi(companyProfileApi);
 
         when(mockCompanyService.getCompanyProfile(any(String.class))).thenReturn(companyProfileApi);
+        when(mockPscService.getPscs(any(String.class))).thenReturn(pscsApi);
         when(mockOfficerService.getOfficers(any(String.class))).thenReturn(officersApi);
         when(mockRecentFilingHistoryService.getFilingHistory(any(String.class))).thenReturn(filingHistoryApi);
 
@@ -97,6 +108,14 @@ public class CompanyReportDataHandlerTest {
         assertEquals("112234554",result);
     }
 
+    private PscsApi createPscsApi() {
+        PscsApi pscsApi = new PscsApi();
+        pscsApi.setActiveCount(1L);
+
+        return pscsApi;
+    }
+
+
     private CompanyProfileApi createCompanyProfile() {
 
         CompanyProfileApi companyProfileApi = new CompanyProfileApi();
@@ -105,6 +124,7 @@ public class CompanyReportDataHandlerTest {
 
         Map<String, String> links = new HashMap<>();
 
+        links.put("persons_with_significant_control", "/persons-with-significant-control");
         links.put("officers", "/officers");
 
         companyProfileApi.setLinks(links);

@@ -9,6 +9,7 @@ import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
+import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.company.report.exception.MapperException;
@@ -17,6 +18,7 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.C
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
+import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
 import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
 import uk.gov.companieshouse.document.generator.company.report.service.RecentFilingHistoryService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
@@ -39,6 +41,9 @@ public class CompanyReportDataHandler {
     private CompanyService companyService;
 
     @Autowired
+    private PscsService pscsService;
+
+    @Autowired
     private OfficerService officerService;
 
     @Autowired
@@ -48,7 +53,7 @@ public class CompanyReportDataHandler {
     private CompanyReportMapper companyReportMapper;
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
-
+    private static final String PSCS_KEY = "persons_with_significant_control";
     private static final String OFFICERS_KEY = "officers";
 
     public DocumentInfoResponse getCompanyReport(String resourceUri, String requestId)
@@ -65,8 +70,8 @@ public class CompanyReportDataHandler {
         }
     }
 
-    private DocumentInfoResponse createDocumentInfoResponse(String companyNumber, String requestId)
-        throws HandlerException, MapperException {
+    private DocumentInfoResponse createDocumentInfoResponse(String companyNumber,
+        String requestId) throws HandlerException, MapperException {
 
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
 
@@ -88,6 +93,14 @@ public class CompanyReportDataHandler {
         FilingHistoryApi filingHistoryApi = getFilingHistory(companyNumber, requestId);
         companyReportApiData.setFilingHistoryApi(filingHistoryApi);
 
+        if (companyProfileApi.getLinks().containsKey(PSCS_KEY)) {
+            try {
+                companyReportApiData.setPscsApi(getPscs(companyNumber, requestId));
+            } catch (HandlerException he) {
+                LOG.infoContext(requestId,"Failed to get PSCs: ", getDebugMap(companyNumber));
+            }
+        }
+
          if (companyProfileApi.getLinks().containsKey(OFFICERS_KEY)) {
              try {
                  OfficersApi officersApi = getOfficers(companyNumber, requestId);
@@ -102,7 +115,6 @@ public class CompanyReportDataHandler {
             companyNumber,
             requestId);
     }
-
 
     private String toJson(CompanyReport companyReport, String companyNumber,
                           String requestId) throws HandlerException {
@@ -162,6 +174,16 @@ public class CompanyReportDataHandler {
         filingHistoryApi.setItems(filings);
 
         return filingHistoryApi;
+    }
+
+    private PscsApi getPscs(String companyNumber, String requestId) throws HandlerException {
+
+        try {
+            LOG.infoContext(requestId,"Attempting to retrieve company PSCSs", getDebugMap(companyNumber));
+            return pscsService.getPscs(companyNumber);
+        } catch (ServiceException se) {
+            throw new HandlerException("error occurred obtaining the company PSCSs", se);
+        }
     }
 
     private String createPathString() {
