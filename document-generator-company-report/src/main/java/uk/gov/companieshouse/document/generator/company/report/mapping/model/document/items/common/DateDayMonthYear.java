@@ -1,8 +1,11 @@
-package uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.items;
+package uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class DateOfBirth {
+public class DateDayMonthYear {
+
+    @JsonProperty("day")
+    private String day;
 
     @JsonProperty("month")
     private String month;
@@ -24,5 +27,13 @@ public class DateOfBirth {
 
     public void setYear(Long year) {
         this.year = year;
+    }
+
+    public String getDay() {
+        return day;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
     }
 }
