@@ -7,6 +7,7 @@
 {{$foreignCompanyAccounts := .company_report.foreign_company_details.accounts}}
 {{$officers := .company_report.current_appointments}}
 {{$pscs := .company_report.pscs}}
+{{$pscStatements := .company_report.psc_statements}}
 
 <head>
     <meta charset="UTF-8">
@@ -425,7 +426,7 @@
 
         {{if $pscs}}
             <h2 class="heading-medium">Persons with significant control:<br>
-                {{if $pscs.active_count}} {{$pscs.active_count}} active person with significant control {{end}} / 0 active statements
+                {{if $pscs.active_count}} {{$pscs.active_count}} active person with significant control {{end}} / {{if $pscStatements.active_count}} {{$pscStatements.active_count}} active statements {{end}}
             </h2>
 
             {{range $pscs.items}}
@@ -538,6 +539,35 @@
 
                 </li>
                 <hr>
+                {{end}}
+            {{end}}
+
+            <!--PSC Statements-->
+            {{if $pcsStatements}}
+                {{range $pscStatements.items}}
+                <h2 class="heading-medium">Statement
+
+                    {{if .ceased_on}}
+                    <span id="statements-status-tag-withdrawn" class="status-tag ceased-tag">Withdrawn</span>
+                    {{else}}
+                    <span id="statements-status-tag-active" class="status-tag">Active</span>
+                    {{end}}
+                </h2>
+
+                {{if .statement}}
+                    <p>{{.statement}}</p>
+                {{end}}
+
+                <ul class="list list-bullet">
+
+                    {{if .notified_on}}
+                    <li>Notified on: {{.notified_on}}</li>
+                    {{end}}
+
+                    {{if .ceased_on}}
+                    <li>Ceased on: {{.ceased_on}}</li>
+                    {{end}}
+                </ul>
                 {{end}}
             {{end}}
         {{end}}
