@@ -2,8 +2,6 @@ package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -15,13 +13,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.companieshouse.api.model.psc.PscApi;
-import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.api.model.statements.StatementApi;
 import uk.gov.companieshouse.api.model.statements.StatementsApi;
-import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
-import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.pscs.Pscs;
-import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.pscs.items.Psc;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.statements.Statements;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.statements.items.Statement;
 

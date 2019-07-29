@@ -26,9 +26,7 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ApiToPscMapperTest {
 
-    @InjectMocks
-    private ApiToPscMapper apiToPscMapper = new ApiToPscMapperImpl();
-
+    private static final String MAPPED_VALUE = "mapped value";
     private static final String NAME = "name";
     private static final LocalDate CEASED_ON = LocalDate.of(
             2019, 06, 06);
@@ -51,9 +49,11 @@ public class ApiToPscMapperTest {
     private static final String LEGAL_FORM = "legal form";
     private static final String PLACE_REGISTRATION = "place registration";
     private static final String REGISTRATION_NUMBER = "registration number";
-    private static final String KIND = "kind";
 
     private String[] NATURE_OF_CONTROL = new String[]{"test1", "test2", "test3"};
+
+    @InjectMocks
+    private ApiToPscMapper apiToPscMapper = new ApiToPscMapperImpl();
 
     @Mock
     RetrieveApiEnumerationDescription mockRetrieveApiEnumerations;
@@ -80,7 +80,7 @@ public class ApiToPscMapperTest {
         PscApi pscApi = createPscApi();
 
         when(mockRetrieveApiEnumerations.getApiEnumerationDescription(anyString(), anyString(),
-                anyString(), any())).thenReturn("mapped value");
+                anyString(), any())).thenReturn(MAPPED_VALUE);
 
         Psc psc = apiToPscMapper.apiToPsc(pscApi);
 
@@ -105,11 +105,11 @@ public class ApiToPscMapperTest {
         assertEquals(LEGAL_FORM, psc.getIdentification().getLegalForm());
         assertEquals(PLACE_REGISTRATION, psc.getIdentification().getPlaceRegistered());
         assertEquals(REGISTRATION_NUMBER, psc.getIdentification().getRegistrationNumber());
-        assertEquals("mapped value",
+        assertEquals(MAPPED_VALUE,
                 psc.getNaturesOfControl().get(0).getNaturesOfControlDescription());
-        assertEquals("mapped value",
+        assertEquals(MAPPED_VALUE,
                 psc.getNaturesOfControl().get(1).getNaturesOfControlDescription());
-        assertEquals("mapped value",
+        assertEquals(MAPPED_VALUE,
                 psc.getNaturesOfControl().get(2).getNaturesOfControlDescription());
     }
 
@@ -122,7 +122,6 @@ public class ApiToPscMapperTest {
         pscApi.setCountryOfResidence(COUNTRY_OF_RESIDENCE);
         pscApi.setIdentification(createIdentification());
         pscApi.setNaturesOfControl(NATURE_OF_CONTROL);
-        ;
         pscApi.setNotifiedOn(NOTIFIED_ON);
         pscApi.setNationality(NATIONALITY);
         pscApi.setName(NAME);

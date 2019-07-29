@@ -43,13 +43,13 @@ public class ApiToPscStatementMapperTest {
         StatementApi statementApi = createStatementApi();
 
         when(mockRetrieveApiEnumerations.getApiEnumerationDescription(anyString(), anyString(),
-                anyString(), any())).thenReturn("mapped value");
+                anyString(), any())).thenReturn(MAPPED_VALUE);
 
         Statement statement = apiToPscStatementMapper.ApiToStatementMapper(statementApi);
 
         assertNotNull(statement);
 
-        assertEquals("mapped value", statement.getStatement());
+        assertEquals(MAPPED_VALUE, statement.getStatement());
         assertEquals("6 June 2019", statement.getCeasedOn());
         assertEquals("5 May 2019", statement.getNotifiedOn());
 
