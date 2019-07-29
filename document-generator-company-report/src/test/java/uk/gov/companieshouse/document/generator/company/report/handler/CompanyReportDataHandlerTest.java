@@ -1,7 +1,5 @@
 package uk.gov.companieshouse.document.generator.company.report.handler;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -10,19 +8,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
-<<<<<<< HEAD
 import uk.gov.companieshouse.api.model.filinghistory.FilingApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
-=======
-import uk.gov.companieshouse.api.model.psc.PscsApi;
->>>>>>> feature/generate-company-report
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
+import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.CompanyReportMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
-import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
 import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
+import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
 import uk.gov.companieshouse.document.generator.company.report.service.RecentFilingHistoryService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 
