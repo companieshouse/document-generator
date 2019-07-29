@@ -48,7 +48,6 @@ public class CompanyReportDataHandler {
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
     private static final String PSCS_KEY = "persons_with_significant_control";
     private static final String OFFICERS_KEY = "officers";
-
     private static final String STATEMENTS_KEY = "persons_with_significant_control_statements";
 
     public DocumentInfoResponse getCompanyReport(String resourceUri, String requestId)
