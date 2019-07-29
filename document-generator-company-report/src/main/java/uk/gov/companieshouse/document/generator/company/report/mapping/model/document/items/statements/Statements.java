@@ -10,7 +10,7 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 public class Statements {
 
     @JsonProperty("items")
-    private List<Statement> statementList;
+    private List<Statement> items;
 
     @JsonProperty("active_count")
     private Long activeStatements;
@@ -18,12 +18,13 @@ public class Statements {
     @JsonProperty("ceased_count")
     private Long ceasedStatements;
 
-    public List<Statement> getStatementList() {
-        return statementList;
+    public List<Statement> getItems() {
+        return items;
     }
 
-    public void setStatementList(List<Statement> statementList) {
-        this.statementList = statementList;
+    public void setItems(
+        List<Statement> items) {
+        this.items = items;
     }
 
     public Long getActiveStatements() {
