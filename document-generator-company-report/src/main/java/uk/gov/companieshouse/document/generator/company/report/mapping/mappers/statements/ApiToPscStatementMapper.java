@@ -54,16 +54,19 @@ public abstract class ApiToPscStatementMapper {
     @AfterMapping
     protected void formatNotifiedOnDate(StatementApi statementApi, @MappingTarget Statement statement) {
 
-        LocalDate notifiedOnDate = statementApi.getNotifiedOn();
-        statement.setNotifiedOn(notifiedOnDate.format(getFormatter()));
+        if(statementApi != null && statementApi.getNotifiedOn() != null) {
+            LocalDate notifiedOnDate = statementApi.getNotifiedOn();
+            statement.setNotifiedOn(notifiedOnDate.format(getFormatter()));
+        }
     }
 
     @AfterMapping
     protected void formatCeasedOnDate(StatementApi statementApi, @MappingTarget Statement statement) {
 
-        LocalDate ceasedOnDate = statementApi.getCeasedOn();
-        statement.setCeasedOn(ceasedOnDate.format(getFormatter()));
-
+        if(statementApi != null && statementApi.getCeasedOn() != null) {
+            LocalDate ceasedOnDate = statementApi.getCeasedOn();
+            statement.setCeasedOn(ceasedOnDate.format(getFormatter()));
+        }
     }
 
     private Map<String, String> getDebugMap(String debugString) {
