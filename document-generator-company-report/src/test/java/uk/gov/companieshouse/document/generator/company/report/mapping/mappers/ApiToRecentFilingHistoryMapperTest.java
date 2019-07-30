@@ -23,6 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class})
@@ -115,6 +117,21 @@ public class ApiToRecentFilingHistoryMapperTest {
 
     }
 
+    @Test
+    @DisplayName("test filing api with date description values is correctly mapped")
+    void testFilingApiWithDateDescriptionValues() throws MapperException {
+
+        createFilingWithDateDescription();
+        when(mockRetrieveApiEnumerations.getApiEnumerationDescription(anyString(), anyString(), anyString(), any())).thenReturn("test description with {made_up_date}");
+
+        RecentFilingHistory recentFilingHistory =  apiToRecentFilingHistoryMapper
+                .apiToRecentFilingHistoryMapper(createFilingWithDateDescription());
+
+     assertNotNull(recentFilingHistory.getDescription());
+     assertEquals("test description with 1 Jan 1999", recentFilingHistory.getDescription());
+
+    }
+
     private FilingApi createFiling(){
 
         FilingApi filingApi = new FilingApi();
@@ -136,6 +153,23 @@ public class ApiToRecentFilingHistoryMapperTest {
         filingApi.setDescription(LEGACY_VALUE);
         filingApi.setType(FORM_TYPE);
         filingApi.setDescriptionValues(filingDescription);
+
+        return filingApi;
+    }
+
+    private FilingApi createFilingWithDateDescription(){
+
+        FilingApi filingApi = new FilingApi();
+        HashMap<String, Object> filingDescription = new HashMap<>();
+        filingDescription.put("description", FILING_DESCRIPTION);
+
+        HashMap<String, Object> descriptionValue = new HashMap<>();
+        descriptionValue.put("made_up_date", FILING_DATE);
+
+        filingApi.setDate(FILING_DATE);
+        filingApi.setDescription("test description with {made_up_date}");
+        filingApi.setType(FORM_TYPE);
+        filingApi.setDescriptionValues(descriptionValue);
 
         return filingApi;
     }

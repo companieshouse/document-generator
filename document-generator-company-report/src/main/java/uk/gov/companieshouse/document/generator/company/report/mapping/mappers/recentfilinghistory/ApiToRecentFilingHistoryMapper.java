@@ -30,31 +30,41 @@ public abstract class ApiToRecentFilingHistoryMapper {
     private static final String D_MMMM_UUU = "d MMM uuu";
 
     @Mappings({
-        @Mapping(source = "type", target = "form")
+            @Mapping(source = "type", target = "form")
     })
     public abstract RecentFilingHistory apiToRecentFilingHistoryMapper(FilingApi filingApi) throws MapperException;
+
     public abstract List<RecentFilingHistory> apiToRecentFilingHistoryMapper(List<FilingApi> filingApi) throws MapperException;
 
     @AfterMapping
-    protected void convertFilingDescription(FilingApi filingApi, @MappingTarget RecentFilingHistory recentFilingHistory) {
+    protected void convertFilingDescription(FilingApi filingApi,
+            @MappingTarget RecentFilingHistory recentFilingHistory) {
 
-        recentFilingHistory.setDescription(setFilingDescripton(filingApi.getDescription(), filingApi.getDescriptionValues()));
+        recentFilingHistory.setDescription(setFilingDescription(filingApi.getDescription(),
+                filingApi.getDescriptionValues()));
     }
 
-    private String setFilingDescripton(String description, Map<String, Object> descriptionValues) {
+    private String setFilingDescription(String description, Map<String, Object> descriptionValues) {
 
         if (description.equals("legacy")) {
+
             return descriptionValues.get("description").toString();
         }
 
         String filingDescription = retrieveApiEnumerationDescription
-            .getApiEnumerationDescription(FILING_HISTORY_DESCRIPTIONS, "description", description, getDebugMap(description) );
+                .getApiEnumerationDescription(FILING_HISTORY_DESCRIPTIONS, "description",
+                        description, getDebugMap(description));
 
-        return populateParameters(filingDescription, descriptionValues);
+        if (descriptionValues != null) {
+
+            return populateParameters(filingDescription, descriptionValues);
+        } else
+            return filingDescription;
     }
 
     @AfterMapping
-    protected void formatFilingDate(FilingApi filingApi, @MappingTarget RecentFilingHistory recentFilingHistory) {
+    protected void formatFilingDate(FilingApi filingApi,
+            @MappingTarget RecentFilingHistory recentFilingHistory) {
         if (filingApi != null && filingApi.getDate() != null) {
             LocalDate filingDate = filingApi.getDate();
             recentFilingHistory.setDate(filingDate.format(getFormatter()));
@@ -67,6 +77,17 @@ public abstract class ApiToRecentFilingHistoryMapper {
 
     private String populateParameters(Object description, Map<String, Object> parameters) {
         StrSubstitutor sub = new StrSubstitutor(parameters, "{", "}");
+
+        for (String parameterKey : parameters.keySet()) {
+
+            if (parameterKey.contains("_date")) {
+
+                LocalDate localDate = LocalDate.parse(parameters.get(parameterKey).toString());
+
+                parameters.replace(parameterKey, localDate.format(getFormatter()));
+            }
+        }
+
         return sub.replace(description);
     }
 
