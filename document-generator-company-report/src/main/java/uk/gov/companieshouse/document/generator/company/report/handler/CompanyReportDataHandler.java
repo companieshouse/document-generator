@@ -90,8 +90,15 @@ public class CompanyReportDataHandler {
         CompanyProfileApi companyProfileApi = getCompanyProfile(companyNumber, requestId);
         companyReportApiData.setCompanyProfileApi(companyProfileApi);
 
-        FilingHistoryApi filingHistoryApi = getFilingHistory(companyNumber, requestId);
-        companyReportApiData.setFilingHistoryApi(filingHistoryApi);
+        if(companyProfileApi.getLinks().containsKey("filing_history")) {
+            try {
+                FilingHistoryApi filingHistoryApi = getFilingHistory(companyNumber, requestId);
+                companyReportApiData.setFilingHistoryApi(filingHistoryApi);
+
+            } catch (HandlerException he) {
+                LOG.infoContext(requestId, "Failed to get filing history: ", getDebugMap(companyNumber));
+            }
+        }
 
         if (companyProfileApi.getLinks().containsKey(PSCS_KEY)) {
             try {

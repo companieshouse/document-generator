@@ -121,6 +121,8 @@ public class CompanyReportDataHandlerTest {
 
         links.put("persons_with_significant_control", "/persons-with-significant-control");
         links.put("officers", "/officers");
+        links.put("filing_history", "/filing-history");
+
 
         companyProfileApi.setLinks(links);
 
