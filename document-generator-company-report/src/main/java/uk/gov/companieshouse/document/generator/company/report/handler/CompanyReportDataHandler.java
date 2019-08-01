@@ -23,6 +23,8 @@ import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
 import java.util.Comparator;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,16 +61,18 @@ public class CompanyReportDataHandler {
 
         String companyNumber = getCompanyNumberFromUri(resourceUri);
 
+        ZonedDateTime timeStamp = ZonedDateTime.now();
+
         LOG.infoContext(requestId, "Getting data for report for company number: " + companyNumber, getDebugMap(companyNumber));
-        return createDocumentInfoResponse(companyNumber, requestId);
+        return createDocumentInfoResponse(companyNumber, requestId, timeStamp);
     }
 
     private DocumentInfoResponse createDocumentInfoResponse(String companyNumber,
-        String requestId) throws HandlerException {
+        String requestId, ZonedDateTime timeStamp) throws HandlerException {
 
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
 
-        documentInfoResponse.setData(getCompanyReportData(companyNumber, requestId));
+        documentInfoResponse.setData(getCompanyReportData(companyNumber, requestId, timeStamp));
         documentInfoResponse.setAssetId("company-report");
         documentInfoResponse.setPath(createPathString());
         documentInfoResponse.setTemplateName("company-report.html");
@@ -76,7 +80,8 @@ public class CompanyReportDataHandler {
         return documentInfoResponse;
     }
 
-    private String getCompanyReportData(String companyNumber,  String requestId) throws HandlerException {
+    private String getCompanyReportData(String companyNumber,  String requestId,
+        ZonedDateTime timeStamp) throws HandlerException {
 
         CompanyReportApiData companyReportApiData = new CompanyReportApiData();
 
@@ -112,7 +117,8 @@ public class CompanyReportDataHandler {
         return toJson(companyReportMapper
             .mapCompanyReport(companyReportApiData),
             companyNumber,
-            requestId);
+            requestId,
+            timeStamp);
     }
 
     private StatementsApi sortStatements(StatementsApi statementsApi) {
@@ -130,10 +136,12 @@ public class CompanyReportDataHandler {
     }
 
     private String toJson(CompanyReport companyReport, String companyNumber,
-                          String requestId) throws HandlerException {
+                          String requestId, ZonedDateTime timeStamp) throws HandlerException {
 
         String reportToJson;
         ObjectMapper mapper = new ObjectMapper();
+
+        companyReport.setTimeStampCreated(timeStamp.format(DateTimeFormatter.ofPattern("d MMMM uuuu HH:mm:ss")));
 
         try {
             LOG.infoContext(requestId,"Attempting to convert company report to JSON",  getDebugMap(companyNumber));
