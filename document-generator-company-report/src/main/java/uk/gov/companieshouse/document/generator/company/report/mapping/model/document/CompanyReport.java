@@ -21,6 +21,9 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 @JsonTypeInfo(include = As.WRAPPER_OBJECT, use = Id.NAME)
 public class CompanyReport {
 
+    @JsonProperty("time_stamp_created")
+    private String TimeStampCreated;
+
     @JsonProperty("company_registration_information")
     private RegistrationInformation registrationInformation;
 
@@ -41,6 +44,14 @@ public class CompanyReport {
 
     @JsonProperty("psc_statements")
     private Statements statements;
+
+    public String getTimeStampCreated() {
+        return TimeStampCreated;
+    }
+
+    public void setTimeStampCreated(String timeStampCreated) {
+        TimeStampCreated = timeStampCreated;
+    }
 
     public RegistrationInformation getRegistrationInformation() {
         return registrationInformation;

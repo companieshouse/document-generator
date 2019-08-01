@@ -56,6 +56,7 @@ public class CompanyReportDataHandlerTest {
     @Mock
     private OfficerService mockOfficerService;
 
+
     @InjectMocks
     private CompanyReportDataHandler companyReportDataHandler;
 
@@ -78,6 +79,7 @@ public class CompanyReportDataHandlerTest {
         when(mockPscService.getPscs(any(String.class))).thenReturn(pscsApi);
         when(mockOfficerService.getOfficers(any(String.class))).thenReturn(officersApi);
         when(mockStatementsService.getStatements(any(String.class))).thenReturn(statementsApi);
+        when(mockCompanyReportMapper.mapCompanyReport(any(CompanyReportApiData.class))).thenReturn(new CompanyReport());
 
         DocumentInfoResponse documentInfoResponse = companyReportDataHandler.getCompanyReport(RESOURCE_URI, REQUEST_ID);
 
