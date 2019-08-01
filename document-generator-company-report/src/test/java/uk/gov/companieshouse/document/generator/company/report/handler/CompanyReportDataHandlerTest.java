@@ -1,6 +1,9 @@
 package uk.gov.companieshouse.document.generator.company.report.handler;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
+import uk.gov.companieshouse.api.model.statements.StatementApi;
 import uk.gov.companieshouse.api.model.statements.StatementsApi;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.CompanyReportMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
@@ -134,6 +138,13 @@ public class CompanyReportDataHandlerTest {
     private StatementsApi createStatementsApi() {
         StatementsApi statementsApi = new StatementsApi();
         statementsApi.setActiveCount(3L);
+
+        List<StatementApi> statementApiList = new ArrayList<>();
+        StatementApi statementApi = new StatementApi();
+        statementApi.setStatement("test data");
+        statementApi.setCeasedOn(LocalDate.of(2018, 12, 13));
+        statementApiList.add(statementApi);
+        statementsApi.setItems(statementApiList);
 
         return statementsApi;
     }
