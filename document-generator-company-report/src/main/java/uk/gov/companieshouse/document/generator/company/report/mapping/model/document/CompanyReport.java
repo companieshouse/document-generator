@@ -7,13 +7,13 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.ForeignCompanyDetails;
-import java.util.List;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.CurrentAppointments;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.ForeignCompanyDetails;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.keyfilingdates.KeyFilingDates;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.previousnames.PreviousNames;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.pscs.Pscs;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.RegistrationInformation;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.ukestablishment.UkEstablishment;
 
 import java.util.List;
 
@@ -39,6 +39,9 @@ public class CompanyReport {
 
     @JsonProperty("foreign_company_details")
     private ForeignCompanyDetails foreignCompanyDetails;
+
+    @JsonProperty("uk_establishment")
+    private List<UkEstablishment> ukEstablishment;
 
     public RegistrationInformation getRegistrationInformation() {
         return registrationInformation;
@@ -92,5 +95,13 @@ public class CompanyReport {
     public void setForeignCompanyDetails(
         ForeignCompanyDetails foreignCompanyDetails) {
         this.foreignCompanyDetails = foreignCompanyDetails;
+    }
+
+    public List<UkEstablishment> getUkEstablishment() {
+        return ukEstablishment;
+    }
+
+    public void setUkEstablishment(List<UkEstablishment> ukEstablishment) {
+        this.ukEstablishment = ukEstablishment;
     }
 }

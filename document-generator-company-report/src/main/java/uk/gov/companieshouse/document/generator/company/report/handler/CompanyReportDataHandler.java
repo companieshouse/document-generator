@@ -5,8 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
-import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
+import uk.gov.companieshouse.api.model.psc.PscsApi;
+import uk.gov.companieshouse.api.model.ukestablishments.UkEstablishmentsApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.company.report.exception.MapperException;
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
@@ -14,8 +15,9 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.C
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
-import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
 import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
+import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
+import uk.gov.companieshouse.document.generator.company.report.service.UkEstablishmentService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
@@ -39,11 +41,15 @@ public class CompanyReportDataHandler {
     private OfficerService officerService;
 
     @Autowired
+    private UkEstablishmentService ukEstablishmentService;
+
+    @Autowired
     private CompanyReportMapper companyReportMapper;
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
     private static final String PSCS_KEY = "persons_with_significant_control";
     private static final String OFFICERS_KEY = "officers";
+    private static final String UK_ESTABLISHMENTS = "uk_establishments";
 
     public DocumentInfoResponse getCompanyReport(String resourceUri, String requestId)
         throws HandlerException {
@@ -96,6 +102,15 @@ public class CompanyReportDataHandler {
              }
          }
 
+         if(companyProfileApi.getLinks().containsKey(UK_ESTABLISHMENTS)) {
+             try {
+                 UkEstablishmentsApi ukEstablishmentsApi = getUkEstablishments(companyNumber, requestId);
+                 companyReportApiData.setUkEstablishmentsApi(ukEstablishmentsApi);
+             } catch (HandlerException he) {
+                 LOG.infoContext(requestId,"Failed to get uk establishments: ", getDebugMap(companyNumber));
+             }
+         }
+
         return toJson(companyReportMapper
             .mapCompanyReport(companyReportApiData),
             companyNumber,
@@ -135,6 +150,15 @@ public class CompanyReportDataHandler {
         try {
             LOG.infoContext(requestId,"Attempting to retrieve company officers", getDebugMap(companyNumber));
             return officerService.getOfficers(companyNumber);
+        } catch (ServiceException se) {
+            throw new HandlerException("error occurred obtaining the company officers", se);
+        }
+    }
+
+    private UkEstablishmentsApi getUkEstablishments(String companyNumber, String requestId) throws HandlerException {
+        try {
+            LOG.infoContext(requestId,"Attempting to retrieve uk establishment", getDebugMap(companyNumber));
+            return ukEstablishmentService.getUkEstablishments(companyNumber);
         } catch (ServiceException se) {
             throw new HandlerException("error occurred obtaining the company officers", se);
         }
