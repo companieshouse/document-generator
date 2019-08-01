@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
+import uk.gov.companieshouse.api.model.statements.StatementApi;
 import uk.gov.companieshouse.api.model.statements.StatementsApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
@@ -21,9 +22,12 @@ import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRes
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static uk.gov.companieshouse.document.generator.company.report.CompanyReportDocumentInfoServiceImpl.MODULE_NAME_SPACE;
 
@@ -98,7 +102,7 @@ public class CompanyReportDataHandler {
 
         if (companyProfileApi.getLinks().containsKey(STATEMENTS_KEY)) {
             try {
-                StatementsApi statementsApi = getStatements(companyNumber, requestId);
+                StatementsApi statementsApi = sortStatements(getStatements(companyNumber, requestId));
                 companyReportApiData.setStatementsApi(statementsApi);
             } catch (HandlerException he) {
                 LOG.infoContext(requestId,"Failed to get psc statements: ", getDebugMap(companyNumber));
@@ -109,6 +113,20 @@ public class CompanyReportDataHandler {
             .mapCompanyReport(companyReportApiData),
             companyNumber,
             requestId);
+    }
+
+    private StatementsApi sortStatements(StatementsApi statementsApi) {
+
+        StatementsApi sortedStatementsApi = statementsApi;
+
+        List<StatementApi> statements = statementsApi.getItems().stream()
+            .sorted(Comparator.comparing(StatementApi::getCeasedOn, Comparator.nullsFirst(Comparator.reverseOrder()))
+                .thenComparing(StatementApi::getNotifiedOn))
+            .collect(Collectors.toList());
+
+        sortedStatementsApi.setItems(statements);
+
+        return  sortedStatementsApi;
     }
 
     private String toJson(CompanyReport companyReport, String companyNumber,
