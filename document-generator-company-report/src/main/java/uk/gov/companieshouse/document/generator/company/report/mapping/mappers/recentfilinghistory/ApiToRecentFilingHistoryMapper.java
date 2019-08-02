@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.annotation.RequestScope;
 import uk.gov.companieshouse.api.model.filinghistory.FilingApi;
 import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
-import uk.gov.companieshouse.document.generator.company.report.exception.MapperException;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.recentfilinghistory.RecentFilingHistory;
 
 import java.time.LocalDate;
@@ -32,9 +31,9 @@ public abstract class ApiToRecentFilingHistoryMapper {
     @Mappings({
             @Mapping(source = "type", target = "form")
     })
-    public abstract RecentFilingHistory apiToRecentFilingHistoryMapper(FilingApi filingApi) throws MapperException;
+    public abstract RecentFilingHistory apiToRecentFilingHistoryMapper(FilingApi filingApi);
 
-    public abstract List<RecentFilingHistory> apiToRecentFilingHistoryMapper(List<FilingApi> filingApi) throws MapperException;
+    public abstract List<RecentFilingHistory> apiToRecentFilingHistoryMapper(List<FilingApi> filingApi);
 
     @AfterMapping
     protected void convertFilingDescription(FilingApi filingApi,

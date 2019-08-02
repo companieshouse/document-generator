@@ -14,7 +14,6 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.r
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.registrationinformation.ApiToRegistrationInformationMapperImpl;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.RegistrationInformation;
 
-import java.io.IOException;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -59,7 +58,7 @@ public class ApiToRegistrationInformationMapperTest {
 
     @Test
     @DisplayName("tests company profile data maps to registration information model")
-    void testApiToRegistrationInformationMaps() throws IOException {
+    void testApiToRegistrationInformationMaps() {
 
         CompanyProfileApi companyProfileApi = createCompanyReportApiData();
 

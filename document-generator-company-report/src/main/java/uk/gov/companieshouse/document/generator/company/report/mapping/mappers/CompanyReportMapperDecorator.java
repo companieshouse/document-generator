@@ -4,27 +4,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.company.PreviousCompanyNamesApi;
-import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.api.model.company.foreigncompany.ForeignCompanyDetailsApi;
-import uk.gov.companieshouse.document.generator.company.report.exception.MapperException;
-import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.foreigncompanydetails.ApiToForeignCompanyDetailsMapper;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
+import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.currentappointments.ApiToCurrentAppointmentsMapper;
+import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.foreigncompanydetails.ApiToForeignCompanyDetailsMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.keyfilingdates.ApiToKeyFilingDatesMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.previousnames.ApiToPreviousNamesMapper;
-import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.recentfilinghistory.ApiToRecentFilingHistoryMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.pscs.ApiToPscsMapper;
+import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.recentfilinghistory.ApiToRecentFilingHistoryMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.registrationinformation.ApiToRegistrationInformationMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
-import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.ForeignCompanyDetails;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.CurrentAppointments;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.ForeignCompanyDetails;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.keyfilingdates.KeyFilingDates;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.previousnames.PreviousNames;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.pscs.Pscs;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.RegistrationInformation;
 
-import java.io.IOException;
 import java.util.List;
 
 public class CompanyReportMapperDecorator implements CompanyReportMapper {
@@ -55,7 +53,7 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
     private ApiToRecentFilingHistoryMapper apiToRecentFilingHistoryMapper;
 
     @Override
-    public CompanyReport mapCompanyReport(CompanyReportApiData companyReportApiData) throws MapperException{
+    public CompanyReport mapCompanyReport(CompanyReportApiData companyReportApiData) {
 
         CompanyReport companyReport = companyReportMapper.mapCompanyReport(companyReportApiData);
 
@@ -91,21 +89,12 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
         return companyReport;
     }
 
-    private Pscs setPscs(PscsApi pscsApi) throws MapperException {
-        try {
-            return apiToPscsMapper.apiToPscsMapper(pscsApi);
-        } catch (MapperException e) {
-            throw new MapperException("An error occurred when mapping to PSCs", e);
-        }
+    private Pscs setPscs(PscsApi pscsApi) {
+        return apiToPscsMapper.apiToPscsMapper(pscsApi);
     }
 
-    private RegistrationInformation setRegistrationInformation(CompanyProfileApi companyProfileApi) throws MapperException {
-        try {
-            return apiToRegistrationInformationMapper.apiToRegistrationInformation(companyProfileApi);
-        } catch (IOException e) {
-            throw new MapperException("An error occurred when mapping to registration " +
-                    "information", e);
-        }
+    private RegistrationInformation setRegistrationInformation(CompanyProfileApi companyProfileApi) {
+        return apiToRegistrationInformationMapper.apiToRegistrationInformation(companyProfileApi);
     }
 
     private KeyFilingDates setKeyFilingDates(CompanyProfileApi companyProfileApi) {
@@ -116,20 +105,12 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
         return apiToPreviousNamesMapper.apiToPreviousNamesMapper(previousCompanyNames);
     }
 
-    private ForeignCompanyDetails setForeignCompanyDetails(ForeignCompanyDetailsApi foreignCompanyDetailsApi) throws MapperException {
-        try {
-            return apiToForeignCompanyDetailsMapper.apiToForeignCompanyDetails(foreignCompanyDetailsApi);
-        } catch (MapperException e) {
-            throw new MapperException("An error occurred when mapping to foreign company details", e);
-        }
+    private ForeignCompanyDetails setForeignCompanyDetails(ForeignCompanyDetailsApi foreignCompanyDetailsApi) {
+        return apiToForeignCompanyDetailsMapper.apiToForeignCompanyDetails(foreignCompanyDetailsApi);
     }
 
-    private CurrentAppointments setCurrentAppointments(OfficersApi officersApi) throws MapperException {
-        try {
-            return apiToCurrentAppointmentsMapper.apiToCurrentAppointmentsMapper(officersApi);
-        } catch (MapperException e) {
-            throw new MapperException("An error occurred when mapping to current appointments", e);
-        }
+    private CurrentAppointments setCurrentAppointments(OfficersApi officersApi) {
+        return apiToCurrentAppointmentsMapper.apiToCurrentAppointmentsMapper(officersApi);
     }
 }
 

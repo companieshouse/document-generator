@@ -9,7 +9,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.filinghistory.FilingApi;
 import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
-import uk.gov.companieshouse.document.generator.company.report.exception.MapperException;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.recentfilinghistory.ApiToRecentFilingHistoryMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.recentfilinghistory.ApiToRecentFilingHistoryMapperImpl;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.recentfilinghistory.RecentFilingHistory;
@@ -23,8 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class})
@@ -48,7 +45,7 @@ public class ApiToRecentFilingHistoryMapperTest {
 
     @Test
     @DisplayName("test filing api data maps correctly to recent filing history")
-    void testApiToRecentFilingInformationMaps() throws MapperException {
+    void testApiToRecentFilingInformationMaps() {
 
         when(mockRetrieveApiEnumerations.getApiEnumerationDescription(anyString(), anyString(), anyString(), any())).thenReturn(MAPPED_VALUE);
 
@@ -63,7 +60,7 @@ public class ApiToRecentFilingHistoryMapperTest {
 
     @Test
     @DisplayName("test a list of filing api data maps correctly to recent filing history")
-    void testApiListToRecentFilingInformation() throws MapperException {
+    void testApiListToRecentFilingInformation() {
 
         when(mockRetrieveApiEnumerations.getApiEnumerationDescription(anyString(), anyString(), anyString(), any())).thenReturn(MAPPED_VALUE);
 
@@ -94,7 +91,7 @@ public class ApiToRecentFilingHistoryMapperTest {
 
     @Test
     @DisplayName("test filing api null value data maps to recent filing history model")
-    void testApiToRecentFilingHistoryMapsWithNullValues() throws MapperException {
+    void testApiToRecentFilingHistoryMapsWithNullValues() {
 
         FilingApi filingApi = null;
 
@@ -107,7 +104,7 @@ public class ApiToRecentFilingHistoryMapperTest {
 
     @Test
     @DisplayName("test filing api with legacy as the filing description is handled")
-    void testFilingApiWithDescriptionSetToLegacy() throws MapperException {
+    void testFilingApiWithDescriptionSetToLegacy() {
 
         RecentFilingHistory recentFilingHistory =  apiToRecentFilingHistoryMapper
             .apiToRecentFilingHistoryMapper(createFilingLegacy());
@@ -119,7 +116,7 @@ public class ApiToRecentFilingHistoryMapperTest {
 
     @Test
     @DisplayName("test filing api with date description values is correctly mapped")
-    void testFilingApiWithDateDescriptionValues() throws MapperException {
+    void testFilingApiWithDateDescriptionValues() {
 
         createFilingWithDateDescription();
         when(mockRetrieveApiEnumerations.getApiEnumerationDescription(anyString(), anyString(), anyString(), any())).thenReturn("test description with {made_up_date}");

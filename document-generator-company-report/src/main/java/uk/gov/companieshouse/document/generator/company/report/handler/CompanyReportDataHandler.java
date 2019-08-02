@@ -9,25 +9,24 @@ import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
-import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
+import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.HandlerException;
-import uk.gov.companieshouse.document.generator.company.report.exception.MapperException;
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.CompanyReportMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
-import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
 import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
+import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
 import uk.gov.companieshouse.document.generator.company.report.service.RecentFilingHistoryService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
-import java.util.Comparator;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,17 +64,12 @@ public class CompanyReportDataHandler {
 
         ZonedDateTime timeStamp = ZonedDateTime.now();
 
-        try {
-            LOG.infoContext(requestId, "Getting data for report for company number: " + companyNumber, getDebugMap(companyNumber));
-            return createDocumentInfoResponse(companyNumber, requestId, timeStamp);
-        } catch (MapperException e) {
-            LOG.errorContext(requestId,"Failed to get data for report for company number " + companyNumber, e, getDebugMap(companyNumber));
-            throw new HandlerException(e.getMessage(), e.getCause());
-        }
+        LOG.infoContext(requestId, "Getting data for report for company number: " + companyNumber, getDebugMap(companyNumber));
+        return createDocumentInfoResponse(companyNumber, requestId, timeStamp);
     }
 
     private DocumentInfoResponse createDocumentInfoResponse(String companyNumber,
-        String requestId, ZonedDateTime timeStamp) throws HandlerException, MapperException {
+        String requestId, ZonedDateTime timeStamp) throws HandlerException {
 
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
 
@@ -88,7 +82,7 @@ public class CompanyReportDataHandler {
     }
 
     private String getCompanyReportData(String companyNumber,  String requestId,
-        ZonedDateTime timeStamp) throws HandlerException, MapperException {
+        ZonedDateTime timeStamp) throws HandlerException {
 
         CompanyReportApiData companyReportApiData = new CompanyReportApiData();
 

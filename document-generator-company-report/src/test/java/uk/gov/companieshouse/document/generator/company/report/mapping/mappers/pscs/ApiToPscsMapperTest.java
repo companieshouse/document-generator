@@ -1,11 +1,5 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.pscs;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -17,6 +11,13 @@ import uk.gov.companieshouse.api.model.psc.PscApi;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.pscs.Pscs;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.pscs.items.Psc;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -30,7 +31,7 @@ public class ApiToPscsMapperTest {
     
     @Test
     @DisplayName("tests pscs api data maps to pscs model")
-    void testApiToCurrentAppointmentsMaps() throws Exception {
+    void testApiToCurrentAppointmentsMaps() {
 
         PscsApi pscsApi = createPscsApi();
 
