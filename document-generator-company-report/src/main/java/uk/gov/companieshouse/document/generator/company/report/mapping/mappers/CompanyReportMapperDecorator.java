@@ -86,7 +86,7 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
                 companyReport.setKeyFilingDates(setKeyFilingDates(companyReportApiData.getCompanyProfileApi()));
             }
 
-            if (companyReportApiData.getFilingHistoryApi() !=null) {
+            if (companyReportApiData.getFilingHistoryApi() !=null && companyReportApiData.getFilingHistoryApi().getItems().size() > 0) {
                 LOG.infoContext(requestId, "Map data for Recent Filing History", getDebugMap(companyNumber));
                 companyReport.setRecentFilingHistory(setRecentFilingHistory(companyReportApiData.getFilingHistoryApi().getItems()));
             }
