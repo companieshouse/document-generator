@@ -85,7 +85,7 @@ public abstract class ApiToRecentFilingHistoryMapper {
                 LocalDate localDate = LocalDate.parse(parameters.get(parameterKey).toString());
 
                 parameters.replace(parameterKey,
-                    parameters.get(parameterKey).toString(), localDate.format(getFormatter()));
+                    parameters.get(parameterKey), localDate.format(getFormatter()));
             }
         }
 
