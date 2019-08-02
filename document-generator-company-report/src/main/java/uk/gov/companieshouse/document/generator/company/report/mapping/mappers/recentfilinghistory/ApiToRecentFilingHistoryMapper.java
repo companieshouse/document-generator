@@ -75,7 +75,14 @@ public abstract class ApiToRecentFilingHistoryMapper {
     }
 
     private String populateParameters(Object description, Map<String, Object> parameters) {
+
+        formatDateParameters(parameters);
         StrSubstitutor sub = new StrSubstitutor(parameters, "{", "}");
+
+        return sub.replace(description);
+    }
+
+    private void formatDateParameters(Map<String, Object> parameters) {
 
         for (String parameterKey : parameters.keySet()) {
 
@@ -87,8 +94,6 @@ public abstract class ApiToRecentFilingHistoryMapper {
                     parameters.get(parameterKey), localDate.format(getFormatter()));
             }
         }
-
-        return sub.replace(description);
     }
 
     private Map<String, String> getDebugMap(String debugString) {
