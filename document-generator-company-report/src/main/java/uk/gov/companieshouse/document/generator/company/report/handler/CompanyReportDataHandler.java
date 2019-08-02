@@ -180,7 +180,7 @@ public class CompanyReportDataHandler {
 
     private FilingHistoryApi sortFilingHistory(FilingHistoryApi filingHistory) {
 
-        FilingHistoryApi filingHistoryApi = new FilingHistoryApi();
+        FilingHistoryApi filingHistoryApi = filingHistory;
 
         List<FilingApi> filings = filingHistory.getItems().stream()
             .sorted(Comparator.comparing(FilingApi::getDate, Comparator.nullsLast(Comparator.reverseOrder())))
