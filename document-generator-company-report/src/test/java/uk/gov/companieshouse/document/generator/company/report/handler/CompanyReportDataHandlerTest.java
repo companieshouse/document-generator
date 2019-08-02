@@ -30,6 +30,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -77,7 +78,7 @@ public class CompanyReportDataHandlerTest {
         when(mockPscService.getPscs(any(String.class))).thenReturn(pscsApi);
         when(mockOfficerService.getOfficers(any(String.class))).thenReturn(officersApi);
         when(mockRecentFilingHistoryService.getFilingHistory(any(String.class))).thenReturn(filingHistoryApi);
-        when(mockCompanyReportMapper.mapCompanyReport(any(CompanyReportApiData.class))).thenReturn(new CompanyReport());
+        when(mockCompanyReportMapper.mapCompanyReport(any(CompanyReportApiData.class), anyString(), anyString())).thenReturn(new CompanyReport());
 
         DocumentInfoResponse documentInfoResponse = companyReportDataHandler.getCompanyReport(RESOURCE_URI, REQUEST_ID);
 
