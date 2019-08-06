@@ -9,12 +9,11 @@ import org.mapstruct.Mappings;
 import org.springframework.web.context.annotation.RequestScope;
 import uk.gov.companieshouse.api.model.company.foreigncompany.ForeignCompanyDetailsApi;
 import uk.gov.companieshouse.api.model.company.foreigncompany.account.ForeignAccountApi;
-import uk.gov.companieshouse.document.generator.company.report.exception.MapperException;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.ForeignCompanyDetails;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.items.Accounts;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.items.accountsItems.AccountPeriodDayMonth;
 
 import java.time.Month;
-import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.items.accountsItems.AccountPeriodDayMonth;
 
 @RequestScope
 @Mapper(componentModel = "spring")
@@ -28,7 +27,7 @@ public abstract class ApiToForeignCompanyDetailsMapper {
 
     })
 
-    public abstract ForeignCompanyDetails apiToForeignCompanyDetails(ForeignCompanyDetailsApi foreignCompanyDetailsApi) throws MapperException;
+    public abstract ForeignCompanyDetails apiToForeignCompanyDetails(ForeignCompanyDetailsApi foreignCompanyDetailsApi);
 
     @AfterMapping
     protected void convertForeignCompanyDetailsAccountsDates(ForeignAccountApi foreignAccountApi,

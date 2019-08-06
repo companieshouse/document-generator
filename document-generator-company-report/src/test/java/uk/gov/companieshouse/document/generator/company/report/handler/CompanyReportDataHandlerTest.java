@@ -1,6 +1,9 @@
 package uk.gov.companieshouse.document.generator.company.report.handler;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,12 +15,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
+import uk.gov.companieshouse.api.model.statements.StatementApi;
+import uk.gov.companieshouse.api.model.statements.StatementsApi;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.CompanyReportMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
 import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
 import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
+import uk.gov.companieshouse.document.generator.company.report.service.StatementsService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 
 import java.util.HashMap;
@@ -45,6 +51,9 @@ public class CompanyReportDataHandlerTest {
     private PscsService mockPscService;
 
     @Mock
+    private StatementsService mockStatementsService;
+
+    @Mock
     private OfficerService mockOfficerService;
 
 
@@ -61,6 +70,7 @@ public class CompanyReportDataHandlerTest {
         CompanyProfileApi companyProfileApi = createCompanyProfile();
         PscsApi pscsApi = createPscsApi();
         OfficersApi officersApi = createOfficers();
+        StatementsApi statementsApi = createStatementsApi();
 
         CompanyReportApiData companyReportApiData = new CompanyReportApiData();
         companyReportApiData.setCompanyProfileApi(companyProfileApi);
@@ -68,6 +78,7 @@ public class CompanyReportDataHandlerTest {
         when(mockCompanyService.getCompanyProfile(any(String.class))).thenReturn(companyProfileApi);
         when(mockPscService.getPscs(any(String.class))).thenReturn(pscsApi);
         when(mockOfficerService.getOfficers(any(String.class))).thenReturn(officersApi);
+        when(mockStatementsService.getStatements(any(String.class))).thenReturn(statementsApi);
         when(mockCompanyReportMapper.mapCompanyReport(any(CompanyReportApiData.class))).thenReturn(new CompanyReport());
 
         DocumentInfoResponse documentInfoResponse = companyReportDataHandler.getCompanyReport(RESOURCE_URI, REQUEST_ID);
@@ -102,7 +113,6 @@ public class CompanyReportDataHandlerTest {
         return pscsApi;
     }
 
-
     private CompanyProfileApi createCompanyProfile() {
 
         CompanyProfileApi companyProfileApi = new CompanyProfileApi();
@@ -113,6 +123,7 @@ public class CompanyReportDataHandlerTest {
 
         links.put("persons_with_significant_control", "/persons-with-significant-control");
         links.put("officers", "/officers");
+        links.put("persons_with_significant_control_statements", "/persons_with_significant_control_statements");
 
         companyProfileApi.setLinks(links);
 
@@ -124,5 +135,19 @@ public class CompanyReportDataHandlerTest {
         officersApi.setActiveCount(1L);
 
         return officersApi;
+    }
+
+    private StatementsApi createStatementsApi() {
+        StatementsApi statementsApi = new StatementsApi();
+        statementsApi.setActiveCount(3L);
+
+        List<StatementApi> statementApiList = new ArrayList<>();
+        StatementApi statementApi = new StatementApi();
+        statementApi.setStatement("test data");
+        statementApi.setCeasedOn(LocalDate.of(2018, 12, 13));
+        statementApiList.add(statementApi);
+        statementsApi.setItems(statementApiList);
+
+        return statementsApi;
     }
 }

@@ -31,7 +31,7 @@ public class ApiToPscsMapperTest {
 
     @Test
     @DisplayName("tests pscs api data maps to pscs model")
-    void testApiToCurrentAppointmentsMaps() throws Exception {
+    void testApiToCurrentAppointmentsMaps() {
 
         PscsApi pscsApi = createPscsApi();
 
