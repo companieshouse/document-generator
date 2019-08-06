@@ -1,5 +1,10 @@
 package uk.gov.companieshouse.document.generator.company.report.handler;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -12,6 +17,8 @@ import uk.gov.companieshouse.api.model.filinghistory.FilingApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
+import uk.gov.companieshouse.api.model.statements.StatementApi;
+import uk.gov.companieshouse.api.model.statements.StatementsApi;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.CompanyReportMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
@@ -19,6 +26,7 @@ import uk.gov.companieshouse.document.generator.company.report.service.CompanySe
 import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
 import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
 import uk.gov.companieshouse.document.generator.company.report.service.RecentFilingHistoryService;
+import uk.gov.companieshouse.document.generator.company.report.service.StatementsService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 
 import java.time.LocalDate;
@@ -50,6 +58,9 @@ public class CompanyReportDataHandlerTest {
     private PscsService mockPscService;
 
     @Mock
+    private StatementsService mockStatementsService;
+
+    @Mock
     private OfficerService mockOfficerService;
 
     @Mock
@@ -70,6 +81,7 @@ public class CompanyReportDataHandlerTest {
         PscsApi pscsApi = createPscsApi();
         OfficersApi officersApi = createOfficers();
         FilingHistoryApi filingHistoryApi = createFilingHistory();
+        StatementsApi statementsApi = createStatementsApi();
 
         CompanyReportApiData companyReportApiData = new CompanyReportApiData();
         companyReportApiData.setCompanyProfileApi(companyProfileApi);
@@ -79,6 +91,8 @@ public class CompanyReportDataHandlerTest {
         when(mockOfficerService.getOfficers(any(String.class))).thenReturn(officersApi);
         when(mockRecentFilingHistoryService.getFilingHistory(any(String.class))).thenReturn(filingHistoryApi);
         when(mockCompanyReportMapper.mapCompanyReport(any(CompanyReportApiData.class), anyString(), anyString())).thenReturn(new CompanyReport());
+        when(mockStatementsService.getStatements(any(String.class))).thenReturn(statementsApi);
+        when(mockCompanyReportMapper.mapCompanyReport(any(CompanyReportApiData.class))).thenReturn(new CompanyReport());
 
         DocumentInfoResponse documentInfoResponse = companyReportDataHandler.getCompanyReport(RESOURCE_URI, REQUEST_ID);
 
@@ -112,7 +126,6 @@ public class CompanyReportDataHandlerTest {
         return pscsApi;
     }
 
-
     private CompanyProfileApi createCompanyProfile() {
 
         CompanyProfileApi companyProfileApi = new CompanyProfileApi();
@@ -124,7 +137,7 @@ public class CompanyReportDataHandlerTest {
         links.put("persons_with_significant_control", "/persons-with-significant-control");
         links.put("officers", "/officers");
         links.put("filing_history", "/filing-history");
-
+        links.put("persons_with_significant_control_statements", "/persons_with_significant_control_statements");
 
         companyProfileApi.setLinks(links);
 
@@ -138,13 +151,13 @@ public class CompanyReportDataHandlerTest {
         return officersApi;
     }
 
-    private FilingHistoryApi createFilingHistory(){
+    private FilingHistoryApi createFilingHistory() {
 
         FilingHistoryApi filingHistoryApi = new FilingHistoryApi();
-        List <FilingApi> filingApiList = new ArrayList<>();
+        List<FilingApi> filingApiList = new ArrayList<>();
 
         FilingApi filingApi = new FilingApi();
-        filingApi.setDate(LocalDate.of(1999,01,01));
+        filingApi.setDate(LocalDate.of(1999, 01, 01));
         filingApi.setDescription(FILING_DESCRIPTION);
         filingApi.setType(FORM_TYPE);
 
@@ -153,5 +166,19 @@ public class CompanyReportDataHandlerTest {
         filingHistoryApi.setItems(filingApiList);
 
         return filingHistoryApi;
+    }
+
+    private StatementsApi createStatementsApi() {
+        StatementsApi statementsApi = new StatementsApi();
+        statementsApi.setActiveCount(3L);
+
+        List<StatementApi> statementApiList = new ArrayList<>();
+        StatementApi statementApi = new StatementApi();
+        statementApi.setStatement("test data");
+        statementApi.setCeasedOn(LocalDate.of(2018, 12, 13));
+        statementApiList.add(statementApi);
+        statementsApi.setItems(statementApiList);
+
+        return statementsApi;
     }
 }

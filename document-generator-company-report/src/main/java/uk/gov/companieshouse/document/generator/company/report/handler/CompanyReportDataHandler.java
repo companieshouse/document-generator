@@ -11,6 +11,8 @@ import uk.gov.companieshouse.api.model.filinghistory.FilingApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
+import uk.gov.companieshouse.api.model.statements.StatementApi;
+import uk.gov.companieshouse.api.model.statements.StatementsApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.CompanyReportMapper;
@@ -20,6 +22,7 @@ import uk.gov.companieshouse.document.generator.company.report.service.CompanySe
 import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
 import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
 import uk.gov.companieshouse.document.generator.company.report.service.RecentFilingHistoryService;
+import uk.gov.companieshouse.document.generator.company.report.service.StatementsService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
@@ -53,9 +56,13 @@ public class CompanyReportDataHandler {
     @Autowired
     private CompanyReportMapper companyReportMapper;
 
+    @Autowired
+    private StatementsService statementsService;
+
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
     private static final String PSCS_KEY = "persons_with_significant_control";
     private static final String OFFICERS_KEY = "officers";
+    private static final String STATEMENTS_KEY = "persons_with_significant_control_statements";
 
     public DocumentInfoResponse getCompanyReport(String resourceUri, String requestId)
         throws HandlerException {
@@ -116,11 +123,34 @@ public class CompanyReportDataHandler {
              }
          }
 
+        if (companyProfileApi.getLinks().containsKey(STATEMENTS_KEY)) {
+            try {
+                StatementsApi statementsApi = sortStatements(getStatements(companyNumber, requestId));
+                companyReportApiData.setStatementsApi(statementsApi);
+            } catch (HandlerException he) {
+                LOG.infoContext(requestId,"Failed to get psc statements: ", getDebugMap(companyNumber));
+            }
+        }
+
         return toJson(companyReportMapper
             .mapCompanyReport(companyReportApiData, requestId, companyNumber),
             companyNumber,
             requestId,
             timeStamp);
+    }
+
+    private StatementsApi sortStatements(StatementsApi statementsApi) {
+
+        StatementsApi sortedStatementsApi = statementsApi;
+
+        List<StatementApi> statements = statementsApi.getItems().stream()
+            .sorted(Comparator.comparing(StatementApi::getCeasedOn, Comparator.nullsFirst(Comparator.reverseOrder()))
+                .thenComparing(StatementApi::getNotifiedOn))
+            .collect(Collectors.toList());
+
+        sortedStatementsApi.setItems(statements);
+
+        return  sortedStatementsApi;
     }
 
     private String toJson(CompanyReport companyReport, String companyNumber,
@@ -185,6 +215,15 @@ public class CompanyReportDataHandler {
         return filingHistoryApi;
     }
 
+    private StatementsApi getStatements(String companyNumber, String requestId) throws HandlerException {
+        try {
+            LOG.infoContext(requestId, "Attempting to retrieve company psc statements", getDebugMap(companyNumber));
+            return statementsService.getStatements(companyNumber);
+        } catch (ServiceException se) {
+            throw new HandlerException("error occurred obtaining the company psc statements", se);
+        }
+    }
+
     private PscsApi getPscs(String companyNumber, String requestId) throws HandlerException {
 
         try {
@@ -192,6 +231,7 @@ public class CompanyReportDataHandler {
             return pscsService.getPscs(companyNumber);
         } catch (ServiceException se) {
             throw new HandlerException("error occurred obtaining the company PSCSs", se);
+
         }
     }
 

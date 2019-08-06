@@ -8,6 +8,7 @@ import uk.gov.companieshouse.api.model.company.foreigncompany.ForeignCompanyDeta
 import uk.gov.companieshouse.api.model.filinghistory.FilingApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
+import uk.gov.companieshouse.api.model.statements.StatementsApi;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.currentappointments.ApiToCurrentAppointmentsMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.foreigncompanydetails.ApiToForeignCompanyDetailsMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.keyfilingdates.ApiToKeyFilingDatesMapper;
@@ -15,6 +16,7 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.p
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.pscs.ApiToPscsMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.recentfilinghistory.ApiToRecentFilingHistoryMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.registrationinformation.ApiToRegistrationInformationMapper;
+import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.statements.ApiToPscStatementsMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.CurrentAppointments;
@@ -24,6 +26,7 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.pscs.Pscs;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.recentfilinghistory.RecentFilingHistory;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.RegistrationInformation;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.statements.Statements;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
@@ -33,7 +36,7 @@ import java.util.Map;
 
 import static uk.gov.companieshouse.document.generator.company.report.CompanyReportDocumentInfoServiceImpl.MODULE_NAME_SPACE;
 
-public class CompanyReportMapperDecorator implements CompanyReportMapper {
+public abstract class CompanyReportMapperDecorator implements CompanyReportMapper {
 
     @Autowired
     @Qualifier("delegate")
@@ -60,7 +63,11 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
     @Autowired
     private ApiToRecentFilingHistoryMapper apiToRecentFilingHistoryMapper;
 
+    @Autowired
+    private ApiToPscStatementsMapper apiToPscStatementsMapper;
+
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
+
 
     @Override
     public CompanyReport mapCompanyReport(CompanyReportApiData companyReportApiData,
@@ -96,6 +103,10 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
                 companyReport.setPscs(setPscs(companyReportApiData.getPscsApi()));
             }
 
+            if(companyReportApiData.getStatementsApi() != null) {
+                companyReport.setStatements(setStatements(companyReportApiData.getStatementsApi()));
+            }
+
             if (companyReportApiData.getCompanyProfileApi().getForeignCompanyDetails() != null) {
                 LOG.infoContext(requestId, "Map data for Foreign Company Details", getDebugMap(companyNumber));
                 companyReport.setForeignCompanyDetails(setForeignCompanyDetails(companyReportApiData
@@ -106,6 +117,22 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
         return companyReport;
     }
 
+    private RegistrationInformation setRegistrationInformation(CompanyProfileApi companyProfileApi) {
+        return apiToRegistrationInformationMapper.apiToRegistrationInformation(companyProfileApi);
+    }
+
+    private List<PreviousNames> setPreviousNames(List<PreviousCompanyNamesApi> previousCompanyNames) {
+        return apiToPreviousNamesMapper.apiToPreviousNamesMapper(previousCompanyNames);
+    }
+
+    private CurrentAppointments setCurrentAppointments(OfficersApi officersApi) {
+        return apiToCurrentAppointmentsMapper.apiToCurrentAppointmentsMapper(officersApi);
+    }
+
+    private KeyFilingDates setKeyFilingDates(CompanyProfileApi companyProfileApi) {
+        return apiToKeyFilingDatesMapper.apiToKeyFilingDates(companyProfileApi);
+    }
+
     private List<RecentFilingHistory> setRecentFilingHistory(List<FilingApi> filingHistory) {
         return apiToRecentFilingHistoryMapper.apiToRecentFilingHistoryMapper(filingHistory);
     }
@@ -114,24 +141,12 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
         return apiToPscsMapper.apiToPscsMapper(pscsApi);
     }
 
-    private RegistrationInformation setRegistrationInformation(CompanyProfileApi companyProfileApi) {
-        return apiToRegistrationInformationMapper.apiToRegistrationInformation(companyProfileApi);
-    }
-
-    private KeyFilingDates setKeyFilingDates(CompanyProfileApi companyProfileApi) {
-        return apiToKeyFilingDatesMapper.apiToKeyFilingDates(companyProfileApi);
-    }
-
-    private List<PreviousNames> setPreviousNames(List<PreviousCompanyNamesApi> previousCompanyNames) {
-        return apiToPreviousNamesMapper.apiToPreviousNamesMapper(previousCompanyNames);
+    private Statements setStatements(StatementsApi statementsApi) {
+        return apiToPscStatementsMapper.ApiToStatementsMapper(statementsApi);
     }
 
     private ForeignCompanyDetails setForeignCompanyDetails(ForeignCompanyDetailsApi foreignCompanyDetailsApi) {
         return apiToForeignCompanyDetailsMapper.apiToForeignCompanyDetails(foreignCompanyDetailsApi);
-    }
-
-    private CurrentAppointments setCurrentAppointments(OfficersApi officersApi) {
-        return apiToCurrentAppointmentsMapper.apiToCurrentAppointmentsMapper(officersApi);
     }
 
     private Map<String, Object> getDebugMap(String companyNumber) {

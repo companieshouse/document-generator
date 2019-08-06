@@ -4,6 +4,7 @@ import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
+import uk.gov.companieshouse.api.model.statements.StatementsApi;
 
 public class CompanyReportApiData {
 
@@ -14,6 +15,8 @@ public class CompanyReportApiData {
     private OfficersApi officersApi;
 
     private FilingHistoryApi filingHistoryApi;
+
+    private StatementsApi statementsApi;
 
     public CompanyProfileApi getCompanyProfileApi() {
         return companyProfileApi;
@@ -45,5 +48,13 @@ public class CompanyReportApiData {
 
     public void setFilingHistoryApi(FilingHistoryApi filingHistoryApi) {
         this.filingHistoryApi = filingHistoryApi;
+    }
+
+    public StatementsApi getStatementsApi() {
+        return statementsApi;
+    }
+
+    public void setStatementsApi(StatementsApi statementsApi) {
+        this.statementsApi = statementsApi;
     }
 }
