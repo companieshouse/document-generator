@@ -125,7 +125,7 @@ public class ApiToRecentFilingHistoryMapperTest {
                 .apiToRecentFilingHistoryMapper(createFilingWithDateDescription());
 
      assertNotNull(recentFilingHistory.getDescription());
-     assertEquals("test description with 1 Jan 1999", recentFilingHistory.getDescription());
+     assertEquals("test description with 1 January 1999", recentFilingHistory.getDescription());
 
     }
 

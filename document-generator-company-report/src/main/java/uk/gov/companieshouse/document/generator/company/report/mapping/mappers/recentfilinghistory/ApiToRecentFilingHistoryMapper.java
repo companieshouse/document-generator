@@ -27,6 +27,7 @@ public abstract class ApiToRecentFilingHistoryMapper {
 
     private static final String FILING_HISTORY_DESCRIPTIONS = "FILING_HISTORY_DESCRIPTIONS";
     private static final String D_MMMM_UUU = "d MMM uuu";
+    private static final String D_MMMMM_UUU = "d MMMM uuu";
 
     @Mappings({
             @Mapping(source = "type", target = "form")
@@ -50,9 +51,9 @@ public abstract class ApiToRecentFilingHistoryMapper {
             return descriptionValues.get("description").toString();
         }
 
-        String filingDescription = retrieveApiEnumerationDescription
+        String filingDescription = regexAsteriskRemoved(retrieveApiEnumerationDescription
                 .getApiEnumerationDescription(FILING_HISTORY_DESCRIPTIONS, "description",
-                        description, getDebugMap(description));
+                        description, getDebugMap(description)));
 
         if (descriptionValues != null) {
 
@@ -66,12 +67,8 @@ public abstract class ApiToRecentFilingHistoryMapper {
             @MappingTarget RecentFilingHistory recentFilingHistory) {
         if (filingApi != null && filingApi.getDate() != null) {
             LocalDate filingDate = filingApi.getDate();
-            recentFilingHistory.setDate(filingDate.format(getFormatter()));
+            recentFilingHistory.setDate(filingDate.format(getDateFormatter()));
         }
-    }
-
-    private DateTimeFormatter getFormatter() {
-        return DateTimeFormatter.ofPattern(D_MMMM_UUU);
     }
 
     private String populateParameters(Object description, Map<String, Object> parameters) {
@@ -91,9 +88,21 @@ public abstract class ApiToRecentFilingHistoryMapper {
                 LocalDate localDate = LocalDate.parse(parameters.get(parameterKey).toString());
 
                 parameters.replace(parameterKey,
-                    parameters.get(parameterKey), localDate.format(getFormatter()));
+                    parameters.get(parameterKey), localDate.format(getParamDateFormatter()));
             }
         }
+    }
+
+    private String regexAsteriskRemoved(String filingDescription) {
+        return filingDescription.replaceAll("[*]", "");
+    }
+
+    private DateTimeFormatter getDateFormatter() {
+        return DateTimeFormatter.ofPattern(D_MMMM_UUU);
+    }
+
+    private DateTimeFormatter getParamDateFormatter() {
+        return DateTimeFormatter.ofPattern(D_MMMMM_UUU);
     }
 
     private Map<String, String> getDebugMap(String debugString) {
