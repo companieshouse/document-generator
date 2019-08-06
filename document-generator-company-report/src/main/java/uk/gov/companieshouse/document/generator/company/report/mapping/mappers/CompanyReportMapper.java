@@ -12,5 +12,6 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 @DecoratedWith(CompanyReportMapperDecorator.class)
 public interface CompanyReportMapper {
 
-    CompanyReport mapCompanyReport(CompanyReportApiData companyReportApiData);
+    CompanyReport mapCompanyReport(CompanyReportApiData companyReportApiData,
+        String requestId, String companyNumber);
 }

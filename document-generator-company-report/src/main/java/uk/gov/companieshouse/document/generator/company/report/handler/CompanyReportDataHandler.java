@@ -4,7 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import uk.gov.companieshouse.api.error.ApiErrorResponseException;
+import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
+import uk.gov.companieshouse.api.model.filinghistory.FilingApi;
+import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.api.model.statements.StatementApi;
@@ -17,14 +21,15 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
 import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
 import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
+import uk.gov.companieshouse.document.generator.company.report.service.RecentFilingHistoryService;
 import uk.gov.companieshouse.document.generator.company.report.service.StatementsService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
-import java.util.Comparator;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +49,9 @@ public class CompanyReportDataHandler {
 
     @Autowired
     private OfficerService officerService;
+
+    @Autowired
+    private RecentFilingHistoryService recentFilingHistoryService;
 
     @Autowired
     private CompanyReportMapper companyReportMapper;
@@ -88,6 +96,16 @@ public class CompanyReportDataHandler {
         CompanyProfileApi companyProfileApi = getCompanyProfile(companyNumber, requestId);
         companyReportApiData.setCompanyProfileApi(companyProfileApi);
 
+        if(companyProfileApi.getLinks().containsKey("filing_history")) {
+            try {
+                FilingHistoryApi filingHistoryApi = getFilingHistory(companyNumber, requestId);
+                companyReportApiData.setFilingHistoryApi(filingHistoryApi);
+
+            } catch (HandlerException he) {
+                LOG.infoContext(requestId, "Failed to get filing history: ", getDebugMap(companyNumber));
+            }
+        }
+
         if (companyProfileApi.getLinks().containsKey(PSCS_KEY)) {
             try {
                 companyReportApiData.setPscsApi(getPscs(companyNumber, requestId));
@@ -115,7 +133,7 @@ public class CompanyReportDataHandler {
         }
 
         return toJson(companyReportMapper
-            .mapCompanyReport(companyReportApiData),
+            .mapCompanyReport(companyReportApiData, requestId, companyNumber),
             companyNumber,
             requestId,
             timeStamp);
@@ -173,6 +191,28 @@ public class CompanyReportDataHandler {
         } catch (ServiceException se) {
             throw new HandlerException("error occurred obtaining the company officers", se);
         }
+    }
+
+    private FilingHistoryApi getFilingHistory(String companyNumber, String requestId) throws HandlerException {
+        try {
+            LOG.infoContext(requestId, "Attempting to retrieve company filing history", getDebugMap(companyNumber));
+            return sortFilingHistory(recentFilingHistoryService.getFilingHistory(companyNumber));
+        } catch (ServiceException | ApiErrorResponseException | URIValidationException se) {
+            throw new HandlerException("error occurred obtaining the company filing history", se);
+        }
+    }
+
+    private FilingHistoryApi sortFilingHistory(FilingHistoryApi filingHistory) {
+
+        FilingHistoryApi filingHistoryApi = filingHistory;
+
+        List<FilingApi> filings = filingHistory.getItems().stream()
+            .sorted(Comparator.comparing(FilingApi::getDate, Comparator.nullsLast(Comparator.reverseOrder())))
+            .collect(Collectors.toList());
+
+        filingHistoryApi.setItems(filings);
+
+        return filingHistoryApi;
     }
 
     private StatementsApi getStatements(String companyNumber, String requestId) throws HandlerException {

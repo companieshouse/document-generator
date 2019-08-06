@@ -6,6 +6,7 @@
 {{$foreignCompanyDetails := .company_report.foreign_company_details}}
 {{$foreignCompanyAccounts := .company_report.foreign_company_details.accounts}}
 {{$officers := .company_report.current_appointments}}
+{{$recentFilingHistory := .company_report.recent_filing_history}}
 {{$pscs := .company_report.pscs}}
 {{$pscStatements := .company_report.psc_statements}}
 
@@ -578,6 +579,31 @@
     {{else}}
     <p>There are no persons with significant control or statements available for this company.</p>
     {{end}}
+
+    {{if $recentFilingHistory}}
+        <h3 class="heading-large">Recent Filing History</h3>
+        <table>
+            <caption class="visually-hidden">Recent Filing History</caption>
+            <!-- this hidden caption is needed for screen-readers-->
+            <thead>
+            <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Form</th>
+                <th scope="col">Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{- range $recentFilingHistory -}}
+            <tr>
+                <td nowrap="nowrap">{{.date}}</td>
+                <td scope="row">{{.form}}</td>
+                <td>{{.description}}</td>
+            </tr>
+            {{end}}
+            </tbody>
+        </table>
+    {{end}}
+
 </main>
 </body>
 </html>
