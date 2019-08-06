@@ -92,7 +92,6 @@ public class CompanyReportDataHandlerTest {
         when(mockRecentFilingHistoryService.getFilingHistory(any(String.class))).thenReturn(filingHistoryApi);
         when(mockCompanyReportMapper.mapCompanyReport(any(CompanyReportApiData.class), anyString(), anyString())).thenReturn(new CompanyReport());
         when(mockStatementsService.getStatements(any(String.class))).thenReturn(statementsApi);
-        when(mockCompanyReportMapper.mapCompanyReport(any(CompanyReportApiData.class))).thenReturn(new CompanyReport());
 
         DocumentInfoResponse documentInfoResponse = companyReportDataHandler.getCompanyReport(RESOURCE_URI, REQUEST_ID);
 

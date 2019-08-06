@@ -36,7 +36,7 @@ import java.util.Map;
 
 import static uk.gov.companieshouse.document.generator.company.report.CompanyReportDocumentInfoServiceImpl.MODULE_NAME_SPACE;
 
-public abstract class CompanyReportMapperDecorator implements CompanyReportMapper {
+public class CompanyReportMapperDecorator implements CompanyReportMapper {
 
     @Autowired
     @Qualifier("delegate")
