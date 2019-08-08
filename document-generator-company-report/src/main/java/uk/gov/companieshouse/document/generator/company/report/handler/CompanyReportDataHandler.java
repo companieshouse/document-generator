@@ -9,6 +9,7 @@ import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
+import uk.gov.companieshouse.api.model.insolvency.InsolvencyApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.api.model.statements.StatementApi;
@@ -19,6 +20,7 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.C
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
+import uk.gov.companieshouse.document.generator.company.report.service.InsolvencyService;
 import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
 import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
 import uk.gov.companieshouse.document.generator.company.report.service.RecentFilingHistoryService;
@@ -59,10 +61,14 @@ public class CompanyReportDataHandler {
     @Autowired
     private StatementsService statementsService;
 
+    @Autowired
+    private InsolvencyService insolvencyService;
+
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
     private static final String PSCS_KEY = "persons_with_significant_control";
     private static final String OFFICERS_KEY = "officers";
     private static final String STATEMENTS_KEY = "persons_with_significant_control_statements";
+    private static final String FILING_HISTORY_KEY = "filing_history";
 
     public DocumentInfoResponse getCompanyReport(String resourceUri, String requestId)
         throws HandlerException {
@@ -96,13 +102,14 @@ public class CompanyReportDataHandler {
         CompanyProfileApi companyProfileApi = getCompanyProfile(companyNumber, requestId);
         companyReportApiData.setCompanyProfileApi(companyProfileApi);
 
-        if(companyProfileApi.getLinks().containsKey("filing_history")) {
+        if(companyProfileApi.getLinks().containsKey(FILING_HISTORY_KEY)) {
             try {
                 FilingHistoryApi filingHistoryApi = getFilingHistory(companyNumber, requestId);
                 companyReportApiData.setFilingHistoryApi(filingHistoryApi);
 
             } catch (HandlerException he) {
-                LOG.infoContext(requestId, "Failed to get filing history: ", getDebugMap(companyNumber));
+                LOG.infoContext(requestId, "Failed to get filing history data for company: "
+                    + companyNumber, getDebugMap(companyNumber));
             }
         }
 
@@ -110,7 +117,8 @@ public class CompanyReportDataHandler {
             try {
                 companyReportApiData.setPscsApi(getPscs(companyNumber, requestId));
             } catch (HandlerException he) {
-                LOG.infoContext(requestId,"Failed to get PSCs: ", getDebugMap(companyNumber));
+                LOG.infoContext(requestId,"Failed to get PSCs data for company: "
+                    + companyNumber, getDebugMap(companyNumber));
             }
         }
 
@@ -119,7 +127,8 @@ public class CompanyReportDataHandler {
                  OfficersApi officersApi = getOfficers(companyNumber, requestId);
                  companyReportApiData.setOfficersApi(officersApi);
              } catch (HandlerException he) {
-                 LOG.infoContext(requestId,"Failed to get company officers: ", getDebugMap(companyNumber));
+                 LOG.infoContext(requestId,"Failed to get officers data for company: "
+                     + companyNumber, getDebugMap(companyNumber));
              }
          }
 
@@ -128,7 +137,18 @@ public class CompanyReportDataHandler {
                 StatementsApi statementsApi = sortStatements(getStatements(companyNumber, requestId));
                 companyReportApiData.setStatementsApi(statementsApi);
             } catch (HandlerException he) {
-                LOG.infoContext(requestId,"Failed to get psc statements: ", getDebugMap(companyNumber));
+                LOG.infoContext(requestId,"Failed to get psc statements data for company: "
+                    + companyNumber, getDebugMap(companyNumber));
+            }
+        }
+
+        if (companyProfileApi.getLinks().containsKey("insolvency")) {
+            try {
+                InsolvencyApi insolvencyApi = getInsolvency(companyNumber, requestId);
+                companyReportApiData.setInsolvencyApi(insolvencyApi);
+            } catch (HandlerException he) {
+                LOG.infoContext(requestId, "Failed to get insolvency data for company: "
+                    + companyNumber, getDebugMap(companyNumber));
             }
         }
 
@@ -232,6 +252,15 @@ public class CompanyReportDataHandler {
         } catch (ServiceException se) {
             throw new HandlerException("error occurred obtaining the company PSCSs", se);
 
+        }
+    }
+
+    private InsolvencyApi getInsolvency(String companyNumber, String requestId) throws HandlerException {
+        try {
+            LOG.infoContext(requestId, "Attempting to retrieve company insolvency", getDebugMap(companyNumber));
+            return insolvencyService.getInsolvency(companyNumber);
+        } catch (ServiceException se) {
+            throw new HandlerException("error occurred obtaining the company insolvency", se);
         }
     }
 
