@@ -12,8 +12,10 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.keyfilingdates.KeyFilingDates;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.previousnames.PreviousNames;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.pscs.Pscs;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.recentfilinghistory.RecentFilingHistory;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.RegistrationInformation;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.ukestablishment.UkEstablishment;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.statements.Statements;
 
 import java.util.List;
 
@@ -21,6 +23,9 @@ import java.util.List;
 @JsonTypeName("company_report")
 @JsonTypeInfo(include = As.WRAPPER_OBJECT, use = Id.NAME)
 public class CompanyReport {
+
+    @JsonProperty("time_stamp_created")
+    private String TimeStampCreated;
 
     @JsonProperty("company_registration_information")
     private RegistrationInformation registrationInformation;
@@ -34,6 +39,9 @@ public class CompanyReport {
     @JsonProperty("key_filing_dates")
     private KeyFilingDates keyFilingDates;
 
+    @JsonProperty("recent_filing_history")
+    private List<RecentFilingHistory> recentFilingHistory;
+
     @JsonProperty("pscs")
     private Pscs pscs;
 
@@ -43,12 +51,22 @@ public class CompanyReport {
     @JsonProperty("uk_establishment")
     private List<UkEstablishment> ukEstablishment;
 
+    @JsonProperty("psc_statements")
+    private Statements statements;
+
+    public String getTimeStampCreated() {
+        return TimeStampCreated;
+    }
+
+    public void setTimeStampCreated(String timeStampCreated) {
+        TimeStampCreated = timeStampCreated;
+    }
+
     public RegistrationInformation getRegistrationInformation() {
         return registrationInformation;
     }
 
-    public void setRegistrationInformation(
-        RegistrationInformation registrationInformation) {
+    public void setRegistrationInformation(RegistrationInformation registrationInformation) {
         this.registrationInformation = registrationInformation;
     }
 
@@ -56,8 +74,7 @@ public class CompanyReport {
         return previousNames;
     }
 
-    public void setPreviousNames(
-        List<PreviousNames> previousNames) {
+    public void setPreviousNames(List<PreviousNames> previousNames) {
         this.previousNames = previousNames;
     }
 
@@ -65,8 +82,7 @@ public class CompanyReport {
         return currentAppointments;
     }
 
-    public void setCurrentAppointments(
-        CurrentAppointments currentAppointments) {
+    public void setCurrentAppointments(CurrentAppointments currentAppointments) {
         this.currentAppointments = currentAppointments;
     }
 
@@ -74,17 +90,23 @@ public class CompanyReport {
         return keyFilingDates;
     }
 
-    public void setKeyFilingDates(
-        KeyFilingDates keyFilingDates) {
+    public void setKeyFilingDates(KeyFilingDates keyFilingDates) {
         this.keyFilingDates = keyFilingDates;
+    }
+
+    public List<RecentFilingHistory> getRecentFilingHistory() {
+        return recentFilingHistory;
+    }
+
+    public void setRecentFilingHistory(List<RecentFilingHistory> recentFilingHistory) {
+        this.recentFilingHistory = recentFilingHistory;
     }
 
     public Pscs getPscs() {
         return pscs;
     }
 
-    public void setPscs(
-        Pscs pscs) {
+    public void setPscs(Pscs pscs) {
         this.pscs = pscs;
     }
 
@@ -92,8 +114,7 @@ public class CompanyReport {
         return foreignCompanyDetails;
     }
 
-    public void setForeignCompanyDetails(
-        ForeignCompanyDetails foreignCompanyDetails) {
+    public void setForeignCompanyDetails(ForeignCompanyDetails foreignCompanyDetails) {
         this.foreignCompanyDetails = foreignCompanyDetails;
     }
 
@@ -103,5 +124,13 @@ public class CompanyReport {
 
     public void setUkEstablishment(List<UkEstablishment> ukEstablishment) {
         this.ukEstablishment = ukEstablishment;
+    }
+
+    public Statements getStatements() {
+        return statements;
+    }
+
+    public void setStatements(Statements statements) {
+        this.statements = statements;
     }
 }

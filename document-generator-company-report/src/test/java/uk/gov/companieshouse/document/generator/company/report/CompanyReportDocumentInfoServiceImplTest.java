@@ -46,7 +46,6 @@ public class CompanyReportDocumentInfoServiceImplTest {
 
         when(mockCompanyReportDataHandler.getCompanyReport(RESOURCE_URI, REQUEST_ID)).thenReturn(createDocumentInfoResponse());
 
-
         assertNotNull(service.getDocumentInfo(mockDocumentInfoRequest));
         assertEquals(createDocumentInfoResponse(), service.getDocumentInfo(mockDocumentInfoRequest));
     }

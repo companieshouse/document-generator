@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.annotation.RequestScope;
 import uk.gov.companieshouse.api.model.officers.CompanyOfficerApi;
 import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
-import uk.gov.companieshouse.document.generator.company.report.exception.MapperException;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.DateDayMonthYear;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.items.CurrentOfficer;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyReportApiClientService;
@@ -38,8 +37,8 @@ public abstract class ApiToCurrentOfficer {
             @Mapping(source = "appointedOn", target = "appointed"),
             @Mapping(source = "countryOfResidence", target = "countryOfResidence")
     })
-    public abstract CurrentOfficer apiToCurrentOfficer(CompanyOfficerApi companyOfficerApi) throws MapperException;
-    public abstract List<CurrentOfficer> apiToCurrentOfficer(List<CompanyOfficerApi> companyOfficerApis) throws MapperException;
+    public abstract CurrentOfficer apiToCurrentOfficer(CompanyOfficerApi companyOfficerApi);
+    public abstract List<CurrentOfficer> apiToCurrentOfficer(List<CompanyOfficerApi> companyOfficerApis);
 
     @AfterMapping
     protected void convertOfficerRole(CompanyOfficerApi companyOfficerApi,
