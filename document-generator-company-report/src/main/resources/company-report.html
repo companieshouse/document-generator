@@ -8,6 +8,7 @@
 {{$officers := .company_report.current_appointments}}
 {{$recentFilingHistory := .company_report.recent_filing_history}}
 {{$pscs := .company_report.pscs}}
+{{$ukEstablishment := .company_report.uk_establishment}}
 {{$pscStatements := .company_report.psc_statements}}
 
 <head>
@@ -602,6 +603,32 @@
             {{end}}
             </tbody>
         </table>
+    {{end}}
+
+    {{if $ukEstablishment}}
+    <h3 class="heading-small">UK establishments</h3>
+    <table>
+        <caption class="visually-hidden">UK establishments</caption>
+        <!-- this hidden caption is needed for screen-readers-->
+        <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Number</th>
+            <th scope="col">Town</th>
+            <th scope="col">Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{- range $ukEstablishment -}}
+        <tr>
+            <td>{{.company_name}}</td>
+            <td scope="row">{{.company_number}}</td>
+            <td scope="row">{{.locality}}</td>
+            <td scope="row">{{.company_status}}</td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
     {{end}}
 
 </main>
