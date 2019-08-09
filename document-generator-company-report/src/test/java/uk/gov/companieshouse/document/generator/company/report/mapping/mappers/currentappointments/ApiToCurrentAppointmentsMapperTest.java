@@ -31,7 +31,7 @@ public class ApiToCurrentAppointmentsMapperTest {
 
     @Test
     @DisplayName("tests officer api data maps to current appointments model")
-    void testApiToCurrentAppointmentsMaps() throws Exception{
+    void testApiToCurrentAppointmentsMaps() {
 
         OfficersApi officersApi = createOfficersApi();
 

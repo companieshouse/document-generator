@@ -8,7 +8,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.ukestablishments.UkEstablishmentsItemsApi;
-import uk.gov.companieshouse.document.generator.company.report.exception.MapperException;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.ukestablishment.ApiToUkEstablishmentMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.ukestablishment.ApiToUkEstablishmentMapperImpl;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.ukestablishment.UkEstablishment;
@@ -34,7 +33,7 @@ public class ApiToUkEstablishmentMapperTest {
 
     @Test
     @DisplayName("test Uk establishments data maps to uk establishment model")
-    void testApiToUkEstablishmentMaps() throws MapperException {
+    void testApiToUkEstablishmentMaps() {
 
         UkEstablishment ukEstablishment =
             apiToUkEstablishmentMapper.apiToUkEstablishmentMapper(createUkEstablishmentApi());
@@ -48,7 +47,7 @@ public class ApiToUkEstablishmentMapperTest {
 
     @Test
     @DisplayName("test a list of uk establishments data maps to uk establishment model")
-    void testMultipleUkEstablishmentsMap() throws MapperException {
+    void testMultipleUkEstablishmentsMap() {
 
         List<UkEstablishmentsItemsApi> ukEstablishmentsItemsApiList = new ArrayList<>();
 
@@ -80,7 +79,7 @@ public class ApiToUkEstablishmentMapperTest {
 
     @Test
     @DisplayName("test uk establishment with null value to uk establishment api model")
-    void testApiToUkEstablishmentMapsWithNullApiModel() throws MapperException {
+    void testApiToUkEstablishmentMapsWithNullApiModel() {
 
         UkEstablishmentsItemsApi ukEstablishmentsItemsApi = null;
 

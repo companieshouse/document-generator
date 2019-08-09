@@ -1,12 +1,5 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.pscs;
 
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -16,10 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.annotation.RequestScope;
 import uk.gov.companieshouse.api.model.psc.PscApi;
 import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
-import uk.gov.companieshouse.document.generator.company.report.exception.MapperException;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.DateDayMonthYear;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.pscs.items.NaturesOfControl;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.pscs.items.Psc;
+
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RequestScope
 @Mapper(componentModel = "spring")
@@ -38,9 +38,9 @@ public abstract class ApiToPscMapper {
             @Mapping(target = "notifiedOn", ignore = true)
     })
 
-    public abstract Psc apiToPsc(PscApi pscApi) throws MapperException;
+    public abstract Psc apiToPsc(PscApi pscApi);
 
-    public abstract List<Psc> apiToPsc(List<PscApi> pscApi) throws MapperException;
+    public abstract List<Psc> apiToPsc(List<PscApi> pscApi);
 
     @Autowired
     private RetrieveApiEnumerationDescription retrieveApiEnumerationDescription;

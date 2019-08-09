@@ -1,14 +1,5 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.pscs;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -22,13 +13,21 @@ import uk.gov.companieshouse.api.model.psc.PscApi;
 import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.pscs.items.Psc;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+
 @ExtendWith({MockitoExtension.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ApiToPscMapperTest {
 
-    @InjectMocks
-    private ApiToPscMapper apiToPscMapper = new ApiToPscMapperImpl();
-
+    private static final String MAPPED_VALUE = "mapped value";
     private static final String NAME = "name";
     private static final LocalDate CEASED_ON = LocalDate.of(
             2019, 06, 06);
@@ -51,16 +50,18 @@ public class ApiToPscMapperTest {
     private static final String LEGAL_FORM = "legal form";
     private static final String PLACE_REGISTRATION = "place registration";
     private static final String REGISTRATION_NUMBER = "registration number";
-    private static final String KIND = "kind";
 
     private String[] NATURE_OF_CONTROL = new String[]{"test1", "test2", "test3"};
+
+    @InjectMocks
+    private ApiToPscMapper apiToPscMapper = new ApiToPscMapperImpl();
 
     @Mock
     RetrieveApiEnumerationDescription mockRetrieveApiEnumerations;
 
     @Test
     @DisplayName("tests multiple PSC data maps to PSC model")
-    void testApiToMultiplePSCMaps() throws Exception {
+    void testApiToMultiplePSCMaps() {
 
         List<PscApi> pscList = createPscList();
 
@@ -75,12 +76,12 @@ public class ApiToPscMapperTest {
 
     @Test
     @DisplayName("tests single PSC data maps to PSC model")
-    void testApiToPSCMaps() throws Exception {
+    void testApiToPSCMaps() {
 
         PscApi pscApi = createPscApi();
 
         when(mockRetrieveApiEnumerations.getApiEnumerationDescription(anyString(), anyString(),
-                anyString(), any())).thenReturn("mapped value");
+                anyString(), any())).thenReturn(MAPPED_VALUE);
 
         Psc psc = apiToPscMapper.apiToPsc(pscApi);
 
@@ -105,11 +106,11 @@ public class ApiToPscMapperTest {
         assertEquals(LEGAL_FORM, psc.getIdentification().getLegalForm());
         assertEquals(PLACE_REGISTRATION, psc.getIdentification().getPlaceRegistered());
         assertEquals(REGISTRATION_NUMBER, psc.getIdentification().getRegistrationNumber());
-        assertEquals("mapped value",
+        assertEquals(MAPPED_VALUE,
                 psc.getNaturesOfControl().get(0).getNaturesOfControlDescription());
-        assertEquals("mapped value",
+        assertEquals(MAPPED_VALUE,
                 psc.getNaturesOfControl().get(1).getNaturesOfControlDescription());
-        assertEquals("mapped value",
+        assertEquals(MAPPED_VALUE,
                 psc.getNaturesOfControl().get(2).getNaturesOfControlDescription());
     }
 
@@ -122,7 +123,6 @@ public class ApiToPscMapperTest {
         pscApi.setCountryOfResidence(COUNTRY_OF_RESIDENCE);
         pscApi.setIdentification(createIdentification());
         pscApi.setNaturesOfControl(NATURE_OF_CONTROL);
-        ;
         pscApi.setNotifiedOn(NOTIFIED_ON);
         pscApi.setNationality(NATIONALITY);
         pscApi.setName(NAME);

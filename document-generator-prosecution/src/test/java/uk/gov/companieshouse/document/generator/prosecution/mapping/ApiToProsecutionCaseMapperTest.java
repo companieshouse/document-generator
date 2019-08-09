@@ -24,6 +24,7 @@ public class ApiToProsecutionCaseMapperTest {
     private static final ProsecutionCaseStatusApi STATUS = ProsecutionCaseStatusApi.ACCEPTED;
     private static final String COMPANY_INCORPORATION_NUMBER = "companyIncorporationNumber";
     private static final String COMPANY_NAME = "companyName";
+    private static final String CASE_REFERENCE_NUMBER = "caseReferenceNumber";
 
     @Test
     @DisplayName("Tests prosecution case API values map to prosecution case DocGen model")
@@ -34,10 +35,12 @@ public class ApiToProsecutionCaseMapperTest {
         assertNotNull(prosecutionCase);
         assertEquals(COMPANY_INCORPORATION_NUMBER, prosecutionCase.getCompanyIncorporationNumber());
         assertEquals(COMPANY_NAME, prosecutionCase.getCompanyName());
+        assertEquals(CASE_REFERENCE_NUMBER, prosecutionCase.getCaseReferenceNumber());
     }
 
     private ProsecutionCaseApi createProsecutionCase() {
         ProsecutionCaseApi prosecutionCase = new ProsecutionCaseApi();
+        prosecutionCase.setCaseReferenceNumber(CASE_REFERENCE_NUMBER);
         prosecutionCase.setStatus(STATUS);
         prosecutionCase.setCompanyIncorporationNumber(COMPANY_INCORPORATION_NUMBER);
         prosecutionCase.setCompanyName(COMPANY_NAME);
