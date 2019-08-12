@@ -27,6 +27,15 @@
         margin-bottom: 1em;
       }
 
+      .sentence-case {
+        text-transform: lowercase;
+        display: inline-block;
+      }
+
+      .sentence-case::first-letter {
+        text-transform: uppercase;
+      }
+
       @media print {
 
         .page-break {
@@ -300,7 +309,7 @@
         <li>Governing Law: {{$foreignCompanyDetails.governed_by}}</li>
         {{end}}
         {{if $foreignCompanyDetails.business_activity}}
-        <li>Objects of the company: {{$foreignCompanyDetails.business_activity}}</li>
+        <li>Objects of the company: <span class="sentence-case">{{$foreignCompanyDetails.business_activity}}</span></li>
         {{end}}
     </ul>
     {{end}}
