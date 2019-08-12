@@ -12,8 +12,12 @@ import uk.gov.companieshouse.document.generator.company.report.exception.Service
 @Service
 public class InsolvencyService {
 
-    @Autowired
     private CompanyReportApiClientService companyReportApiClientService;
+
+    @Autowired
+    public InsolvencyService(CompanyReportApiClientService companyReportApiClientService) {
+        this.companyReportApiClientService = companyReportApiClientService;
+    }
 
     private static final UriTemplate GET_INSOLVENCY_URI =
         new UriTemplate("/company/{companyNumber}/insolvency");

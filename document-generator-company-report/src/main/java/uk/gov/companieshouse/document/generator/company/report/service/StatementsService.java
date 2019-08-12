@@ -13,8 +13,12 @@ import uk.gov.companieshouse.document.generator.company.report.exception.Service
 @Service
 public class StatementsService {
 
-    @Autowired
     private CompanyReportApiClientService companyReportApiClientService;
+
+    @Autowired
+    public StatementsService(CompanyReportApiClientService companyReportApiClientService) {
+        this.companyReportApiClientService = companyReportApiClientService;
+    }
 
     private static final UriTemplate GET_STATEMENTS_URI =
             new UriTemplate("/company/{companyNumber}/persons-with-significant-control-statements");

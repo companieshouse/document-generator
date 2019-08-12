@@ -43,26 +43,37 @@ import static uk.gov.companieshouse.document.generator.company.report.CompanyRep
 @Component
 public class CompanyReportDataHandler {
 
-    @Autowired
     private CompanyService companyService;
 
-    @Autowired
     private PscsService pscsService;
 
-    @Autowired
     private OfficerService officerService;
 
-    @Autowired
     private RecentFilingHistoryService recentFilingHistoryService;
 
-    @Autowired
     private CompanyReportMapper companyReportMapper;
 
-    @Autowired
     private StatementsService statementsService;
 
-    @Autowired
     private InsolvencyService insolvencyService;
+
+    @Autowired
+    public CompanyReportDataHandler(CompanyService companyService,
+                                    PscsService pscsService,
+                                    OfficerService officerService,
+                                    RecentFilingHistoryService recentFilingHistoryService,
+                                    CompanyReportMapper companyReportMapper,
+                                    StatementsService statementsService,
+                                    InsolvencyService insolvencyService) {
+
+        this.companyService = companyService;
+        this.pscsService = pscsService;
+        this.officerService = officerService;
+        this.recentFilingHistoryService = recentFilingHistoryService;
+        this.companyReportMapper = companyReportMapper;
+        this.statementsService = statementsService;
+        this.insolvencyService = insolvencyService;
+    }
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
     private static final String PSCS_KEY = "persons_with_significant_control";
@@ -134,7 +145,7 @@ public class CompanyReportDataHandler {
 
         if (companyProfileApi.getLinks().containsKey(STATEMENTS_KEY)) {
             try {
-                StatementsApi statementsApi = sortStatements(getStatements(companyNumber, requestId));
+                StatementsApi statementsApi = getStatements(companyNumber, requestId);
                 companyReportApiData.setStatementsApi(statementsApi);
             } catch (HandlerException he) {
                 LOG.infoContext(requestId,"Failed to get psc statements data for company: "
@@ -157,20 +168,6 @@ public class CompanyReportDataHandler {
             companyNumber,
             requestId,
             timeStamp);
-    }
-
-    private StatementsApi sortStatements(StatementsApi statementsApi) {
-
-        StatementsApi sortedStatementsApi = statementsApi;
-
-        List<StatementApi> statements = statementsApi.getItems().stream()
-            .sorted(Comparator.comparing(StatementApi::getCeasedOn, Comparator.nullsFirst(Comparator.reverseOrder()))
-                .thenComparing(StatementApi::getNotifiedOn))
-            .collect(Collectors.toList());
-
-        sortedStatementsApi.setItems(statements);
-
-        return  sortedStatementsApi;
     }
 
     private String toJson(CompanyReport companyReport, String companyNumber,
@@ -217,7 +214,7 @@ public class CompanyReportDataHandler {
         try {
             LOG.infoContext(requestId, "Attempting to retrieve company filing history", getDebugMap(companyNumber));
             return sortFilingHistory(recentFilingHistoryService.getFilingHistory(companyNumber));
-        } catch (ServiceException | ApiErrorResponseException | URIValidationException se) {
+        } catch (ServiceException se) {
             throw new HandlerException("error occurred obtaining the company filing history", se);
         }
     }
@@ -238,10 +235,24 @@ public class CompanyReportDataHandler {
     private StatementsApi getStatements(String companyNumber, String requestId) throws HandlerException {
         try {
             LOG.infoContext(requestId, "Attempting to retrieve company psc statements", getDebugMap(companyNumber));
-            return statementsService.getStatements(companyNumber);
+            return sortStatements(statementsService.getStatements(companyNumber));
         } catch (ServiceException se) {
             throw new HandlerException("error occurred obtaining the company psc statements", se);
         }
+    }
+
+    private StatementsApi sortStatements(StatementsApi statementsApi) {
+
+        StatementsApi sortedStatementsApi = statementsApi;
+
+        List<StatementApi> statements = statementsApi.getItems().stream()
+            .sorted(Comparator.comparing(StatementApi::getCeasedOn, Comparator.nullsFirst(Comparator.reverseOrder()))
+                .thenComparing(StatementApi::getNotifiedOn))
+            .collect(Collectors.toList());
+
+        sortedStatementsApi.setItems(statements);
+
+        return  sortedStatementsApi;
     }
 
     private PscsApi getPscs(String companyNumber, String requestId) throws HandlerException {
