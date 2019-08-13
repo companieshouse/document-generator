@@ -17,6 +17,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RequestScope
 @Mapper(componentModel = "spring")
@@ -82,13 +84,14 @@ public abstract class ApiToRecentFilingHistoryMapper {
     private void formatDateParameters(Map<String, Object> parameters) {
 
         for (String parameterKey : parameters.keySet()) {
+            if (parameterKey.equals("date") ||
+                parameterKey.contains("_date") &&
+                parameters.get(parameterKey) != null) {
 
-            if (parameterKey.equals("date") || parameterKey.contains("_date")) {
+                    LocalDate localDate = LocalDate.parse(parameters.get(parameterKey).toString());
 
-                LocalDate localDate = LocalDate.parse(parameters.get(parameterKey).toString());
-
-                parameters.replace(parameterKey,
-                    parameters.get(parameterKey), localDate.format(getParamDateFormatter()));
+                    parameters.replace(parameterKey,
+                        parameters.get(parameterKey), localDate.format(getParamDateFormatter()));
             }
         }
     }
