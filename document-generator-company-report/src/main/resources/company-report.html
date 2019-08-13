@@ -28,6 +28,15 @@
         margin-bottom: 1em;
       }
 
+      .sentence-case {
+        text-transform: lowercase;
+        display: inline-block;
+      }
+
+      .sentence-case::first-letter {
+        text-transform: uppercase;
+      }
+
       @media print {
 
         .page-break {
@@ -169,7 +178,7 @@
                 {{if eq $foreignCompanyDetails.accounting_requirements.terms_of_account_publication "accounting-publication-date-does-not-need-to-be-supplied-by-company"}}
 
                     {{if $keyFilingDates.last_accounts_made_up_to}}
-                        <h3 class="heading-small">Accounts</h3>
+                        <h3 class="heading-small">Key filing dates</h3>
                         Last accounts made up to: {{$keyFilingDates.last_accounts_made_up_to}}
                     {{end}}
 
@@ -177,7 +186,7 @@
 
                 {{if eq $foreignCompanyDetails.accounting_requirements.terms_of_account_publication "accounts-publication-date-supplied-by-company"}}
 
-                    <h3 class="heading-small">Accounts</h3>
+                    <h3 class="heading-small">Key filing dates</h3>
                     {{if $foreignCompanyDetails.accounts}}
                         <p>Required to publish accounts from {{$foreignCompanyDetails.accounts.account_period_from.day}}
                             {{$foreignCompanyDetails.accounts.account_period_from.month}} to {{$foreignCompanyDetails.accounts.account_period_to.day}}
@@ -196,7 +205,7 @@
                 {{ if eq $foreignCompanyDetails.accounting_requirements.terms_of_account_publication "accounting-reference-date-allocated-by-companies-house"}}
 
                     {{if or $keyFilingDates.next_made_up_to $keyFilingDates.last_accounts_made_up_to}}
-                        <h3 class="heading-small">Accounts</h3>
+                        <h3 class="heading-small">Key filing dates</h3>
                     {{end}}
 
                     {{if $keyFilingDates.next_made_up_to}}
@@ -301,7 +310,7 @@
         <li>Governing Law: {{$foreignCompanyDetails.governed_by}}</li>
         {{end}}
         {{if $foreignCompanyDetails.business_activity}}
-        <li>Objects of the company: {{$foreignCompanyDetails.business_activity}}</li>
+        <li>Objects of the company: <span class="sentence-case">{{$foreignCompanyDetails.business_activity}}</span></li>
         {{end}}
     </ul>
     {{end}}
