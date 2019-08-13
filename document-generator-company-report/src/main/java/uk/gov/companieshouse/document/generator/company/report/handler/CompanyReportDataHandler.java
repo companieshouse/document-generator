@@ -213,7 +213,7 @@ public class CompanyReportDataHandler {
             LOG.infoContext(requestId, "Attempting to retrieve uk establishment", getDebugMap(companyNumber));
             return ukEstablishmentService.getUkEstablishments(companyNumber);
         } catch (ServiceException se) {
-            throw new HandlerException("error occurred obtaining ukk establishments", se);
+            throw new HandlerException("error occurred obtaining uk establishments", se);
         }
     }
 
