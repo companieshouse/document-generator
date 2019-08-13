@@ -1,10 +1,5 @@
 package uk.gov.companieshouse.document.generator.company.report.handler;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -19,6 +14,8 @@ import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.api.model.statements.StatementApi;
 import uk.gov.companieshouse.api.model.statements.StatementsApi;
+import uk.gov.companieshouse.api.model.ukestablishments.UkEstablishmentsApi;
+import uk.gov.companieshouse.api.model.ukestablishments.UkEstablishmentsItemsApi;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.CompanyReportMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
@@ -27,6 +24,7 @@ import uk.gov.companieshouse.document.generator.company.report.service.OfficerSe
 import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
 import uk.gov.companieshouse.document.generator.company.report.service.RecentFilingHistoryService;
 import uk.gov.companieshouse.document.generator.company.report.service.StatementsService;
+import uk.gov.companieshouse.document.generator.company.report.service.UkEstablishmentService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 
 import java.time.LocalDate;
@@ -64,6 +62,9 @@ public class CompanyReportDataHandlerTest {
     private OfficerService mockOfficerService;
 
     @Mock
+    private UkEstablishmentService mockUkEstablishmentService;
+
+    @Mock
     private RecentFilingHistoryService mockRecentFilingHistoryService;
 
     @InjectMocks
@@ -71,6 +72,10 @@ public class CompanyReportDataHandlerTest {
 
     private static final String RESOURCE_URI = "/company-number/000064000";
     private static final String REQUEST_ID = "request-id";
+    private static final String COMPANY_NAME = "company name";
+    private static final String COMPANY_NUMBER = "FC000005";
+    private static final String COMPANY_STATUS = "company status";
+    private static final String LOCALITY = "locality";
     private static final String FILING_DESCRIPTION = "filing description";
     private static final String FORM_TYPE = "form type";
 
@@ -80,6 +85,7 @@ public class CompanyReportDataHandlerTest {
         CompanyProfileApi companyProfileApi = createCompanyProfile();
         PscsApi pscsApi = createPscsApi();
         OfficersApi officersApi = createOfficers();
+        UkEstablishmentsApi ukEstablishmentsApi = createUkEstablishment();
         FilingHistoryApi filingHistoryApi = createFilingHistory();
         StatementsApi statementsApi = createStatementsApi();
 
@@ -89,6 +95,7 @@ public class CompanyReportDataHandlerTest {
         when(mockCompanyService.getCompanyProfile(any(String.class))).thenReturn(companyProfileApi);
         when(mockPscService.getPscs(any(String.class))).thenReturn(pscsApi);
         when(mockOfficerService.getOfficers(any(String.class))).thenReturn(officersApi);
+        when(mockUkEstablishmentService.getUkEstablishments(any(String.class))).thenReturn(ukEstablishmentsApi);
         when(mockRecentFilingHistoryService.getFilingHistory(any(String.class))).thenReturn(filingHistoryApi);
         when(mockCompanyReportMapper.mapCompanyReport(any(CompanyReportApiData.class), anyString(), anyString())).thenReturn(new CompanyReport());
         when(mockStatementsService.getStatements(any(String.class))).thenReturn(statementsApi);
@@ -135,6 +142,7 @@ public class CompanyReportDataHandlerTest {
 
         links.put("persons_with_significant_control", "/persons-with-significant-control");
         links.put("officers", "/officers");
+        links.put("uk_establishments", "/uk-establishments");
         links.put("filing_history", "/filing-history");
         links.put("persons_with_significant_control_statements", "/persons_with_significant_control_statements");
 
@@ -148,6 +156,23 @@ public class CompanyReportDataHandlerTest {
         officersApi.setActiveCount(1L);
 
         return officersApi;
+    }
+
+    private UkEstablishmentsApi createUkEstablishment() {
+
+        UkEstablishmentsApi ukEstablishmentsApi = new UkEstablishmentsApi();
+        List<UkEstablishmentsItemsApi> ukEstablishmentsItemsApiList = new ArrayList<>();
+
+        UkEstablishmentsItemsApi ukEstablishmentsItemsApi = new UkEstablishmentsItemsApi();
+        ukEstablishmentsItemsApi.setCompanyName(COMPANY_NAME);
+        ukEstablishmentsItemsApi.setCompanyNumber(COMPANY_NUMBER);
+        ukEstablishmentsItemsApi.setLocality(LOCALITY);
+        ukEstablishmentsItemsApi.setCompanyStatus(COMPANY_STATUS);
+
+        ukEstablishmentsItemsApiList.add(ukEstablishmentsItemsApi);
+        ukEstablishmentsApi.setItems(ukEstablishmentsItemsApiList);
+
+        return ukEstablishmentsApi;
     }
 
     private FilingHistoryApi createFilingHistory() {
