@@ -8,49 +8,49 @@ import java.util.List;
 public class MortgageChargeDetails {
 
     @JsonProperty("total_count")
-    private Integer totalCount;
+    private Long totalCount;
 
     @JsonProperty("satisfied_count")
-    private Integer satisfiedCount;
+    private Long satisfiedCount;
 
     @JsonProperty("part_satisfied_count")
-    private Integer partSatisfiedCount;
+    private Long partSatisfiedCount;
 
     @JsonProperty("outstanding")
-    private Integer outstanding;
+    private Long outstanding;
 
     @JsonProperty("charges")
     private List<Charge> charges;
 
-    public Integer getTotalCount() {
+    public Long getTotalCount() {
         return totalCount;
     }
 
-    public void setTotalCount(Integer totalCount) {
+    public void setTotalCount(Long totalCount) {
         this.totalCount = totalCount;
     }
 
-    public Integer getSatisfiedCount() {
+    public Long getSatisfiedCount() {
         return satisfiedCount;
     }
 
-    public void setSatisfiedCount(Integer satisfiedCount) {
+    public void setSatisfiedCount(Long satisfiedCount) {
         this.satisfiedCount = satisfiedCount;
     }
 
-    public Integer getPartSatisfiedCount() {
+    public Long getPartSatisfiedCount() {
         return partSatisfiedCount;
     }
 
-    public void setPartSatisfiedCount(Integer partSatisfiedCount) {
+    public void setPartSatisfiedCount(Long partSatisfiedCount) {
         this.partSatisfiedCount = partSatisfiedCount;
     }
 
-    public Integer getOutstanding() {
+    public Long getOutstanding() {
         return outstanding;
     }
 
-    public void setOutstanding(Integer outstanding) {
+    public void setOutstanding(Long outstanding) {
         this.outstanding = outstanding;
     }
 

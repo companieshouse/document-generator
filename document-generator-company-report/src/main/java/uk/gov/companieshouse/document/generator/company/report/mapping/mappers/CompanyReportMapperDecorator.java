@@ -2,7 +2,6 @@ package uk.gov.companieshouse.document.generator.company.report.mapping.mappers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import uk.gov.companieshouse.api.model.charges.ChargesApi;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.company.PreviousCompanyNamesApi;
 import uk.gov.companieshouse.api.model.company.foreigncompany.ForeignCompanyDetailsApi;
@@ -26,7 +25,6 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.CurrentAppointments;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.ForeignCompanyDetails;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.keyfilingdates.KeyFilingDates;
-import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.mortgagechargedetails.MortgageChargeDetails;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.previousnames.PreviousNames;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.pscs.Pscs;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.recentfilinghistory.RecentFilingHistory;
@@ -130,10 +128,7 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
                 companyReport.setUkEstablishment(setUkEstablishments(companyReportApiData.getUkEstablishmentsApi().getItems()));
             }
 
-            if(companyReportApiData.getChargesApi() != null && companyReportApiData.getChargesApi().getItems() != null) {
-                LOG.infoContext(requestId, "Map data for Mortgage Charge Details", getDebugMap(companyNumber));
-                companyReport.setMortgageChargeDetails(setMortgageChargeDetails(companyReportApiData.getChargesApi()));
-            }
+            setMortgageChargeDetails(companyReportApiData, requestId, companyNumber, companyReport);
         }
 
         return companyReport;
@@ -171,8 +166,14 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
         return apiToForeignCompanyDetailsMapper.apiToForeignCompanyDetails(foreignCompanyDetailsApi);
     }
 
-    private MortgageChargeDetails setMortgageChargeDetails(ChargesApi chargesApi) {
-        return apiToMortgageChargeDetailsMapper.apiToMortgageChargeDetails(chargesApi);
+    private void setMortgageChargeDetails(CompanyReportApiData companyReportApiData, String requestId, String companyNumber, CompanyReport companyReport) {
+        if(companyReportApiData.getChargesApi() != null && companyReportApiData.getChargesApi().getItems() != null) {
+            LOG.infoContext(requestId, "Map data for Mortgage Charge Details", getDebugMap(companyNumber));
+
+            companyReport.setMortgageChargeDetails(
+                apiToMortgageChargeDetailsMapper
+                    .apiToMortgageChargeDetails(companyReportApiData.getChargesApi()));
+        }
     }
 
     private Map<String, Object> getDebugMap(String companyNumber) {

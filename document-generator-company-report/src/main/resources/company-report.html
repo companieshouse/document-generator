@@ -10,6 +10,7 @@
 {{$pscs := .company_report.pscs}}
 {{$ukEstablishment := .company_report.uk_establishment}}
 {{$pscStatements := .company_report.psc_statements}}
+{{$charges := .company_report.mortgage_charge_details}}
 
 <head>
     <meta charset="UTF-8">
@@ -638,6 +639,12 @@
         {{end}}
         </tbody>
     </table>
+    {{end}}
+
+    {{if $charges}}
+    <h3 class="heading-large">Charges</h3>
+    <h2 class="heading-medium">{{$charges.total_count}} charges registered</h2>
+    <p>{{$charges.outstanding}} outstanding, {{$charges.satisfied_count}} satisfied, {{$charges.part_satisfied_count}} part satisfied</p>
     {{end}}
 
 </main>
