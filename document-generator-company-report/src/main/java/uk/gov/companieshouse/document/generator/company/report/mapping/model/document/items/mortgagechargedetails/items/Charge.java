@@ -68,4 +68,156 @@ public class Charge {
 
     @JsonProperty("floating_charge_covers_all")
     private Boolean floatingChargeCoversAll;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getChargeCode() {
+        return chargeCode;
+    }
+
+    public void setChargeCode(String chargeCode) {
+        this.chargeCode = chargeCode;
+    }
+
+    public LocalDate getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public LocalDate getDelivered() {
+        return delivered;
+    }
+
+    public void setDelivered(LocalDate delivered) {
+        this.delivered = delivered;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getTransaction() {
+        return transaction;
+    }
+
+    public void setTransaction(String transaction) {
+        this.transaction = transaction;
+    }
+
+    public LocalDate getAcquisitionDate() {
+        return acquisitionDate;
+    }
+
+    public void setAcquisitionDate(LocalDate acquisitionDate) {
+        this.acquisitionDate = acquisitionDate;
+    }
+
+    public String getAssetsCeased() {
+        return assetsCeased;
+    }
+
+    public void setAssetsCeased(String assetsCeased) {
+        this.assetsCeased = assetsCeased;
+    }
+
+    public List<PersonEntitled> getPersonsEntitled() {
+        return personsEntitled;
+    }
+
+    public void setPersonsEntitled(List<PersonEntitled> personsEntitled) {
+        this.personsEntitled = personsEntitled;
+    }
+
+    public Boolean getMoreThanFourPersonsEntitled() {
+        return moreThanFourPersonsEntitled;
+    }
+
+    public void setMoreThanFourPersonsEntitled(Boolean moreThanFourPersonsEntitled) {
+        this.moreThanFourPersonsEntitled = moreThanFourPersonsEntitled;
+    }
+
+    public String getSecuredDetailsDescription() {
+        return securedDetailsDescription;
+    }
+
+    public void setSecuredDetailsDescription(String securedDetailsDescription) {
+        this.securedDetailsDescription = securedDetailsDescription;
+    }
+
+    public String getSecuredDetailsType() {
+        return securedDetailsType;
+    }
+
+    public void setSecuredDetailsType(String securedDetailsType) {
+        this.securedDetailsType = securedDetailsType;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getParticularsDescription() {
+        return particularsDescription;
+    }
+
+    public void setParticularsDescription(String particularsDescription) {
+        this.particularsDescription = particularsDescription;
+    }
+
+    public Boolean getChargorActingAsBareTrustee() {
+        return chargorActingAsBareTrustee;
+    }
+
+    public void setChargorActingAsBareTrustee(Boolean chargorActingAsBareTrustee) {
+        this.chargorActingAsBareTrustee = chargorActingAsBareTrustee;
+    }
+
+    public Boolean getContainsFixedCharge() {
+        return containsFixedCharge;
+    }
+
+    public void setContainsFixedCharge(Boolean containsFixedCharge) {
+        this.containsFixedCharge = containsFixedCharge;
+    }
+
+    public Boolean getContainsFloatingCharge() {
+        return containsFloatingCharge;
+    }
+
+    public void setContainsFloatingCharge(Boolean containsFloatingCharge) {
+        this.containsFloatingCharge = containsFloatingCharge;
+    }
+
+    public Boolean getContainsNegativePledge() {
+        return containsNegativePledge;
+    }
+
+    public void setContainsNegativePledge(Boolean containsNegativePledge) {
+        this.containsNegativePledge = containsNegativePledge;
+    }
+
+    public Boolean getFloatingChargeCoversAll() {
+        return floatingChargeCoversAll;
+    }
+
+    public void setFloatingChargeCoversAll(Boolean floatingChargeCoversAll) {
+        this.floatingChargeCoversAll = floatingChargeCoversAll;
+    }
 }
