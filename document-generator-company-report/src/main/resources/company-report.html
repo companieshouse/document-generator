@@ -10,7 +10,7 @@
 {{$pscs := .company_report.pscs}}
 {{$ukEstablishment := .company_report.uk_establishment}}
 {{$pscStatements := .company_report.psc_statements}}
-{{$charges := .company_report.mortgage_charge_details}}
+{{$mortgageChargeDetails := .company_report.mortgage_charge_details}}
 
 <head>
     <meta charset="UTF-8">
@@ -36,6 +36,10 @@
 
       .sentence-case::first-letter {
         text-transform: uppercase;
+      }
+
+      .capitalised {
+        text-transform: capitalize;
       }
 
       @media print {
@@ -641,10 +645,35 @@
     </table>
     {{end}}
 
-    {{if $charges}}
+    {{if $mortgageChargeDetails}}
     <h3 class="heading-large">Charges</h3>
-    <h2 class="heading-medium">{{$charges.total_count}} charges registered</h2>
-    <p>{{$charges.outstanding}} outstanding, {{$charges.satisfied_count}} satisfied, {{$charges.part_satisfied_count}} part satisfied</p>
+    <h2 class="heading-medium">{{$mortgageChargeDetails.total_count}} charges registered</h2>
+    <p>{{$mortgageChargeDetails.outstanding}} outstanding, {{$mortgageChargeDetails.satisfied_count}} satisfied, {{$mortgageChargeDetails.part_satisfied_count}} part satisfied</p>
+
+    {{if $charges := $mortgageChargeDetails.charges}}
+    {{- range $charges -}}
+    <h2 class="heading-medium">{{.description}}</h2>
+
+    <table>
+        <tr>
+            <th>Created</th>
+            <th>Delivered</th>
+            <th>Status</th>
+        </tr>
+        <tr>
+            <td>{{.created_date}}</td>
+            <td>{{.delivered}}</td>
+            <td><span class="capitalised">{{.status}}</span> on {{.satisfied_on}}</td>
+        </tr>
+    </table>
+
+    <h3 class="heading-small">{{.particulars_type}}</h3>
+    <p>{{.particulars_description}}</p>
+
+    <hr>
+    {{end}}
+    {{end}}
+
     {{end}}
 
 </main>
