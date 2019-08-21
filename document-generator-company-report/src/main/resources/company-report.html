@@ -38,8 +38,20 @@
         text-transform: uppercase;
       }
 
-      .capitalised {
-        text-transform: capitalize;
+      .underlined {
+        text-decoration: underline;
+      }
+
+      .bold {
+        font-weight: 700px;
+      }
+
+      .charge {
+        margin: 20px 0px;
+      }
+
+      .particulars {
+        margin-top: 20px;
       }
 
       @media print {
@@ -652,7 +664,8 @@
 
     {{if $charges := $mortgageChargeDetails.charges}}
     {{- range $charges -}}
-    <h2 class="heading-medium">{{.description}}</h2>
+    <div class="charge">
+    <h2 class="heading-medium underlined">{{.description}}</h2>
 
     <table>
         <tr>
@@ -663,14 +676,17 @@
         <tr>
             <td>{{.created_date}}</td>
             <td>{{.delivered}}</td>
-            <td><span class="capitalised">{{.status}}</span> on {{.satisfied_on}}</td>
+            <td>{{.status}} on {{.satisfied_on}}</td>
         </tr>
     </table>
 
-    <h3 class="heading-small">{{.particulars_type}}</h3>
-    <p>{{.particulars_description}}</p>
+    <div class="particulars">
+        <p class="bold">{{.particulars_type}}</p>
+        <p>{{.particulars_description}}</p>
+    </div>
 
     <hr>
+    </div>
     {{end}}
     {{end}}
 
