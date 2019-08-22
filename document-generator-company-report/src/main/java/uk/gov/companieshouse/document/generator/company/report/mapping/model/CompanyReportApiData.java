@@ -2,10 +2,11 @@ package uk.gov.companieshouse.document.generator.company.report.mapping.model;
 
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
-import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
-import uk.gov.companieshouse.api.model.ukestablishments.UkEstablishmentsApi;
+import uk.gov.companieshouse.api.model.psc.PscsApi;
+import uk.gov.companieshouse.api.model.registers.CompanyRegistersApi;
 import uk.gov.companieshouse.api.model.statements.StatementsApi;
+import uk.gov.companieshouse.api.model.ukestablishments.UkEstablishmentsApi;
 
 public class CompanyReportApiData {
 
@@ -20,6 +21,8 @@ public class CompanyReportApiData {
     private FilingHistoryApi filingHistoryApi;
 
     private StatementsApi statementsApi;
+
+    private CompanyRegistersApi companyRegistersApi;
 
     public CompanyProfileApi getCompanyProfileApi() {
         return companyProfileApi;
@@ -67,5 +70,13 @@ public class CompanyReportApiData {
 
     public void setStatementsApi(StatementsApi statementsApi) {
         this.statementsApi = statementsApi;
+    }
+
+    public CompanyRegistersApi getCompanyRegistersApi() {
+        return companyRegistersApi;
+    }
+
+    public void setCompanyRegistersApi(CompanyRegistersApi companyRegistersApi) {
+        this.companyRegistersApi = companyRegistersApi;
     }
 }
