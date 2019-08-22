@@ -5,10 +5,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.annotation.RequestScope;
-import uk.gov.companieshouse.api.model.registers.RegisterApi;
 import uk.gov.companieshouse.api.model.registers.RegisterItemsApi;
 import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
-import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registers.items.Register;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registers.items.RegisterItems;
 
 import java.time.LocalDate;
@@ -55,22 +53,6 @@ public abstract class ApiToRegisterItems {
             LocalDate registerDate = registerItemsApi.getMovedOn();
             registerItems.setMovedOn(registerDate.format(getDateFormatter()));
         }
-    }
-
-    @AfterMapping
-    protected void createInformationSentence(RegisterApi registerApi,
-              @MappingTarget Register register) {
-
-        StringBuilder informationSentence = new StringBuilder();
-
-
-        informationSentence
-            .append("Information ")
-            .append("yo")
-            .append("since ")
-            .append("yoyo");
-
-           register.setInformation(informationSentence.toString());
     }
 
     private Map<String, String> getDebugMap(String debugString) {
