@@ -10,6 +10,7 @@
 {{$pscs := .company_report.pscs}}
 {{$ukEstablishment := .company_report.uk_establishment}}
 {{$pscStatements := .company_report.psc_statements}}
+{{$registers := .company_report.registers}}
 
 <head>
     <meta charset="UTF-8">
@@ -638,6 +639,24 @@
         {{end}}
         </tbody>
     </table>
+    {{end}}
+
+    {{if $registers}}
+    <h3 class="heading-medium">Registers</h3>
+
+        <caption class="visually-hidden">Registers</caption>
+        <!-- this hidden caption is needed for screen-readers-->
+
+    <!--Title should come from the constants file-->
+    {{if $registers.directors}}
+
+            <p>Register of directors</p>
+
+            <p>{{$registers.directors.information}}</p>
+
+
+        {{end}}
+
     {{end}}
 
 </main>
