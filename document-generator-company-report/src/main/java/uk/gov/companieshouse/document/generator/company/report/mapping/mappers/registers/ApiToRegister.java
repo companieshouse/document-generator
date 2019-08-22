@@ -53,6 +53,8 @@ public abstract class ApiToRegister {
              } else {
                  formattedDates.setFormattedDate(registerItem.getMovedOn() + " - " + previousDate);
                  dates.add(formattedDates);
+
+                 previousDate = registerItem.getMovedOn();
              }
          }
          register.setDates(dates);
