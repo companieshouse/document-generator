@@ -9,6 +9,7 @@
 {{$recentFilingHistory := .company_report.recent_filing_history}}
 {{$pscs := .company_report.pscs}}
 {{$pscStatements := .company_report.psc_statements}}
+{{$insolvency := .company_report.insolvency}}
 
 <head>
     <meta charset="UTF-8">
@@ -604,6 +605,46 @@
         </table>
     {{end}}
 
+    {{if $insolvency}}
+        <h3 class="heading-large">Insolvency</h3>
+        <h2 class="heading-medium">
+            {{if $insolvency.total_insolvency_cases}} {{$insolvency.total_insolvency_cases}} Insolvency Case {{else}} Insolvency Case {{end}}
+        </h2>
+
+        {{if $insolvency.cases}}
+            {{- range $insolvency.cases -}}
+                <h2 class="heading-medium"> Case number {{.case_number}} - {{.case_type}}</h2>
+                {{if .dates}}
+                    {{- range .dates}}
+                    <ul class="list list-bullet">
+                        <li>{{.type}}: {{.date}}</li>
+                    </ul>
+                    {{end}}
+                {{end}}
+                {{if .practitioners}}
+                <table>
+                    <thead>
+                    <tr>
+                        <th scope="col">Practitioner</th>
+                        <th scope="col">Appointed on</th>
+                        <th scope="col">Ceased to act</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{- range .practitioners}}
+                    <tr>
+                        <td>{{.name}} <br>
+                            {{.address.address_line_1}}, {{.address.address_line_2}}, {{.address.postal_code}}</td>
+                        <td nowrap="nowrap">{{.appointed_on}}</td>
+                        <td nowrap="nowrap">{{.ceased_to_act_on}}</td>
+                    </tr>
+                    {{end}}
+                    </tbody>
+                </table>
+                {{end}}
+            {{end}}
+        {{end}}
+    {{end}}
 </main>
 </body>
 </html>
