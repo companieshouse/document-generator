@@ -676,7 +676,12 @@
         <tr>
             <td>{{.created_date}}</td>
             <td>{{.delivered}}</td>
-            <td>{{.status}} on {{.satisfied_on}}</td>
+            <td>{{.status}}
+                {{if eq .status "Satisfied"}}
+                    on {{.satisfied_on}}
+                {{else}}
+                {{end}}
+            </td>
         </tr>
     </table>
 
