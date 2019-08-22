@@ -3,8 +3,6 @@ package uk.gov.companieshouse.document.generator.company.report.mapping.model.do
 import com.fasterxml.jackson.annotation.JsonProperty;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.Address;
 
-import java.time.LocalDate;
-
 public class Practitioner {
 
     @JsonProperty("name")
@@ -14,10 +12,10 @@ public class Practitioner {
     private Address address;
 
     @JsonProperty("appointed_on")
-    private LocalDate appointedOn;
+    private String appointedOn;
 
     @JsonProperty("ceased_to_act_on")
-    private LocalDate ceasedToActOn;
+    private String ceasedToActOn;
 
     public String getName() {
         return name;
@@ -36,19 +34,19 @@ public class Practitioner {
         this.address = address;
     }
 
-    public LocalDate getAppointedOn() {
+    public String getAppointedOn() {
         return appointedOn;
     }
 
-    public void setAppointedOn(LocalDate appointedOn) {
+    public void setAppointedOn(String appointedOn) {
         this.appointedOn = appointedOn;
     }
 
-    public LocalDate getCeasedToActOn() {
+    public String getCeasedToActOn() {
         return ceasedToActOn;
     }
 
-    public void setCeasedToActOn(LocalDate ceasedToActOn) {
+    public void setCeasedToActOn(String ceasedToActOn) {
         this.ceasedToActOn = ceasedToActOn;
     }
 }

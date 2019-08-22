@@ -4,12 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.gov.companieshouse.api.error.ApiErrorResponseException;
-import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
+import uk.gov.companieshouse.api.model.insolvency.CaseApi;
+import uk.gov.companieshouse.api.model.insolvency.DatesApi;
 import uk.gov.companieshouse.api.model.insolvency.InsolvencyApi;
+import uk.gov.companieshouse.api.model.insolvency.PractitionerApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.api.model.statements.StatementApi;
@@ -80,6 +81,7 @@ public class CompanyReportDataHandler {
     private static final String OFFICERS_KEY = "officers";
     private static final String STATEMENTS_KEY = "persons_with_significant_control_statements";
     private static final String FILING_HISTORY_KEY = "filing_history";
+    private static final String INSOLVENCY_KEY = "insolvency";
 
     public DocumentInfoResponse getCompanyReport(String resourceUri, String requestId)
         throws HandlerException {
@@ -153,7 +155,7 @@ public class CompanyReportDataHandler {
             }
         }
 
-        if (companyProfileApi.getLinks().containsKey("insolvency")) {
+        if (companyProfileApi.getLinks().containsKey(INSOLVENCY_KEY)) {
             try {
                 InsolvencyApi insolvencyApi = getInsolvency(companyNumber, requestId);
                 companyReportApiData.setInsolvencyApi(insolvencyApi);
@@ -269,10 +271,34 @@ public class CompanyReportDataHandler {
     private InsolvencyApi getInsolvency(String companyNumber, String requestId) throws HandlerException {
         try {
             LOG.infoContext(requestId, "Attempting to retrieve company insolvency", getDebugMap(companyNumber));
-            return insolvencyService.getInsolvency(companyNumber);
+            return sortInsolvency(insolvencyService.getInsolvency(companyNumber));
         } catch (ServiceException se) {
             throw new HandlerException("error occurred obtaining the company insolvency", se);
         }
+    }
+
+    private InsolvencyApi sortInsolvency(InsolvencyApi insolvencyApi) {
+
+        InsolvencyApi sortedInsolvencyApi = insolvencyApi;
+
+        List<CaseApi> sortedCaseApi = insolvencyApi.getCases().stream()
+            .sorted(Comparator.comparing(CaseApi::getNumber, Comparator.nullsLast(Comparator.reverseOrder())))
+            .map(cases -> {
+                List<DatesApi> dates = cases.getDates().stream()
+                    .sorted(Comparator.comparing(DatesApi::getDate, Comparator.nullsLast(Comparator.reverseOrder())))
+                    .collect(Collectors.toList());
+                cases.setDates(dates);
+                List<PractitionerApi> practitioners = cases.getPractitioners().stream()
+                    .sorted(Comparator.comparing(PractitionerApi::getCeasedToActOn, Comparator.nullsFirst(Comparator.reverseOrder())))
+                    .collect(Collectors.toList());
+                cases.setPractitioners(practitioners);
+                return cases;
+            })
+            .collect(Collectors.toList());
+
+        sortedInsolvencyApi.setCases(sortedCaseApi);
+
+        return sortedInsolvencyApi;
     }
 
     private String createPathString() {
