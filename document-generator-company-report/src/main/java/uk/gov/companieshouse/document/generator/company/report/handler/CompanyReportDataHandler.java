@@ -295,7 +295,6 @@ public class CompanyReportDataHandler {
             }
         }
 
-
         return sortedCompanyRegistersApi;
     }
 
