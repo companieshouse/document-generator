@@ -17,6 +17,8 @@ public abstract class ApiToInsolvencyMapper {
     protected void calculateTotalNumberOfCases(InsolvencyApi insolvencyApi,
         @MappingTarget Insolvency insolvency) {
 
-        insolvency.setTotalInsolvencyCases(insolvencyApi.getCases().size());
+        if(insolvencyApi.getCases() != null) {
+            insolvency.setTotalInsolvencyCases(insolvencyApi.getCases().size());
+        }
     }
 }

@@ -4,16 +4,18 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.gov.companieshouse.api.error.ApiErrorResponseException;
-import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
+import uk.gov.companieshouse.api.model.insolvency.CaseApi;
+import uk.gov.companieshouse.api.model.insolvency.DatesApi;
 import uk.gov.companieshouse.api.model.insolvency.InsolvencyApi;
+import uk.gov.companieshouse.api.model.insolvency.PractitionerApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.api.model.statements.StatementApi;
 import uk.gov.companieshouse.api.model.statements.StatementsApi;
+import uk.gov.companieshouse.api.model.ukestablishments.UkEstablishmentsApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.CompanyReportMapper;
@@ -25,6 +27,7 @@ import uk.gov.companieshouse.document.generator.company.report.service.OfficerSe
 import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
 import uk.gov.companieshouse.document.generator.company.report.service.RecentFilingHistoryService;
 import uk.gov.companieshouse.document.generator.company.report.service.StatementsService;
+import uk.gov.companieshouse.document.generator.company.report.service.UkEstablishmentService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
@@ -49,6 +52,8 @@ public class CompanyReportDataHandler {
 
     private OfficerService officerService;
 
+    private UkEstablishmentService ukEstablishmentService;
+
     private RecentFilingHistoryService recentFilingHistoryService;
 
     private CompanyReportMapper companyReportMapper;
@@ -61,6 +66,7 @@ public class CompanyReportDataHandler {
     public CompanyReportDataHandler(CompanyService companyService,
                                     PscsService pscsService,
                                     OfficerService officerService,
+                                    UkEstablishmentService ukEstablishmentService,
                                     RecentFilingHistoryService recentFilingHistoryService,
                                     CompanyReportMapper companyReportMapper,
                                     StatementsService statementsService,
@@ -69,6 +75,7 @@ public class CompanyReportDataHandler {
         this.companyService = companyService;
         this.pscsService = pscsService;
         this.officerService = officerService;
+        this.ukEstablishmentService = ukEstablishmentService;
         this.recentFilingHistoryService = recentFilingHistoryService;
         this.companyReportMapper = companyReportMapper;
         this.statementsService = statementsService;
@@ -78,8 +85,10 @@ public class CompanyReportDataHandler {
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
     private static final String PSCS_KEY = "persons_with_significant_control";
     private static final String OFFICERS_KEY = "officers";
+    private static final String UK_ESTABLISHMENTS = "uk_establishments";
     private static final String STATEMENTS_KEY = "persons_with_significant_control_statements";
     private static final String FILING_HISTORY_KEY = "filing_history";
+    private static final String INSOLVENCY_KEY = "insolvency";
 
     public DocumentInfoResponse getCompanyReport(String resourceUri, String requestId)
         throws HandlerException {
@@ -143,6 +152,15 @@ public class CompanyReportDataHandler {
              }
          }
 
+         if(companyProfileApi.getLinks().containsKey(UK_ESTABLISHMENTS)) {
+             try {
+                 UkEstablishmentsApi ukEstablishmentsApi = getUkEstablishments(companyNumber, requestId);
+                 companyReportApiData.setUkEstablishmentsApi(ukEstablishmentsApi);
+             } catch (HandlerException he) {
+                 LOG.infoContext(requestId,"Failed to get uk establishments: ", getDebugMap(companyNumber));
+             }
+         }
+
         if (companyProfileApi.getLinks().containsKey(STATEMENTS_KEY)) {
             try {
                 StatementsApi statementsApi = getStatements(companyNumber, requestId);
@@ -153,7 +171,7 @@ public class CompanyReportDataHandler {
             }
         }
 
-        if (companyProfileApi.getLinks().containsKey("insolvency")) {
+        if (companyProfileApi.getLinks().containsKey(INSOLVENCY_KEY)) {
             try {
                 InsolvencyApi insolvencyApi = getInsolvency(companyNumber, requestId);
                 companyReportApiData.setInsolvencyApi(insolvencyApi);
@@ -207,6 +225,15 @@ public class CompanyReportDataHandler {
             return officerService.getOfficers(companyNumber);
         } catch (ServiceException se) {
             throw new HandlerException("error occurred obtaining the company officers", se);
+        }
+    }
+
+    private UkEstablishmentsApi getUkEstablishments(String companyNumber, String requestId) throws HandlerException {
+        try {
+            LOG.infoContext(requestId, "Attempting to retrieve uk establishment", getDebugMap(companyNumber));
+            return ukEstablishmentService.getUkEstablishments(companyNumber);
+        } catch (ServiceException se) {
+            throw new HandlerException("error occurred obtaining uk establishments", se);
         }
     }
 
@@ -269,10 +296,34 @@ public class CompanyReportDataHandler {
     private InsolvencyApi getInsolvency(String companyNumber, String requestId) throws HandlerException {
         try {
             LOG.infoContext(requestId, "Attempting to retrieve company insolvency", getDebugMap(companyNumber));
-            return insolvencyService.getInsolvency(companyNumber);
+            return sortInsolvency(insolvencyService.getInsolvency(companyNumber));
         } catch (ServiceException se) {
             throw new HandlerException("error occurred obtaining the company insolvency", se);
         }
+    }
+
+    private InsolvencyApi sortInsolvency(InsolvencyApi insolvencyApi) {
+
+        InsolvencyApi sortedInsolvencyApi = insolvencyApi;
+
+        List<CaseApi> sortedCaseApi = insolvencyApi.getCases().stream()
+            .sorted(Comparator.comparing(CaseApi::getNumber, Comparator.nullsLast(Comparator.reverseOrder())))
+            .map(cases -> {
+                List<DatesApi> dates = cases.getDates().stream()
+                    .sorted(Comparator.comparing(DatesApi::getDate, Comparator.nullsLast(Comparator.reverseOrder())))
+                    .collect(Collectors.toList());
+                cases.setDates(dates);
+                List<PractitionerApi> practitioners = cases.getPractitioners().stream()
+                    .sorted(Comparator.comparing(PractitionerApi::getCeasedToActOn, Comparator.nullsFirst(Comparator.reverseOrder())))
+                    .collect(Collectors.toList());
+                cases.setPractitioners(practitioners);
+                return cases;
+            })
+            .collect(Collectors.toList());
+
+        sortedInsolvencyApi.setCases(sortedCaseApi);
+
+        return sortedInsolvencyApi;
     }
 
     private String createPathString() {

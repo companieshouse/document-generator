@@ -1,10 +1,5 @@
 package uk.gov.companieshouse.document.generator.company.report.handler;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -15,18 +10,28 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
+import uk.gov.companieshouse.api.model.insolvency.CaseApi;
+import uk.gov.companieshouse.api.model.insolvency.CaseTypeApi;
+import uk.gov.companieshouse.api.model.insolvency.DatesApi;
+import uk.gov.companieshouse.api.model.insolvency.InsolvencyApi;
+import uk.gov.companieshouse.api.model.insolvency.PractitionerApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.api.model.statements.StatementApi;
 import uk.gov.companieshouse.api.model.statements.StatementsApi;
+import uk.gov.companieshouse.api.model.ukestablishments.UkEstablishmentsApi;
+import uk.gov.companieshouse.api.model.ukestablishments.UkEstablishmentsItemsApi;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.CompanyReportMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.insolvency.items.Practitioner;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
+import uk.gov.companieshouse.document.generator.company.report.service.InsolvencyService;
 import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
 import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
 import uk.gov.companieshouse.document.generator.company.report.service.RecentFilingHistoryService;
 import uk.gov.companieshouse.document.generator.company.report.service.StatementsService;
+import uk.gov.companieshouse.document.generator.company.report.service.UkEstablishmentService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 
 import java.time.LocalDate;
@@ -64,13 +69,23 @@ public class CompanyReportDataHandlerTest {
     private OfficerService mockOfficerService;
 
     @Mock
+    private UkEstablishmentService mockUkEstablishmentService;
+
+    @Mock
     private RecentFilingHistoryService mockRecentFilingHistoryService;
+
+    @Mock
+    private InsolvencyService mockInsolvencyService;
 
     @InjectMocks
     private CompanyReportDataHandler companyReportDataHandler;
 
     private static final String RESOURCE_URI = "/company-number/000064000";
     private static final String REQUEST_ID = "request-id";
+    private static final String COMPANY_NAME = "company name";
+    private static final String COMPANY_NUMBER = "FC000005";
+    private static final String COMPANY_STATUS = "company status";
+    private static final String LOCALITY = "locality";
     private static final String FILING_DESCRIPTION = "filing description";
     private static final String FORM_TYPE = "form type";
 
@@ -80,8 +95,10 @@ public class CompanyReportDataHandlerTest {
         CompanyProfileApi companyProfileApi = createCompanyProfile();
         PscsApi pscsApi = createPscsApi();
         OfficersApi officersApi = createOfficers();
+        UkEstablishmentsApi ukEstablishmentsApi = createUkEstablishment();
         FilingHistoryApi filingHistoryApi = createFilingHistory();
         StatementsApi statementsApi = createStatementsApi();
+        InsolvencyApi insolvencyApi = createInsolvencyApi();
 
         CompanyReportApiData companyReportApiData = new CompanyReportApiData();
         companyReportApiData.setCompanyProfileApi(companyProfileApi);
@@ -89,9 +106,11 @@ public class CompanyReportDataHandlerTest {
         when(mockCompanyService.getCompanyProfile(any(String.class))).thenReturn(companyProfileApi);
         when(mockPscService.getPscs(any(String.class))).thenReturn(pscsApi);
         when(mockOfficerService.getOfficers(any(String.class))).thenReturn(officersApi);
+        when(mockUkEstablishmentService.getUkEstablishments(any(String.class))).thenReturn(ukEstablishmentsApi);
         when(mockRecentFilingHistoryService.getFilingHistory(any(String.class))).thenReturn(filingHistoryApi);
         when(mockCompanyReportMapper.mapCompanyReport(any(CompanyReportApiData.class), anyString(), anyString())).thenReturn(new CompanyReport());
         when(mockStatementsService.getStatements(any(String.class))).thenReturn(statementsApi);
+        when(mockInsolvencyService.getInsolvency(anyString())).thenReturn(insolvencyApi);
 
         DocumentInfoResponse documentInfoResponse = companyReportDataHandler.getCompanyReport(RESOURCE_URI, REQUEST_ID);
 
@@ -135,8 +154,10 @@ public class CompanyReportDataHandlerTest {
 
         links.put("persons_with_significant_control", "/persons-with-significant-control");
         links.put("officers", "/officers");
+        links.put("uk_establishments", "/uk-establishments");
         links.put("filing_history", "/filing-history");
         links.put("persons_with_significant_control_statements", "/persons_with_significant_control_statements");
+        links.put("insolvency", "/insolvency");
 
         companyProfileApi.setLinks(links);
 
@@ -148,6 +169,23 @@ public class CompanyReportDataHandlerTest {
         officersApi.setActiveCount(1L);
 
         return officersApi;
+    }
+
+    private UkEstablishmentsApi createUkEstablishment() {
+
+        UkEstablishmentsApi ukEstablishmentsApi = new UkEstablishmentsApi();
+        List<UkEstablishmentsItemsApi> ukEstablishmentsItemsApiList = new ArrayList<>();
+
+        UkEstablishmentsItemsApi ukEstablishmentsItemsApi = new UkEstablishmentsItemsApi();
+        ukEstablishmentsItemsApi.setCompanyName(COMPANY_NAME);
+        ukEstablishmentsItemsApi.setCompanyNumber(COMPANY_NUMBER);
+        ukEstablishmentsItemsApi.setLocality(LOCALITY);
+        ukEstablishmentsItemsApi.setCompanyStatus(COMPANY_STATUS);
+
+        ukEstablishmentsItemsApiList.add(ukEstablishmentsItemsApi);
+        ukEstablishmentsApi.setItems(ukEstablishmentsItemsApiList);
+
+        return ukEstablishmentsApi;
     }
 
     private FilingHistoryApi createFilingHistory() {
@@ -179,5 +217,22 @@ public class CompanyReportDataHandlerTest {
         statementsApi.setItems(statementApiList);
 
         return statementsApi;
+    }
+
+    private InsolvencyApi createInsolvencyApi() {
+
+        InsolvencyApi insolvencyApi = new InsolvencyApi();
+
+        List<CaseApi> caseApiList = new ArrayList<>();
+        CaseApi caseApi = new CaseApi();
+        caseApi.setPractitioners(new ArrayList<>());
+        caseApi.setDates(new ArrayList<>());
+        caseApi.setNumber(1L);
+        caseApi.setType(CaseTypeApi.ADMINISTRATION_ORDER);
+
+        caseApiList.add(caseApi);
+        insolvencyApi.setCases(caseApiList);
+
+        return insolvencyApi;
     }
 }

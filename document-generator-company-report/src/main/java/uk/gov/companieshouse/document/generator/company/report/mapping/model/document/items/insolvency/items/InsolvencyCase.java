@@ -12,6 +12,9 @@ public class InsolvencyCase {
     @JsonProperty("case_type")
     private String type;
 
+    @JsonProperty("dates")
+    private List<InsolvencyDate> dates;
+
     @JsonProperty("practitioners")
     private List<Practitioner> practitioners;
 
@@ -31,12 +34,20 @@ public class InsolvencyCase {
         this.type = type;
     }
 
+    public List<InsolvencyDate> getDates() {
+        return dates;
+    }
+
+    public void setDates(
+        List<InsolvencyDate> dates) {
+        this.dates = dates;
+    }
+
     public List<Practitioner> getPractitioners() {
         return practitioners;
     }
 
-    public void setPractitioners(
-        List<Practitioner> practitioners) {
+    public void setPractitioners(List<Practitioner> practitioners) {
         this.practitioners = practitioners;
     }
 }
