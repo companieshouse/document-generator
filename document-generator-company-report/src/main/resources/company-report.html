@@ -643,22 +643,30 @@
 
     {{if $registers}}
     <h3 class="heading-medium">Registers</h3>
-
-        <caption class="visually-hidden">Registers</caption>
-        <!-- this hidden caption is needed for screen-readers-->
-
     <!--Title should come from the constants file-->
-    {{if $registers.directors}}
-
-            <p>Register of directors</p>
-
-            <p>{{$registers.directors.information}}</p>
-
-
+        {{if $registers.directors}}
+        <p>Register of {{$registers.directors.register_type}}</p>
+        <p>{{$registers.directors.information}}</p>
+        <table>
+            <caption class="visually-hidden">Registers</caption>
+            <!-- this hidden caption is needed for screen-readers-->
+            <thead>
+            <tr>
+                <th scope="col">Dates</th>
+                <th scope="col">Location</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{- range $registers.directors.items -}}
+            <tr>
+                <td>{{.formatted_date}}</td>
+                <td scope="row">{{.register_moved_to}}</td>
+            </tr>
+            {{end}}
+            </tbody>
+        </table>
         {{end}}
-
     {{end}}
-
 </main>
 </body>
 </html>

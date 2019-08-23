@@ -12,6 +12,9 @@ public class RegisterItems {
     @JsonProperty("register_moved_to")
     private String registerMovedTo;
 
+    @JsonProperty("formatted_date")
+    private String formattedDate;
+
     public String getMovedOn() {
         return movedOn;
     }
@@ -26,5 +29,13 @@ public class RegisterItems {
 
     public void setRegisterMovedTo(String registerMovedTo) {
         this.registerMovedTo = registerMovedTo;
+    }
+
+    public String getFormattedDate() {
+        return formattedDate;
+    }
+
+    public void setFormattedDate(String formattedDate) {
+        this.formattedDate = formattedDate;
     }
 }

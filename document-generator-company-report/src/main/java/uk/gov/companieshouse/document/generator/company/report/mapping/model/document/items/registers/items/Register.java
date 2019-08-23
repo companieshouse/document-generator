@@ -17,9 +17,6 @@ public class Register {
     @JsonProperty("information")
     private String information;
 
-    @JsonProperty("dates")
-    private List<FormattedDates> dates;
-
     public List<RegisterItems> getItems() {
         return items;
     }
@@ -42,13 +39,5 @@ public class Register {
 
     public void setInformation(String information) {
         this.information = information;
-    }
-
-    public List<FormattedDates> getDates() {
-        return dates;
-    }
-
-    public void setDates(List<FormattedDates> dates) {
-        this.dates = dates;
     }
 }

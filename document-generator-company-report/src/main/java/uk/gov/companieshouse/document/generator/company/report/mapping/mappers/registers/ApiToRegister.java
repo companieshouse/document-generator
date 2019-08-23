@@ -3,18 +3,27 @@ package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.annotation.RequestScope;
 import uk.gov.companieshouse.api.model.registers.RegisterApi;
-import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registers.items.FormattedDates;
+import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registers.items.Register;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registers.items.RegisterItems;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequestScope
 @Mapper(componentModel = "spring", uses = {ApiToRegisterItems.class})
 public abstract class ApiToRegister {
+
+     @Autowired
+     private RetrieveApiEnumerationDescription retrieveApiEnumerationDescription;
+
+     private static final String REGISTER_TYPE_DESCRIPTION = "CONSTANTS";
+     private static final String ENUMERATION_MAPPING = "Enumeration mapping :";
 
      public abstract Register apiToRegister(RegisterApi registerApi);
 
@@ -35,28 +44,54 @@ public abstract class ApiToRegister {
      }
 
      @AfterMapping
-     protected void createDateList(RegisterApi registerApi,
+     protected void createFormattedDateAndLocationList(RegisterApi registerApi,
                                    @MappingTarget Register register) {
          String previousDate = null;
 
-         List<FormattedDates> dates = new ArrayList<>();
+         List<RegisterItems> itemsList = new ArrayList<>();
 
          for (RegisterItems registerItem : register.getItems()) {
 
-             FormattedDates formattedDates = new FormattedDates();
+             RegisterItems item = new RegisterItems();
 
              if (previousDate == null || previousDate.isEmpty()) {
-                 formattedDates.setFormattedDate(registerItem.getMovedOn());
+                 item.setFormattedDate(registerItem.getMovedOn());
+                 item.setRegisterMovedTo(registerItem.getRegisterMovedTo());
 
-                 dates.add(formattedDates);
+                 itemsList.add(item);
                  previousDate = registerItem.getMovedOn();
              } else {
-                 formattedDates.setFormattedDate(registerItem.getMovedOn() + " - " + previousDate);
-                 dates.add(formattedDates);
+                 item.setFormattedDate(registerItem.getMovedOn() + " - " + previousDate);
+                 itemsList.add(item);
 
+                 item.setRegisterMovedTo(registerItem.getRegisterMovedTo());
                  previousDate = registerItem.getMovedOn();
              }
          }
-         register.setDates(dates);
+         register.setItems(itemsList);
      }
+
+     @AfterMapping
+     protected void convertRegisterTypeDescription(RegisterApi registerApi,
+                                        @MappingTarget Register register) {
+         register.setRegisterType(setRegisterTypeDescription(registerApi.getRegisterType()));
+     }
+
+     private String setRegisterTypeDescription(String registerType) {
+
+         String registerTypeDescription = retrieveApiEnumerationDescription.
+             getApiEnumerationDescription(REGISTER_TYPE_DESCRIPTION, "register_types",
+                 registerType, getDebugMap(registerType));
+
+         return registerTypeDescription;
+
+     }
+
+    private Map<String, String> getDebugMap(String debugString) {
+
+        Map<String, String> debugMap = new HashMap<>();
+        debugMap.put(ENUMERATION_MAPPING, debugString);
+
+        return debugMap;
+    }
 }
