@@ -15,6 +15,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
+import uk.gov.companieshouse.api.model.insolvency.CaseApi;
+import uk.gov.companieshouse.api.model.insolvency.CaseTypeApi;
+import uk.gov.companieshouse.api.model.insolvency.DatesApi;
+import uk.gov.companieshouse.api.model.insolvency.InsolvencyApi;
+import uk.gov.companieshouse.api.model.insolvency.PractitionerApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.api.model.statements.StatementApi;
@@ -22,7 +27,9 @@ import uk.gov.companieshouse.api.model.statements.StatementsApi;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.CompanyReportMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.insolvency.items.Practitioner;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
+import uk.gov.companieshouse.document.generator.company.report.service.InsolvencyService;
 import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
 import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
 import uk.gov.companieshouse.document.generator.company.report.service.RecentFilingHistoryService;
@@ -66,6 +73,9 @@ public class CompanyReportDataHandlerTest {
     @Mock
     private RecentFilingHistoryService mockRecentFilingHistoryService;
 
+    @Mock
+    private InsolvencyService mockInsolvencyService;
+
     @InjectMocks
     private CompanyReportDataHandler companyReportDataHandler;
 
@@ -82,6 +92,7 @@ public class CompanyReportDataHandlerTest {
         OfficersApi officersApi = createOfficers();
         FilingHistoryApi filingHistoryApi = createFilingHistory();
         StatementsApi statementsApi = createStatementsApi();
+        InsolvencyApi insolvencyApi = createInsolvencyApi();
 
         CompanyReportApiData companyReportApiData = new CompanyReportApiData();
         companyReportApiData.setCompanyProfileApi(companyProfileApi);
@@ -92,6 +103,7 @@ public class CompanyReportDataHandlerTest {
         when(mockRecentFilingHistoryService.getFilingHistory(any(String.class))).thenReturn(filingHistoryApi);
         when(mockCompanyReportMapper.mapCompanyReport(any(CompanyReportApiData.class), anyString(), anyString())).thenReturn(new CompanyReport());
         when(mockStatementsService.getStatements(any(String.class))).thenReturn(statementsApi);
+        when(mockInsolvencyService.getInsolvency(anyString())).thenReturn(insolvencyApi);
 
         DocumentInfoResponse documentInfoResponse = companyReportDataHandler.getCompanyReport(RESOURCE_URI, REQUEST_ID);
 
@@ -137,6 +149,7 @@ public class CompanyReportDataHandlerTest {
         links.put("officers", "/officers");
         links.put("filing_history", "/filing-history");
         links.put("persons_with_significant_control_statements", "/persons_with_significant_control_statements");
+        links.put("insolvency", "/insolvency");
 
         companyProfileApi.setLinks(links);
 
@@ -179,5 +192,22 @@ public class CompanyReportDataHandlerTest {
         statementsApi.setItems(statementApiList);
 
         return statementsApi;
+    }
+
+    private InsolvencyApi createInsolvencyApi() {
+
+        InsolvencyApi insolvencyApi = new InsolvencyApi();
+
+        List<CaseApi> caseApiList = new ArrayList<>();
+        CaseApi caseApi = new CaseApi();
+        caseApi.setPractitioners(new ArrayList<>());
+        caseApi.setDates(new ArrayList<>());
+        caseApi.setNumber(1L);
+        caseApi.setType(CaseTypeApi.ADMINISTRATION_ORDER);
+
+        caseApiList.add(caseApi);
+        insolvencyApi.setCases(caseApiList);
+
+        return insolvencyApi;
     }
 }
