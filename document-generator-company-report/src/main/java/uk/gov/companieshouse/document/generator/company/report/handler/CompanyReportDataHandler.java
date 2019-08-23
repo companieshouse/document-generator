@@ -15,6 +15,7 @@ import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.api.model.statements.StatementApi;
 import uk.gov.companieshouse.api.model.statements.StatementsApi;
+import uk.gov.companieshouse.api.model.ukestablishments.UkEstablishmentsApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.CompanyReportMapper;
@@ -26,6 +27,7 @@ import uk.gov.companieshouse.document.generator.company.report.service.OfficerSe
 import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
 import uk.gov.companieshouse.document.generator.company.report.service.RecentFilingHistoryService;
 import uk.gov.companieshouse.document.generator.company.report.service.StatementsService;
+import uk.gov.companieshouse.document.generator.company.report.service.UkEstablishmentService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
@@ -50,6 +52,8 @@ public class CompanyReportDataHandler {
 
     private OfficerService officerService;
 
+    private UkEstablishmentService ukEstablishmentService;
+
     private RecentFilingHistoryService recentFilingHistoryService;
 
     private CompanyReportMapper companyReportMapper;
@@ -62,6 +66,7 @@ public class CompanyReportDataHandler {
     public CompanyReportDataHandler(CompanyService companyService,
                                     PscsService pscsService,
                                     OfficerService officerService,
+                                    UkEstablishmentService ukEstablishmentService,
                                     RecentFilingHistoryService recentFilingHistoryService,
                                     CompanyReportMapper companyReportMapper,
                                     StatementsService statementsService,
@@ -70,6 +75,7 @@ public class CompanyReportDataHandler {
         this.companyService = companyService;
         this.pscsService = pscsService;
         this.officerService = officerService;
+        this.ukEstablishmentService = ukEstablishmentService;
         this.recentFilingHistoryService = recentFilingHistoryService;
         this.companyReportMapper = companyReportMapper;
         this.statementsService = statementsService;
@@ -79,6 +85,7 @@ public class CompanyReportDataHandler {
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
     private static final String PSCS_KEY = "persons_with_significant_control";
     private static final String OFFICERS_KEY = "officers";
+    private static final String UK_ESTABLISHMENTS = "uk_establishments";
     private static final String STATEMENTS_KEY = "persons_with_significant_control_statements";
     private static final String FILING_HISTORY_KEY = "filing_history";
     private static final String INSOLVENCY_KEY = "insolvency";
@@ -142,6 +149,15 @@ public class CompanyReportDataHandler {
              } catch (HandlerException he) {
                  LOG.infoContext(requestId,"Failed to get officers data for company: "
                      + companyNumber, getDebugMap(companyNumber));
+             }
+         }
+
+         if(companyProfileApi.getLinks().containsKey(UK_ESTABLISHMENTS)) {
+             try {
+                 UkEstablishmentsApi ukEstablishmentsApi = getUkEstablishments(companyNumber, requestId);
+                 companyReportApiData.setUkEstablishmentsApi(ukEstablishmentsApi);
+             } catch (HandlerException he) {
+                 LOG.infoContext(requestId,"Failed to get uk establishments: ", getDebugMap(companyNumber));
              }
          }
 
@@ -209,6 +225,15 @@ public class CompanyReportDataHandler {
             return officerService.getOfficers(companyNumber);
         } catch (ServiceException se) {
             throw new HandlerException("error occurred obtaining the company officers", se);
+        }
+    }
+
+    private UkEstablishmentsApi getUkEstablishments(String companyNumber, String requestId) throws HandlerException {
+        try {
+            LOG.infoContext(requestId, "Attempting to retrieve uk establishment", getDebugMap(companyNumber));
+            return ukEstablishmentService.getUkEstablishments(companyNumber);
+        } catch (ServiceException se) {
+            throw new HandlerException("error occurred obtaining uk establishments", se);
         }
     }
 

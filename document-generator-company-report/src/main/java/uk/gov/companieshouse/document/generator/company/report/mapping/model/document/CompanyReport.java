@@ -15,6 +15,7 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.pscs.Pscs;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.recentfilinghistory.RecentFilingHistory;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.RegistrationInformation;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.ukestablishment.UkEstablishment;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.statements.Statements;
 
 import java.util.List;
@@ -47,6 +48,9 @@ public class CompanyReport {
 
     @JsonProperty("foreign_company_details")
     private ForeignCompanyDetails foreignCompanyDetails;
+
+    @JsonProperty("uk_establishment")
+    private List<UkEstablishment> ukEstablishment;
 
     @JsonProperty("psc_statements")
     private Statements statements;
@@ -116,6 +120,14 @@ public class CompanyReport {
 
     public void setForeignCompanyDetails(ForeignCompanyDetails foreignCompanyDetails) {
         this.foreignCompanyDetails = foreignCompanyDetails;
+    }
+
+    public List<UkEstablishment> getUkEstablishment() {
+        return ukEstablishment;
+    }
+
+    public void setUkEstablishment(List<UkEstablishment> ukEstablishment) {
+        this.ukEstablishment = ukEstablishment;
     }
 
     public Statements getStatements() {
