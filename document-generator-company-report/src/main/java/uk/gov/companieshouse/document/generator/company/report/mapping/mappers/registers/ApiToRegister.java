@@ -48,27 +48,16 @@ public abstract class ApiToRegister {
                                    @MappingTarget Register register) {
          String previousDate = null;
 
-         List<RegisterItems> itemsList = new ArrayList<>();
-
          for (RegisterItems registerItem : register.getItems()) {
 
-             RegisterItems item = new RegisterItems();
-
              if (previousDate == null || previousDate.isEmpty()) {
-                 item.setFormattedDate(registerItem.getMovedOn());
-                 item.setRegisterMovedTo(registerItem.getRegisterMovedTo());
-
-                 itemsList.add(item);
+                 registerItem.setFormattedDate(registerItem.getMovedOn());
                  previousDate = registerItem.getMovedOn();
              } else {
-                 item.setFormattedDate(registerItem.getMovedOn() + " - " + previousDate);
-                 itemsList.add(item);
-
-                 item.setRegisterMovedTo(registerItem.getRegisterMovedTo());
+                 registerItem.setFormattedDate(registerItem.getMovedOn() + " - " + previousDate);
                  previousDate = registerItem.getMovedOn();
              }
          }
-         register.setItems(itemsList);
      }
 
      @AfterMapping
