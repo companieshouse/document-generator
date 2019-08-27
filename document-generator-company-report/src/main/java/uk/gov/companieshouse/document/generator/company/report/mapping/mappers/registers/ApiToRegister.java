@@ -83,7 +83,7 @@ public abstract class ApiToRegister {
              getApiEnumerationDescription(REGISTER_TYPE_DESCRIPTION, "register_types",
                  registerType, getDebugMap(registerType));
 
-         return registerTypeDescription;
+         return registerTypeDescription.toLowerCase();
 
      }
 
