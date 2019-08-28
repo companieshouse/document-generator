@@ -7,9 +7,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Mappings;
 import org.springframework.web.context.annotation.RequestScope;
-import uk.gov.companieshouse.api.model.insolvency.DatesApi;
 import uk.gov.companieshouse.api.model.insolvency.PractitionerApi;
-import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.insolvency.items.InsolvencyDate;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.insolvency.items.Practitioner;
 
 import java.time.format.DateTimeFormatter;
