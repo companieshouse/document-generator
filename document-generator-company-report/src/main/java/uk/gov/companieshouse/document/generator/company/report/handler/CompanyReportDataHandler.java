@@ -14,6 +14,8 @@ import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.api.model.statements.StatementApi;
 import uk.gov.companieshouse.api.model.statements.StatementsApi;
 import uk.gov.companieshouse.api.model.ukestablishments.UkEstablishmentsApi;
+import uk.gov.companieshouse.document.generator.company.report.data.CompanyReportDataManager;
+import uk.gov.companieshouse.document.generator.company.report.exception.ApiDataException;
 import uk.gov.companieshouse.document.generator.company.report.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.CompanyReportMapper;
@@ -43,32 +45,19 @@ import static uk.gov.companieshouse.document.generator.company.report.CompanyRep
 @Component
 public class CompanyReportDataHandler {
 
-    @Autowired
-    private CompanyService companyService;
-
-    @Autowired
-    private PscsService pscsService;
-
-    @Autowired
-    private OfficerService officerService;
-
-    @Autowired
-    private UkEstablishmentService ukEstablishmentService;
-
-    @Autowired
-    private RecentFilingHistoryService recentFilingHistoryService;
-
-    @Autowired
     private CompanyReportMapper companyReportMapper;
 
-    @Autowired
-    private StatementsService statementsService;
+    private CompanyReportDataManager companyReportDataManager;
+
+    public CompanyReportDataHandler(CompanyReportMapper companyReportMapper,
+                                    CompanyReportDataManager companyReportDataManager) {
+
+        this.companyReportMapper = companyReportMapper;
+        this.companyReportDataManager = companyReportDataManager;
+    }
+
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
-    private static final String PSCS_KEY = "persons_with_significant_control";
-    private static final String OFFICERS_KEY = "officers";
-    private static final String UK_ESTABLISHMENTS = "uk_establishments";
-    private static final String STATEMENTS_KEY = "persons_with_significant_control_statements";
 
     public DocumentInfoResponse getCompanyReport(String resourceUri, String requestId)
         throws HandlerException {
@@ -86,12 +75,26 @@ public class CompanyReportDataHandler {
 
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
 
-        documentInfoResponse.setData(getCompanyReportData(companyNumber, requestId, timeStamp));
+        CompanyReportApiData companyReportApiData = getCompanyReportData(companyNumber, requestId);
+
+        documentInfoResponse.setData(toJson(companyReportMapper
+            .mapCompanyReport(companyReportApiData,requestId, companyNumber),
+            companyNumber, requestId, timeStamp));
+
         documentInfoResponse.setAssetId("company-report");
         documentInfoResponse.setPath(createPathString());
         documentInfoResponse.setTemplateName("company-report.html");
 
         return documentInfoResponse;
+    }
+
+    private CompanyReportApiData getCompanyReportData(String companyNumber, String requestId) throws HandlerException {
+
+        try {
+            return companyReportDataManager.getCompanyReportData(companyNumber, requestId);
+        } catch (ApiDataException ae) {
+            throw new HandlerException("An error occurred whilst obtaining the company report data for company: " + companyNumber, ae);
+        }
     }
 
     private String toJson(CompanyReport companyReport, String companyNumber,

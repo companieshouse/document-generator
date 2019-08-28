@@ -165,7 +165,7 @@ public class CompanyReportDataManager {
 
     private void setStatementsData(String companyNumber, String requestId,
                                    CompanyReportApiData companyReportApiData,
-                                   CompanyProfileApi companyProfileApi) throws HandlerException {
+                                   CompanyProfileApi companyProfileApi) throws ApiDataException {
 
         if(companyProfileApi.getLinks().containsKey(STATEMENTS_KEY)) {
 
@@ -173,7 +173,7 @@ public class CompanyReportDataManager {
                 LOG.infoContext(requestId, "Attempting to retrieve company psc statements data for company: " + companyNumber, getDebugMap(companyNumber));
                 companyReportApiData.setStatementsApi(sortStatements(statementsService.getStatements(companyNumber)));
             } catch (ServiceException se) {
-                throw new HandlerException("error occurred obtaining the company psc statements data for company: " + companyNumber, se);
+                throw new ApiDataException("error occurred obtaining the company psc statements data for company: " + companyNumber, se);
             }
         }
     }
@@ -194,7 +194,7 @@ public class CompanyReportDataManager {
 
     private void setPscsData(String companyNumber, String requestId,
                                 CompanyReportApiData companyReportApiData,
-                                CompanyProfileApi companyProfileApi) throws HandlerException {
+                                CompanyProfileApi companyProfileApi) throws ApiDataException {
 
         if(companyProfileApi.getLinks().containsKey(PSCS_KEY)) {
 
@@ -202,7 +202,7 @@ public class CompanyReportDataManager {
                 LOG.infoContext(requestId,"Attempting to retrieve company PSCS data for company: " + companyNumber, getDebugMap(companyNumber));
                 companyReportApiData.setPscsApi(pscsService.getPscs(companyNumber));
             } catch (ServiceException se) {
-                throw new HandlerException("error occurred obtaining the company PSCS data for company: " + companyNumber, se);
+                throw new ApiDataException("error occurred obtaining the company PSCS data for company: " + companyNumber, se);
 
             }
         }
