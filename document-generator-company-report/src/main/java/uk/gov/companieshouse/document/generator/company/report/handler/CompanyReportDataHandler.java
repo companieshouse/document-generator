@@ -314,7 +314,7 @@ public class CompanyReportDataHandler {
                     .collect(Collectors.toList());
                 cases.setDates(dates);
                 List<PractitionerApi> practitioners = cases.getPractitioners().stream()
-                    .sorted(Comparator.comparing(PractitionerApi::getCeasedToActOn, Comparator.nullsFirst(Comparator.reverseOrder())))
+                    .sorted(Comparator.comparing(PractitionerApi::getCeasedToActOn, Comparator.nullsLast(Comparator.reverseOrder())))
                     .collect(Collectors.toList());
                 cases.setPractitioners(practitioners);
                 return cases;
