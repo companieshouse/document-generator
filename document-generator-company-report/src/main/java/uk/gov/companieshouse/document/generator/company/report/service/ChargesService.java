@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriTemplate;
 import uk.gov.companieshouse.api.ApiClient;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
+import uk.gov.companieshouse.api.handler.charges.request.ChargesGet;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.charges.ChargesApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
@@ -26,7 +27,10 @@ public class ChargesService {
         String uri = GET_CHARGES_URI.expand(companyNumber).toString();
 
         try {
-            chargesApi = apiClient.charges().get(uri).execute().getData();
+            ChargesGet chargesGet = apiClient.charges().get(uri);
+            chargesGet.addQueryParams("items_per_page", "100");
+
+            chargesApi = chargesGet.execute().getData();
         } catch (ApiErrorResponseException e) {
 
             throw new ServiceException("Error retrieving company charges", e);

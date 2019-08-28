@@ -7,6 +7,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.companieshouse.api.model.charges.ChargeApi;
+import uk.gov.companieshouse.api.model.charges.ChargesApi;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
@@ -19,6 +21,8 @@ import uk.gov.companieshouse.api.model.ukestablishments.UkEstablishmentsItemsApi
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.CompanyReportMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.mortgagechargedetails.items.Charge;
+import uk.gov.companieshouse.document.generator.company.report.service.ChargesService;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
 import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
 import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
@@ -67,6 +71,9 @@ public class CompanyReportDataHandlerTest {
     @Mock
     private RecentFilingHistoryService mockRecentFilingHistoryService;
 
+    @Mock
+    private ChargesService mockChargesService;
+
     @InjectMocks
     private CompanyReportDataHandler companyReportDataHandler;
 
@@ -88,6 +95,7 @@ public class CompanyReportDataHandlerTest {
         UkEstablishmentsApi ukEstablishmentsApi = createUkEstablishment();
         FilingHistoryApi filingHistoryApi = createFilingHistory();
         StatementsApi statementsApi = createStatementsApi();
+        ChargesApi chargesApi = createChargesApi();
 
         CompanyReportApiData companyReportApiData = new CompanyReportApiData();
         companyReportApiData.setCompanyProfileApi(companyProfileApi);
@@ -99,6 +107,7 @@ public class CompanyReportDataHandlerTest {
         when(mockRecentFilingHistoryService.getFilingHistory(any(String.class))).thenReturn(filingHistoryApi);
         when(mockCompanyReportMapper.mapCompanyReport(any(CompanyReportApiData.class), anyString(), anyString())).thenReturn(new CompanyReport());
         when(mockStatementsService.getStatements(any(String.class))).thenReturn(statementsApi);
+        when(mockChargesService.getCharges(any(String.class))).thenReturn(chargesApi);
 
         DocumentInfoResponse documentInfoResponse = companyReportDataHandler.getCompanyReport(RESOURCE_URI, REQUEST_ID);
 
@@ -145,6 +154,7 @@ public class CompanyReportDataHandlerTest {
         links.put("uk_establishments", "/uk-establishments");
         links.put("filing_history", "/filing-history");
         links.put("persons_with_significant_control_statements", "/persons_with_significant_control_statements");
+        links.put("charges", "/charges");
 
         companyProfileApi.setLinks(links);
 
@@ -204,5 +214,21 @@ public class CompanyReportDataHandlerTest {
         statementsApi.setItems(statementApiList);
 
         return statementsApi;
+    }
+
+    private ChargesApi createChargesApi() {
+
+        ChargesApi chargesApi = new ChargesApi();
+
+        chargesApi.setTotalCount(1L);
+        chargesApi.setSatisfiedCount(1L);
+        chargesApi.setPartSatisfiedCount(1L);
+
+        List<ChargeApi> items = new ArrayList<>();
+        ChargeApi chargeApi = new ChargeApi();
+        chargeApi.setStatus("status");
+        chargesApi.setItems(items);
+
+        return chargesApi;
     }
 }
