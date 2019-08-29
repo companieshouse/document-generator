@@ -310,11 +310,12 @@ public class CompanyReportDataHandler {
             .sorted(Comparator.comparing(CaseApi::getNumber, Comparator.nullsLast(Comparator.reverseOrder())))
             .map(cases -> {
                 List<DatesApi> dates = cases.getDates().stream()
-                    .sorted(Comparator.comparing(DatesApi::getDate, Comparator.nullsLast(Comparator.reverseOrder())))
+                    .sorted(Comparator.comparing(DatesApi::getDate, Comparator.nullsLast(Comparator.naturalOrder())))
                     .collect(Collectors.toList());
                 cases.setDates(dates);
                 List<PractitionerApi> practitioners = cases.getPractitioners().stream()
-                    .sorted(Comparator.comparing(PractitionerApi::getCeasedToActOn, Comparator.nullsLast(Comparator.reverseOrder())))
+                    .sorted(Comparator.comparing(PractitionerApi::getCeasedToActOn, Comparator.nullsLast(Comparator.reverseOrder()))
+                        .thenComparing(PractitionerApi::getAppointedOn, Comparator.nullsLast(Comparator.reverseOrder())))
                     .collect(Collectors.toList());
                 cases.setPractitioners(practitioners);
                 return cases;
