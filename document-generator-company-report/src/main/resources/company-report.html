@@ -21,6 +21,33 @@
         padding-bottom: 3em;
       }
 
+      .grid-row {
+        margin: 0 -15px;
+      }
+
+      .column-quarter {
+        float: left;
+        width: 25%;
+      }
+
+      .column-half {
+        float: left;
+        width: 50%;
+      }
+
+      .data {
+        font-weight: bold;
+      }
+
+      .normal {
+        font-weight: normal;
+      }
+
+      .heading-with-border {
+        border-top: 1px solid #bec0c2;
+        padding-top: 1.25em;
+      }
+
       .pagebreak {
         page-break-before: always;
       }
@@ -165,7 +192,7 @@
         {{end}}
 
     </ul>
-    
+
     {{if $foreignCompanyDetails}}
 
         {{if (eq $foreignCompanyDetails.is_a_credit_financial_institution true)}}
@@ -315,7 +342,6 @@
         {{end}}
     </ul>
     {{end}}
-
 
     <h2 class="heading-large">People</h2>
 
@@ -621,36 +647,46 @@
             {{if $insolvency.total_insolvency_cases}} {{$insolvency.total_insolvency_cases}} Insolvency Case {{else}} Insolvency Case {{end}}
         </h2>
 
-        {{if $insolvency.cases}}
-            {{- range $insolvency.cases -}}
-                <h2 class="heading-medium"> Case number {{.case_number}} - {{.case_type}}</h2>
+            {{if $insolvency.cases}}
+                {{- range $insolvency.cases -}}
+                <h2 class="heading-medium heading-with-border"> Case number {{.case_number}} - {{.case_type}}</h2>
                 {{if .dates}}
-                    {{- range .dates}}
-                    <ul class="list list-bullet">
-                        <li>{{.type}}: {{.date}}</li>
-                    </ul>
-                    {{end}}
+                    <div class="grid-row">
+                        {{- range .dates -}}
+                        <div class="column-quarter">
+                            <p>{{.type}}<br>
+                                <span class="data">{{.date}}</span>
+                            </p>
+                        </div>
+                        {{end}}
+                    </div>
                 {{end}}
+
                 {{if .practitioners}}
-                <table>
-                    <thead>
-                    <tr>
-                        <th scope="col">Practitioner</th>
-                        <th scope="col">Appointed on</th>
-                        <th scope="col">Ceased to act</th>
-                    </tr>
-                    </thead>
-                    <tbody>
                     {{- range .practitioners}}
-                    <tr>
-                        <td>{{.name}} <br>
-                            {{.address.address_line_1}}, {{.address.address_line_2}}, {{.address.postal_code}}</td>
-                        <td nowrap="nowrap">{{.appointed_on}}</td>
-                        <td nowrap="nowrap">{{.ceased_to_act_on}}</td>
-                    </tr>
+                        <div class="grid-row">
+                            <div class="column-half">
+                                <p>Practitioner<br>
+                                    <span class="data">{{.name}}</span><br>
+                                    <span>{{if .address.address_line_1}} {{.address.address_line_1}}, {{end}} {{if .address.address_line_2}} {{.address.address_line_2}}, {{end}} {{if .address.postal_code}} {{.address.postal_code}} {{end}}</span>
+                                </p>
+                            </div>
+                            {{if .appointed_on}}
+                            <div class="column-quarter">
+                                <p>Appointed on<br>
+                                    <span class="data">{{.appointed_on}}</span>
+                                </p>
+                            </div>
+                            {{end}}
+                            {{if .ceased_to_act_on}}
+                                <div class="column-quarter">
+                                    <p>Ceased to act<br>
+                                        <span class="data">{{.ceased_to_act_on}}</span>
+                                    </p>
+                                </div>
+                            {{end}}
+                        </div>
                     {{end}}
-                    </tbody>
-                </table>
                 {{end}}
             {{end}}
         {{end}}
