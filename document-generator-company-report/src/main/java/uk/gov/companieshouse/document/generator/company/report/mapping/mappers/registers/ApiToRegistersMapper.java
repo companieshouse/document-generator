@@ -9,6 +9,5 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 @Mapper(componentModel = "spring", uses = {ApiToRegister.class})
 public interface ApiToRegistersMapper {
 
-    public abstract CompanyRegisters apiToRegistersMapper(RegistersApi registersApi);
-
+    CompanyRegisters apiToRegistersMapper(RegistersApi registersApi);
 }

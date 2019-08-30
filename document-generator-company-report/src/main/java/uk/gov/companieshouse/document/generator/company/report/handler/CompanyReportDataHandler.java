@@ -289,9 +289,40 @@ public class CompanyReportDataHandler {
         CompanyRegistersApi sortedCompanyRegistersApi = companyRegistersApi;
 
         if(companyRegistersApi.getRegisters() != null) {
+
             if(companyRegistersApi.getRegisters().getDirectorsRegister() != null) {
                 RegisterApi sortRegister = sortRegister(companyRegistersApi.getRegisters().getDirectorsRegister());
                 sortedCompanyRegistersApi.getRegisters().setDirectorsRegister(sortRegister);
+            }
+
+            if(companyRegistersApi.getRegisters().getLlpMembersRegister() != null) {
+                RegisterApi sortRegister = sortRegister(companyRegistersApi.getRegisters().getLlpMembersRegister());
+                sortedCompanyRegistersApi.getRegisters().setLlpMembersRegister(sortRegister);
+            }
+
+            if(companyRegistersApi.getRegisters().getLlpUsualResidentialAddressRegister() != null) {
+                RegisterApi sortRegister = sortRegister(companyRegistersApi.getRegisters().getLlpUsualResidentialAddressRegister());
+                sortedCompanyRegistersApi.getRegisters().setLlpUsualResidentialAddressRegister(sortRegister);
+            }
+
+            if(companyRegistersApi.getRegisters().getMembersRegister() != null) {
+                RegisterApi sortRegister = sortRegister(companyRegistersApi.getRegisters().getMembersRegister());
+                sortedCompanyRegistersApi.getRegisters().setMembersRegister(sortRegister);
+            }
+
+            if(companyRegistersApi.getRegisters().getPscRegister() != null) {
+                RegisterApi sortRegister = sortRegister(companyRegistersApi.getRegisters().getPscRegister());
+                sortedCompanyRegistersApi.getRegisters().setPscRegister(sortRegister);
+            }
+
+            if(companyRegistersApi.getRegisters().getSecretariesRegister() != null) {
+                RegisterApi sortRegister = sortRegister(companyRegistersApi.getRegisters().getSecretariesRegister());
+                sortedCompanyRegistersApi.getRegisters().setSecretariesRegister(sortRegister);
+            }
+
+            if(companyRegistersApi.getRegisters().getUsualResidentialAddressRegister() != null) {
+                RegisterApi sortRegister = sortRegister(companyRegistersApi.getRegisters().getUsualResidentialAddressRegister());
+                sortedCompanyRegistersApi.getRegisters().setUsualResidentialAddressRegister(sortRegister);
             }
         }
 

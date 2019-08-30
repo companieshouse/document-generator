@@ -642,10 +642,9 @@
     {{end}}
 
     {{if $registers}}
-    <h3 class="heading-medium">Registers</h3>
-    <!--Title should come from the constants file-->
+    <h3 class="heading-large">Registers</h3>
         {{if $registers.directors}}
-        <p>Register of {{$registers.directors.register_type}}</p>
+        <h3 class="heading-small">Register of {{$registers.directors.register_type}}</h3>
         <p>{{$registers.directors.information}}</p>
         <table>
             <caption class="visually-hidden">Registers</caption>
@@ -658,6 +657,132 @@
             </thead>
             <tbody>
             {{- range $registers.directors.items -}}
+            <tr>
+                <td>{{.formatted_date}}</td>
+                <td scope="row">{{.register_moved_to}}</td>
+            </tr>
+            {{end}}
+            </tbody>
+        </table>
+        {{end}}
+
+        {{if $registers.llp_members}}
+        <h3 class="heading-small">Register of {{$registers.llp_members.register_type}}</h3>
+        <p>{{$registers.llp_members.information}}</p>
+        <table>
+            <thead>
+            <tr>
+                <th scope="col">Dates</th>
+                <th scope="col">Location</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{- range $registers.llp_members.items -}}
+            <tr>
+                <td>{{.formatted_date}}</td>
+                <td scope="row">{{.register_moved_to}}</td>
+            </tr>
+            {{end}}
+            </tbody>
+        </table>
+        {{end}}
+
+        {{if $registers.llp_usual_residential_address}}
+        <h3 class="heading-small">Register of {{$registers.llp_usual_residential_address.register_type}}</h3>
+        <p>{{$registers.llp_usual_residential_address.information}}</p>
+        <table>
+            <thead>
+            <tr>
+                <th scope="col">Dates</th>
+                <th scope="col">Location</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{- range $registers.llp_usual_residential_address.items -}}
+            <tr>
+                <td>{{.formatted_date}}</td>
+                <td scope="row">{{.register_moved_to}}</td>
+            </tr>
+            {{end}}
+            </tbody>
+        </table>
+        {{end}}
+
+        {{if $registers.members}}
+        <h3 class="heading-small">Register of {{$registers.members.register_type}}</h3>
+        <p>{{$registers.members.information}}</p>
+        <table>
+            <thead>
+            <tr>
+                <th scope="col">Dates</th>
+                <th scope="col">Location</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{- range $registers.members.items -}}
+            <tr>
+                <td>{{.formatted_date}}</td>
+                <td scope="row">{{.register_moved_to}}</td>
+            </tr>
+            {{end}}
+            </tbody>
+        </table>
+        {{end}}
+
+        {{if $registers.persons_with_significant_control}}
+        <h3 class="heading-small">Register of {{$registers.persons_with_significant_control.register_type}}</h3>
+        <p>{{$registers.persons_with_significant_control.information}}</p>
+        <table>
+            <thead>
+            <tr>
+                <th scope="col">Dates</th>
+                <th scope="col">Location</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{- range $registers.persons_with_significant_control.items -}}
+            <tr>
+                <td>{{.formatted_date}}</td>
+                <td scope="row">{{.register_moved_to}}</td>
+            </tr>
+            {{end}}
+            </tbody>
+        </table>
+        {{end}}
+
+        {{if $registers.secretaries}}
+        <h3 class="heading-small">Register of {{$registers.secretaries.register_type}}</h3>
+        <p>{{$registers.secretaries.information}}</p>
+        <table>
+            <thead>
+            <tr>
+                <th scope="col">Dates</th>
+                <th scope="col">Location</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{- range $registers.secretaries.items -}}
+            <tr>
+                <td>{{.formatted_date}}</td>
+                <td scope="row">{{.register_moved_to}}</td>
+            </tr>
+            {{end}}
+            </tbody>
+        </table>
+        {{end}}
+
+        {{if $registers.usual_residential_address}}
+        <h3 class="heading-small">Register of {{$registers.usual_residential_address.register_type}}</h3>
+        <p>{{$registers.usual_residential_address.information}}</p>
+        <table>
+            <thead>
+            <tr>
+                <th scope="col">Dates</th>
+                <th scope="col">Location</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{- range $registers.usual_residential_address.items -}}
             <tr>
                 <td>{{.formatted_date}}</td>
                 <td scope="row">{{.register_moved_to}}</td>

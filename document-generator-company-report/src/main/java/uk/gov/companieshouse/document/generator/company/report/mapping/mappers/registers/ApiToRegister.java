@@ -10,22 +10,20 @@ import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiE
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registers.items.Register;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registers.items.RegisterItems;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RequestScope
 @Mapper(componentModel = "spring", uses = {ApiToRegisterItems.class})
 public abstract class ApiToRegister {
 
-     @Autowired
-     private RetrieveApiEnumerationDescription retrieveApiEnumerationDescription;
-
      private static final String REGISTER_TYPE_DESCRIPTION = "CONSTANTS";
      private static final String ENUMERATION_MAPPING = "Enumeration mapping :";
 
      public abstract Register apiToRegister(RegisterApi registerApi);
+
+     @Autowired
+     private RetrieveApiEnumerationDescription retrieveApiEnumerationDescription;
 
      @AfterMapping
      protected void createInformationSentence(RegisterApi registerApi,
@@ -44,8 +42,7 @@ public abstract class ApiToRegister {
      }
 
      @AfterMapping
-     protected void createFormattedDateAndLocationList(RegisterApi registerApi,
-                                   @MappingTarget Register register) {
+     protected void createFormattedDateList(@MappingTarget Register register) {
          String previousDate = null;
 
          for (RegisterItems registerItem : register.getItems()) {
@@ -73,7 +70,6 @@ public abstract class ApiToRegister {
                  registerType, getDebugMap(registerType));
 
          return registerTypeDescription.toLowerCase();
-
      }
 
     private Map<String, String> getDebugMap(String debugString) {
