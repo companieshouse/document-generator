@@ -12,6 +12,9 @@ import uk.gov.companieshouse.api.model.charges.ChargesApi;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
+import uk.gov.companieshouse.api.model.insolvency.CaseApi;
+import uk.gov.companieshouse.api.model.insolvency.CaseTypeApi;
+import uk.gov.companieshouse.api.model.insolvency.InsolvencyApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.api.model.statements.StatementApi;
@@ -21,9 +24,9 @@ import uk.gov.companieshouse.api.model.ukestablishments.UkEstablishmentsItemsApi
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.CompanyReportMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
-import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.mortgagechargedetails.items.Charge;
 import uk.gov.companieshouse.document.generator.company.report.service.ChargesService;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
+import uk.gov.companieshouse.document.generator.company.report.service.InsolvencyService;
 import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
 import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
 import uk.gov.companieshouse.document.generator.company.report.service.RecentFilingHistoryService;
@@ -72,7 +75,11 @@ public class CompanyReportDataHandlerTest {
     private RecentFilingHistoryService mockRecentFilingHistoryService;
 
     @Mock
+    private InsolvencyService mockInsolvencyService;
+
+    @Mock
     private ChargesService mockChargesService;
+
 
     @InjectMocks
     private CompanyReportDataHandler companyReportDataHandler;
@@ -95,6 +102,7 @@ public class CompanyReportDataHandlerTest {
         UkEstablishmentsApi ukEstablishmentsApi = createUkEstablishment();
         FilingHistoryApi filingHistoryApi = createFilingHistory();
         StatementsApi statementsApi = createStatementsApi();
+        InsolvencyApi insolvencyApi = createInsolvencyApi();
         ChargesApi chargesApi = createChargesApi();
 
         CompanyReportApiData companyReportApiData = new CompanyReportApiData();
@@ -107,6 +115,7 @@ public class CompanyReportDataHandlerTest {
         when(mockRecentFilingHistoryService.getFilingHistory(any(String.class))).thenReturn(filingHistoryApi);
         when(mockCompanyReportMapper.mapCompanyReport(any(CompanyReportApiData.class), anyString(), anyString())).thenReturn(new CompanyReport());
         when(mockStatementsService.getStatements(any(String.class))).thenReturn(statementsApi);
+        when(mockInsolvencyService.getInsolvency(anyString())).thenReturn(insolvencyApi);
         when(mockChargesService.getCharges(any(String.class))).thenReturn(chargesApi);
 
         DocumentInfoResponse documentInfoResponse = companyReportDataHandler.getCompanyReport(RESOURCE_URI, REQUEST_ID);
@@ -154,6 +163,7 @@ public class CompanyReportDataHandlerTest {
         links.put("uk_establishments", "/uk-establishments");
         links.put("filing_history", "/filing-history");
         links.put("persons_with_significant_control_statements", "/persons_with_significant_control_statements");
+        links.put("insolvency", "/insolvency");
         links.put("charges", "/charges");
 
         companyProfileApi.setLinks(links);
@@ -214,6 +224,23 @@ public class CompanyReportDataHandlerTest {
         statementsApi.setItems(statementApiList);
 
         return statementsApi;
+    }
+
+    private InsolvencyApi createInsolvencyApi() {
+
+        InsolvencyApi insolvencyApi = new InsolvencyApi();
+
+        List<CaseApi> caseApiList = new ArrayList<>();
+        CaseApi caseApi = new CaseApi();
+        caseApi.setPractitioners(new ArrayList<>());
+        caseApi.setDates(new ArrayList<>());
+        caseApi.setNumber(1L);
+        caseApi.setType(CaseTypeApi.ADMINISTRATION_ORDER);
+
+        caseApiList.add(caseApi);
+        insolvencyApi.setCases(caseApiList);
+
+        return insolvencyApi;
     }
 
     private ChargesApi createChargesApi() {

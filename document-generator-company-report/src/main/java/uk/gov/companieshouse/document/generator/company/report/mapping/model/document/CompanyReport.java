@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.CurrentAppointments;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.ForeignCompanyDetails;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.insolvency.Insolvency;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.keyfilingdates.KeyFilingDates;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.mortgagechargedetails.MortgageChargeDetails;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.previousnames.PreviousNames;
@@ -55,8 +56,12 @@ public class CompanyReport {
     @JsonProperty("psc_statements")
     private Statements statements;
 
+    @JsonProperty("insolvency")
+    private Insolvency insolvency;
+
     @JsonProperty("mortgage_charge_details")
     private MortgageChargeDetails mortgageChargeDetails;
+
 
     public String getTimeStampCreated() {
         return TimeStampCreated;
@@ -138,11 +143,21 @@ public class CompanyReport {
         this.statements = statements;
     }
 
+    public Insolvency getInsolvency() {
+        return insolvency;
+    }
+
+    public void setInsolvency(
+        Insolvency insolvency) {
+        this.insolvency = insolvency;
+    }
+
     public MortgageChargeDetails getMortgageChargeDetails() {
         return mortgageChargeDetails;
     }
 
-    public void setMortgageChargeDetails(MortgageChargeDetails mortgageChargeDetails) {
+    public void setMortgageChargeDetails(
+        MortgageChargeDetails mortgageChargeDetails) {
         this.mortgageChargeDetails = mortgageChargeDetails;
     }
 }

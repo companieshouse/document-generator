@@ -3,6 +3,7 @@ package uk.gov.companieshouse.document.generator.company.report.mapping.model;
 import uk.gov.companieshouse.api.model.charges.ChargesApi;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
+import uk.gov.companieshouse.api.model.insolvency.InsolvencyApi;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.api.model.ukestablishments.UkEstablishmentsApi;
@@ -21,6 +22,8 @@ public class CompanyReportApiData {
     private FilingHistoryApi filingHistoryApi;
 
     private StatementsApi statementsApi;
+
+    private InsolvencyApi insolvencyApi;
 
     private ChargesApi chargesApi;
 
@@ -70,6 +73,14 @@ public class CompanyReportApiData {
 
     public void setStatementsApi(StatementsApi statementsApi) {
         this.statementsApi = statementsApi;
+    }
+
+    public InsolvencyApi getInsolvencyApi() {
+        return insolvencyApi;
+    }
+
+    public void setInsolvencyApi(InsolvencyApi insolvencyApi) {
+        this.insolvencyApi = insolvencyApi;
     }
 
     public ChargesApi getChargesApi() {

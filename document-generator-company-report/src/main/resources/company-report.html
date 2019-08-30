@@ -10,6 +10,7 @@
 {{$pscs := .company_report.pscs}}
 {{$ukEstablishment := .company_report.uk_establishment}}
 {{$pscStatements := .company_report.psc_statements}}
+{{$insolvency := .company_report.insolvency}}
 {{$mortgageChargeDetails := .company_report.mortgage_charge_details}}
 
 <head>
@@ -19,6 +20,33 @@
 
       main {
         padding-bottom: 3em;
+      }
+
+      .grid-row {
+        margin: 0 -15px;
+      }
+
+      .column-quarter {
+        float: left;
+        width: 25%;
+      }
+
+      .column-half {
+        float: left;
+        width: 50%;
+      }
+
+      .data {
+        font-weight: bold;
+      }
+
+      .normal {
+        font-weight: normal;
+      }
+
+      .heading-with-border {
+        border-top: 1px solid #bec0c2;
+        padding-top: 1.25em;
       }
 
       .pagebreak {
@@ -181,7 +209,7 @@
         {{end}}
 
     </ul>
-    
+
     {{if $foreignCompanyDetails}}
 
         {{if (eq $foreignCompanyDetails.is_a_credit_financial_institution true)}}
@@ -331,7 +359,6 @@
         {{end}}
     </ul>
     {{end}}
-
 
     <h2 class="heading-large">People</h2>
 
@@ -631,6 +658,57 @@
         </table>
     {{end}}
 
+    {{if $insolvency}}
+        <h3 class="heading-large">Insolvency</h3>
+        <h2 class="heading-medium">
+            {{if $insolvency.total_insolvency_cases}} {{$insolvency.total_insolvency_cases}} Insolvency Case {{else}} Insolvency Case {{end}}
+        </h2>
+
+            {{if $insolvency.cases}}
+                {{- range $insolvency.cases -}}
+                <h2 class="heading-medium heading-with-border"> Case number {{.case_number}} - {{.case_type}}</h2>
+                {{if .dates}}
+                    <div class="grid-row">
+                        {{- range .dates -}}
+                        <div class="column-quarter">
+                            <p>{{.type}}<br>
+                                <span class="data">{{.date}}</span>
+                            </p>
+                        </div>
+                        {{end}}
+                    </div>
+                {{end}}
+
+                {{if .practitioners}}
+                    {{- range .practitioners}}
+                        <div class="grid-row">
+                            <div class="column-half">
+                                <p>Practitioner<br>
+                                    <span class="data">{{.name}}</span><br>
+                                    <span>{{if .address.address_line_1}} {{.address.address_line_1}}{{end}}{{if .address.address_line_2}}, {{.address.address_line_2}}{{end}}{{if .address.locality}}, {{.address.locality}}{{end}}{{if .address.region}}, {{.address.region}}{{end}}{{if .address.postal_code}}, {{.address.postal_code}} {{end}}</span>
+                                </p>
+                            </div>
+                            {{if .appointed_on}}
+                            <div class="column-quarter">
+                                <p>Appointed on<br>
+                                    <span class="data">{{.appointed_on}}</span>
+                                </p>
+                            </div>
+                            {{end}}
+                            {{if .ceased_to_act_on}}
+                                <div class="column-quarter">
+                                    <p>Ceased to act<br>
+                                        <span class="data">{{.ceased_to_act_on}}</span>
+                                    </p>
+                                </div>
+                            {{end}}
+                        </div>
+                    {{end}}
+                {{end}}
+            {{end}}
+        {{end}}
+    {{end}}
+
     {{if $ukEstablishment}}
     <h3 class="heading-small">UK establishments</h3>
     <table>
@@ -658,45 +736,43 @@
     {{end}}
 
     {{if $mortgageChargeDetails}}
-    <h3 class="heading-large">Charges</h3>
-    <h2 class="heading-medium">{{$mortgageChargeDetails.total_count}} charges registered</h2>
-    <p>{{$mortgageChargeDetails.outstanding}} outstanding, {{$mortgageChargeDetails.satisfied_count}} satisfied, {{$mortgageChargeDetails.part_satisfied_count}} part satisfied</p>
+        <h3 class="heading-large">Charges</h3>
+        <h2 class="heading-medium">{{$mortgageChargeDetails.total_count}} charges registered</h2>
+        <p>{{$mortgageChargeDetails.outstanding}} outstanding, {{$mortgageChargeDetails.satisfied_count}} satisfied, {{$mortgageChargeDetails.part_satisfied_count}} part satisfied</p>
 
-    {{if $charges := $mortgageChargeDetails.charges}}
-    {{- range $charges -}}
-    <div class="charge">
-    <h2 class="heading-medium underlined">{{.description}}</h2>
+        {{if $charges := $mortgageChargeDetails.charges}}
+            {{- range $charges -}}
+            <div class="charge">
+            <h2 class="heading-medium underlined">{{.description}}</h2>
 
-    <table>
-        <tr>
-            <th>Created</th>
-            <th>Delivered</th>
-            <th>Status</th>
-        </tr>
-        <tr>
-            <td>{{.created_date}}</td>
-            <td>{{.delivered}}</td>
-            <td>{{.status}}
-                {{if eq .status "Satisfied"}}
-                    on {{.satisfied_on}}
-                {{else}}
-                {{end}}
-            </td>
-        </tr>
-    </table>
+            <table>
+                <tr>
+                    <th>Created</th>
+                    <th>Delivered</th>
+                    <th>Status</th>
+                </tr>
+                <tr>
+                    <td>{{.created_date}}</td>
+                    <td>{{.delivered}}</td>
+                    <td>{{.status}}
+                        {{if eq .status "Satisfied"}}
+                            on {{.satisfied_on}}
+                        {{else}}
+                        {{end}}
+                    </td>
+                </tr>
+            </table>
 
-    <div class="particulars">
-        <p class="bold">{{.particulars_type}}</p>
-        <p>{{.particulars_description}}</p>
-    </div>
+            <div class="particulars">
+                <p class="bold">{{.particulars_type}}</p>
+                <p>{{.particulars_description}}</p>
+            </div>
 
-    <hr>
-    </div>
+            <hr>
+            </div>
+            {{end}}
+        {{end}}
     {{end}}
-    {{end}}
-
-    {{end}}
-
 </main>
 </body>
 </html>
