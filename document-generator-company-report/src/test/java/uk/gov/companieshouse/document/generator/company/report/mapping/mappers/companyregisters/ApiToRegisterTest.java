@@ -30,7 +30,7 @@ import static org.mockito.Mockito.when;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ApiToRegisterTest {
 
-    private static final String INFORMATION_SENTENCE= "Information moved to place since 11 January 2017";
+    private static final String INFORMATION_SENTENCE= "moved to place";
     private static final String REGISTER_TYPE = "register type";
     private static final String MOVED_TO = "moved to place";
     private static final String MOVED_ON_STRING = "11 January 2017";
