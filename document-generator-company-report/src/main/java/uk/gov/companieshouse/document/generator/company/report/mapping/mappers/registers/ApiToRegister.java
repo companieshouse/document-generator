@@ -26,19 +26,15 @@ public abstract class ApiToRegister {
      private RetrieveApiEnumerationDescription retrieveApiEnumerationDescription;
 
      @AfterMapping
-     protected void createInformationSentence(RegisterApi registerApi,
+     protected void setInformationSentenceDetails(RegisterApi registerApi,
                                               @MappingTarget Register register) {
 
-          StringBuilder informationSentence = new StringBuilder();
-          RegisterItems firstItem = register.getItems().get(0);
+         if (register != null && !register.getItems().isEmpty()) {
+             RegisterItems firstItem = register.getItems().get(0);
 
-          informationSentence
-              .append("Information ")
-              .append(firstItem.getRegisterMovedTo().toLowerCase())
-              .append(" since ")
-              .append(firstItem.getMovedOn());
-
-          register.setInformation(informationSentence.toString());
+             register.setInformation(firstItem.getRegisterMovedTo().toLowerCase());
+             register.setInformationMovedOnDate(firstItem.getMovedOn());
+         }
      }
 
      @AfterMapping

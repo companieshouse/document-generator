@@ -17,6 +17,9 @@ public class Register {
     @JsonProperty("information")
     private String information;
 
+    @JsonProperty("information_moved_on_date")
+    private String informationMovedOnDate;
+
     public List<RegisterItems> getItems() {
         return items;
     }
@@ -39,5 +42,13 @@ public class Register {
 
     public void setInformation(String information) {
         this.information = information;
+    }
+
+    public String getInformationMovedOnDate() {
+        return informationMovedOnDate;
+    }
+
+    public void setInformationMovedOnDate(String informationMovedOnDate) {
+        this.informationMovedOnDate = informationMovedOnDate;
     }
 }
