@@ -745,23 +745,25 @@
             <div class="charge">
             <h2 class="heading-medium underlined">{{.description}}</h2>
 
-            <table>
-                <tr>
-                    <th>Created</th>
-                    <th>Delivered</th>
-                    <th>Status</th>
-                </tr>
-                <tr>
-                    <td>{{.created_date}}</td>
-                    <td>{{.delivered}}</td>
-                    <td>{{.status}}
-                        {{if eq .status "Satisfied"}}
-                            on {{.satisfied_on}}
-                        {{else}}
-                        {{end}}
-                    </td>
-                </tr>
-            </table>
+            <div class="grid-row">
+                <div class="column-quarter">
+                    <p>Created<br>
+                    <span class="data">{{.created_date}}</span></p>
+                </div>
+                <div class="column-quarter">
+                    <p>Delivered<br>
+                        <span class="data">{{.delivered}}</span></p>
+                </div>
+                <div class="column-half">
+                    <p>Status<br>
+                        <span class="data">{{.status}}
+                              {{if eq .status "Satisfied"}}
+                                   <span class="normal">on</span> {{.satisfied_on}}
+                              {{else}}
+                              {{end}}
+                        </span></p>
+                </div>
+            </div>
 
             <div class="particulars">
                 <p class="bold">{{.particulars_type}}</p>
