@@ -13,6 +13,7 @@ import uk.gov.companieshouse.document.generator.company.report.exception.Handler
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
+import uk.gov.companieshouse.document.generator.company.report.service.InsolvencyService;
 import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
 import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
 import uk.gov.companieshouse.document.generator.company.report.service.RecentFilingHistoryService;
@@ -44,12 +45,15 @@ public class CompanyReportDataManager {
 
     private StatementsService statementsService;
 
+    private InsolvencyService insolvencyService;
+
     public CompanyReportDataManager (CompanyService companyService,
                                      PscsService pscsService,
                                      OfficerService officerService,
                                      UkEstablishmentService ukEstablishmentService,
                                      RecentFilingHistoryService recentFilingHistoryService,
-                                     StatementsService statementsService ) {
+                                     StatementsService statementsService,
+                                     InsolvencyService insolvencyService) {
 
         this.companyService = companyService;
         this.pscsService = pscsService;
@@ -57,6 +61,7 @@ public class CompanyReportDataManager {
         this.ukEstablishmentService = ukEstablishmentService;
         this.recentFilingHistoryService = recentFilingHistoryService;
         this.statementsService = statementsService;
+        this.insolvencyService = insolvencyService;
     }
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
@@ -65,6 +70,7 @@ public class CompanyReportDataManager {
     private static final String OFFICERS_KEY = "officers";
     private static final String UK_ESTABLISHMENTS = "uk_establishments";
     private static final String STATEMENTS_KEY = "persons_with_significant_control_statements";
+    private static final String INSOLVENCY_KEY = "insolvency";
 
 
     public CompanyReportApiData getCompanyReportData(String companyNumber,  String requestId)
@@ -144,7 +150,7 @@ public class CompanyReportDataManager {
                 LOG.infoContext(requestId, "Attempting to retrieve company filing history data for company: " + companyNumber, getDebugMap(companyNumber));
                 companyReportApiData.setFilingHistoryApi(sortFilingHistory(
                     recentFilingHistoryService.getFilingHistory(companyNumber)));
-            } catch (ServiceException | ApiErrorResponseException | URIValidationException se) {
+            } catch (ServiceException se) {
                 throw new ApiDataException("error occurred obtaining the company filing history data for company: " + companyNumber, se);
             }
         }

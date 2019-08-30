@@ -10,6 +10,7 @@
 {{$pscs := .company_report.pscs}}
 {{$ukEstablishment := .company_report.uk_establishment}}
 {{$pscStatements := .company_report.psc_statements}}
+{{$insolvency := .company_report.insolvency}}
 
 <head>
     <meta charset="UTF-8">
@@ -18,6 +19,33 @@
 
       main {
         padding-bottom: 3em;
+      }
+
+      .grid-row {
+        margin: 0 -15px;
+      }
+
+      .column-quarter {
+        float: left;
+        width: 25%;
+      }
+
+      .column-half {
+        float: left;
+        width: 50%;
+      }
+
+      .data {
+        font-weight: bold;
+      }
+
+      .normal {
+        font-weight: normal;
+      }
+
+      .heading-with-border {
+        border-top: 1px solid #bec0c2;
+        padding-top: 1.25em;
       }
 
       .pagebreak {
@@ -164,7 +192,7 @@
         {{end}}
 
     </ul>
-    
+
     {{if $foreignCompanyDetails}}
 
         {{if (eq $foreignCompanyDetails.is_a_credit_financial_institution true)}}
@@ -314,7 +342,6 @@
         {{end}}
     </ul>
     {{end}}
-
 
     <h2 class="heading-large">People</h2>
 
@@ -612,6 +639,57 @@
             {{end}}
             </tbody>
         </table>
+    {{end}}
+
+    {{if $insolvency}}
+        <h3 class="heading-large">Insolvency</h3>
+        <h2 class="heading-medium">
+            {{if $insolvency.total_insolvency_cases}} {{$insolvency.total_insolvency_cases}} Insolvency Case {{else}} Insolvency Case {{end}}
+        </h2>
+
+            {{if $insolvency.cases}}
+                {{- range $insolvency.cases -}}
+                <h2 class="heading-medium heading-with-border"> Case number {{.case_number}} - {{.case_type}}</h2>
+                {{if .dates}}
+                    <div class="grid-row">
+                        {{- range .dates -}}
+                        <div class="column-quarter">
+                            <p>{{.type}}<br>
+                                <span class="data">{{.date}}</span>
+                            </p>
+                        </div>
+                        {{end}}
+                    </div>
+                {{end}}
+
+                {{if .practitioners}}
+                    {{- range .practitioners}}
+                        <div class="grid-row">
+                            <div class="column-half">
+                                <p>Practitioner<br>
+                                    <span class="data">{{.name}}</span><br>
+                                    <span>{{if .address.address_line_1}} {{.address.address_line_1}}{{end}}{{if .address.address_line_2}}, {{.address.address_line_2}}{{end}}{{if .address.locality}}, {{.address.locality}}{{end}}{{if .address.region}}, {{.address.region}}{{end}}{{if .address.postal_code}}, {{.address.postal_code}} {{end}}</span>
+                                </p>
+                            </div>
+                            {{if .appointed_on}}
+                            <div class="column-quarter">
+                                <p>Appointed on<br>
+                                    <span class="data">{{.appointed_on}}</span>
+                                </p>
+                            </div>
+                            {{end}}
+                            {{if .ceased_to_act_on}}
+                                <div class="column-quarter">
+                                    <p>Ceased to act<br>
+                                        <span class="data">{{.ceased_to_act_on}}</span>
+                                    </p>
+                                </div>
+                            {{end}}
+                        </div>
+                    {{end}}
+                {{end}}
+            {{end}}
+        {{end}}
     {{end}}
 
     {{if $ukEstablishment}}
