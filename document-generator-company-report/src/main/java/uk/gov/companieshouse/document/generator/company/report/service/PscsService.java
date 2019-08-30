@@ -1,6 +1,5 @@
 package uk.gov.companieshouse.document.generator.company.report.service;
 
-import javax.sql.rowset.serial.SerialException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriTemplate;
@@ -8,15 +7,18 @@ import uk.gov.companieshouse.api.ApiClient;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.handler.psc.request.PscsList;
-import uk.gov.companieshouse.api.model.psc.PscApi;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
 
 @Service
 public class PscsService {
 
-    @Autowired
     private CompanyReportApiClientService companyReportApiClientService;
+
+    @Autowired
+    public PscsService(CompanyReportApiClientService companyReportApiClientService) {
+        this.companyReportApiClientService = companyReportApiClientService;
+    }
 
     private static final UriTemplate GET_PSCS_URI =
             new UriTemplate("/company/{companyNumber}/persons-with-significant-control");

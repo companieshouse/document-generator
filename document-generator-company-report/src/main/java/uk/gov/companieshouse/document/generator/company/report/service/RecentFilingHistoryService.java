@@ -13,13 +13,17 @@ import uk.gov.companieshouse.document.generator.company.report.exception.Service
 @Service
 public class RecentFilingHistoryService {
 
-    @Autowired
     private CompanyReportApiClientService companyReportApiClientService;
+
+    @Autowired
+    public RecentFilingHistoryService(CompanyReportApiClientService companyReportApiClientService) {
+        this.companyReportApiClientService = companyReportApiClientService;
+    }
 
     private static final UriTemplate GET_RECENT_FILING_HISTORY_URI =
         new UriTemplate("/company/{company_number}/filing-history");
 
-    public FilingHistoryApi getFilingHistory(String companyNumber) throws ServiceException, ApiErrorResponseException, URIValidationException {
+    public FilingHistoryApi getFilingHistory(String companyNumber) throws ServiceException {
 
         FilingHistoryApi filingHistoryApi;
 

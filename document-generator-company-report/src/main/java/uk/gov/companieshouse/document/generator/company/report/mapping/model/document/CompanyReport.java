@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.CurrentAppointments;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.ForeignCompanyDetails;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.insolvency.Insolvency;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.keyfilingdates.KeyFilingDates;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.previousnames.PreviousNames;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.pscs.Pscs;
@@ -57,6 +58,9 @@ public class CompanyReport {
 
     @JsonProperty("registers")
     private CompanyRegisters companyRegisters;
+
+    @JsonProperty("insolvency")
+    private Insolvency insolvency;
 
     public String getTimeStampCreated() {
         return TimeStampCreated;
@@ -144,5 +148,13 @@ public class CompanyReport {
 
     public void setCompanyRegisters(CompanyRegisters companyRegisters) {
         this.companyRegisters = companyRegisters;
+    }
+    public Insolvency getInsolvency() {
+        return insolvency;
+    }
+
+    public void setInsolvency(
+        Insolvency insolvency) {
+        this.insolvency = insolvency;
     }
 }
