@@ -30,10 +30,12 @@ import static org.mockito.Mockito.when;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ApiToRegisterTest {
 
-    private static final String INFORMATION_SENTENCE= "Information moved to place since 15 January 2017";
+    private static final String INFORMATION_SENTENCE= "Information moved to place since 11 January 2017";
     private static final String REGISTER_TYPE = "register type";
+    private static final String MOVED_TO = "moved to place";
+    private static final String MOVED_ON_STRING = "11 January 2017";
     private static final String REGISTER_MOVED_TO_MAPPED_VALUE = "register moved to mapped value";
-    private static final String FORMATTED_DATE = "11 January 2017 - 15 January 2017";
+    private static final String FORMATTED_DATE = "11 January 2017 - 11 January 2017";
     private static final LocalDate MOVED_ON = LocalDate.of(2016,01,01);
 
     @Mock
@@ -73,8 +75,6 @@ public class ApiToRegisterTest {
 
         Register register = apiToRegister.apiToRegister(registerApi);
 
-        //register.getItems().get(1).setMovedOn(PREVIOUS_DATE);
-
         assertNotNull(register);
         assertEquals(FORMATTED_DATE, register.getItems().get(1).getFormattedDate());
     }
@@ -84,7 +84,7 @@ public class ApiToRegisterTest {
         RegisterApi registerApi = new RegisterApi();
 
         registerApi.setRegisterType(REGISTER_TYPE);
-        registerApi.setItems(createRegisterItemsList());
+        registerApi.setItems(createRegisterItemsApiList());
 
         return registerApi;
     }
@@ -98,29 +98,27 @@ public class ApiToRegisterTest {
         return registerItem;
     }
 
-    private List<RegisterItemsApi> createRegisterItemsList() {
+    private List<RegisterItemsApi> createRegisterItemsApiList() {
 
         List<RegisterItemsApi> registerItemsApiList = new ArrayList<>();
 
-        RegisterItemsApi registerItemsApi1 = createRegisterItem();
-        RegisterItemsApi registerItemsApi2 = createRegisterItem();
-
-        registerItemsApiList.add(registerItemsApi1);
-        registerItemsApiList.add(registerItemsApi2);
+        RegisterItemsApi registerItemsApi = createRegisterItem();
+        registerItemsApiList.add(registerItemsApi);
 
         return registerItemsApiList;
     }
 
     private List<RegisterItems> createRegisterItems() {
         List<RegisterItems> registerItems = new ArrayList<>();
+
         RegisterItems registerItem1 = new RegisterItems();
         RegisterItems registerItem2 = new RegisterItems();
 
-        registerItem1.setRegisterMovedTo("moved to place");
-        registerItem1.setMovedOn("15 January 2017");
+        registerItem1.setRegisterMovedTo(MOVED_TO);
+        registerItem1.setMovedOn(MOVED_ON_STRING);
 
-        registerItem2.setRegisterMovedTo("moved to place");
-        registerItem2.setMovedOn("11 January 2017");
+        registerItem2.setRegisterMovedTo(MOVED_TO);
+        registerItem2.setMovedOn(MOVED_ON_STRING);
 
         registerItems.add(registerItem1);
         registerItems.add(registerItem2);
