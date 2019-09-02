@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ApiToRegisterItemsTest {
 
-    private static final String REGISTER_MOVED_TO_MAPPED_VALUE = "register moved to mapped value";
+    private static final String REGISTER_MOVED_TO_MAPPED_VALUE = "Register moved to mapped value psc";
     private static final LocalDate MOVED_ON = LocalDate.of(2016,01,01);
     private static final String MOVED_ON_CONVERTED = "1 January 2016";
 
