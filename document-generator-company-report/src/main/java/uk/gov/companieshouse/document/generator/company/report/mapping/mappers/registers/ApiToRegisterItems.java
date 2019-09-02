@@ -43,7 +43,7 @@ public abstract class ApiToRegisterItems {
             getApiEnumerationDescription(REGISTERS_DESCRIPTION, "register_locations",
                 description, getDebugMap(description));
 
-        return registersDescription.substring(0,1).toUpperCase() + registersDescription.substring(1).toLowerCase();
+            return registersDescription;
     }
 
     @AfterMapping
