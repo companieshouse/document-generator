@@ -65,7 +65,6 @@ public abstract class ApiToRegister {
              getApiEnumerationDescription(REGISTER_TYPE_DESCRIPTION, "register_types",
                  registerType, getDebugMap(registerType));
 
-         String test = registerTypeDescription.substring(0, 1).toLowerCase() + registerTypeDescription.substring(1);
          return registerTypeDescription.substring(0, 1).toLowerCase() + registerTypeDescription.substring(1);
      }
 
