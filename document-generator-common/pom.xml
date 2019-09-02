@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>document-generator</artifactId>
+        <groupId>uk.gov.companieshouse</groupId>
+        <version>unversioned</version>
+    </parent>
+
+    <artifactId>document-generator-common</artifactId>
+    <version>unversioned</version>
+
+    <name>document-generator-common</name>
+    <description>Module for holding common classes/methods used in document generation</description>
+
+    <properties>
+        <snakeyaml.version>1.17</snakeyaml.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>${snakeyaml.version}</version>
+        </dependency>
+    </dependencies>
+
+
+</project>

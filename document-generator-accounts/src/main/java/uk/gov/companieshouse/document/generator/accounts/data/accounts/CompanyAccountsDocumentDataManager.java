@@ -1,13 +1,18 @@
 package uk.gov.companieshouse.document.generator.accounts.data.accounts;
 
+import java.util.Collections;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.api.model.accounts.CompanyAccountsApi;
+import uk.gov.companieshouse.api.model.accounts.CompanyAccountsLinks;
 import uk.gov.companieshouse.document.generator.accounts.AccountType;
+import uk.gov.companieshouse.document.generator.accounts.data.IxbrlDataWrapper;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.AccountsLinkNotFoundException;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.accounts.service.AccountsService;
+import uk.gov.companieshouse.document.generator.accounts.service.CicReportService;
 
 @Component
 public class CompanyAccountsDocumentDataManager {
@@ -15,13 +20,28 @@ public class CompanyAccountsDocumentDataManager {
     @Autowired
     private AccountsService accountsService;
 
-    public <T> T getCompanyAccountDocumentData(CompanyAccountsApi companyAccounts, AccountType accountType,
+    @Autowired
+    private CicReportService cicReportService;
+
+    public IxbrlDataWrapper getCompanyAccountDocumentData(CompanyAccountsApi companyAccounts, AccountType accountType,
                                                Transaction transaction, String requestId)
             throws ServiceException, AccountsLinkNotFoundException {
 
-        String smallFullAccountLink = getCompanyAccountLink(companyAccounts, accountType);
+        IxbrlDataWrapper ixbrlDataWrapper = new IxbrlDataWrapper();
 
-        return (T) accountsService.getSmallFullAccounts(smallFullAccountLink, requestId, transaction);
+        ixbrlDataWrapper.setAccounts(
+                Collections.singletonMap(
+                        accountType.getResourceKey(),
+                                accountsService.getSmallFullAccounts(
+                                        getCompanyAccountLink(companyAccounts, accountType), requestId, transaction)));
+
+        Optional<String> cicReportLink = getCicReportLink(companyAccounts);
+        if (cicReportLink.isPresent()) {
+            ixbrlDataWrapper
+                    .setCicReport(cicReportService.getCicReport(cicReportLink.get(), requestId));
+        }
+
+        return ixbrlDataWrapper;
     }
 
     private String getCompanyAccountLink(CompanyAccountsApi accounts, AccountType accountsType) throws AccountsLinkNotFoundException {
@@ -39,6 +59,13 @@ public class CompanyAccountsDocumentDataManager {
                         + accountsType.getResourceKey());
         }
 
+    }
+
+    private Optional<String> getCicReportLink(CompanyAccountsApi accounts) {
+
+        return Optional.ofNullable(accounts)
+                        .map(CompanyAccountsApi::getLinks)
+                        .map(CompanyAccountsLinks::getCicReport);
     }
 }
 
