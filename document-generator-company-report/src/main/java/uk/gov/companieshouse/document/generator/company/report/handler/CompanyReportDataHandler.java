@@ -13,6 +13,9 @@ import uk.gov.companieshouse.api.model.insolvency.InsolvencyApi;
 import uk.gov.companieshouse.api.model.insolvency.PractitionerApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
+import uk.gov.companieshouse.api.model.registers.CompanyRegistersApi;
+import uk.gov.companieshouse.api.model.registers.RegisterApi;
+import uk.gov.companieshouse.api.model.registers.RegisterItemsApi;
 import uk.gov.companieshouse.api.model.statements.StatementApi;
 import uk.gov.companieshouse.api.model.statements.StatementsApi;
 import uk.gov.companieshouse.api.model.ukestablishments.UkEstablishmentsApi;
@@ -26,6 +29,7 @@ import uk.gov.companieshouse.document.generator.company.report.service.Insolvenc
 import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
 import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
 import uk.gov.companieshouse.document.generator.company.report.service.RecentFilingHistoryService;
+import uk.gov.companieshouse.document.generator.company.report.service.RegistersService;
 import uk.gov.companieshouse.document.generator.company.report.service.StatementsService;
 import uk.gov.companieshouse.document.generator.company.report.service.UkEstablishmentService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
@@ -60,6 +64,8 @@ public class CompanyReportDataHandler {
 
     private StatementsService statementsService;
 
+    private RegistersService registersService;
+
     private InsolvencyService insolvencyService;
 
     @Autowired
@@ -70,7 +76,8 @@ public class CompanyReportDataHandler {
                                     RecentFilingHistoryService recentFilingHistoryService,
                                     CompanyReportMapper companyReportMapper,
                                     StatementsService statementsService,
-                                    InsolvencyService insolvencyService) {
+                                    InsolvencyService insolvencyService,
+                                    RegistersService registersService) {
 
         this.companyService = companyService;
         this.pscsService = pscsService;
@@ -80,6 +87,7 @@ public class CompanyReportDataHandler {
         this.companyReportMapper = companyReportMapper;
         this.statementsService = statementsService;
         this.insolvencyService = insolvencyService;
+        this.registersService = registersService;
     }
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
@@ -87,6 +95,7 @@ public class CompanyReportDataHandler {
     private static final String OFFICERS_KEY = "officers";
     private static final String UK_ESTABLISHMENTS = "uk_establishments";
     private static final String STATEMENTS_KEY = "persons_with_significant_control_statements";
+    private static final String REGISTERS_KEY = "registers";
     private static final String FILING_HISTORY_KEY = "filing_history";
     private static final String INSOLVENCY_KEY = "insolvency";
 
@@ -102,7 +111,7 @@ public class CompanyReportDataHandler {
     }
 
     private DocumentInfoResponse createDocumentInfoResponse(String companyNumber,
-        String requestId, ZonedDateTime timeStamp) throws HandlerException {
+                                                            String requestId, ZonedDateTime timeStamp) throws HandlerException {
 
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
 
@@ -114,15 +123,15 @@ public class CompanyReportDataHandler {
         return documentInfoResponse;
     }
 
-    private String getCompanyReportData(String companyNumber,  String requestId,
-        ZonedDateTime timeStamp) throws HandlerException {
+    private String getCompanyReportData(String companyNumber, String requestId,
+                                        ZonedDateTime timeStamp) throws HandlerException {
 
         CompanyReportApiData companyReportApiData = new CompanyReportApiData();
 
         CompanyProfileApi companyProfileApi = getCompanyProfile(companyNumber, requestId);
         companyReportApiData.setCompanyProfileApi(companyProfileApi);
 
-        if(companyProfileApi.getLinks().containsKey(FILING_HISTORY_KEY)) {
+        if (companyProfileApi.getLinks().containsKey(FILING_HISTORY_KEY)) {
             try {
                 FilingHistoryApi filingHistoryApi = getFilingHistory(companyNumber, requestId);
                 companyReportApiData.setFilingHistoryApi(filingHistoryApi);
@@ -137,36 +146,36 @@ public class CompanyReportDataHandler {
             try {
                 companyReportApiData.setPscsApi(getPscs(companyNumber, requestId));
             } catch (HandlerException he) {
-                LOG.infoContext(requestId,"Failed to get PSCs data for company: "
+                LOG.infoContext(requestId, "Failed to get PSCs data for company: "
                     + companyNumber, getDebugMap(companyNumber));
             }
         }
 
-         if (companyProfileApi.getLinks().containsKey(OFFICERS_KEY)) {
-             try {
-                 OfficersApi officersApi = getOfficers(companyNumber, requestId);
-                 companyReportApiData.setOfficersApi(officersApi);
-             } catch (HandlerException he) {
-                 LOG.infoContext(requestId,"Failed to get officers data for company: "
-                     + companyNumber, getDebugMap(companyNumber));
-             }
-         }
+        if (companyProfileApi.getLinks().containsKey(OFFICERS_KEY)) {
+            try {
+                OfficersApi officersApi = getOfficers(companyNumber, requestId);
+                companyReportApiData.setOfficersApi(officersApi);
+            } catch (HandlerException he) {
+                LOG.infoContext(requestId, "Failed to get officers data for company: "
+                    + companyNumber, getDebugMap(companyNumber));
+            }
+        }
 
-         if(companyProfileApi.getLinks().containsKey(UK_ESTABLISHMENTS)) {
-             try {
-                 UkEstablishmentsApi ukEstablishmentsApi = getUkEstablishments(companyNumber, requestId);
-                 companyReportApiData.setUkEstablishmentsApi(ukEstablishmentsApi);
-             } catch (HandlerException he) {
-                 LOG.infoContext(requestId,"Failed to get uk establishments: ", getDebugMap(companyNumber));
-             }
-         }
+        if (companyProfileApi.getLinks().containsKey(UK_ESTABLISHMENTS)) {
+            try {
+                UkEstablishmentsApi ukEstablishmentsApi = getUkEstablishments(companyNumber, requestId);
+                companyReportApiData.setUkEstablishmentsApi(ukEstablishmentsApi);
+            } catch (HandlerException he) {
+                LOG.infoContext(requestId, "Failed to get uk establishments: ", getDebugMap(companyNumber));
+            }
+        }
 
         if (companyProfileApi.getLinks().containsKey(STATEMENTS_KEY)) {
             try {
                 StatementsApi statementsApi = getStatements(companyNumber, requestId);
                 companyReportApiData.setStatementsApi(statementsApi);
             } catch (HandlerException he) {
-                LOG.infoContext(requestId,"Failed to get psc statements data for company: "
+                LOG.infoContext(requestId, "Failed to get psc statements data for company: "
                     + companyNumber, getDebugMap(companyNumber));
             }
         }
@@ -181,8 +190,17 @@ public class CompanyReportDataHandler {
             }
         }
 
+        if (companyProfileApi.getLinks().containsKey(REGISTERS_KEY)) {
+            try {
+                CompanyRegistersApi companyRegistersApi = getCompanyRegisters(companyNumber, requestId);
+                companyReportApiData.setCompanyRegistersApi(companyRegistersApi);
+            } catch (HandlerException he) {
+                LOG.infoContext(requestId, "Failed to get company registers: ", getDebugMap(companyNumber));
+            }
+        }
+
         return toJson(companyReportMapper
-            .mapCompanyReport(companyReportApiData, requestId, companyNumber),
+                .mapCompanyReport(companyReportApiData, requestId, companyNumber),
             companyNumber,
             requestId,
             timeStamp);
@@ -197,7 +215,7 @@ public class CompanyReportDataHandler {
         companyReport.setTimeStampCreated(timeStamp.format(DateTimeFormatter.ofPattern("d MMMM uuuu HH:mm:ss")));
 
         try {
-            LOG.infoContext(requestId,"Attempting to convert company report to JSON",  getDebugMap(companyNumber));
+            LOG.infoContext(requestId, "Attempting to convert company report to JSON", getDebugMap(companyNumber));
             reportToJson = mapper.writeValueAsString(companyReport);
         } catch (JsonProcessingException e) {
             throw new HandlerException(
@@ -212,7 +230,7 @@ public class CompanyReportDataHandler {
     private CompanyProfileApi getCompanyProfile(String companyNumber, String requestId) throws HandlerException {
 
         try {
-            LOG.infoContext(requestId,"Attempting to retrieve company profile", getDebugMap(companyNumber));
+            LOG.infoContext(requestId, "Attempting to retrieve company profile", getDebugMap(companyNumber));
             return companyService.getCompanyProfile(companyNumber);
         } catch (ServiceException se) {
             throw new HandlerException("error occurred obtaining the company profile", se);
@@ -221,7 +239,7 @@ public class CompanyReportDataHandler {
 
     private OfficersApi getOfficers(String companyNumber, String requestId) throws HandlerException {
         try {
-            LOG.infoContext(requestId,"Attempting to retrieve company officers", getDebugMap(companyNumber));
+            LOG.infoContext(requestId, "Attempting to retrieve company officers", getDebugMap(companyNumber));
             return officerService.getOfficers(companyNumber);
         } catch (ServiceException se) {
             throw new HandlerException("error occurred obtaining the company officers", se);
@@ -279,71 +297,137 @@ public class CompanyReportDataHandler {
 
         sortedStatementsApi.setItems(statements);
 
-        return  sortedStatementsApi;
+        return sortedStatementsApi;
     }
 
     private PscsApi getPscs(String companyNumber, String requestId) throws HandlerException {
-
         try {
-            LOG.infoContext(requestId,"Attempting to retrieve company PSCSs", getDebugMap(companyNumber));
+            LOG.infoContext(requestId, "Attempting to retrieve company PSCSs", getDebugMap(companyNumber));
             return pscsService.getPscs(companyNumber);
         } catch (ServiceException se) {
             throw new HandlerException("error occurred obtaining the company PSCSs", se);
-
         }
     }
 
-    private InsolvencyApi getInsolvency(String companyNumber, String requestId) throws HandlerException {
+    private CompanyRegistersApi getCompanyRegisters(String companyNumber, String requestId) throws HandlerException {
         try {
-            LOG.infoContext(requestId, "Attempting to retrieve company insolvency", getDebugMap(companyNumber));
-            return sortInsolvency(insolvencyService.getInsolvency(companyNumber));
+            LOG.infoContext(requestId, "Attempting to retrieve company registers", getDebugMap(companyNumber));
+            return sortEachRegistersDates(registersService.getCompanyRegisters(companyNumber));
         } catch (ServiceException se) {
-            throw new HandlerException("error occurred obtaining the company insolvency", se);
+            throw new HandlerException("error occurred obtaining the company registers", se);
         }
     }
 
-    private InsolvencyApi sortInsolvency(InsolvencyApi insolvencyApi) {
+    private CompanyRegistersApi sortEachRegistersDates(CompanyRegistersApi companyRegistersApi) {
 
-        InsolvencyApi sortedInsolvencyApi = insolvencyApi;
+        CompanyRegistersApi sortedCompanyRegistersApi = companyRegistersApi;
 
-        List<CaseApi> sortedCaseApi = insolvencyApi.getCases().stream()
-            .sorted(Comparator.comparing(CaseApi::getNumber, Comparator.nullsLast(Comparator.reverseOrder())))
-            .map(cases -> {
-                List<DatesApi> dates = cases.getDates().stream()
-                    .sorted(Comparator.comparing(DatesApi::getDate, Comparator.nullsLast(Comparator.naturalOrder())))
-                    .collect(Collectors.toList());
-                cases.setDates(dates);
-                List<PractitionerApi> practitioners = cases.getPractitioners().stream()
-                    .sorted(Comparator.comparing(PractitionerApi::getCeasedToActOn, Comparator.nullsLast(Comparator.reverseOrder()))
-                        .thenComparing(PractitionerApi::getAppointedOn, Comparator.nullsLast(Comparator.reverseOrder())))
-                    .collect(Collectors.toList());
-                cases.setPractitioners(practitioners);
-                return cases;
-            })
+        if (companyRegistersApi.getRegisters() != null) {
+
+            if (companyRegistersApi.getRegisters().getDirectorsRegister() != null) {
+                RegisterApi sortRegister = sortRegister(companyRegistersApi.getRegisters().getDirectorsRegister());
+                sortedCompanyRegistersApi.getRegisters().setDirectorsRegister(sortRegister);
+            }
+
+            if (companyRegistersApi.getRegisters().getLlpMembersRegister() != null) {
+                RegisterApi sortRegister = sortRegister(companyRegistersApi.getRegisters().getLlpMembersRegister());
+                sortedCompanyRegistersApi.getRegisters().setLlpMembersRegister(sortRegister);
+            }
+
+            if (companyRegistersApi.getRegisters().getLlpUsualResidentialAddressRegister() != null) {
+                RegisterApi sortRegister = sortRegister(companyRegistersApi.getRegisters().getLlpUsualResidentialAddressRegister());
+                sortedCompanyRegistersApi.getRegisters().setLlpUsualResidentialAddressRegister(sortRegister);
+            }
+
+            if (companyRegistersApi.getRegisters().getMembersRegister() != null) {
+                RegisterApi sortRegister = sortRegister(companyRegistersApi.getRegisters().getMembersRegister());
+                sortedCompanyRegistersApi.getRegisters().setMembersRegister(sortRegister);
+            }
+
+            if (companyRegistersApi.getRegisters().getPscRegister() != null) {
+                RegisterApi sortRegister = sortRegister(companyRegistersApi.getRegisters().getPscRegister());
+                sortedCompanyRegistersApi.getRegisters().setPscRegister(sortRegister);
+            }
+
+            if (companyRegistersApi.getRegisters().getSecretariesRegister() != null) {
+                RegisterApi sortRegister = sortRegister(companyRegistersApi.getRegisters().getSecretariesRegister());
+                sortedCompanyRegistersApi.getRegisters().setSecretariesRegister(sortRegister);
+            }
+
+            if (companyRegistersApi.getRegisters().getUsualResidentialAddressRegister() != null) {
+                RegisterApi sortRegister = sortRegister(companyRegistersApi.getRegisters().getUsualResidentialAddressRegister());
+                sortedCompanyRegistersApi.getRegisters().setUsualResidentialAddressRegister(sortRegister);
+            }
+        }
+
+        return sortedCompanyRegistersApi;
+    }
+
+    private RegisterApi sortRegister(RegisterApi registerApi) {
+
+        RegisterApi sortedRegisterApi = registerApi;
+
+        List<RegisterItemsApi> items = registerApi.getItems().stream()
+            .sorted(Comparator.comparing(RegisterItemsApi::getMovedOn, Comparator.nullsLast(Comparator.reverseOrder())))
             .collect(Collectors.toList());
 
-        sortedInsolvencyApi.setCases(sortedCaseApi);
+        sortedRegisterApi.setItems(items);
 
-        return sortedInsolvencyApi;
+        return sortedRegisterApi;
     }
+        private InsolvencyApi getInsolvency (String companyNumber, String requestId) throws
+        HandlerException {
+            try {
+                LOG.infoContext(requestId, "Attempting to retrieve company insolvency", getDebugMap(companyNumber));
+                return sortInsolvency(insolvencyService.getInsolvency(companyNumber));
+            } catch (ServiceException se) {
+                throw new HandlerException("error occurred obtaining the company insolvency", se);
+            }
+        }
 
-    private String createPathString() {
-        return String.format("/%s/%s", "company-report", getUniqueFileName());
-    }
+        private InsolvencyApi sortInsolvency (InsolvencyApi insolvencyApi){
 
-    private String getUniqueFileName() {
-        UUID uuid = UUID.randomUUID();
-        return "companyReport" + uuid.toString() + ".html";
-    }
+            InsolvencyApi sortedInsolvencyApi = insolvencyApi;
 
-    protected String getCompanyNumberFromUri(String resourceUri) {
-        return resourceUri.replaceAll("^/company-number/", "");
-    }
+            List<CaseApi> sortedCaseApi = insolvencyApi.getCases().stream()
+                .sorted(Comparator.comparing(CaseApi::getNumber, Comparator.nullsLast(Comparator.reverseOrder())))
+                .map(cases -> {
+                    List<DatesApi> dates = cases.getDates().stream()
+                        .sorted(Comparator.comparing(DatesApi::getDate, Comparator.nullsLast(Comparator.naturalOrder())))
+                        .collect(Collectors.toList());
+                    cases.setDates(dates);
+                    List<PractitionerApi> practitioners = cases.getPractitioners().stream()
+                        .sorted(Comparator.comparing(PractitionerApi::getCeasedToActOn, Comparator.nullsLast(Comparator.reverseOrder()))
+                            .thenComparing(PractitionerApi::getAppointedOn, Comparator.nullsLast(Comparator.reverseOrder())))
+                        .collect(Collectors.toList());
+                    cases.setPractitioners(practitioners);
+                    return cases;
+                })
+                .collect(Collectors.toList());
 
-    private Map<String, Object> getDebugMap(String companyNumber) {
-        Map<String, Object> logMap = new HashMap<>();
-        logMap.put("COMPANY_NUMBER", companyNumber);
+            sortedInsolvencyApi.setCases(sortedCaseApi);
 
-        return logMap;
-    }
+            return sortedInsolvencyApi;
+        }
+
+        private String createPathString () {
+            return String.format("/%s/%s", "company-report", getUniqueFileName());
+        }
+
+        private String getUniqueFileName () {
+            UUID uuid = UUID.randomUUID();
+            return "companyReport" + uuid.toString() + ".html";
+        }
+
+        protected String getCompanyNumberFromUri (String resourceUri){
+            return resourceUri.replaceAll("^/company-number/", "");
+        }
+
+        private Map<String, Object> getDebugMap (String companyNumber){
+            Map<String, Object> logMap = new HashMap<>();
+            logMap.put("COMPANY_NUMBER", companyNumber);
+
+            return logMap;
+        }
 }
+
