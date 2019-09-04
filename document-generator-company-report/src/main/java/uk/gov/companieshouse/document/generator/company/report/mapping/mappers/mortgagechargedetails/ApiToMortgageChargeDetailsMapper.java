@@ -2,9 +2,7 @@ package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.
 
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import org.mapstruct.Mappings;
 import org.springframework.web.context.annotation.RequestScope;
 import uk.gov.companieshouse.api.model.charges.ChargesApi;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.mortgagechargedetails.MortgageChargeDetails;
@@ -15,9 +13,6 @@ import java.util.Optional;
 @Mapper(componentModel = "spring", uses = {ApiToChargesMapper.class})
 public abstract class ApiToMortgageChargeDetailsMapper {
 
-    @Mappings({
-        @Mapping(source = "items", target = "charges")
-    })
     public abstract MortgageChargeDetails apiToMortgageChargeDetails(ChargesApi chargesApi);
 
     @AfterMapping

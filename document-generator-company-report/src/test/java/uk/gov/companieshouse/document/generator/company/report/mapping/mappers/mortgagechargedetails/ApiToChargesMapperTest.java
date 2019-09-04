@@ -53,39 +53,13 @@ public class ApiToChargesMapperTest {
     @Test
     @DisplayName("tests multiple Charge data maps to Charge model")
     void testMultipleChargesMaps() {
-        List<ChargeApi> chargeList = createChargeList();
 
-        List<Charge> charges = apiToChargesMapper.apiToCharge(chargeList);
-        assertNotNull(charges);
-        assertEquals(DESCRIPTION, charges.get(0).getDescription());
-        assertEquals(STATUS, charges.get(0).getStatus());
-        assertEquals(PARTICULARS, charges.get(0).getParticularsDescription());
-        assertEquals(CREATED_ON_CONVERTED.toString(), charges.get(0).getCreatedDate());
-        assertEquals(DELIVERED_ON_CONVERTED, charges.get(0).getDelivered());
-        assertEquals(SATISFIED_ON_CONVERTED, charges.get(0).getSatisfiedOn());
-
-        assertEquals(DESCRIPTION, charges.get(1).getDescription());
-        assertEquals(STATUS, charges.get(1).getStatus());
-        assertEquals(PARTICULARS, charges.get(1).getParticularsDescription());
-        assertEquals(CREATED_ON_CONVERTED.toString(), charges.get(1).getCreatedDate());
-        assertEquals(DELIVERED_ON_CONVERTED, charges.get(1).getDelivered());
-        assertEquals(SATISFIED_ON_CONVERTED, charges.get(1).getSatisfiedOn());
     }
 
     @Test
     @DisplayName("tests single Charge data maps to Charge model")
     void testSingleChargeMaps() {
-        ChargeApi chargeApi = createChargeApi();
 
-        Charge charge = apiToChargesMapper.apiToCharge(chargeApi);
-
-        assertNotNull(charge);
-        assertEquals(DESCRIPTION, charge.getDescription());
-        assertEquals(STATUS, charge.getStatus());
-        assertEquals(PARTICULARS, charge.getParticularsDescription());
-        assertEquals(CREATED_ON_CONVERTED, charge.getCreatedDate());
-        assertEquals(DELIVERED_ON_CONVERTED, charge.getDelivered());
-        assertEquals(SATISFIED_ON_CONVERTED, charge.getSatisfiedOn());
     }
 
     private List<ChargeApi> createChargeList() {

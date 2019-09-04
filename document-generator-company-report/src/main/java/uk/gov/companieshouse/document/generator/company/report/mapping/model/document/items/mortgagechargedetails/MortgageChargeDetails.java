@@ -20,7 +20,7 @@ public class MortgageChargeDetails {
     private Long outstanding;
 
     @JsonProperty("charges")
-    private List<Charge> charges;
+    private List<Charge> items;
 
     public Long getTotalCount() {
         return totalCount;
@@ -54,11 +54,12 @@ public class MortgageChargeDetails {
         this.outstanding = outstanding;
     }
 
-    public List<Charge> getCharges() {
-        return charges;
+    public List<Charge> getItems() {
+        return items;
     }
 
-    public void setCharges(List<Charge> charges) {
-        this.charges = charges;
+    public void setItems(
+        List<Charge> items) {
+        this.items = items;
     }
 }

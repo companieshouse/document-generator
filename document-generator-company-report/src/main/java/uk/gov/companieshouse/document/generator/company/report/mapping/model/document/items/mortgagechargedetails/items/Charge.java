@@ -1,19 +1,16 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.mortgagechargedetails.items;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public class Charge {
 
-    @JsonProperty("description")
-    private String description;
+    @JsonProperty("charge_description")
+    private String chargeDescription;
 
-    @JsonProperty("created_date")
-    private String createdDate;
+    @JsonProperty("created")
+    private String created;
 
     @JsonProperty("delivered")
     private String delivered;
@@ -24,26 +21,35 @@ public class Charge {
     @JsonProperty("satisfied_on")
     private String satisfiedOn;
 
-    @JsonProperty("particulars_type")
-    private String type;
+    @JsonProperty("assets_ceased_released")
+    private String assetsCeasedReleased;
 
-    @JsonProperty("particulars_description")
-    private String particularsDescription;
+    @JsonProperty("more_than_four_persons_entitled")
+    private boolean moreThanFourPersonsEntitled;
 
-    public String getDescription() {
-        return description;
+    @JsonProperty("persons_entitled")
+    private List<PersonsEntitled> personsEntitled;
+
+    @JsonProperty("secured_details")
+    private SecuredDetails securedDetails;
+
+    @JsonProperty("particulars")
+    private Particulars particulars;
+
+    public String getChargeDescription() {
+        return chargeDescription;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setChargeDescription(String chargeDescription) {
+        this.chargeDescription = chargeDescription;
     }
 
-    public String getCreatedDate() {
-        return createdDate;
+    public String getCreated() {
+        return created;
     }
 
-    public void setCreatedDate(String createdDate) {
-        this.createdDate = createdDate;
+    public void setCreated(String created) {
+        this.created = created;
     }
 
     public String getDelivered() {
@@ -70,19 +76,46 @@ public class Charge {
         this.satisfiedOn = satisfiedOn;
     }
 
-    public String getType() {
-        return type;
+    public String getAssetsCeasedReleased() {
+        return assetsCeasedReleased;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setAssetsCeasedReleased(String assetsCeasedReleased) {
+        this.assetsCeasedReleased = assetsCeasedReleased;
     }
 
-    public String getParticularsDescription() {
-        return particularsDescription;
+    public boolean isMoreThanFourPersonsEntitled() {
+        return moreThanFourPersonsEntitled;
     }
 
-    public void setParticularsDescription(String particularsDescription) {
-        this.particularsDescription = particularsDescription;
+    public void setMoreThanFourPersonsEntitled(boolean moreThanFourPersonsEntitled) {
+        this.moreThanFourPersonsEntitled = moreThanFourPersonsEntitled;
+    }
+
+    public List<PersonsEntitled> getPersonsEntitled() {
+        return personsEntitled;
+    }
+
+    public void setPersonsEntitled(
+        List<PersonsEntitled> personsEntitled) {
+        this.personsEntitled = personsEntitled;
+    }
+
+    public SecuredDetails getSecuredDetails() {
+        return securedDetails;
+    }
+
+    public void setSecuredDetails(
+        SecuredDetails securedDetails) {
+        this.securedDetails = securedDetails;
+    }
+
+    public Particulars getParticulars() {
+        return particulars;
+    }
+
+    public void setParticulars(
+        Particulars particulars) {
+        this.particulars = particulars;
     }
 }

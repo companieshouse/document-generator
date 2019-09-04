@@ -743,12 +743,12 @@
         {{if $charges := $mortgageChargeDetails.charges}}
             {{- range $charges -}}
             <div class="charge">
-            <h2 class="heading-medium underlined">{{.description}}</h2>
+            <h2 class="heading-medium underlined">{{.charge_description}}</h2>
 
             <div class="grid-row">
                 <div class="column-quarter">
                     <p>Created<br>
-                    <span class="data">{{.created_date}}</span></p>
+                    <span class="data">{{.created}}</span></p>
                 </div>
                 <div class="column-quarter">
                     <p>Delivered<br>
@@ -765,11 +765,46 @@
                 </div>
             </div>
 
-            <div class="particulars">
-                <p class="bold">{{.particulars_type}}</p>
-                <p>{{.particulars_description}}</p>
+            {{if .assets_ceased_released}}
+            <div>
+                <p class="data">Assets ceased/released<br>
+                    <span class="normal">{{.assets_ceased_released}}</span>
+                </p>
             </div>
+            {{end}}
 
+            {{if .persons_entitled}}
+            <div>
+                <p class="data">Persons entitled<br>
+                {{- range .persons_entitled}}
+                    <span class="normal">{{.name}}</span><br>
+                </p>
+                {{end}}
+                {{if .more_than_four_persons_entitled}}
+                <p>There are more than four persons entitled to the charge. Please see the deed to view their names.</p>
+                {{end}}
+            </div>
+            {{end}}
+
+            {{if .secured_details}}
+            <div>
+                <p class="data">{{.secured_details.type}}<br>
+                    <span class="normal">{{.secured_details.description}}</span>
+                </p>
+            </div>
+            {{end}}
+
+            {{if .particulars}}
+            <div>
+                <p class="data">{{.particulars.type}}<br>
+                    <span class="normal">{{.particulars.description}}
+                    {{- range $key, $value := .particulars.extra_particular_statements}}
+                        <span class="normal"><br>{{$value}}.</span>
+                    {{end}}
+                    </span>
+                </p>
+            </div>
+            {{end}}
             <hr>
             </div>
             {{end}}
