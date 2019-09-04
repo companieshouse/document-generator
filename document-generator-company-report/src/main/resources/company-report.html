@@ -737,8 +737,9 @@
 
     {{if $mortgageChargeDetails}}
         <h3 class="heading-large">Charges</h3>
-        <h2 class="heading-medium">{{$mortgageChargeDetails.total_count}} charges registered</h2>
-        <p>{{$mortgageChargeDetails.outstanding}} outstanding, {{$mortgageChargeDetails.satisfied_count}} satisfied, {{$mortgageChargeDetails.part_satisfied_count}} part satisfied</p>
+        <h2 class="heading-medium">{{$mortgageChargeDetails.total_count}} charges registered<br>
+            <span class="heading-small normal">{{$mortgageChargeDetails.outstanding}} outstanding, {{$mortgageChargeDetails.satisfied_count}} satisfied, {{$mortgageChargeDetails.part_satisfied_count}} part satisfied</span>
+        </h2>
 
         {{if $charges := $mortgageChargeDetails.charges}}
             {{- range $charges -}}
