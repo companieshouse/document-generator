@@ -1,6 +1,5 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.mortgagechargedetails;
 
-import org.apache.commons.lang.ObjectUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -21,7 +20,6 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.mortgagechargedetails.items.Particulars;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.mortgagechargedetails.items.SecuredDetails;
 
-import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +59,7 @@ public class ApiToChargesMapperTest {
     private static final String DATE_CONVERTED = "1 January 2019";
     private static final String CHARGE_CODE = "00112233";
     private static final String CLASSIFICATION_DESCRIPTION = "classification description";
+    private static final String API_ENUMERATION_DESCRIPTION = "api enumeration description";
     private static final Boolean WITH_ACQUIRED_ON = true;
     private static final Boolean WITHOUT_ACQUIRED_ON = false;
 
@@ -78,7 +77,7 @@ public class ApiToChargesMapperTest {
         when(mockApiToSecuredDetailsMapper.apiToSecuredDetailsMapper(any(SecuredDetailsApi.class)))
             .thenReturn(new SecuredDetails());
         when(mockRetrieveApiEnumerationDescription.getApiEnumerationDescription(anyString(), anyString(), anyString(), anyMap()))
-            .thenReturn("api enumeration description");
+            .thenReturn(API_ENUMERATION_DESCRIPTION);
     }
 
     @Test
@@ -100,11 +99,10 @@ public class ApiToChargesMapperTest {
     @Test
     @Tag("SkipBeforeEach")
     @DisplayName("test Null ChargeApi returns Null")
-    void testNullChargeApiReturnsNull() {
+    void TestNull() {
 
         List<ChargeApi> chargeApi = null;
-        List<Charge> charge = apiToChargesMapper.apiToCharge(chargeApi);
-        assertNull(charge);
+        assertNull(apiToChargesMapper.apiToCharge(chargeApi));
     }
 
     private void assertTest(List<Charge> charges, boolean acquiredOnRequired) {
@@ -122,6 +120,7 @@ public class ApiToChargesMapperTest {
         }
         assertEquals(STATUS, charges.get(0).getStatus());
         assertEquals(true, charges.get(0).isMoreThanFourPersonsEntitled());
+        assertEquals(API_ENUMERATION_DESCRIPTION, charges.get(0).getAssetsCeasedReleased());
     }
 
 

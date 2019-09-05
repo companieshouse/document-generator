@@ -47,29 +47,29 @@ public abstract class ApiToParticularsMapper {
 
         if(particularsApi != null) {
 
-            Map<String, String> extraParticularStatments = new HashMap<>();
+            Map<String, String> extraParticularStatements = new HashMap<>();
 
             if(particularsApi.isChargorActingAsBareTrustee() == true) {
-                extraParticularStatments.put(CHARGOR_ACTING, getStatement(CHARGOR_ACTING));
+                extraParticularStatements.put(CHARGOR_ACTING, getStatement(CHARGOR_ACTING));
             }
 
             if(particularsApi.isContainsFixedCharge() == true) {
-                extraParticularStatments.put(CONTAINS_FIXED, getStatement(CONTAINS_FIXED));
+                extraParticularStatements.put(CONTAINS_FIXED, getStatement(CONTAINS_FIXED));
             }
 
             if(particularsApi.isContainsFloatingCharge() == true) {
-                extraParticularStatments.put(CONTAINS_FLOATING, getStatement(CONTAINS_FLOATING));
+                extraParticularStatements.put(CONTAINS_FLOATING, getStatement(CONTAINS_FLOATING));
             }
 
             if(particularsApi.isContainsNegativePledge() == true) {
-                extraParticularStatments.put(CONTAINS_NEGATIVE, getStatement(CONTAINS_NEGATIVE));
+                extraParticularStatements.put(CONTAINS_NEGATIVE, getStatement(CONTAINS_NEGATIVE));
             }
 
             if(particularsApi.isFloatingChargeCoversAll() == true) {
-                extraParticularStatments.put(FLOATING_CHARGE, getStatement(FLOATING_CHARGE));
+                extraParticularStatements.put(FLOATING_CHARGE, getStatement(FLOATING_CHARGE));
             }
 
-            particulars.setExtraParticularStatements(extraParticularStatments);
+            particulars.setExtraParticularStatements(extraParticularStatements);
         }
     }
 
