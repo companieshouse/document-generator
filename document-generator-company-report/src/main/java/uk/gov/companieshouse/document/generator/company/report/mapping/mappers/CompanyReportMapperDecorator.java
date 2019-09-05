@@ -9,6 +9,7 @@ import uk.gov.companieshouse.api.model.filinghistory.FilingApi;
 import uk.gov.companieshouse.api.model.insolvency.InsolvencyApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
+import uk.gov.companieshouse.api.model.registers.RegistersApi;
 import uk.gov.companieshouse.api.model.statements.StatementsApi;
 import uk.gov.companieshouse.api.model.ukestablishments.UkEstablishmentsItemsApi;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.currentappointments.ApiToCurrentAppointmentsMapper;
@@ -19,6 +20,7 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.m
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.previousnames.ApiToPreviousNamesMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.pscs.ApiToPscsMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.recentfilinghistory.ApiToRecentFilingHistoryMapper;
+import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.registers.ApiToRegistersMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.registrationinformation.ApiToRegistrationInformationMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.statements.ApiToPscStatementsMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.ukestablishment.ApiToUkEstablishmentMapper;
@@ -32,6 +34,7 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.previousnames.PreviousNames;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.pscs.Pscs;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.recentfilinghistory.RecentFilingHistory;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registers.CompanyRegisters;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.RegistrationInformation;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.statements.Statements;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.ukestablishment.UkEstablishment;
@@ -81,13 +84,17 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
     private ApiToMortgageChargeDetailsMapper apiToMortgageChargeDetailsMapper;
 
     @Autowired
+    private ApiToRegistersMapper apiToRegistersMapper;
+
+    @Autowired
     private ApiToInsolvencyMapper apiToInsolvencyMapper;
+
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
     @Override
     public CompanyReport mapCompanyReport(CompanyReportApiData companyReportApiData,
-        String requestId, String companyNumber) {
+                                          String requestId, String companyNumber) {
 
         CompanyReport companyReport = companyReportMapper.mapCompanyReport(companyReportApiData, requestId, companyNumber);
 
@@ -99,7 +106,7 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
                 companyReport.setPreviousNames(setPreviousNames(companyReportApiData.getCompanyProfileApi().getPreviousCompanyNames()));
             }
 
-            if(companyReportApiData.getOfficersApi() != null && companyReportApiData.getOfficersApi().getItems().size() > 0) {
+            if (companyReportApiData.getOfficersApi() != null && companyReportApiData.getOfficersApi().getItems().size() > 0) {
                 LOG.infoContext(requestId, "Map data for Current Appointments", getDebugMap(companyNumber));
                 companyReport.setCurrentAppointments(setCurrentAppointments(companyReportApiData.getOfficersApi()));
             }
@@ -109,18 +116,22 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
                 companyReport.setKeyFilingDates(setKeyFilingDates(companyReportApiData.getCompanyProfileApi()));
             }
 
-            if (companyReportApiData.getFilingHistoryApi() !=null && companyReportApiData.getFilingHistoryApi().getItems().size() > 0) {
+            if (companyReportApiData.getFilingHistoryApi() != null && companyReportApiData.getFilingHistoryApi().getItems().size() > 0) {
                 LOG.infoContext(requestId, "Map data for Recent Filing History", getDebugMap(companyNumber));
                 companyReport.setRecentFilingHistory(setRecentFilingHistory(companyReportApiData.getFilingHistoryApi().getItems()));
             }
 
-            if(companyReportApiData.getPscsApi() != null) {
+            if (companyReportApiData.getPscsApi() != null) {
                 LOG.infoContext(requestId, "Map Data for PSCS", getDebugMap(companyNumber));
                 companyReport.setPscs(setPscs(companyReportApiData.getPscsApi()));
             }
 
             if(companyReportApiData.getStatementsApi() != null) {
                 LOG.infoContext(requestId, "Map data for Statements", getDebugMap(companyNumber));
+            }
+
+            if (companyReportApiData.getStatementsApi() != null) {
+                LOG.infoContext(requestId, "Map Data for Statements", getDebugMap(companyNumber));
                 companyReport.setStatements(setStatements(companyReportApiData.getStatementsApi()));
             }
 
@@ -143,6 +154,10 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
             if (companyReportApiData.getUkEstablishmentsApi() != null && companyReportApiData.getUkEstablishmentsApi().getItems() != null) {
                 LOG.infoContext(requestId, "Map data for UK Establishments", getDebugMap(companyNumber));
                 companyReport.setUkEstablishment(setUkEstablishments(companyReportApiData.getUkEstablishmentsApi().getItems()));
+            }
+
+            if (companyReportApiData.getCompanyRegistersApi() != null) {
+                companyReport.setCompanyRegisters(setRegister(companyReportApiData.getCompanyRegistersApi().getRegisters()));
             }
         }
 
@@ -185,15 +200,19 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
         return apiToMortgageChargeDetailsMapper.apiToMortgageChargeDetails(companyReportApiData.getChargesApi());
     }
 
-    private Insolvency setInsolvency(InsolvencyApi insolvencyApi) {
-        return apiToInsolvencyMapper.apiToInsolvencyMapper(insolvencyApi);
-    }
-
     private List<UkEstablishment> setUkEstablishments(List<UkEstablishmentsItemsApi> ukEstablishmentsItemsApi) {
         return apiToUkEstablishmentMapper.apiToUkEstablishmentMapper(ukEstablishmentsItemsApi);
     }
 
-    private Map<String, Object> getDebugMap(String companyNumber) {
+    private CompanyRegisters setRegister(RegistersApi registersApi) {
+        return apiToRegistersMapper.apiToRegistersMapper(registersApi);
+    }
+
+    private Insolvency setInsolvency (InsolvencyApi insolvencyApi){
+        return apiToInsolvencyMapper.apiToInsolvencyMapper(insolvencyApi);
+    }
+
+    private Map<String, Object> getDebugMap (String companyNumber){
         Map<String, Object> logMap = new HashMap<>();
         logMap.put("COMPANY_NUMBER", companyNumber);
 

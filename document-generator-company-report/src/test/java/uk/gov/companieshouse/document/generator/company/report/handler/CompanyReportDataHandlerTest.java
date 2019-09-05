@@ -17,6 +17,10 @@ import uk.gov.companieshouse.api.model.insolvency.CaseTypeApi;
 import uk.gov.companieshouse.api.model.insolvency.InsolvencyApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
+import uk.gov.companieshouse.api.model.registers.CompanyRegistersApi;
+import uk.gov.companieshouse.api.model.registers.RegisterApi;
+import uk.gov.companieshouse.api.model.registers.RegisterItemsApi;
+import uk.gov.companieshouse.api.model.registers.RegistersApi;
 import uk.gov.companieshouse.api.model.statements.StatementApi;
 import uk.gov.companieshouse.api.model.statements.StatementsApi;
 import uk.gov.companieshouse.api.model.ukestablishments.UkEstablishmentsApi;
@@ -30,6 +34,7 @@ import uk.gov.companieshouse.document.generator.company.report.service.Insolvenc
 import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
 import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
 import uk.gov.companieshouse.document.generator.company.report.service.RecentFilingHistoryService;
+import uk.gov.companieshouse.document.generator.company.report.service.RegistersService;
 import uk.gov.companieshouse.document.generator.company.report.service.StatementsService;
 import uk.gov.companieshouse.document.generator.company.report.service.UkEstablishmentService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
@@ -75,6 +80,9 @@ public class CompanyReportDataHandlerTest {
     private RecentFilingHistoryService mockRecentFilingHistoryService;
 
     @Mock
+    private RegistersService mockRegistersService;
+
+    @Mock
     private InsolvencyService mockInsolvencyService;
 
     @Mock
@@ -102,6 +110,7 @@ public class CompanyReportDataHandlerTest {
         UkEstablishmentsApi ukEstablishmentsApi = createUkEstablishment();
         FilingHistoryApi filingHistoryApi = createFilingHistory();
         StatementsApi statementsApi = createStatementsApi();
+        CompanyRegistersApi companyRegistersApi = createCompanyRegisters();
         InsolvencyApi insolvencyApi = createInsolvencyApi();
         ChargesApi chargesApi = createChargesApi();
 
@@ -115,6 +124,7 @@ public class CompanyReportDataHandlerTest {
         when(mockRecentFilingHistoryService.getFilingHistory(any(String.class))).thenReturn(filingHistoryApi);
         when(mockCompanyReportMapper.mapCompanyReport(any(CompanyReportApiData.class), anyString(), anyString())).thenReturn(new CompanyReport());
         when(mockStatementsService.getStatements(any(String.class))).thenReturn(statementsApi);
+        when(mockRegistersService.getCompanyRegisters(any(String.class))).thenReturn(companyRegistersApi);
         when(mockInsolvencyService.getInsolvency(anyString())).thenReturn(insolvencyApi);
         when(mockChargesService.getCharges(any(String.class))).thenReturn(chargesApi);
 
@@ -163,6 +173,7 @@ public class CompanyReportDataHandlerTest {
         links.put("uk_establishments", "/uk-establishments");
         links.put("filing_history", "/filing-history");
         links.put("persons_with_significant_control_statements", "/persons_with_significant_control_statements");
+        links.put("registers", "/registers");
         links.put("insolvency", "/insolvency");
         links.put("charges", "/charges");
 
@@ -224,6 +235,31 @@ public class CompanyReportDataHandlerTest {
         statementsApi.setItems(statementApiList);
 
         return statementsApi;
+    }
+
+    private CompanyRegistersApi createCompanyRegisters() {
+
+        CompanyRegistersApi companyRegistersApi = new CompanyRegistersApi();
+        RegistersApi registersApi = new RegistersApi();
+        RegisterApi registerApi = new RegisterApi();
+        List<RegisterItemsApi> registerItemsApisList = new ArrayList<>();
+        RegisterItemsApi registerItem = new RegisterItemsApi();
+
+        registerItem.setMovedOn(LocalDate.of(2018, 12, 13));
+        registerItem.setRegisterMovedTo("register moved to");
+
+        companyRegistersApi.setRegisters(registersApi);
+        registersApi.setDirectorsRegister(registerApi);
+        registersApi.setUsualResidentialAddressRegister(registerApi);
+        registersApi.setPscRegister(registerApi);
+        registersApi.setSecretariesRegister(registerApi);
+        registersApi.setMembersRegister(registerApi);
+        registersApi.setLlpMembersRegister(registerApi);
+        registersApi.setLlpUsualResidentialAddressRegister(registerApi);
+        registerApi.setItems(registerItemsApisList);
+        registerItemsApisList.add(registerItem);
+
+        return companyRegistersApi;
     }
 
     private InsolvencyApi createInsolvencyApi() {
