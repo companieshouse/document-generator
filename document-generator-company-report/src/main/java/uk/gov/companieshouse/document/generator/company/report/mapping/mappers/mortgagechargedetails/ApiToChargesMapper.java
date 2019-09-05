@@ -8,6 +8,7 @@ import org.mapstruct.Mappings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.annotation.RequestScope;
 import uk.gov.companieshouse.api.model.charges.ChargeApi;
+import uk.gov.companieshouse.api.model.charges.ClassificationApi;
 import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.mortgagechargedetails.items.Charge;
 
@@ -43,11 +44,14 @@ public abstract class ApiToChargesMapper {
 
         if(chargeApi != null) {
             if(chargeApi.getAcquiredOn() == null) {
-                charge.setChargeDescription(Optional.ofNullable(
-                    chargeApi.getClassification().getDescription()).orElse("Charge"));
+                charge.setChargeDescription(Optional.of(chargeApi)
+                    .map(ChargeApi::getClassification)
+                    .map(ClassificationApi::getDescription)
+                    .orElse("charge"));
             } else {
-                charge.setChargeDescription("Charge code " + Optional.ofNullable(
-                    chargeApi.getChargeCode()).orElse(""));
+                charge.setChargeDescription("Charge code " + Optional.of(chargeApi)
+                    .map(ChargeApi::getChargeCode)
+                    .orElse(""));
             }
         }
     }
