@@ -50,7 +50,7 @@ public class CompanyReportDataHandler {
     }
 
     private DocumentInfoResponse createDocumentInfoResponse(String companyNumber,
-        String requestId, ZonedDateTime timeStamp) throws HandlerException {
+                                                            String requestId, ZonedDateTime timeStamp) throws HandlerException {
 
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
 
@@ -85,7 +85,7 @@ public class CompanyReportDataHandler {
         companyReport.setTimeStampCreated(timeStamp.format(DateTimeFormatter.ofPattern("d MMMM uuuu HH:mm:ss")));
 
         try {
-            LOG.infoContext(requestId,"Attempting to convert company report to JSON",  getDebugMap(companyNumber));
+            LOG.infoContext(requestId, "Attempting to convert company report to JSON", getDebugMap(companyNumber));
             reportToJson = mapper.writeValueAsString(companyReport);
         } catch (JsonProcessingException e) {
             throw new HandlerException(
@@ -97,23 +97,24 @@ public class CompanyReportDataHandler {
         return reportToJson;
     }
 
-    private String createPathString() {
+    private String createPathString () {
         return String.format("/%s/%s", "company-report", getUniqueFileName());
     }
 
-    private String getUniqueFileName() {
+    private String getUniqueFileName () {
         UUID uuid = UUID.randomUUID();
         return "companyReport" + uuid.toString() + ".html";
     }
 
-    protected String getCompanyNumberFromUri(String resourceUri) {
+    protected String getCompanyNumberFromUri (String resourceUri){
         return resourceUri.replaceAll("^/company-number/", "");
     }
 
-    private Map<String, Object> getDebugMap(String companyNumber) {
+    private Map<String, Object> getDebugMap (String companyNumber){
         Map<String, Object> logMap = new HashMap<>();
         logMap.put("COMPANY_NUMBER", companyNumber);
 
         return logMap;
     }
 }
+

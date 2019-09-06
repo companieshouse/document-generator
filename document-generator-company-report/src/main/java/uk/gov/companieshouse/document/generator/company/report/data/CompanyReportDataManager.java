@@ -1,15 +1,19 @@
 package uk.gov.companieshouse.document.generator.company.report.data;
 
 import org.springframework.stereotype.Component;
-import uk.gov.companieshouse.api.error.ApiErrorResponseException;
-import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
+import uk.gov.companieshouse.api.model.insolvency.CaseApi;
+import uk.gov.companieshouse.api.model.insolvency.DatesApi;
+import uk.gov.companieshouse.api.model.insolvency.InsolvencyApi;
+import uk.gov.companieshouse.api.model.insolvency.PractitionerApi;
+import uk.gov.companieshouse.api.model.registers.CompanyRegistersApi;
+import uk.gov.companieshouse.api.model.registers.RegisterApi;
+import uk.gov.companieshouse.api.model.registers.RegisterItemsApi;
 import uk.gov.companieshouse.api.model.statements.StatementApi;
 import uk.gov.companieshouse.api.model.statements.StatementsApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.ApiDataException;
-import uk.gov.companieshouse.document.generator.company.report.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
@@ -17,6 +21,7 @@ import uk.gov.companieshouse.document.generator.company.report.service.Insolvenc
 import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
 import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
 import uk.gov.companieshouse.document.generator.company.report.service.RecentFilingHistoryService;
+import uk.gov.companieshouse.document.generator.company.report.service.RegistersService;
 import uk.gov.companieshouse.document.generator.company.report.service.StatementsService;
 import uk.gov.companieshouse.document.generator.company.report.service.UkEstablishmentService;
 import uk.gov.companieshouse.logging.Logger;
@@ -47,13 +52,16 @@ public class CompanyReportDataManager {
 
     private InsolvencyService insolvencyService;
 
+    private RegistersService registersService;
+
     public CompanyReportDataManager (CompanyService companyService,
                                      PscsService pscsService,
                                      OfficerService officerService,
                                      UkEstablishmentService ukEstablishmentService,
                                      RecentFilingHistoryService recentFilingHistoryService,
                                      StatementsService statementsService,
-                                     InsolvencyService insolvencyService) {
+                                     InsolvencyService insolvencyService,
+                                     RegistersService registersService) {
 
         this.companyService = companyService;
         this.pscsService = pscsService;
@@ -62,6 +70,7 @@ public class CompanyReportDataManager {
         this.recentFilingHistoryService = recentFilingHistoryService;
         this.statementsService = statementsService;
         this.insolvencyService = insolvencyService;
+        this.registersService = registersService;
     }
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
@@ -71,6 +80,7 @@ public class CompanyReportDataManager {
     private static final String UK_ESTABLISHMENTS = "uk_establishments";
     private static final String STATEMENTS_KEY = "persons_with_significant_control_statements";
     private static final String INSOLVENCY_KEY = "insolvency";
+    private static final String REGISTERS_KEY = "registers";
 
 
     public CompanyReportApiData getCompanyReportData(String companyNumber,  String requestId)
@@ -96,6 +106,8 @@ public class CompanyReportDataManager {
         setFilingHistoryData(companyNumber, requestId, companyReportApiData, companyProfileApi);
         setStatementsData(companyNumber, requestId, companyReportApiData, companyProfileApi);
         setPscsData(companyNumber, requestId, companyReportApiData, companyProfileApi);
+        setInsolvency(companyNumber, requestId, companyReportApiData, companyProfileApi);
+        setCompanyRegisters(companyNumber, requestId, companyReportApiData, companyProfileApi);
 
     }
 
@@ -199,8 +211,8 @@ public class CompanyReportDataManager {
     }
 
     private void setPscsData(String companyNumber, String requestId,
-                                CompanyReportApiData companyReportApiData,
-                                CompanyProfileApi companyProfileApi) throws ApiDataException {
+        CompanyReportApiData companyReportApiData,
+        CompanyProfileApi companyProfileApi) throws ApiDataException {
 
         if(companyProfileApi.getLinks().containsKey(PSCS_KEY)) {
 
@@ -212,6 +224,117 @@ public class CompanyReportDataManager {
 
             }
         }
+    }
+
+    private void setInsolvency (String companyNumber, String requestId,
+        CompanyReportApiData companyReportApiData, CompanyProfileApi companyProfileApi) throws ApiDataException {
+
+        if(companyProfileApi.getLinks().containsKey(INSOLVENCY_KEY)) {
+
+            try {
+                LOG.infoContext(requestId, "Attempting to retrieve company insolvency", getDebugMap(companyNumber));
+                companyReportApiData.setInsolvencyApi(sortInsolvency(insolvencyService.getInsolvency(companyNumber)));
+            } catch (ServiceException se) {
+                throw new ApiDataException("error occurred obtaining the company insolvency", se);
+            }
+
+        }
+    }
+
+    private InsolvencyApi sortInsolvency (InsolvencyApi insolvencyApi){
+
+        InsolvencyApi sortedInsolvencyApi = insolvencyApi;
+
+        List<CaseApi> sortedCaseApi = insolvencyApi.getCases().stream()
+            .sorted(Comparator.comparing(CaseApi::getNumber, Comparator.nullsLast(Comparator.reverseOrder())))
+            .map(cases -> {
+                List<DatesApi> dates = cases.getDates().stream()
+                    .sorted(Comparator.comparing(DatesApi::getDate, Comparator.nullsLast(Comparator.naturalOrder())))
+                    .collect(Collectors.toList());
+                cases.setDates(dates);
+                List<PractitionerApi> practitioners = cases.getPractitioners().stream()
+                    .sorted(Comparator.comparing(PractitionerApi::getCeasedToActOn, Comparator.nullsLast(Comparator.reverseOrder()))
+                        .thenComparing(PractitionerApi::getAppointedOn, Comparator.nullsLast(Comparator.reverseOrder())))
+                    .collect(Collectors.toList());
+                cases.setPractitioners(practitioners);
+                return cases;
+            })
+            .collect(Collectors.toList());
+
+        sortedInsolvencyApi.setCases(sortedCaseApi);
+
+        return sortedInsolvencyApi;
+    }
+
+    private void setCompanyRegisters(String companyNumber, String requestId,
+        CompanyReportApiData companyReportApiData, CompanyProfileApi companyProfileApi) throws ApiDataException {
+
+        if(companyProfileApi.getLinks().containsKey(REGISTERS_KEY)) {
+            try {
+                LOG.infoContext(requestId, "Attempting to retrieve company registers", getDebugMap(companyNumber));
+                companyReportApiData.setCompanyRegistersApi(sortEachRegistersDates(registersService.getCompanyRegisters(companyNumber)));
+            } catch (ServiceException se) {
+                throw new ApiDataException("error occurred obtaining the company registers", se);
+            }
+        }
+    }
+
+    private CompanyRegistersApi sortEachRegistersDates(CompanyRegistersApi companyRegistersApi) {
+
+        CompanyRegistersApi sortedCompanyRegistersApi = companyRegistersApi;
+
+        if (companyRegistersApi.getRegisters() != null) {
+
+            if (companyRegistersApi.getRegisters().getDirectorsRegister() != null) {
+                RegisterApi sortRegister = sortRegister(companyRegistersApi.getRegisters().getDirectorsRegister());
+                sortedCompanyRegistersApi.getRegisters().setDirectorsRegister(sortRegister);
+            }
+
+            if (companyRegistersApi.getRegisters().getLlpMembersRegister() != null) {
+                RegisterApi sortRegister = sortRegister(companyRegistersApi.getRegisters().getLlpMembersRegister());
+                sortedCompanyRegistersApi.getRegisters().setLlpMembersRegister(sortRegister);
+            }
+
+            if (companyRegistersApi.getRegisters().getLlpUsualResidentialAddressRegister() != null) {
+                RegisterApi sortRegister = sortRegister(companyRegistersApi.getRegisters().getLlpUsualResidentialAddressRegister());
+                sortedCompanyRegistersApi.getRegisters().setLlpUsualResidentialAddressRegister(sortRegister);
+            }
+
+            if (companyRegistersApi.getRegisters().getMembersRegister() != null) {
+                RegisterApi sortRegister = sortRegister(companyRegistersApi.getRegisters().getMembersRegister());
+                sortedCompanyRegistersApi.getRegisters().setMembersRegister(sortRegister);
+            }
+
+            if (companyRegistersApi.getRegisters().getPscRegister() != null) {
+                RegisterApi sortRegister = sortRegister(companyRegistersApi.getRegisters().getPscRegister());
+                sortedCompanyRegistersApi.getRegisters().setPscRegister(sortRegister);
+            }
+
+            if (companyRegistersApi.getRegisters().getSecretariesRegister() != null) {
+                RegisterApi sortRegister = sortRegister(companyRegistersApi.getRegisters().getSecretariesRegister());
+                sortedCompanyRegistersApi.getRegisters().setSecretariesRegister(sortRegister);
+            }
+
+            if (companyRegistersApi.getRegisters().getUsualResidentialAddressRegister() != null) {
+                RegisterApi sortRegister = sortRegister(companyRegistersApi.getRegisters().getUsualResidentialAddressRegister());
+                sortedCompanyRegistersApi.getRegisters().setUsualResidentialAddressRegister(sortRegister);
+            }
+        }
+
+        return sortedCompanyRegistersApi;
+    }
+
+    private RegisterApi sortRegister(RegisterApi registerApi) {
+
+        RegisterApi sortedRegisterApi = registerApi;
+
+        List<RegisterItemsApi> items = registerApi.getItems().stream()
+            .sorted(Comparator.comparing(RegisterItemsApi::getMovedOn, Comparator.nullsLast(Comparator.reverseOrder())))
+            .collect(Collectors.toList());
+
+        sortedRegisterApi.setItems(items);
+
+        return sortedRegisterApi;
     }
 
     private Map<String, Object> getDebugMap(String companyNumber) {
