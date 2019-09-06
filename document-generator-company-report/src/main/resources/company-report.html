@@ -12,6 +12,7 @@
 {{$pscStatements := .company_report.psc_statements}}
 {{$registers := .company_report.registers}}
 {{$insolvency := .company_report.insolvency}}
+{{$exemptions := .company_report.exemptions}}
 
 <head>
     <meta charset="UTF-8">
@@ -463,13 +464,43 @@
         <p>There are no officer details available for this company.</p>
     {{end}}
 
-    <!--PSC & STATMENTS-->
+    <!--PSC & STATMENTS & PSC EXEMPTIONS-->
 
-    <h2 class="heading-medium">Persons with significant control:<br>
+    <h2 class="heading-medium">Persons with significant control:</h2>
+
+        {{if $exemptions}}
+            {{if $pscs.active_count}}
+                <h3 class="heading-small">The PSC information is no longer updated at Companies House because:</h3>
+            {{else}}
+                <h3 class="heading-small">The PSC information is not available because:</h3>
+            {{end}}
+                <ul class="list list-bullet">
+                    {{if $exemptions.disclosure_transparency_rules_chapter_five_applies}}
+                        <li>From {{$exemptions.disclosure_transparency_rules_chapter_five_applies.moved_on_date_formatted}}
+                            {{$exemptions.disclosure_transparency_rules_chapter_five_applies.exemption_type}}</li>
+                    {{end}}
+
+                    {{if $exemptions.psc_exempt_as_shares_admitted_on_market}}
+                        <li>From {{$exemptions.psc_exempt_as_shares_admitted_on_market.moved_on_date_formatted}}
+                            {{$exemptions.psc_exempt_as_shares_admitted_on_market.exemption_type}}</li>
+                    {{end}}
+
+                    {{if $exemptions.psc_exempt_as_trading_on_regulated_market}}
+                        <li>From {{$exemptions.psc_exempt_as_trading_on_regulated_market.moved_on_date_formatted}}
+                            {{$exemptions.psc_exempt_as_trading_on_regulated_market.exemption_type}}</li>
+                    {{end}}
+
+                    {{if $exemptions.psc_exempt_as_trading_on_uk_regulated_market}}
+                        <li>From {{$exemptions.psc_exempt_as_trading_on_uk_regulated_market.moved_on_date_formatted}}
+                            {{$exemptions.psc_exempt_as_trading_on_uk_regulated_market.exemption_type}}</li>
+                    {{end}}
+                </ul>
+        {{end}}
+
+    <h2 class="heading-medium">
         {{if $pscs.active_count}} {{$pscs.active_count}} active person with significant control {{else}} 0 active person with significant control {{end}} /
         {{if $pscStatements.active_count}} {{$pscStatements.active_count}} active statements {{else}} 0 active statements {{end}}
     </h2>
-
     {{if or $pscs $pscStatements}}
         {{if $pscs}}
             {{range $pscs.items}}

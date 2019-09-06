@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.company.PreviousCompanyNamesApi;
 import uk.gov.companieshouse.api.model.company.foreigncompany.ForeignCompanyDetailsApi;
+import uk.gov.companieshouse.api.model.exemptions.ExemptionsApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingApi;
 import uk.gov.companieshouse.api.model.insolvency.InsolvencyApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
@@ -13,6 +14,7 @@ import uk.gov.companieshouse.api.model.registers.RegistersApi;
 import uk.gov.companieshouse.api.model.statements.StatementsApi;
 import uk.gov.companieshouse.api.model.ukestablishments.UkEstablishmentsItemsApi;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.currentappointments.ApiToCurrentAppointmentsMapper;
+import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.exemptions.ApiToExemptionsMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.foreigncompanydetails.ApiToForeignCompanyDetailsMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.insolvency.ApiToInsolvencyMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.keyfilingdates.ApiToKeyFilingDatesMapper;
@@ -26,6 +28,7 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.u
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.CurrentAppointments;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.exemptions.Exemptions;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.ForeignCompanyDetails;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.insolvency.Insolvency;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.keyfilingdates.KeyFilingDates;
@@ -83,6 +86,9 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
 
     @Autowired
     private ApiToInsolvencyMapper apiToInsolvencyMapper;
+
+    @Autowired
+    private ApiToExemptionsMapper apiToExemptionsMapper;
 
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
@@ -143,7 +149,13 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
             }
 
             if (companyReportApiData.getCompanyRegistersApi() != null) {
+                LOG.infoContext(requestId, "Map Data for Company Registers", getDebugMap(companyNumber));
                 companyReport.setCompanyRegisters(setRegister(companyReportApiData.getCompanyRegistersApi().getRegisters()));
+            }
+
+            if (companyReportApiData.getCompanyExemptionsApi() !=null) {
+                LOG.infoContext(requestId, "Map Data for Company Exemptions", getDebugMap(companyNumber));
+                companyReport.setExemptions(setExemptions(companyReportApiData.getCompanyExemptionsApi().getExemptions()));
             }
         }
 
@@ -192,6 +204,10 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
 
     private Insolvency setInsolvency (InsolvencyApi insolvencyApi){
         return apiToInsolvencyMapper.apiToInsolvencyMapper(insolvencyApi);
+    }
+
+    private Exemptions setExemptions (ExemptionsApi exemptionsApi) {
+        return apiToExemptionsMapper.apiToExemptionsMapper(exemptionsApi);
     }
 
     private Map<String, Object> getDebugMap (String companyNumber){
