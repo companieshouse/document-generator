@@ -759,10 +759,12 @@
                     <div class="column-half">
                         <p>Status<br>
                             <span class="data">{{.status}}
+                                {{if .satisfied_on}}
                                   {{if eq .status "Satisfied"}}
                                        <span class="normal">on</span> {{.satisfied_on}}
                                   {{else}}
                                   {{end}}
+                                {{end}}
                             </span></p>
                     </div>
                 </div>
