@@ -50,7 +50,7 @@ public class CompanyReportDataHandler {
     }
 
     private DocumentInfoResponse createDocumentInfoResponse(String companyNumber,
-                                                            String requestId, ZonedDateTime timeStamp) throws HandlerException {
+        String requestId, ZonedDateTime timeStamp) throws HandlerException {
 
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
 
@@ -75,6 +75,7 @@ public class CompanyReportDataHandler {
             throw new HandlerException("An error occurred whilst obtaining the company report data for company: " + companyNumber, ae);
         }
     }
+
 
     private String toJson(CompanyReport companyReport, String companyNumber,
         String requestId, ZonedDateTime timeStamp) throws HandlerException {

@@ -12,6 +12,7 @@
 {{$pscStatements := .company_report.psc_statements}}
 {{$registers := .company_report.registers}}
 {{$insolvency := .company_report.insolvency}}
+{{$mortgageChargeDetails := .company_report.mortgage_charge_details}}
 
 <head>
     <meta charset="UTF-8">
@@ -64,6 +65,22 @@
 
       .sentence-case::first-letter {
         text-transform: uppercase;
+      }
+
+      .underlined {
+        text-decoration: underline;
+      }
+
+      .bold {
+        font-weight: 700px;
+      }
+
+      .charge {
+        margin: 20px 0px;
+      }
+
+      .particulars {
+        margin-top: 20px;
       }
 
       @media print {
@@ -719,111 +736,188 @@
     </table>
     {{end}}
 
+    {{if $mortgageChargeDetails}}
+        <h3 class="heading-large">Charges</h3>
+        <h2 class="heading-medium">{{$mortgageChargeDetails.total_count}} charges registered<br>
+            <span class="heading-small normal">{{$mortgageChargeDetails.outstanding}} outstanding, {{$mortgageChargeDetails.satisfied_count}} satisfied, {{$mortgageChargeDetails.part_satisfied_count}} part satisfied</span>
+        </h2>
+
+        {{if $charges := $mortgageChargeDetails.charges}}
+            {{- range $charges -}}
+                <div class="charge">
+                <h2 class="heading-medium underlined">{{.charge_description}}</h2>
+
+                <div class="grid-row">
+                    <div class="column-quarter">
+                        <p>Created<br>
+                        <span class="data">{{.created}}</span></p>
+                    </div>
+                    <div class="column-quarter">
+                        <p>Delivered<br>
+                            <span class="data">{{.delivered}}</span></p>
+                    </div>
+                    <div class="column-half">
+                        <p>Status<br>
+                            <span class="data">{{.status}}
+                                  {{if eq .status "Satisfied"}}
+                                       <span class="normal">on</span> {{.satisfied_on}}
+                                  {{else}}
+                                  {{end}}
+                            </span></p>
+                    </div>
+                </div>
+
+                {{if .assets_ceased_released}}
+                <div>
+                    <p class="data">Assets ceased/released<br>
+                        <span class="normal">{{.assets_ceased_released}}</span>
+                    </p>
+                </div>
+                {{end}}
+
+                {{if .persons_entitled}}
+                <div>
+                    <p class="data">Person(s) entitled<br>
+                    {{- range .persons_entitled}}
+                        <span class="normal">{{.name}}</span><br>
+                    </p>
+                    {{end}}
+                    {{if .more_than_four_persons_entitled}}
+                    <p>There are more than four persons entitled to the charge. Please see the deed to view their names.</p>
+                    {{end}}
+                </div>
+                {{end}}
+
+                {{if .secured_details}}
+                    <div>
+                        <p class="data">{{.secured_details.type}}<br>
+                            <span class="normal">{{.secured_details.description}}</span>
+                        </p>
+                    </div>
+                {{end}}
+
+                {{if .particulars}}
+                    <div>
+                        <p class="data">{{.particulars.type}}<br>
+                            <span class="normal">{{.particulars.description}}
+                            {{- range $key, $value := .particulars.extra_particular_statements}}
+                                <span class="normal"><br>{{$value}}.</span>
+                            {{end}}
+                            </span>
+                        </p>
+                    </div>
+                {{end}}
+                <hr>
+                </div>
+            {{end}}
+        {{end}}
+    {{end}}
+
     {{if $registers}}
     <h3 class="heading-large">Registers</h3>
-        {{if $registers.directors}}
-        <h3 class="heading-small">Register of {{$registers.directors.register_type}}</h3>
-        <p>{{if eq $registers.directors.information "public register"}}
-            Information held on
-            {{else}}
-            Information
-            {{end}}<b>{{$registers.directors.information}}</b> since {{$registers.directors.information_moved_on_date}}</p>
-        <table>
-            <caption class="visually-hidden">Registers</caption>
-            <!-- this hidden caption is needed for screen-readers-->
-            <thead>
-            <tr>
-                <th scope="col">Dates</th>
-                <th scope="col">Location</th>
-            </tr>
-            </thead>
-            <tbody>
-            {{- range $registers.directors.items -}}
-            <tr>
-                <td>{{.formatted_date}}</td>
-                <td scope="row">{{.register_moved_to}}</td>
-            </tr>
-            {{end}}
-            </tbody>
-        </table>
+    {{if $registers.directors}}
+    <h3 class="heading-small">Register of {{$registers.directors.register_type}}</h3>
+    <p>{{if eq $registers.directors.information "public register"}}
+        Information held on
+        {{else}}
+        Information
+        {{end}}<b>{{$registers.directors.information}}</b> since {{$registers.directors.information_moved_on_date}}</p>
+    <table>
+        <caption class="visually-hidden">Registers</caption>
+        <!-- this hidden caption is needed for screen-readers-->
+        <thead>
+        <tr>
+            <th scope="col">Dates</th>
+            <th scope="col">Location</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{- range $registers.directors.items -}}
+        <tr>
+            <td>{{.formatted_date}}</td>
+            <td scope="row">{{.register_moved_to}}</td>
+        </tr>
         {{end}}
+        </tbody>
+    </table>
+    {{end}}
 
-        {{if $registers.llp_members}}
-        <h3 class="heading-small">Register of {{$registers.llp_members.register_type}}</h3>
-        <p>{{if eq $registers.llp_members.information "public register"}}
-            Information held on
-            {{else}}
-            Information
-            {{end}}<b>{{$registers.llp_members.information}}</b> since {{$registers.llp_members.information_moved_on_date}}</p>
-        <table>
-            <thead>
-            <tr>
-                <th scope="col">Dates</th>
-                <th scope="col">Location</th>
-            </tr>
-            </thead>
-            <tbody>
-            {{- range $registers.llp_members.items -}}
-            <tr>
-                <td>{{.formatted_date}}</td>
-                <td scope="row">{{.register_moved_to}}</td>
-            </tr>
-            {{end}}
-            </tbody>
-        </table>
+    {{if $registers.llp_members}}
+    <h3 class="heading-small">Register of {{$registers.llp_members.register_type}}</h3>
+    <p>{{if eq $registers.llp_members.information "public register"}}
+        Information held on
+        {{else}}
+        Information
+        {{end}}<b>{{$registers.llp_members.information}}</b> since {{$registers.llp_members.information_moved_on_date}}</p>
+    <table>
+        <thead>
+        <tr>
+            <th scope="col">Dates</th>
+            <th scope="col">Location</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{- range $registers.llp_members.items -}}
+        <tr>
+            <td>{{.formatted_date}}</td>
+            <td scope="row">{{.register_moved_to}}</td>
+        </tr>
         {{end}}
+        </tbody>
+    </table>
+    {{end}}
 
-        {{if $registers.llp_usual_residential_address}}
-        <h3 class="heading-small">Register of {{$registers.llp_usual_residential_address.register_type}}</h3>
-        <p>{{if eq $registers.llp_usual_residential_address.information "public register"}}
-            Information held on
-            {{else}}
-            Information
-            {{end}}<b>{{$registers.llp_usual_residential_address.information}}</b> since {{$registers.llp_usual_residential_address.information_moved_on_date}}</p>
-        <table>
-            <thead>
-            <tr>
-                <th scope="col">Dates</th>
-                <th scope="col">Location</th>
-            </tr>
-            </thead>
-            <tbody>
-            {{- range $registers.llp_usual_residential_address.items -}}
-            <tr>
-                <td>{{.formatted_date}}</td>
-                <td scope="row">{{.register_moved_to}}</td>
-            </tr>
-            {{end}}
-            </tbody>
-        </table>
+    {{if $registers.llp_usual_residential_address}}
+    <h3 class="heading-small">Register of {{$registers.llp_usual_residential_address.register_type}}</h3>
+    <p>{{if eq $registers.llp_usual_residential_address.information "public register"}}
+        Information held on
+        {{else}}
+        Information
+        {{end}}<b>{{$registers.llp_usual_residential_address.information}}</b> since {{$registers.llp_usual_residential_address.information_moved_on_date}}</p>
+    <table>
+        <thead>
+        <tr>
+            <th scope="col">Dates</th>
+            <th scope="col">Location</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{- range $registers.llp_usual_residential_address.items -}}
+        <tr>
+            <td>{{.formatted_date}}</td>
+            <td scope="row">{{.register_moved_to}}</td>
+        </tr>
         {{end}}
+        </tbody>
+    </table>
+    {{end}}
 
-        {{if $registers.members}}
-        <h3 class="heading-small">Register of {{$registers.members.register_type}}</h3>
-        <p>{{if eq $registers.members.information "public register"}}
-            Information held on
-            {{else}}
-            Information
-            {{end}}<b>{{$registers.members.information}}</b> since {{$registers.members.information_moved_on_date}}</p>
-        <table>
-            <thead>
-            <tr>
-                <th scope="col">Dates</th>
-                <th scope="col">Location</th>
-            </tr>
-            </thead>
-            <tbody>
-            {{- range $registers.members.items -}}
-            <tr>
-                <td>{{.formatted_date}}</td>
-                <td scope="row">{{.register_moved_to}}</td>
-            </tr>
-            {{end}}
-            </tbody>
-        </table>
+    {{if $registers.members}}
+    <h3 class="heading-small">Register of {{$registers.members.register_type}}</h3>
+    <p>{{if eq $registers.members.information "public register"}}
+        Information held on
+        {{else}}
+        Information
+        {{end}}<b>{{$registers.members.information}}</b> since {{$registers.members.information_moved_on_date}}</p>
+    <table>
+        <thead>
+        <tr>
+            <th scope="col">Dates</th>
+            <th scope="col">Location</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{- range $registers.members.items -}}
+        <tr>
+            <td>{{.formatted_date}}</td>
+            <td scope="row">{{.register_moved_to}}</td>
+        </tr>
         {{end}}
+        </tbody>
+    </table>
+    {{end}}
 
-        {{if $registers.persons_with_significant_control}}
+    {{if $registers.persons_with_significant_control}}
         <h3 class="heading-small">Register of {{$registers.persons_with_significant_control.register_type}}</h3>
         <p>{{if eq $registers.persons_with_significant_control.information "public register"}}
             Information held on
@@ -896,7 +990,6 @@
             {{end}}
             </tbody>
         </table>
-        {{end}}
     {{end}}
 </main>
 </body>

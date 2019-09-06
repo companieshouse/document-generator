@@ -16,6 +16,7 @@ import uk.gov.companieshouse.api.model.statements.StatementsApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.ApiDataException;
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
+import uk.gov.companieshouse.document.generator.company.report.service.ChargesService;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
 import uk.gov.companieshouse.document.generator.company.report.service.InsolvencyService;
 import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
@@ -54,6 +55,8 @@ public class CompanyReportDataManager {
 
     private RegistersService registersService;
 
+    private ChargesService chargesService;
+
     public CompanyReportDataManager (CompanyService companyService,
                                      PscsService pscsService,
                                      OfficerService officerService,
@@ -61,7 +64,8 @@ public class CompanyReportDataManager {
                                      RecentFilingHistoryService recentFilingHistoryService,
                                      StatementsService statementsService,
                                      InsolvencyService insolvencyService,
-                                     RegistersService registersService) {
+                                     RegistersService registersService,
+                                     ChargesService chargesService) {
 
         this.companyService = companyService;
         this.pscsService = pscsService;
@@ -71,6 +75,7 @@ public class CompanyReportDataManager {
         this.statementsService = statementsService;
         this.insolvencyService = insolvencyService;
         this.registersService = registersService;
+        this.chargesService = chargesService;
     }
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
@@ -81,6 +86,7 @@ public class CompanyReportDataManager {
     private static final String STATEMENTS_KEY = "persons_with_significant_control_statements";
     private static final String INSOLVENCY_KEY = "insolvency";
     private static final String REGISTERS_KEY = "registers";
+    private static final String CHARGES_KEY = "charges";
 
 
     public CompanyReportApiData getCompanyReportData(String companyNumber,  String requestId)
@@ -108,6 +114,7 @@ public class CompanyReportDataManager {
         setPscsData(companyNumber, requestId, companyReportApiData, companyProfileApi);
         setInsolvency(companyNumber, requestId, companyReportApiData, companyProfileApi);
         setCompanyRegisters(companyNumber, requestId, companyReportApiData, companyProfileApi);
+        setCharges(companyNumber, requestId, companyReportApiData, companyProfileApi);
 
     }
 
@@ -335,6 +342,21 @@ public class CompanyReportDataManager {
         sortedRegisterApi.setItems(items);
 
         return sortedRegisterApi;
+    }
+
+    private void setCharges(String companyNumber, String requestId,
+        CompanyReportApiData companyReportApiData, CompanyProfileApi companyProfileApi) throws ApiDataException {
+
+        if(companyProfileApi.getLinks().containsKey(CHARGES_KEY)) {
+
+            try {
+                LOG.infoContext(requestId, "Attempting to retrieve company PSCSs", getDebugMap(companyNumber));
+                companyReportApiData.setChargesApi(chargesService.getCharges(companyNumber));
+            } catch (ServiceException se) {
+                throw new ApiDataException("error occurred obtaining the company charges", se);
+
+            }
+        }
     }
 
     private Map<String, Object> getDebugMap(String companyNumber) {
