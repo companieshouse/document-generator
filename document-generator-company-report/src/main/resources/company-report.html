@@ -779,7 +779,7 @@
 
                 {{if .persons_entitled}}
                 <div>
-                    <p class="data">Person(s) entitled<br>
+                    <p class="data">Persons entitled<br>
                     {{- range .persons_entitled}}
                         <span class="normal">{{.name}}</span><br>
                     </p>
@@ -800,7 +800,12 @@
 
                 {{if .particulars}}
                     <div>
-                        <p class="data">{{.particulars.type}}<br>
+                        <p class="data">
+                        {{if .particulars.type}}
+                            {{.particulars.type}}<br>
+                        {{else}}
+                                <span class="bold">Brief description</span>
+                        {{end}}
                             <span class="normal">{{.particulars.description}}
                             {{- range $key, $value := .particulars.extra_particular_statements}}
                                 <span class="normal"><br>{{$value}}.</span>
