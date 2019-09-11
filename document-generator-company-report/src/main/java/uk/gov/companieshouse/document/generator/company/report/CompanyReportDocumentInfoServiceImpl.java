@@ -25,20 +25,23 @@ public class CompanyReportDocumentInfoServiceImpl implements DocumentInfoService
     private CompanyReportDataHandler companyReportDataHandler;
 
     @Override
-    public DocumentInfoResponse getDocumentInfo(DocumentInfoRequest documentInfoRequest) throws DocumentInfoException {
+    public DocumentInfoResponse getDocumentInfo(
+        DocumentInfoRequest documentInfoRequest) throws DocumentInfoException {
 
         String resourceUri = documentInfoRequest.getResourceUri();
         String requestId = documentInfoRequest.getRequestId();
 
         final Map<String, Object> debugMap = new HashMap<>();
-        debugMap.put("resource_uri", resourceUri);
+        debugMap.put("resource", resourceUri);
 
-        LOG.infoContext(requestId, "Started getting document information for company profile", debugMap);
+        LOG.infoContext(requestId, "Started getting document information for company profile for " +
+            "resource: " + resourceUri, debugMap);
 
         try {
             return companyReportDataHandler.getCompanyReport(resourceUri, requestId);
         } catch (HandlerException he) {
-            LOG.errorContext(requestId, "An error occurred when retrieving the data for the company report", he, debugMap);
+            LOG.errorContext(requestId, "An error occurred when retrieving the data for the " +
+                "company report for resource: " + resourceUri, he, debugMap);
             throw new DocumentInfoException("Failed to get company report data for resourceUri: "
                 + resourceUri);
         }

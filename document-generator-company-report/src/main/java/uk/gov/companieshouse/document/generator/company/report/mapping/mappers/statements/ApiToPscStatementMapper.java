@@ -37,9 +37,9 @@ public abstract class ApiToPscStatementMapper {
             @Mapping(target = "notifiedOn", ignore = true),
             @Mapping(target = "ceasedOn", ignore = true)
     })
-    public abstract Statement ApiToStatementMapper(StatementApi statementApi);
+    public abstract Statement apiToStatementMapper(StatementApi statementApi);
 
-    public abstract List<Statement> ApiToStatementMapper(List<StatementApi> statementApiList);
+    public abstract List<Statement> apiToStatementMapper(List<StatementApi> statementApiList);
 
     @AfterMapping
     protected void convertStatement(StatementApi statementApi, @MappingTarget Statement statement) {

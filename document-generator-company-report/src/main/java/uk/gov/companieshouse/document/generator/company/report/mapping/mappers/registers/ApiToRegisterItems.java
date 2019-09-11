@@ -39,11 +39,9 @@ public abstract class ApiToRegisterItems {
 
     private String setRegistersDescription(String description) {
 
-        String registersDescription = retrieveApiEnumerationDescription.
+        return retrieveApiEnumerationDescription.
             getApiEnumerationDescription(REGISTERS_DESCRIPTION, "register_locations",
                 description, getDebugMap(description));
-
-            return registersDescription;
     }
 
     @AfterMapping

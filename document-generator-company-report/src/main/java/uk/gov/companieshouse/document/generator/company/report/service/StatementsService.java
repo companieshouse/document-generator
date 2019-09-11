@@ -21,7 +21,7 @@ public class StatementsService {
     }
 
     private static final UriTemplate GET_STATEMENTS_URI =
-            new UriTemplate("/company/{companyNumber}/persons-with-significant-control-statements");
+        new UriTemplate("/company/{companyNumber}/persons-with-significant-control-statements");
 
     public StatementsApi getStatements(String companyNumber) throws ServiceException {
 

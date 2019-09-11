@@ -25,6 +25,7 @@ import uk.gov.companieshouse.api.model.statements.StatementApi;
 import uk.gov.companieshouse.api.model.statements.StatementsApi;
 import uk.gov.companieshouse.api.model.ukestablishments.UkEstablishmentsApi;
 import uk.gov.companieshouse.api.model.ukestablishments.UkEstablishmentsItemsApi;
+import uk.gov.companieshouse.document.generator.company.report.data.CompanyReportDataManager;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.CompanyReportMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
@@ -56,37 +57,13 @@ import static org.mockito.Mockito.when;
 public class CompanyReportDataManagerHandlerTest {
 
     @Mock
-    private CompanyService mockCompanyService;
+    private CompanyReport mockCompanyReport;
 
     @Mock
     private CompanyReportMapper mockCompanyReportMapper;
 
     @Mock
-    private CompanyReport mockCompanyReport;
-
-    @Mock
-    private PscsService mockPscService;
-
-    @Mock
-    private StatementsService mockStatementsService;
-
-    @Mock
-    private OfficerService mockOfficerService;
-
-    @Mock
-    private UkEstablishmentService mockUkEstablishmentService;
-
-    @Mock
-    private RecentFilingHistoryService mockRecentFilingHistoryService;
-
-    @Mock
-    private RegistersService mockRegistersService;
-
-    @Mock
-    private InsolvencyService mockInsolvencyService;
-
-    @Mock
-    private ChargesService mockChargesService;
+    private CompanyReportDataManager mockCompanyReportDataManager;
 
 
     @InjectMocks
@@ -104,29 +81,9 @@ public class CompanyReportDataManagerHandlerTest {
     @Test
     @DisplayName("Test get company report successful")
     void testGetDocumentInfoSuccessful() throws Exception {
-        CompanyProfileApi companyProfileApi = createCompanyProfile();
-        PscsApi pscsApi = createPscsApi();
-        OfficersApi officersApi = createOfficers();
-        UkEstablishmentsApi ukEstablishmentsApi = createUkEstablishment();
-        FilingHistoryApi filingHistoryApi = createFilingHistory();
-        StatementsApi statementsApi = createStatementsApi();
-        CompanyRegistersApi companyRegistersApi = createCompanyRegisters();
-        InsolvencyApi insolvencyApi = createInsolvencyApi();
-        ChargesApi chargesApi = createChargesApi();
 
-        CompanyReportApiData companyReportApiData = new CompanyReportApiData();
-        companyReportApiData.setCompanyProfileApi(companyProfileApi);
-
-        when(mockCompanyService.getCompanyProfile(any(String.class))).thenReturn(companyProfileApi);
-        when(mockPscService.getPscs(any(String.class))).thenReturn(pscsApi);
-        when(mockOfficerService.getOfficers(any(String.class))).thenReturn(officersApi);
-        when(mockUkEstablishmentService.getUkEstablishments(any(String.class))).thenReturn(ukEstablishmentsApi);
-        when(mockRecentFilingHistoryService.getFilingHistory(any(String.class))).thenReturn(filingHistoryApi);
-        when(mockCompanyReportMapper.mapCompanyReport(any(CompanyReportApiData.class), anyString(), anyString())).thenReturn(new CompanyReport());
-        when(mockStatementsService.getStatements(any(String.class))).thenReturn(statementsApi);
-        when(mockRegistersService.getCompanyRegisters(any(String.class))).thenReturn(companyRegistersApi);
-        when(mockInsolvencyService.getInsolvency(anyString())).thenReturn(insolvencyApi);
-        when(mockChargesService.getCharges(any(String.class))).thenReturn(chargesApi);
+        when(mockCompanyReportMapper.mapCompanyReport(any(CompanyReportApiData.class), any(RequestParameters.class))).thenReturn(new CompanyReport());
+        when(mockCompanyReportDataManager.getCompanyReportData(any(RequestParameters.class))).thenReturn(createCompanyReportApiData());
 
         DocumentInfoResponse documentInfoResponse = companyReportDataHandler.getCompanyReport(RESOURCE_URI, REQUEST_ID);
 
@@ -153,11 +110,20 @@ public class CompanyReportDataManagerHandlerTest {
         assertEquals("112234554",result);
     }
 
-    private PscsApi createPscsApi() {
-        PscsApi pscsApi = new PscsApi();
-        pscsApi.setActiveCount(1L);
+    private CompanyReportApiData createCompanyReportApiData() {
 
-        return pscsApi;
+        CompanyReportApiData companyReportApiData = new CompanyReportApiData();
+        companyReportApiData.setCompanyProfileApi(createCompanyProfile());
+        companyReportApiData.setPscsApi(createPscsApi());
+        companyReportApiData.setOfficersApi(createOfficers());
+        companyReportApiData.setUkEstablishmentsApi(createUkEstablishment());
+        companyReportApiData.setFilingHistoryApi(createFilingHistory());
+        companyReportApiData.setStatementsApi(createStatementsApi());
+        companyReportApiData.setCompanyRegistersApi(createCompanyRegisters());
+        companyReportApiData.setInsolvencyApi(createInsolvencyApi());
+        companyReportApiData.setChargesApi(createChargesApi());
+
+        return companyReportApiData;
     }
 
     private CompanyProfileApi createCompanyProfile() {
@@ -180,6 +146,13 @@ public class CompanyReportDataManagerHandlerTest {
         companyProfileApi.setLinks(links);
 
         return companyProfileApi;
+    }
+
+    private PscsApi createPscsApi() {
+        PscsApi pscsApi = new PscsApi();
+        pscsApi.setActiveCount(1L);
+
+        return pscsApi;
     }
 
     private OfficersApi createOfficers() {

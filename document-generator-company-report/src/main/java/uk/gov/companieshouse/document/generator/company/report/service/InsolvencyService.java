@@ -31,7 +31,7 @@ public class InsolvencyService {
         String uri = GET_INSOLVENCY_URI.expand(companyNumber).toString();
 
         try {
-            insolvencyApi =  apiClient.insolvency().get(uri).execute().getData();
+            insolvencyApi = apiClient.insolvency().get(uri).execute().getData();
         } catch (ApiErrorResponseException e) {
 
             throw new ServiceException("Error retrieving insolvency", e);

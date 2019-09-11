@@ -49,23 +49,23 @@ public abstract class ApiToParticularsMapper {
 
             Map<String, String> extraParticularStatements = new HashMap<>();
 
-            if(particularsApi.isChargorActingAsBareTrustee() == true) {
+            if(particularsApi.isChargorActingAsBareTrustee()) {
                 extraParticularStatements.put(CHARGOR_ACTING, getStatement(CHARGOR_ACTING));
             }
 
-            if(particularsApi.isContainsFixedCharge() == true) {
+            if(particularsApi.isContainsFixedCharge()) {
                 extraParticularStatements.put(CONTAINS_FIXED, getStatement(CONTAINS_FIXED));
             }
 
-            if(particularsApi.isContainsFloatingCharge() == true) {
+            if(particularsApi.isContainsFloatingCharge()) {
                 extraParticularStatements.put(CONTAINS_FLOATING, getStatement(CONTAINS_FLOATING));
             }
 
-            if(particularsApi.isContainsNegativePledge() == true) {
+            if(particularsApi.isContainsNegativePledge()) {
                 extraParticularStatements.put(CONTAINS_NEGATIVE, getStatement(CONTAINS_NEGATIVE));
             }
 
-            if(particularsApi.isFloatingChargeCoversAll() == true) {
+            if(particularsApi.isFloatingChargeCoversAll()) {
                 extraParticularStatements.put(FLOATING_CHARGE, getStatement(FLOATING_CHARGE));
             }
 

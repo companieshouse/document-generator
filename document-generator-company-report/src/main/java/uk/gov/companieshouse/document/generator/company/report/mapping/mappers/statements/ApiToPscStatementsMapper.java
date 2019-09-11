@@ -15,6 +15,6 @@ public interface ApiToPscStatementsMapper {
             @Mapping(source = "activeCount", target = "activeStatements"),
             @Mapping(source = "ceasedCount", target = "ceasedStatements"),
     })
-    Statements ApiToStatementsMapper(StatementsApi statementsApi);
+    Statements apiToStatementsMapper(StatementsApi statementsApi);
 }
 

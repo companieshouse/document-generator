@@ -29,7 +29,7 @@ public class CompanyReportDataHandler {
     private CompanyReportDataManager companyReportDataManager;
 
     public CompanyReportDataHandler(CompanyReportMapper companyReportMapper,
-                                    CompanyReportDataManager companyReportDataManager) {
+        CompanyReportDataManager companyReportDataManager) {
 
         this.companyReportMapper = companyReportMapper;
         this.companyReportDataManager = companyReportDataManager;
@@ -41,24 +41,23 @@ public class CompanyReportDataHandler {
     public DocumentInfoResponse getCompanyReport(String resourceUri, String requestId)
         throws HandlerException {
 
-        String companyNumber = getCompanyNumberFromUri(resourceUri);
+        RequestParameters requestParameters = setRequestParameters(resourceUri, requestId);
 
-        ZonedDateTime timeStamp = ZonedDateTime.now();
-
-        LOG.infoContext(requestId, "Getting data for report for company number: " + companyNumber, getDebugMap(companyNumber));
-        return createDocumentInfoResponse(companyNumber, requestId, timeStamp);
+        LOG.infoContext(requestId, "Getting data for report for company number: "
+            + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
+        return createDocumentInfoResponse(requestParameters, ZonedDateTime.now());
     }
 
-    private DocumentInfoResponse createDocumentInfoResponse(String companyNumber,
-        String requestId, ZonedDateTime timeStamp) throws HandlerException {
+    private DocumentInfoResponse createDocumentInfoResponse(RequestParameters requestParameters,
+        ZonedDateTime timeStamp) throws HandlerException {
 
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
 
-        CompanyReportApiData companyReportApiData = getCompanyReportData(companyNumber, requestId);
+        CompanyReportApiData companyReportApiData = getCompanyReportData(requestParameters);
 
         documentInfoResponse.setData(toJson(companyReportMapper
-            .mapCompanyReport(companyReportApiData,requestId, companyNumber),
-            companyNumber, requestId, timeStamp));
+                .mapCompanyReport(companyReportApiData, requestParameters),
+            requestParameters, timeStamp));
 
         documentInfoResponse.setAssetId("company-report");
         documentInfoResponse.setPath(createPathString());
@@ -67,18 +66,20 @@ public class CompanyReportDataHandler {
         return documentInfoResponse;
     }
 
-    private CompanyReportApiData getCompanyReportData(String companyNumber, String requestId) throws HandlerException {
+    private CompanyReportApiData getCompanyReportData(
+        RequestParameters requestParameters) throws HandlerException {
 
         try {
-            return companyReportDataManager.getCompanyReportData(companyNumber, requestId);
+            return companyReportDataManager.getCompanyReportData(requestParameters);
         } catch (ApiDataException ae) {
-            throw new HandlerException("An error occurred whilst obtaining the company report data for company: " + companyNumber, ae);
+            throw new HandlerException("An error occurred whilst obtaining the company report data for company: "
+                + requestParameters.getCompanyNumber(), ae);
         }
     }
 
 
-    private String toJson(CompanyReport companyReport, String companyNumber,
-        String requestId, ZonedDateTime timeStamp) throws HandlerException {
+    private String toJson(CompanyReport companyReport, RequestParameters requestParameters,
+        ZonedDateTime timeStamp) throws HandlerException {
 
         String reportToJson;
         ObjectMapper mapper = new ObjectMapper();
@@ -86,7 +87,9 @@ public class CompanyReportDataHandler {
         companyReport.setTimeStampCreated(timeStamp.format(DateTimeFormatter.ofPattern("d MMMM uuuu HH:mm:ss")));
 
         try {
-            LOG.infoContext(requestId, "Attempting to convert company report to JSON", getDebugMap(companyNumber));
+            LOG.infoContext(requestParameters.getRequestId(),
+                "Attempting to convert company report to JSON for company: " + requestParameters.getCompanyNumber(),
+                getDebugMap(requestParameters.getResourceUri()));
             reportToJson = mapper.writeValueAsString(companyReport);
         } catch (JsonProcessingException e) {
             throw new HandlerException(
@@ -98,22 +101,32 @@ public class CompanyReportDataHandler {
         return reportToJson;
     }
 
-    private String createPathString () {
+    private RequestParameters setRequestParameters(String resourceUri, String requestId) {
+
+        RequestParameters requestParameters = new RequestParameters();
+        requestParameters.setCompanyNumber(getCompanyNumberFromUri(resourceUri));
+        requestParameters.setRequestId(requestId);
+        requestParameters.setResourceUri(resourceUri);
+
+        return requestParameters;
+    }
+
+    private String createPathString() {
         return String.format("/%s/%s", "company-report", getUniqueFileName());
     }
 
-    private String getUniqueFileName () {
+    private String getUniqueFileName() {
         UUID uuid = UUID.randomUUID();
         return "companyReport" + uuid.toString() + ".html";
     }
 
-    protected String getCompanyNumberFromUri (String resourceUri){
+    protected String getCompanyNumberFromUri(String resourceUri) {
         return resourceUri.replaceAll("^/company-number/", "");
     }
 
-    private Map<String, Object> getDebugMap (String companyNumber){
+    private Map<String, Object> getDebugMap(String resourceUri) {
         Map<String, Object> logMap = new HashMap<>();
-        logMap.put("COMPANY_NUMBER", companyNumber);
+        logMap.put("resource", resourceUri);
 
         return logMap;
     }

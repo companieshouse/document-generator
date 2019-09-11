@@ -81,15 +81,15 @@ public abstract class ApiToRecentFilingHistoryMapper {
 
     private void formatDateParameters(Map<String, Object> parameters) {
 
-        for (String parameterKey : parameters.keySet()) {
-            if (parameterKey.equals("date") ||
-                parameterKey.contains("_date") &&
-                parameters.get(parameterKey) != null) {
+        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+            if (entry.getKey().equals("date") ||
+                entry.getKey().contains("_date") &&
+                    parameters.get(entry.getKey()) != null) {
 
-                    LocalDate localDate = LocalDate.parse(parameters.get(parameterKey).toString());
+                LocalDate localDate = LocalDate.parse(parameters.get(entry.getKey()).toString());
 
-                    parameters.replace(parameterKey,
-                        parameters.get(parameterKey), localDate.format(getParamDateFormatter()));
+                parameters.replace(entry.getKey(),
+                    parameters.get(entry.getKey()), localDate.format(getParamDateFormatter()));
             }
         }
     }
