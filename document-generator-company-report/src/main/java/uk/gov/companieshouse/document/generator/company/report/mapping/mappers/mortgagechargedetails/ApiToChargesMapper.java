@@ -26,6 +26,7 @@ public abstract class ApiToChargesMapper {
 
     private static final String MORTGAGE_DESCRIPTIONS = "mortgage_descriptions";
     private static final String ASSETS_CEASED_RELEASED = "assets-ceased-released";
+    private static final String STATUS = "status";
 
     private static final String D_MMMM_UUUU = "d MMMM uuuu";
 
@@ -33,7 +34,8 @@ public abstract class ApiToChargesMapper {
         @Mapping(source = "createdOn", target = "created", dateFormat = D_MMMM_UUUU),
         @Mapping(source = "deliveredOn", target = "delivered", dateFormat = D_MMMM_UUUU),
         @Mapping(source = "satisfiedOn", target = "satisfiedOn", dateFormat = D_MMMM_UUUU),
-        @Mapping(target = "assetsCeasedReleased", ignore = true)
+        @Mapping(target = "assetsCeasedReleased", ignore = true),
+        @Mapping(target = "status", ignore = true)
     })
     public abstract Charge apiToCharge(ChargeApi chargeApi);
 
@@ -57,14 +59,25 @@ public abstract class ApiToChargesMapper {
     }
 
     @AfterMapping
+    protected void setStatus(ChargeApi chargeApi, @MappingTarget Charge charge) {
+
+        if (chargeApi != null && chargeApi.getStatus() != null) {
+            charge.setStatus(convertApiEnumerationValue(STATUS, chargeApi.getStatus()));
+        }
+    }
+
+    @AfterMapping
     protected void setAssetsCeasedReleased(ChargeApi chargeApi, @MappingTarget Charge charge) {
 
         if(chargeApi != null && chargeApi.getAssetsCeasedReleased() != null) {
-            charge.setAssetsCeasedReleased(retrieveApiEnumerationDescription
-                .getApiEnumerationDescription(MORTGAGE_DESCRIPTIONS, ASSETS_CEASED_RELEASED,
-                    chargeApi.getAssetsCeasedReleased().getType(),
-                    getDebugMap(chargeApi.getAssetsCeasedReleased().getType())));
+            charge.setAssetsCeasedReleased(convertApiEnumerationValue(ASSETS_CEASED_RELEASED,
+                chargeApi.getAssetsCeasedReleased().getType()));
         }
+    }
+
+    private String convertApiEnumerationValue(String identifier, String descriptionValue) {
+        return retrieveApiEnumerationDescription.getApiEnumerationDescription(
+            MORTGAGE_DESCRIPTIONS, identifier, descriptionValue, getDebugMap(descriptionValue));
     }
 
     private Map<String, String> getDebugMap(String debugString) {

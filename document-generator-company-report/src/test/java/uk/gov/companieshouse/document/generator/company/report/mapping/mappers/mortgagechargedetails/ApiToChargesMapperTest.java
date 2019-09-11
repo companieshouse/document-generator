@@ -118,7 +118,7 @@ public class ApiToChargesMapperTest {
         } else {
             assertEquals(DESCRIPTION_WITHOUT_ACQUIRED_ON, charges.get(0).getChargeDescription());
         }
-        assertEquals(STATUS, charges.get(0).getStatus());
+        assertEquals(API_ENUMERATION_DESCRIPTION, charges.get(0).getStatus());
         assertEquals(true, charges.get(0).isMoreThanFourPersonsEntitled());
         assertEquals(API_ENUMERATION_DESCRIPTION, charges.get(0).getAssetsCeasedReleased());
     }
