@@ -101,7 +101,7 @@ public class CompanyReportDataManager {
     }
 
     private void setCompanyReportData(CompanyReportApiData companyReportApiData, CompanyProfileApi companyProfileApi,
-       RequestParameters requestParameters) throws ApiDataException {
+       RequestParameters requestParameters) {
 
         companyReportApiData.setCompanyProfileApi(companyProfileApi);
 
@@ -128,7 +128,7 @@ public class CompanyReportDataManager {
     }
 
     private void setOfficersData(CompanyReportApiData companyReportApiData,
-        CompanyProfileApi companyProfileApi, RequestParameters requestParameters) throws ApiDataException {
+        CompanyProfileApi companyProfileApi, RequestParameters requestParameters) {
 
         if(companyProfileApi.getLinks().containsKey(OFFICERS_KEY)) {
 
@@ -137,13 +137,14 @@ public class CompanyReportDataManager {
                     + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
                 companyReportApiData.setOfficersApi(officerService.getOfficers(requestParameters.getCompanyNumber()));
             } catch (ServiceException se) {
-                throw new ApiDataException("error occurred obtaining the company officers data for company: " + requestParameters.getCompanyNumber(), se);
+                LOG.infoContext(requestParameters.getRequestId(), "Failed to get company officer data for company: "
+                    + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
             }
         }
     }
 
     private void setUkEstablishmentsData(CompanyReportApiData companyReportApiData,
-        CompanyProfileApi companyProfileApi, RequestParameters requestParameters) throws ApiDataException {
+        CompanyProfileApi companyProfileApi, RequestParameters requestParameters) {
 
         if(companyProfileApi.getLinks().containsKey(UK_ESTABLISHMENTS)) {
 
@@ -153,13 +154,14 @@ public class CompanyReportDataManager {
                 companyReportApiData.setUkEstablishmentsApi(ukEstablishmentService
                     .getUkEstablishments(requestParameters.getCompanyNumber()));
             } catch (ServiceException se) {
-                throw new ApiDataException("error occurred obtaining uk establishments data for company: " + requestParameters.getCompanyNumber(), se);
+                LOG.infoContext(requestParameters.getRequestId(), "Failed to get uk establishment data for company: "
+                    + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
             }
         }
     }
 
     private void setFilingHistoryData(CompanyReportApiData companyReportApiData,
-        CompanyProfileApi companyProfileApi, RequestParameters requestParameters) throws ApiDataException {
+        CompanyProfileApi companyProfileApi, RequestParameters requestParameters) {
 
         if(companyProfileApi.getLinks().containsKey(FILING_HISTORY_KEY)) {
 
@@ -169,7 +171,8 @@ public class CompanyReportDataManager {
                 companyReportApiData.setFilingHistoryApi(sortFilingHistory(
                     recentFilingHistoryService.getFilingHistory(requestParameters.getCompanyNumber())));
             } catch (ServiceException se) {
-                throw new ApiDataException("error occurred obtaining the company filing history data for company: " + requestParameters.getCompanyNumber(), se);
+                LOG.infoContext(requestParameters.getRequestId(), "Failed to get company filing history data for company: "
+                    + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
             }
         }
     }
@@ -188,7 +191,7 @@ public class CompanyReportDataManager {
     }
 
     private void setStatementsData(CompanyReportApiData companyReportApiData,
-        CompanyProfileApi companyProfileApi, RequestParameters requestParameters) throws ApiDataException {
+        CompanyProfileApi companyProfileApi, RequestParameters requestParameters) {
 
         if(companyProfileApi.getLinks().containsKey(STATEMENTS_KEY)) {
 
@@ -198,7 +201,8 @@ public class CompanyReportDataManager {
                 companyReportApiData.setStatementsApi(sortStatements(statementsService
                     .getStatements(requestParameters.getCompanyNumber())));
             } catch (ServiceException se) {
-                throw new ApiDataException("error occurred obtaining the company psc statements data for company: " + requestParameters.getCompanyNumber(), se);
+                LOG.infoContext(requestParameters.getRequestId(), "Failed to get company psc statements data for company: "
+                    + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
             }
         }
     }
@@ -218,25 +222,24 @@ public class CompanyReportDataManager {
     }
 
     private void setPscsData(CompanyReportApiData companyReportApiData,
-        CompanyProfileApi companyProfileApi, RequestParameters requestParameters) throws ApiDataException {
+        CompanyProfileApi companyProfileApi, RequestParameters requestParameters) {
 
         if(companyProfileApi.getLinks().containsKey(PSCS_KEY)) {
 
             try {
-                LOG.infoContext(requestParameters.getRequestId(),
-                    "Attempting to retrieve company PSCS data for company: " + requestParameters.getCompanyNumber(),
-                    getDebugMap(requestParameters.getResourceUri()));
+                LOG.infoContext(requestParameters.getRequestId(), "Attempting to retrieve company PSCS data for company: "
+                        + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
                 companyReportApiData.setPscsApi(pscsService.getPscs(requestParameters.getCompanyNumber()));
             } catch (ServiceException se) {
-                throw new ApiDataException("error occurred obtaining the company PSCS data for " +
-                    "company: " + requestParameters.getCompanyNumber(), se);
+                LOG.infoContext(requestParameters.getRequestId(), "Failed to get company PSCS data for company: "
+                    + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
 
             }
         }
     }
 
     private void setInsolvency(CompanyReportApiData companyReportApiData, CompanyProfileApi companyProfileApi,
-        RequestParameters requestParameters) throws ApiDataException {
+        RequestParameters requestParameters) {
 
         if(companyProfileApi.getLinks().containsKey(INSOLVENCY_KEY)) {
 
@@ -246,9 +249,9 @@ public class CompanyReportDataManager {
                     getDebugMap(requestParameters.getResourceUri()));
                 companyReportApiData.setInsolvencyApi(sortInsolvency(insolvencyService.getInsolvency(requestParameters.getCompanyNumber())));
             } catch (ServiceException se) {
-                throw new ApiDataException("error occurred obtaining the company insolvency", se);
+                LOG.infoContext(requestParameters.getRequestId(), "Failed to get company insolvency data for company: "
+                    + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
             }
-
         }
     }
 
@@ -278,7 +281,7 @@ public class CompanyReportDataManager {
     }
 
     private void setCompanyRegisters(CompanyReportApiData companyReportApiData, CompanyProfileApi companyProfileApi,
-        RequestParameters requestParameters) throws ApiDataException {
+        RequestParameters requestParameters) {
 
         if(companyProfileApi.getLinks().containsKey(REGISTERS_KEY)) {
             try {
@@ -287,7 +290,8 @@ public class CompanyReportDataManager {
                     getDebugMap(requestParameters.getResourceUri()));
                 companyReportApiData.setCompanyRegistersApi(sortEachRegistersDates(registersService.getCompanyRegisters(requestParameters.getCompanyNumber())));
             } catch (ServiceException se) {
-                throw new ApiDataException("error occurred obtaining the company registers", se);
+                LOG.infoContext(requestParameters.getRequestId(), "Failed to get company registers data for company: "
+                    + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
             }
         }
     }
@@ -351,7 +355,7 @@ public class CompanyReportDataManager {
     }
 
     private void setCharges(CompanyReportApiData companyReportApiData, CompanyProfileApi companyProfileApi,
-        RequestParameters requestParameters) throws ApiDataException {
+        RequestParameters requestParameters){
 
         if(companyProfileApi.getLinks().containsKey(CHARGES_KEY)) {
 
@@ -361,7 +365,8 @@ public class CompanyReportDataManager {
                     getDebugMap(requestParameters.getResourceUri()));
                 companyReportApiData.setChargesApi(chargesService.getCharges(requestParameters.getCompanyNumber()));
             } catch (ServiceException se) {
-                throw new ApiDataException("error occurred obtaining the company charges", se);
+                LOG.infoContext(requestParameters.getRequestId(), "Failed to get company charges data for company: "
+                    + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
             }
         }
     }

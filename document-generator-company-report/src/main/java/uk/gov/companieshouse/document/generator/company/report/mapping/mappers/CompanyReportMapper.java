@@ -105,20 +105,20 @@ public class CompanyReportMapper {
 
         if(companyProfileApi != null) {
 
-            LOG.infoContext(requestParameters.getRequestId(), "Mapping Data Registration Information for company: "
+            LOG.infoContext(requestParameters.getRequestId(), "mapping data registration information for company: "
                 + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
 
             companyReport.setRegistrationInformation(apiToRegistrationInformationMapper
                 .apiToRegistrationInformation(companyProfileApi));
 
-            LOG.infoContext(requestParameters.getRequestId(), "Mapping Data Key Filing Dates for company: "
+            LOG.infoContext(requestParameters.getRequestId(), "mapping data filing dates for company: "
                 + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
 
             companyReport.setKeyFilingDates(apiToKeyFilingDatesMapper.apiToKeyFilingDates(companyProfileApi));
 
             if(companyProfileApi.getForeignCompanyDetails() != null) {
 
-                LOG.infoContext(requestParameters.getRequestId(), "Mapping Data Foreign Company Details for company: "
+                LOG.infoContext(requestParameters.getRequestId(), "mapping data foreign company details for company: "
                     + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
 
                 companyReport.setForeignCompanyDetails(apiToForeignCompanyDetailsMapper
@@ -132,7 +132,7 @@ public class CompanyReportMapper {
 
         if (companyProfileApi != null && companyProfileApi.getPreviousCompanyNames() != null) {
 
-            LOG.infoContext(requestParameters.getRequestId(), "Mapping Data Previous Company Names for company: "
+            LOG.infoContext(requestParameters.getRequestId(), "mapping data previous company names for company: "
                 + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
 
             companyReport.setPreviousNames(apiToPreviousNamesMapper
@@ -146,7 +146,7 @@ public class CompanyReportMapper {
 
         if(officersApi != null) {
 
-            LOG.infoContext(requestParameters.getRequestId(), "Mapping Data Current Appointments for company: "
+            LOG.infoContext(requestParameters.getRequestId(), "mapping data current appointments for company: "
                 + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
 
             companyReport.setCurrentAppointments( apiToCurrentAppointmentsMapper.apiToCurrentAppointmentsMapper(officersApi));
@@ -158,7 +158,7 @@ public class CompanyReportMapper {
 
         if(filingHistory != null && filingHistory.getItems() != null && !filingHistory.getItems().isEmpty()) {
 
-            LOG.infoContext(requestParameters.getRequestId(), "Mapping Data Filing History for company: "
+            LOG.infoContext(requestParameters.getRequestId(), "mapping data filing history for company: "
                 + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
 
             companyReport.setRecentFilingHistory(apiToRecentFilingHistoryMapper.apiToRecentFilingHistoryMapper(filingHistory.getItems()));
@@ -169,7 +169,7 @@ public class CompanyReportMapper {
 
         if(pscsApi != null) {
 
-            LOG.infoContext(requestParameters.getRequestId(), "Mapping Data PSCS for company: "
+            LOG.infoContext(requestParameters.getRequestId(), "mapping data PSCS for company: "
                 + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
 
             companyReport.setPscs(apiToPscsMapper.apiToPscsMapper(pscsApi));
@@ -181,7 +181,7 @@ public class CompanyReportMapper {
 
         if(statementsApi != null) {
 
-            LOG.infoContext(requestParameters.getRequestId(), "Mapping Data Statements for company: "
+            LOG.infoContext(requestParameters.getRequestId(), "mapping data statements for company: "
                 + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
 
             companyReport.setStatements(apiToPscStatementsMapper.apiToStatementsMapper(statementsApi));
@@ -193,7 +193,7 @@ public class CompanyReportMapper {
 
         if(chargesApi != null) {
 
-            LOG.infoContext(requestParameters.getRequestId(), "Mapping Data Mortgage Charges for company: "
+            LOG.infoContext(requestParameters.getRequestId(), "mapping data mortgage charges for company: "
                 + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
 
             companyReport.setMortgageChargeDetails(apiToMortgageChargeDetailsMapper
@@ -206,7 +206,7 @@ public class CompanyReportMapper {
 
         if (insolvencyApi != null) {
 
-            LOG.infoContext(requestParameters.getRequestId(), "Mapping Data Mortgage Charges for company: "
+            LOG.infoContext(requestParameters.getRequestId(), "mapping data mortgage charges for company: "
                 + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
 
             companyReport.setInsolvency(apiToInsolvencyMapper.apiToInsolvencyMapper(insolvencyApi));
@@ -219,7 +219,7 @@ public class CompanyReportMapper {
         if(ukEstablishmentsApi != null && ukEstablishmentsApi.getItems() != null
             && !ukEstablishmentsApi.getItems().isEmpty()) {
 
-            LOG.infoContext(requestParameters.getRequestId(), "Mapping Data UKEstablishments for company: "
+            LOG.infoContext(requestParameters.getRequestId(), "mapping data UKEstablishments for company: "
                 + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
 
             companyReport.setUkEstablishment(apiToUkEstablishmentMapper
@@ -232,7 +232,7 @@ public class CompanyReportMapper {
 
         if(companyRegistersApi != null && companyRegistersApi.getRegisters() != null) {
 
-            LOG.infoContext(requestParameters.getRequestId(), "Mapping Data Company Registers for company: "
+            LOG.infoContext(requestParameters.getRequestId(), "mapping data company registers for company: "
                 + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
 
             companyReport.setCompanyRegisters(apiToRegistersMapper
