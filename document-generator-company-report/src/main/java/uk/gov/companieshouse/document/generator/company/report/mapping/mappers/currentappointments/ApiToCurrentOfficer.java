@@ -33,6 +33,8 @@ public abstract class ApiToCurrentOfficer {
     private static final String CONSTANTS = "CONSTANTS";
     private static final String D_MMMM_UUUU = "d MMMM uuuu";
 
+    private static final String ENUMERATION_MAPPING = "enumeration mapping";
+
     @Mappings({
             @Mapping(source = "appointedOn", target = "appointed"),
             @Mapping(source = "countryOfResidence", target = "countryOfResidence")
@@ -114,7 +116,7 @@ public abstract class ApiToCurrentOfficer {
     private Map<String, String> getDebugMap(String debugString) {
 
         Map<String, String> debugMap = new HashMap<>();
-        debugMap.put("Enumeration mapping :", debugString);
+        debugMap.put(ENUMERATION_MAPPING, debugString);
 
         return debugMap;
     }

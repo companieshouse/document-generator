@@ -28,6 +28,8 @@ public abstract class ApiToParticularsMapper {
     private static final String CONTAINS_NEGATIVE = "contains_negative_pledge";
     private static final String FLOATING_CHARGE = "floating_charge_covers_all";
 
+    private static final String ENUMERATION_MAPPING = "enumeration mapping";
+
 
     public abstract Particulars apiToParticularsMapper(ParticularsApi particularsApi);
 
@@ -83,7 +85,7 @@ public abstract class ApiToParticularsMapper {
     private Map<String, String> getDebugMap(String debugString) {
 
         Map<String, String> debugMap = new HashMap<>();
-        debugMap.put("Enumeration mapping :", debugString);
+        debugMap.put(ENUMERATION_MAPPING, debugString);
 
         return debugMap;
     }

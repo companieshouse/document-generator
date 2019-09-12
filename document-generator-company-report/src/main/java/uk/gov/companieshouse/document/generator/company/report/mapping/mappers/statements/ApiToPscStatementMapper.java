@@ -32,6 +32,8 @@ public abstract class ApiToPscStatementMapper {
     private static final String IDENTIFIER = "statement_description";
     private static final String D_MMMM_UUUU = "d MMMM uuuu";
 
+    private static final String ENUMERATION_MAPPING = "enumeration mapping";
+
     @Mappings({
             @Mapping(target = "statement", ignore = true),
             @Mapping(target = "notifiedOn", ignore = true),
@@ -72,7 +74,7 @@ public abstract class ApiToPscStatementMapper {
     private Map<String, String> getDebugMap(String debugString) {
 
         Map<String, String> debugMap = new HashMap<>();
-        debugMap.put("Enumeration mapping :", debugString);
+        debugMap.put(ENUMERATION_MAPPING, debugString);
 
         return debugMap;
     }

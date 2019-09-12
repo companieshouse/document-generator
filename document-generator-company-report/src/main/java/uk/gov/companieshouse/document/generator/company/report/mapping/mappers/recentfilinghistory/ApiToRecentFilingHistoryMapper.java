@@ -29,6 +29,8 @@ public abstract class ApiToRecentFilingHistoryMapper {
     private static final String D_MMMM_UUU = "d MMM uuu";
     private static final String D_MMMMM_UUU = "d MMMM uuu";
 
+    private static final String ENUMERATION_MAPPING = "enumeration mapping";
+
     @Mappings({
             @Mapping(source = "type", target = "form")
     })
@@ -109,7 +111,7 @@ public abstract class ApiToRecentFilingHistoryMapper {
     private Map<String, String> getDebugMap(String debugString) {
 
         Map<String, String> debugMap = new HashMap<>();
-        debugMap.put("Enumeration mapping :", debugString);
+        debugMap.put(ENUMERATION_MAPPING, debugString);
 
         return debugMap;
     }

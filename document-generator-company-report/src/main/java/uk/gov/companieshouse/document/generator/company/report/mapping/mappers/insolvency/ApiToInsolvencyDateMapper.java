@@ -25,7 +25,7 @@ public abstract class ApiToInsolvencyDateMapper {
 
     private static final String CONSTANTS = "constants";
     private static final String INSOLVENCY_CASE_DATE_TYPE = "insolvency_case_date_type";
-    private static final String ENUMERATION_MAPPING = "Enumeration mapping :";
+    private static final String ENUMERATION_MAPPING = "enumeration mapping";
 
     private static final String D_MMMM_UUUU = "d MMMM uuuu";
 

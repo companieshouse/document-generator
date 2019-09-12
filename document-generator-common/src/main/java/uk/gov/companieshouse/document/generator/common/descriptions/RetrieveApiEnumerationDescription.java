@@ -16,6 +16,8 @@ public class RetrieveApiEnumerationDescription {
 
     private static final String REQUEST_ID = "request_id";
 
+    private static final String ENUMERATION_MAPPING = "enumeration mapping";
+
     public static final String DESCRIPTIONS_MODULE_NAME_SPACE = "document-generator-commons-descriptions";
 
     private static final Logger LOG = LoggerFactory.getLogger(DESCRIPTIONS_MODULE_NAME_SPACE);
@@ -67,7 +69,12 @@ public class RetrieveApiEnumerationDescription {
     private Map<String, Object> setDebugMap(Map<String, String> requestParameters) {
 
         Map <String, Object> debugMap = new HashMap<>();
-        debugMap.put(RESOURCE_URI, requestParameters.get(RESOURCE_URI));
+        if(requestParameters.containsKey(RESOURCE_URI)) {
+            debugMap.put(RESOURCE_URI, requestParameters.get(RESOURCE_URI));
+            // Temporary solution as need to think about the information stored here, as we
+            // cannot obtain the resource id/company number during the mapstruct phase.
+        } else if (requestParameters.containsKey(ENUMERATION_MAPPING))
+            debugMap.put(ENUMERATION_MAPPING, requestParameters.get(ENUMERATION_MAPPING));
 
         return debugMap;
     }
