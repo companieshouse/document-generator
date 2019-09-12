@@ -7,6 +7,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.companieshouse.api.model.charges.ChargeApi;
+import uk.gov.companieshouse.api.model.charges.ChargesApi;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
@@ -26,6 +28,7 @@ import uk.gov.companieshouse.api.model.ukestablishments.UkEstablishmentsItemsApi
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.CompanyReportMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
+import uk.gov.companieshouse.document.generator.company.report.service.ChargesService;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
 import uk.gov.companieshouse.document.generator.company.report.service.InsolvencyService;
 import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
@@ -82,6 +85,10 @@ public class CompanyReportDataHandlerTest {
     @Mock
     private InsolvencyService mockInsolvencyService;
 
+    @Mock
+    private ChargesService mockChargesService;
+
+
     @InjectMocks
     private CompanyReportDataHandler companyReportDataHandler;
 
@@ -105,6 +112,7 @@ public class CompanyReportDataHandlerTest {
         StatementsApi statementsApi = createStatementsApi();
         CompanyRegistersApi companyRegistersApi = createCompanyRegisters();
         InsolvencyApi insolvencyApi = createInsolvencyApi();
+        ChargesApi chargesApi = createChargesApi();
 
         CompanyReportApiData companyReportApiData = new CompanyReportApiData();
         companyReportApiData.setCompanyProfileApi(companyProfileApi);
@@ -118,6 +126,7 @@ public class CompanyReportDataHandlerTest {
         when(mockStatementsService.getStatements(any(String.class))).thenReturn(statementsApi);
         when(mockRegistersService.getCompanyRegisters(any(String.class))).thenReturn(companyRegistersApi);
         when(mockInsolvencyService.getInsolvency(anyString())).thenReturn(insolvencyApi);
+        when(mockChargesService.getCharges(any(String.class))).thenReturn(chargesApi);
 
         DocumentInfoResponse documentInfoResponse = companyReportDataHandler.getCompanyReport(RESOURCE_URI, REQUEST_ID);
 
@@ -166,6 +175,7 @@ public class CompanyReportDataHandlerTest {
         links.put("persons_with_significant_control_statements", "/persons_with_significant_control_statements");
         links.put("registers", "/registers");
         links.put("insolvency", "/insolvency");
+        links.put("charges", "/charges");
 
         companyProfileApi.setLinks(links);
 
@@ -267,5 +277,21 @@ public class CompanyReportDataHandlerTest {
         insolvencyApi.setCases(caseApiList);
 
         return insolvencyApi;
+    }
+
+    private ChargesApi createChargesApi() {
+
+        ChargesApi chargesApi = new ChargesApi();
+
+        chargesApi.setTotalCount(1L);
+        chargesApi.setSatisfiedCount(1L);
+        chargesApi.setPartSatisfiedCount(1L);
+
+        List<ChargeApi> items = new ArrayList<>();
+        ChargeApi chargeApi = new ChargeApi();
+        chargeApi.setStatus("status");
+        chargesApi.setItems(items);
+
+        return chargesApi;
     }
 }
