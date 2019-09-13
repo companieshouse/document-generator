@@ -19,7 +19,9 @@ import java.util.List;
 import java.util.Map;
 
 @RequestScope
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {ApiToResolutions.class, ApiToAnnotations.class,
+                                            ApiToAssociatedFilings.class})
+
 public abstract class ApiToRecentFilingHistoryMapper {
 
     @Autowired
