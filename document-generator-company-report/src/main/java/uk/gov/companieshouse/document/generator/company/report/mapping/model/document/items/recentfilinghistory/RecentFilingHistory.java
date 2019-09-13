@@ -6,7 +6,6 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 
 public class RecentFilingHistory {
 
-
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonProperty("date")
     private String date;
