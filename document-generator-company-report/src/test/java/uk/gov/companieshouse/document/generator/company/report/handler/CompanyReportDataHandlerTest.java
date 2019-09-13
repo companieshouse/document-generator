@@ -1,5 +1,7 @@
 package uk.gov.companieshouse.document.generator.company.report.handler;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -26,18 +28,11 @@ import uk.gov.companieshouse.api.model.statements.StatementsApi;
 import uk.gov.companieshouse.api.model.ukestablishments.UkEstablishmentsApi;
 import uk.gov.companieshouse.api.model.ukestablishments.UkEstablishmentsItemsApi;
 import uk.gov.companieshouse.document.generator.company.report.data.CompanyReportDataManager;
+import uk.gov.companieshouse.document.generator.company.report.exception.ApiDataException;
+import uk.gov.companieshouse.document.generator.company.report.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.CompanyReportMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
-import uk.gov.companieshouse.document.generator.company.report.service.ChargesService;
-import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
-import uk.gov.companieshouse.document.generator.company.report.service.InsolvencyService;
-import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
-import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
-import uk.gov.companieshouse.document.generator.company.report.service.RecentFilingHistoryService;
-import uk.gov.companieshouse.document.generator.company.report.service.RegistersService;
-import uk.gov.companieshouse.document.generator.company.report.service.StatementsService;
-import uk.gov.companieshouse.document.generator.company.report.service.UkEstablishmentService;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 
 import java.time.LocalDate;
@@ -48,13 +43,13 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class CompanyReportDataManagerHandlerTest {
+public class CompanyReportDataHandlerTest {
 
     @Mock
     private CompanyReport mockCompanyReport;
@@ -64,7 +59,6 @@ public class CompanyReportDataManagerHandlerTest {
 
     @Mock
     private CompanyReportDataManager mockCompanyReportDataManager;
-
 
     @InjectMocks
     private CompanyReportDataHandler companyReportDataHandler;
@@ -79,8 +73,18 @@ public class CompanyReportDataManagerHandlerTest {
     private static final String FORM_TYPE = "form type";
 
     @Test
+    @DisplayName("Test Exception thrown when company report data manager throws ApiDataException")
+    void testWhenApiDataExceptionThrown() throws ApiDataException {
+
+        when(mockCompanyReportDataManager.getCompanyReportData(any(RequestParameters.class))).thenThrow(ApiDataException.class);
+
+        assertThrows(HandlerException.class,
+            () -> companyReportDataHandler.getCompanyReport(RESOURCE_URI, RESOURCE_URI));
+    }
+
+    @Test
     @DisplayName("Test get company report successful")
-    void testGetDocumentInfoSuccessful() throws Exception {
+    void testGetDocumentInfoSuccessful() throws ApiDataException, HandlerException {
 
         when(mockCompanyReportMapper.mapCompanyReport(any(CompanyReportApiData.class), any(RequestParameters.class))).thenReturn(new CompanyReport());
         when(mockCompanyReportDataManager.getCompanyReportData(any(RequestParameters.class))).thenReturn(createCompanyReportApiData());
@@ -88,8 +92,6 @@ public class CompanyReportDataManagerHandlerTest {
         DocumentInfoResponse documentInfoResponse = companyReportDataHandler.getCompanyReport(RESOURCE_URI, REQUEST_ID);
 
         assertNotNull(documentInfoResponse);
-
-        //TODO - This test needs to be revisited when we have access to the mappers/companyreport
     }
 
     @Test
