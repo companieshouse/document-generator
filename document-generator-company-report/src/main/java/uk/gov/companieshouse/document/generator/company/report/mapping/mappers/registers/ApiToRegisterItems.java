@@ -23,7 +23,7 @@ public abstract class ApiToRegisterItems {
     private RetrieveApiEnumerationDescription retrieveApiEnumerationDescription;
 
     private static final String REGISTERS_DESCRIPTION ="CONSTANTS";
-    private static final String ENUMERATION_MAPPING = "Enumeration mapping :";
+    private static final String ENUMERATION_MAPPING = "enumeration mapping";
     private static final String D_MMMM_UUUU = "d MMMM uuuu";
 
     public abstract RegisterItems apiToRegister(RegisterItemsApi registerItemsApi);
@@ -39,11 +39,9 @@ public abstract class ApiToRegisterItems {
 
     private String setRegistersDescription(String description) {
 
-        String registersDescription = retrieveApiEnumerationDescription.
+        return retrieveApiEnumerationDescription.
             getApiEnumerationDescription(REGISTERS_DESCRIPTION, "register_locations",
                 description, getDebugMap(description));
-
-            return registersDescription;
     }
 
     @AfterMapping

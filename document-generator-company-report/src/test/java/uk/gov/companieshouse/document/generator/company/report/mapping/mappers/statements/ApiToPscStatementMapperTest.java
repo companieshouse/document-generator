@@ -45,7 +45,7 @@ public class ApiToPscStatementMapperTest {
         when(mockRetrieveApiEnumerations.getApiEnumerationDescription(anyString(), anyString(),
                 anyString(), any())).thenReturn(MAPPED_VALUE);
 
-        Statement statement = apiToPscStatementMapper.ApiToStatementMapper(statementApi);
+        Statement statement = apiToPscStatementMapper.apiToStatementMapper(statementApi);
 
         assertNotNull(statement);
 
@@ -77,7 +77,7 @@ public class ApiToPscStatementMapperTest {
                 anyString(), any())).thenReturn(MAPPED_VALUE);
 
 
-        List<Statement> statement = apiToPscStatementMapper.ApiToStatementMapper(statementApiList);
+        List<Statement> statement = apiToPscStatementMapper.apiToStatementMapper(statementApiList);
 
         assertNotNull(statement);
         assertEquals(MAPPED_VALUE, statement.get(0).getStatement());

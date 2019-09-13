@@ -9,6 +9,7 @@ import uk.gov.companieshouse.api.http.HttpClient;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.UUID;
+
 import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.environment.impl.EnvironmentReaderImpl;
 

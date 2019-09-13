@@ -30,100 +30,112 @@ public abstract class ApiToKeyFilingDatesMapper {
     protected void convertKeyFilingDates(CompanyProfileApi companyProfileApi,
             @MappingTarget KeyFilingDates keyFilingDates) {
 
-        if (companyProfileApi != null) {
+        if (hasAccounts(companyProfileApi)) {
 
-            if (companyProfileApi.getAccounts() != null) {
+            formatNextMadeUpTo(companyProfileApi, keyFilingDates);
 
-                if(companyProfileApi.getAccounts().getNextMadeUpTo() != null) {
-                    formatNextMadeupTo(companyProfileApi, keyFilingDates);
-                }
+            formatLastAccountsMadeUpTo(companyProfileApi, keyFilingDates);
 
-                if (companyProfileApi.getAccounts().getLastAccounts() != null &&
-                        companyProfileApi.getAccounts().getLastAccounts().getMadeUpTo() != null) {
+            formatNextAccountsDueOn(companyProfileApi, keyFilingDates);
 
-                    formatLastAccountsMadeUpTo(companyProfileApi, keyFilingDates);
-                }
-
-                if (companyProfileApi.getAccounts().getNextAccounts() != null &&
-                        companyProfileApi.getAccounts().getNextAccounts().getDueOn() != null) {
-
-                    formatNextAccountsDueOn(companyProfileApi, keyFilingDates);
-                }
-
-                if (companyProfileApi.getAccounts().getAccountingReferenceDate() != null) {
-
-                    formatAccountingReferenceDate(companyProfileApi, keyFilingDates);
-                }
-            }
-
-            if (companyProfileApi.getConfirmationStatement() != null) {
-
-                if (companyProfileApi.getConfirmationStatement().getLastMadeUpTo() != null) {
-
-                    formatConfirmationStatementLastMadeUpTo(companyProfileApi, keyFilingDates);
-                }
-
-                if (companyProfileApi.getConfirmationStatement().getNextDue() != null) {
-
-                    formatConfirmationStatementNextDue(companyProfileApi, keyFilingDates);
-                }
-            }
-
-            if (companyProfileApi.getLastFullMembersListDate() != null) {
-
-                formatLastMembersList(companyProfileApi, keyFilingDates);
-            }
+            formatAccountingReferenceDate(companyProfileApi, keyFilingDates);
         }
+
+        if (hasConfirmationStatement(companyProfileApi)) {
+
+            formatConfirmationStatementLastMadeUpTo(companyProfileApi, keyFilingDates);
+
+            formatConfirmationStatementNextDue(companyProfileApi, keyFilingDates);
+        }
+
+        formatLastMembersList(companyProfileApi, keyFilingDates);
     }
 
     private void formatLastMembersList(CompanyProfileApi companyProfileApi, @MappingTarget KeyFilingDates keyFilingDates) {
-        LocalDate lastMembersList = companyProfileApi.getLastFullMembersListDate();
-        keyFilingDates.setLastMembersList(lastMembersList.format(getFormatter()));
+
+        if (companyProfileApi.getLastFullMembersListDate() != null) {
+
+            LocalDate lastMembersList = companyProfileApi.getLastFullMembersListDate();
+            keyFilingDates.setLastMembersList(lastMembersList.format(getFormatter()));
+        }
     }
 
     private void formatConfirmationStatementNextDue(CompanyProfileApi companyProfileApi, @MappingTarget KeyFilingDates keyFilingDates) {
-        LocalDate nextConfirmationStatement =
+
+        if (companyProfileApi.getConfirmationStatement().getNextDue() != null) {
+
+            LocalDate nextConfirmationStatement =
                 companyProfileApi.getConfirmationStatement().getNextDue();
-        keyFilingDates.setNextConfirmationStatement(nextConfirmationStatement.format(getFormatter()));
+            keyFilingDates.setNextConfirmationStatement(nextConfirmationStatement.format(getFormatter()));
+        }
     }
 
     private void formatConfirmationStatementLastMadeUpTo(CompanyProfileApi companyProfileApi,
             @MappingTarget KeyFilingDates keyFilingDates) {
-        LocalDate lastConfirmationStatement =
+
+        if (companyProfileApi.getConfirmationStatement().getLastMadeUpTo() != null) {
+
+            LocalDate lastConfirmationStatement =
                 companyProfileApi.getConfirmationStatement().getLastMadeUpTo();
-        keyFilingDates.setLastConfirmationStatement(lastConfirmationStatement.format(getFormatter()));
+            keyFilingDates.setLastConfirmationStatement(lastConfirmationStatement.format(getFormatter()));
+        }
     }
 
     private void formatAccountingReferenceDate(CompanyProfileApi companyProfileApi, @MappingTarget KeyFilingDates keyFilingDates) {
-        DateDayMonthYear accountingReferenceDate = new DateDayMonthYear();
-        String monthString = getNameOfMonth(companyProfileApi);
 
-        accountingReferenceDate.setDay(companyProfileApi.getAccounts().getAccountingReferenceDate().getDay());
-        //Sentence case month string
-        accountingReferenceDate.setMonth(monthString.substring(0,1).toUpperCase()
+        if (companyProfileApi.getAccounts().getAccountingReferenceDate() != null) {
+
+            DateDayMonthYear accountingReferenceDate = new DateDayMonthYear();
+            String monthString = getNameOfMonth(companyProfileApi);
+
+            accountingReferenceDate.setDay(companyProfileApi.getAccounts().getAccountingReferenceDate().getDay());
+            //Sentence case month string
+            accountingReferenceDate.setMonth(monthString.substring(0,1).toUpperCase()
                 + monthString.substring(1).toLowerCase());
 
-        keyFilingDates.setAccountingReferenceDate(accountingReferenceDate);
+            keyFilingDates.setAccountingReferenceDate(accountingReferenceDate);
+        }
     }
 
     private void formatNextAccountsDueOn(CompanyProfileApi companyProfileApi, @MappingTarget KeyFilingDates keyFilingDates) {
-        LocalDate nextAccountsDue = companyProfileApi.getAccounts().getNextAccounts().getDueOn();
-        keyFilingDates.setNextAccountsDue(nextAccountsDue.format(getFormatter()));
+
+        if (companyProfileApi.getAccounts().getNextAccounts() != null &&
+            companyProfileApi.getAccounts().getNextAccounts().getDueOn() != null) {
+
+            LocalDate nextAccountsDue = companyProfileApi.getAccounts().getNextAccounts().getDueOn();
+            keyFilingDates.setNextAccountsDue(nextAccountsDue.format(getFormatter()));
+        }
     }
 
-    private void formatNextMadeupTo(CompanyProfileApi companyProfileApi, @MappingTarget KeyFilingDates keyFilingDates) {
-        LocalDate nextMadeUpTo = companyProfileApi.getAccounts().getNextMadeUpTo();
-        keyFilingDates.setNextMadeUpTo(nextMadeUpTo.format(getFormatter()));
+    private void formatNextMadeUpTo(CompanyProfileApi companyProfileApi, @MappingTarget KeyFilingDates keyFilingDates) {
+
+        if (companyProfileApi.getAccounts().getNextMadeUpTo() != null) {
+            LocalDate nextMadeUpTo = companyProfileApi.getAccounts().getNextMadeUpTo();
+            keyFilingDates.setNextMadeUpTo(nextMadeUpTo.format(getFormatter()));
+        }
     }
 
     private void formatLastAccountsMadeUpTo(CompanyProfileApi companyProfileApi, @MappingTarget KeyFilingDates keyFilingDates) {
-        LocalDate lastAccounts =
+
+        if (companyProfileApi.getAccounts().getLastAccounts() != null &&
+            companyProfileApi.getAccounts().getLastAccounts().getMadeUpTo() != null) {
+
+            LocalDate lastAccounts =
                 companyProfileApi.getAccounts().getLastAccounts().getMadeUpTo();
-        keyFilingDates.setLastAccountsMadeUpTo(lastAccounts.format(getFormatter()));
+            keyFilingDates.setLastAccountsMadeUpTo(lastAccounts.format(getFormatter()));
+        }
     }
 
     private String getNameOfMonth(CompanyProfileApi companyProfileApi) {
         return Month.of(Integer.valueOf(companyProfileApi.getAccounts().getAccountingReferenceDate().getMonth())).name();
+    }
+
+    private Boolean hasAccounts(CompanyProfileApi companyProfileApi) {
+        return companyProfileApi != null && companyProfileApi.getAccounts() != null;
+    }
+
+    private Boolean hasConfirmationStatement(CompanyProfileApi companyProfileApi) {
+        return companyProfileApi != null && companyProfileApi.getConfirmationStatement() != null;
     }
 
     private DateTimeFormatter getFormatter() {

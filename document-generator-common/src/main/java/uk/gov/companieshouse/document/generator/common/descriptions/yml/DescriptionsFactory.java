@@ -19,7 +19,7 @@ import java.util.Map;
 @Component
 public class DescriptionsFactory {
 
-    final static Map<String, Descriptions> map = new HashMap<>();
+    static final Map<String, Descriptions> map = new HashMap<>();
 
     @Autowired
     public DescriptionsFactory(Constants constants,

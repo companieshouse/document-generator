@@ -13,7 +13,8 @@ import uk.gov.companieshouse.document.generator.company.report.exception.Service
 @Service
 public class RegistersService {
 
-    @Autowired CompanyReportApiClientService companyReportApiClientService;
+    @Autowired
+    CompanyReportApiClientService companyReportApiClientService;
 
     private static final UriTemplate GET_REGISTERS_URI =
         new UriTemplate("/company/{companyNumber}/registers");

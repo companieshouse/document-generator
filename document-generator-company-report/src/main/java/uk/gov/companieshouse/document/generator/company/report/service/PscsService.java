@@ -21,7 +21,7 @@ public class PscsService {
     }
 
     private static final UriTemplate GET_PSCS_URI =
-            new UriTemplate("/company/{companyNumber}/persons-with-significant-control");
+        new UriTemplate("/company/{companyNumber}/persons-with-significant-control");
 
     public PscsApi getPscs(String companyNumber) throws ServiceException {
 

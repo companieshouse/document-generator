@@ -31,7 +31,7 @@ public abstract class ApiToRegistrationInformationMapper {
     private static final String COMPANY_SUBTYPE = "company_subtype";
     private static final String SIC_DESCRIPTIONS = "sic_descriptions";
     private static final String REPORT_DATE_FORMAT = "d MMMM uuuu";
-    private static final String ENUMERATION_MAPPING = "Enumeration mapping :";
+    private static final String ENUMERATION_MAPPING = "enumeration mapping";
     private static final String COMPANY_BIRTH_TYPE = "company_birth_type";
 
     @Mappings({

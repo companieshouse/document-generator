@@ -25,7 +25,7 @@ import java.util.Map;
 @Mapper(componentModel = "spring")
 public abstract class ApiToPscMapper {
 
-    private static final String ENUMERATION_MAPPING = "Enumeration mapping :";
+    private static final String ENUMERATION_MAPPING = "enumeration mapping";
     private static final String PSC_DESCRIPTIONS = "PSC_DESCRIPTIONS";
     private static final String IDENTIFIER = "short_description";
     private static final String D_MMMM_UUUU = "d MMMM uuuu";

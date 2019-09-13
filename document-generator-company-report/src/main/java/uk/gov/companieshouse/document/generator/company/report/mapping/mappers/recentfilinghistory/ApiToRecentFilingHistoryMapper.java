@@ -29,6 +29,8 @@ public abstract class ApiToRecentFilingHistoryMapper {
     private static final String D_MMMM_UUU = "d MMM uuu";
     private static final String D_MMMMM_UUU = "d MMMM uuu";
 
+    private static final String ENUMERATION_MAPPING = "enumeration mapping";
+
     @Mappings({
             @Mapping(source = "type", target = "form")
     })
@@ -81,15 +83,15 @@ public abstract class ApiToRecentFilingHistoryMapper {
 
     private void formatDateParameters(Map<String, Object> parameters) {
 
-        for (String parameterKey : parameters.keySet()) {
-            if (parameterKey.equals("date") ||
-                parameterKey.contains("_date") &&
-                parameters.get(parameterKey) != null) {
+        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+            if (entry.getKey().equals("date") ||
+                entry.getKey().contains("_date") &&
+                    parameters.get(entry.getKey()) != null) {
 
-                    LocalDate localDate = LocalDate.parse(parameters.get(parameterKey).toString());
+                LocalDate localDate = LocalDate.parse(parameters.get(entry.getKey()).toString());
 
-                    parameters.replace(parameterKey,
-                        parameters.get(parameterKey), localDate.format(getParamDateFormatter()));
+                parameters.replace(entry.getKey(),
+                    parameters.get(entry.getKey()), localDate.format(getParamDateFormatter()));
             }
         }
     }
@@ -109,7 +111,7 @@ public abstract class ApiToRecentFilingHistoryMapper {
     private Map<String, String> getDebugMap(String debugString) {
 
         Map<String, String> debugMap = new HashMap<>();
-        debugMap.put("Enumeration mapping :", debugString);
+        debugMap.put(ENUMERATION_MAPPING, debugString);
 
         return debugMap;
     }

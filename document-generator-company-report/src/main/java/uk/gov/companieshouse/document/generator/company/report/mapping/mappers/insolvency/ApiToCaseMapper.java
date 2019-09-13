@@ -24,7 +24,7 @@ public abstract class ApiToCaseMapper {
 
     private static final String CONSTANTS = "constants";
     private static final String INSOLVENCY_CASE_TYPE = "insolvency_case_type";
-    private static final String ENUMERATION_MAPPING = "Enumeration mapping :";
+    private static final String ENUMERATION_MAPPING = "enumeration mapping";
 
 
     @Mappings({

@@ -22,6 +22,8 @@ public abstract class ApiToSecuredDetailsMapper {
     private static final String MORTGAGE_DESCRIPTIONS = "mortgage_descriptions";
     private static final String SECURED_DETAILS_DESCRIPTION = "secured-details-description";
 
+    private static final String ENUMERATION_MAPPING = "enumeration mapping";
+
     public abstract SecuredDetails apiToSecuredDetailsMapper(SecuredDetailsApi securedDetailsApi);
 
     @AfterMapping
@@ -38,7 +40,7 @@ public abstract class ApiToSecuredDetailsMapper {
     private Map<String, String> getDebugMap(String debugString) {
 
         Map<String, String> debugMap = new HashMap<>();
-        debugMap.put("Enumeration mapping :", debugString);
+        debugMap.put(ENUMERATION_MAPPING, debugString);
 
         return debugMap;
     }

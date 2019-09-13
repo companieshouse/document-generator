@@ -18,7 +18,7 @@ import java.util.Map;
 public abstract class ApiToRegister {
 
      private static final String REGISTER_TYPE_DESCRIPTION = "CONSTANTS";
-     private static final String ENUMERATION_MAPPING = "Enumeration mapping :";
+     private static final String ENUMERATION_MAPPING = "enumeration mapping";
 
      public abstract Register apiToRegister(RegisterApi registerApi);
 

@@ -28,6 +28,8 @@ public abstract class ApiToParticularsMapper {
     private static final String CONTAINS_NEGATIVE = "contains_negative_pledge";
     private static final String FLOATING_CHARGE = "floating_charge_covers_all";
 
+    private static final String ENUMERATION_MAPPING = "enumeration mapping";
+
 
     public abstract Particulars apiToParticularsMapper(ParticularsApi particularsApi);
 
@@ -49,23 +51,23 @@ public abstract class ApiToParticularsMapper {
 
             Map<String, String> extraParticularStatements = new HashMap<>();
 
-            if(particularsApi.isChargorActingAsBareTrustee() == true) {
+            if(particularsApi.isChargorActingAsBareTrustee()) {
                 extraParticularStatements.put(CHARGOR_ACTING, getStatement(CHARGOR_ACTING));
             }
 
-            if(particularsApi.isContainsFixedCharge() == true) {
+            if(particularsApi.isContainsFixedCharge()) {
                 extraParticularStatements.put(CONTAINS_FIXED, getStatement(CONTAINS_FIXED));
             }
 
-            if(particularsApi.isContainsFloatingCharge() == true) {
+            if(particularsApi.isContainsFloatingCharge()) {
                 extraParticularStatements.put(CONTAINS_FLOATING, getStatement(CONTAINS_FLOATING));
             }
 
-            if(particularsApi.isContainsNegativePledge() == true) {
+            if(particularsApi.isContainsNegativePledge()) {
                 extraParticularStatements.put(CONTAINS_NEGATIVE, getStatement(CONTAINS_NEGATIVE));
             }
 
-            if(particularsApi.isFloatingChargeCoversAll() == true) {
+            if(particularsApi.isFloatingChargeCoversAll()) {
                 extraParticularStatements.put(FLOATING_CHARGE, getStatement(FLOATING_CHARGE));
             }
 
@@ -83,7 +85,7 @@ public abstract class ApiToParticularsMapper {
     private Map<String, String> getDebugMap(String debugString) {
 
         Map<String, String> debugMap = new HashMap<>();
-        debugMap.put("Enumeration mapping :", debugString);
+        debugMap.put(ENUMERATION_MAPPING, debugString);
 
         return debugMap;
     }

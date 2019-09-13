@@ -36,9 +36,9 @@ public class ApiToPscStatementsMapperTest {
 
         List<Statement> statementList = generatestatementsList();
 
-        when(mockApiToStatementMapper.ApiToStatementMapper(statementsApi.getItems())).thenReturn(statementList);
+        when(mockApiToStatementMapper.apiToStatementMapper(statementsApi.getItems())).thenReturn(statementList);
 
-        Statements statements = apiToPscStatementsMapper.ApiToStatementsMapper(statementsApi);
+        Statements statements = apiToPscStatementsMapper.apiToStatementsMapper(statementsApi);
 
         assertNotNull(statements);
         assertEquals(1L, statements.getActiveStatements().longValue());

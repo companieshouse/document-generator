@@ -32,14 +32,16 @@ public abstract class ApiToPscStatementMapper {
     private static final String IDENTIFIER = "statement_description";
     private static final String D_MMMM_UUUU = "d MMMM uuuu";
 
+    private static final String ENUMERATION_MAPPING = "enumeration mapping";
+
     @Mappings({
             @Mapping(target = "statement", ignore = true),
             @Mapping(target = "notifiedOn", ignore = true),
             @Mapping(target = "ceasedOn", ignore = true)
     })
-    public abstract Statement ApiToStatementMapper(StatementApi statementApi);
+    public abstract Statement apiToStatementMapper(StatementApi statementApi);
 
-    public abstract List<Statement> ApiToStatementMapper(List<StatementApi> statementApiList);
+    public abstract List<Statement> apiToStatementMapper(List<StatementApi> statementApiList);
 
     @AfterMapping
     protected void convertStatement(StatementApi statementApi, @MappingTarget Statement statement) {
@@ -72,7 +74,7 @@ public abstract class ApiToPscStatementMapper {
     private Map<String, String> getDebugMap(String debugString) {
 
         Map<String, String> debugMap = new HashMap<>();
-        debugMap.put("Enumeration mapping :", debugString);
+        debugMap.put(ENUMERATION_MAPPING, debugString);
 
         return debugMap;
     }

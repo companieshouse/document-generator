@@ -28,7 +28,7 @@ import java.util.List;
 public class CompanyReport {
 
     @JsonProperty("time_stamp_created")
-    private String TimeStampCreated;
+    private String timeStampCreated;
 
     @JsonProperty("company_registration_information")
     private RegistrationInformation registrationInformation;
@@ -66,13 +66,12 @@ public class CompanyReport {
     @JsonProperty("mortgage_charge_details")
     private MortgageChargeDetails mortgageChargeDetails;
 
-
     public String getTimeStampCreated() {
-        return TimeStampCreated;
+        return timeStampCreated;
     }
 
     public void setTimeStampCreated(String timeStampCreated) {
-        TimeStampCreated = timeStampCreated;
+        this.timeStampCreated = timeStampCreated;
     }
 
     public RegistrationInformation getRegistrationInformation() {
