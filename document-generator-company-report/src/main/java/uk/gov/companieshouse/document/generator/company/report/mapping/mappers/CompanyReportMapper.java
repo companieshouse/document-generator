@@ -200,7 +200,7 @@ public class CompanyReportMapper {
 
         if (insolvencyApi != null) {
 
-            LOG.infoContext(requestParameters.getRequestId(), "mapping data mortgage charges for company: "
+            LOG.infoContext(requestParameters.getRequestId(), "mapping data insolvency for company: "
                 + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
 
             companyReport.setInsolvency(apiToInsolvencyMapper.apiToInsolvencyMapper(insolvencyApi));

@@ -1,6 +1,5 @@
 package uk.gov.companieshouse.document.generator.company.report.exception;
 
-
 /**
  * ApiDataException is a wrapper exception that hides
  * lower level exceptions from the caller and prevents them
