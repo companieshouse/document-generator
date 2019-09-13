@@ -105,6 +105,7 @@ public class CompanyReportDataHandler {
     private static final String CHARGES_KEY = "charges";
     private static final String REGISTERS_KEY = "registers";
     private static final String INSOLVENCY_KEY = "insolvency";
+    private static final String COMPANY_REPORT = "company-report";
 
     public DocumentInfoResponse getCompanyReport(String resourceUri, String requestId)
         throws HandlerException {
@@ -123,9 +124,10 @@ public class CompanyReportDataHandler {
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
 
         documentInfoResponse.setData(getCompanyReportData(companyNumber, requestId, timeStamp));
-        documentInfoResponse.setAssetId("company-report");
+        documentInfoResponse.setAssetId(COMPANY_REPORT);
         documentInfoResponse.setPath(createPathString());
         documentInfoResponse.setTemplateName("company-report.html");
+        documentInfoResponse.setDescriptionIdentifier(COMPANY_REPORT);
 
         return documentInfoResponse;
     }
@@ -496,7 +498,7 @@ public class CompanyReportDataHandler {
     }
 
     private String createPathString() {
-        return String.format("/%s/%s", "company-report", getUniqueFileName());
+        return String.format("/%s/%s", COMPANY_REPORT, getUniqueFileName());
     }
 
     private String getUniqueFileName() {
