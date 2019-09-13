@@ -86,6 +86,7 @@ public class CompanyReportDataHandler {
                                     StatementsService statementsService,
                                     InsolvencyService insolvencyService,
                                     RegistersService registersService,
+                                    ChargesService chargesService,
                                     ExemptionsService exemptionsService) {
 
         this.companyService = companyService;
@@ -98,6 +99,7 @@ public class CompanyReportDataHandler {
         this.insolvencyService = insolvencyService;
         this.chargesService = chargesService;
         this.registersService = registersService;
+        this.chargesService = chargesService;
         this.exemptionsService =exemptionsService;
     }
 
@@ -407,11 +409,10 @@ public class CompanyReportDataHandler {
     private ChargesApi getCharges(String companyNumber, String requestId) throws HandlerException {
 
         try {
-            LOG.infoContext(requestId, "Attempting to retrieve company PSCSs", getDebugMap(companyNumber));
+            LOG.infoContext(requestId, "Attempting to retrieve company charges", getDebugMap(companyNumber));
             return chargesService.getCharges(companyNumber);
         } catch (ServiceException se) {
             throw new HandlerException("error occurred obtaining the company charges", se);
-
         }
     }
 
