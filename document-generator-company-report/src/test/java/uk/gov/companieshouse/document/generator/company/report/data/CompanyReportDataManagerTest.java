@@ -88,8 +88,8 @@ public class CompanyReportDataManagerTest {
     private static final String FORM_TYPE = "form type";
 
     @Test
-    @DisplayName("Test get company report data")
-    void testCompanyReportDataRetrieve() throws ServiceException, ApiDataException {
+    @DisplayName("Test get company report data is successful")
+    void testCompanyReportDataSuccessful() throws ServiceException, ApiDataException {
 
         when(mockCompanyService.getCompanyProfile(anyString())).thenReturn(createCompanyProfileApi());
         when(mockPscsService.getPscs(anyString())).thenReturn(new PscsApi());

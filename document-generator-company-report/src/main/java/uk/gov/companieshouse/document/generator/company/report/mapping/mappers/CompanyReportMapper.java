@@ -86,7 +86,6 @@ public class CompanyReportMapper {
 
         if(companyReportApiData != null) {
             mapCompanyProfileData(companyReport, companyReportApiData.getCompanyProfileApi(), requestParameters);
-            mapPreviousNames(companyReport, companyReportApiData.getCompanyProfileApi(), requestParameters);
             mapCurrentAppointments(companyReport, companyReportApiData.getOfficersApi(), requestParameters);
             mapRecentFilingHistory(companyReport, companyReportApiData.getFilingHistoryApi(), requestParameters);
             mapPscs(companyReport, companyReportApiData.getPscsApi(), requestParameters);
@@ -124,22 +123,17 @@ public class CompanyReportMapper {
                 companyReport.setForeignCompanyDetails(apiToForeignCompanyDetailsMapper
                     .apiToForeignCompanyDetails(companyProfileApi.getForeignCompanyDetails()));
             }
+
+            if (companyProfileApi.getPreviousCompanyNames() != null) {
+
+                LOG.infoContext(requestParameters.getRequestId(), "mapping data previous company names for company: "
+                    + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
+
+                companyReport.setPreviousNames(apiToPreviousNamesMapper
+                    .apiToPreviousNamesMapper(companyProfileApi.getPreviousCompanyNames()));
+            }
         }
     }
-
-    private void mapPreviousNames(CompanyReport companyReport, CompanyProfileApi companyProfileApi,
-        RequestParameters requestParameters) {
-
-        if (companyProfileApi != null && companyProfileApi.getPreviousCompanyNames() != null) {
-
-            LOG.infoContext(requestParameters.getRequestId(), "mapping data previous company names for company: "
-                + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
-
-            companyReport.setPreviousNames(apiToPreviousNamesMapper
-                .apiToPreviousNamesMapper(companyProfileApi.getPreviousCompanyNames()));
-        }
-    }
-
 
     private void mapCurrentAppointments(CompanyReport companyReport, OfficersApi officersApi,
         RequestParameters requestParameters) {
