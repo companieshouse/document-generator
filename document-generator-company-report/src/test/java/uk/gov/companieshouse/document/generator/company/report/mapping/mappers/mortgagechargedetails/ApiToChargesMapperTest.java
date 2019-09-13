@@ -52,8 +52,8 @@ public class ApiToChargesMapperTest {
     @InjectMocks
     private ApiToChargesMapper apiToChargesMapper = new ApiToChargesMapperImpl();
 
-    private static final String DESCRIPTION_WITH_ACQUIRED_ON = "Charge code 00112233";
-    private static final String DESCRIPTION_WITHOUT_ACQUIRED_ON = "classification description";
+    private static final String DESCRIPTION_WITH_ACQUIRED_ON = "classification description";
+    private static final String DESCRIPTION_WITHOUT_ACQUIRED_ON = "Charge code 00112233";
     private static final String STATUS = "status";
     private static final LocalDate DATE = LocalDate.of(2019,01,01);
     private static final String DATE_CONVERTED = "1 January 2019";
@@ -136,11 +136,11 @@ public class ApiToChargesMapperTest {
         chargeApi.setSatisfiedOn(DATE);
         if(acquiredOnRequired == WITH_ACQUIRED_ON) {
             chargeApi.setAcquiredOn(DATE);
-            chargeApi.setChargeCode(CHARGE_CODE);
-        } else {
             ClassificationApi classificationApi = new ClassificationApi();
             classificationApi.setDescription(CLASSIFICATION_DESCRIPTION);
             chargeApi.setClassification(classificationApi);
+        } else {
+            chargeApi.setChargeCode(CHARGE_CODE);
         }
         chargeApi.setAssetsCeasedReleased(AssetsCeasedReleasedApi.PART_PROPERTY_RELEASED);
         chargeApi.setStatus(STATUS);

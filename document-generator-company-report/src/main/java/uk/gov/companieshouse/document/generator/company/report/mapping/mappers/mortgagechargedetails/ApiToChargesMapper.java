@@ -47,7 +47,7 @@ public abstract class ApiToChargesMapper {
     protected void setChargeDescription(ChargeApi chargeApi, @MappingTarget Charge charge) {
 
         if(chargeApi != null) {
-            if(chargeApi.getAcquiredOn() == null) {
+            if(chargeApi.getAcquiredOn() != null || chargeApi.getChargeCode() == null) {
                 charge.setChargeDescription(Optional.of(chargeApi)
                     .map(ChargeApi::getClassification)
                     .map(ClassificationApi::getDescription)
