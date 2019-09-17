@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.CurrentAppointments;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.exemptions.Exemptions;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.ForeignCompanyDetails;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.insolvency.Insolvency;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.keyfilingdates.KeyFilingDates;
@@ -63,9 +64,11 @@ public class CompanyReport {
     @JsonProperty("insolvency")
     private Insolvency insolvency;
 
+    @JsonProperty("exemptions")
+    private Exemptions exemptions;
+
     @JsonProperty("mortgage_charge_details")
     private MortgageChargeDetails mortgageChargeDetails;
-
 
     public String getTimeStampCreated() {
         return TimeStampCreated;
@@ -161,6 +164,14 @@ public class CompanyReport {
     public void setInsolvency(
         Insolvency insolvency) {
         this.insolvency = insolvency;
+    }
+
+    public Exemptions getExemptions() {
+        return exemptions;
+    }
+
+    public void setExemptions(Exemptions exemptions) {
+        this.exemptions = exemptions;
     }
 
     public MortgageChargeDetails getMortgageChargeDetails() {

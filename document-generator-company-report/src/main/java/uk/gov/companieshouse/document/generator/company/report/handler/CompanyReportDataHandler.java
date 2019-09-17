@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.api.model.charges.ChargesApi;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
+import uk.gov.companieshouse.api.model.exemptions.CompanyExemptionsApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
 import uk.gov.companieshouse.api.model.insolvency.CaseApi;
@@ -27,6 +28,7 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.Com
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
 import uk.gov.companieshouse.document.generator.company.report.service.ChargesService;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
+import uk.gov.companieshouse.document.generator.company.report.service.ExemptionsService;
 import uk.gov.companieshouse.document.generator.company.report.service.InsolvencyService;
 import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
 import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
@@ -72,17 +74,20 @@ public class CompanyReportDataHandler {
 
     private InsolvencyService insolvencyService;
 
+    private ExemptionsService exemptionsService;
+
     @Autowired
     public CompanyReportDataHandler(CompanyService companyService,
-        PscsService pscsService,
-        OfficerService officerService,
-        UkEstablishmentService ukEstablishmentService,
-        RecentFilingHistoryService recentFilingHistoryService,
-        CompanyReportMapper companyReportMapper,
-        StatementsService statementsService,
-        InsolvencyService insolvencyService,
-        ChargesService chargesService,
-        RegistersService registersService) {
+                                    PscsService pscsService,
+                                    OfficerService officerService,
+                                    UkEstablishmentService ukEstablishmentService,
+                                    RecentFilingHistoryService recentFilingHistoryService,
+                                    CompanyReportMapper companyReportMapper,
+                                    StatementsService statementsService,
+                                    InsolvencyService insolvencyService,
+                                    RegistersService registersService,
+                                    ChargesService chargesService,
+                                    ExemptionsService exemptionsService) {
 
         this.companyService = companyService;
         this.pscsService = pscsService;
@@ -94,6 +99,8 @@ public class CompanyReportDataHandler {
         this.insolvencyService = insolvencyService;
         this.chargesService = chargesService;
         this.registersService = registersService;
+        this.chargesService = chargesService;
+        this.exemptionsService =exemptionsService;
     }
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
@@ -105,6 +112,7 @@ public class CompanyReportDataHandler {
     private static final String CHARGES_KEY = "charges";
     private static final String REGISTERS_KEY = "registers";
     private static final String INSOLVENCY_KEY = "insolvency";
+    private static final String EXEMPTION_KEY = "exemptions";
     private static final String COMPANY_REPORT = "company-report";
 
     public DocumentInfoResponse getCompanyReport(String resourceUri, String requestId)
@@ -168,6 +176,8 @@ public class CompanyReportDataHandler {
         setInsolvency(companyNumber, requestId, companyReportApiData, companyProfileApi);
 
         setRegisters(companyNumber, requestId, companyReportApiData, companyProfileApi);
+
+        setExemptions(companyNumber, requestId, companyReportApiData, companyProfileApi);
     }
 
     private void setFilingHistoryData(String companyNumber, String requestId,
@@ -190,7 +200,9 @@ public class CompanyReportDataHandler {
         CompanyReportApiData companyReportApiData, CompanyProfileApi companyProfileApi) {
         if (companyProfileApi.getLinks().containsKey(PSCS_KEY)) {
             try {
-                companyReportApiData.setPscsApi(getPscs(companyNumber, requestId));
+                PscsApi pscsApi = getPscs(companyNumber, requestId);
+                companyReportApiData.setPscsApi(pscsApi);
+
             } catch (HandlerException he) {
                 LOG.infoContext(requestId, "Failed to get PSCs data for company: "
                     + companyNumber, getDebugMap(companyNumber));
@@ -268,6 +280,18 @@ public class CompanyReportDataHandler {
                 companyReportApiData.setCompanyRegistersApi(companyRegistersApi);
             } catch (HandlerException he) {
                 LOG.infoContext(requestId, "Failed to get company registers: ", getDebugMap(companyNumber));
+            }
+        }
+    }
+
+    private void setExemptions(String companyNumber, String requestId,
+        CompanyReportApiData companyReportApiData, CompanyProfileApi companyProfileApi) {
+        if (companyProfileApi.getLinks().containsKey(EXEMPTION_KEY)) {
+            try {
+                CompanyExemptionsApi companyExemptionsApi = getCompanyExemptions(companyNumber, requestId);
+                companyReportApiData.setCompanyExemptionsApi(companyExemptionsApi);
+            } catch (HandlerException he) {
+                LOG.infoContext(requestId, "Failed to get company exemptions: ", getDebugMap(companyNumber));
             }
         }
     }
@@ -385,11 +409,10 @@ public class CompanyReportDataHandler {
     private ChargesApi getCharges(String companyNumber, String requestId) throws HandlerException {
 
         try {
-            LOG.infoContext(requestId, "Attempting to retrieve company PSCSs", getDebugMap(companyNumber));
+            LOG.infoContext(requestId, "Attempting to retrieve company charges", getDebugMap(companyNumber));
             return chargesService.getCharges(companyNumber);
         } catch (ServiceException se) {
             throw new HandlerException("error occurred obtaining the company charges", se);
-
         }
     }
 
@@ -461,7 +484,6 @@ public class CompanyReportDataHandler {
         return sortedRegisterApi;
     }
 
-
     private InsolvencyApi getInsolvency(String companyNumber,
         String requestId) throws HandlerException {
         try {
@@ -495,6 +517,15 @@ public class CompanyReportDataHandler {
         sortedInsolvencyApi.setCases(sortedCaseApi);
 
         return sortedInsolvencyApi;
+    }
+
+    private CompanyExemptionsApi getCompanyExemptions(String companyNumber, String requestId) throws HandlerException {
+        try {
+            LOG.infoContext(requestId, "Attempting to retrieve company exemptions", getDebugMap(companyNumber));
+            return exemptionsService.getCompanyExemptions(companyNumber);
+        } catch (ServiceException se) {
+            throw new HandlerException("error occurred obtaining the company exemptions", se);
+        }
     }
 
     private String createPathString() {
