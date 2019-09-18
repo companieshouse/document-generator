@@ -1,7 +1,5 @@
 package uk.gov.companieshouse.document.generator.prosecution.service;
 
-import java.io.IOException;
-
 import org.springframework.stereotype.Component;
 
 import uk.gov.companieshouse.api.InternalApiClient;
