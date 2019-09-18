@@ -6,7 +6,7 @@
 
     <groupId>uk.gov.companieshouse</groupId>
     <artifactId>document-generator</artifactId>
-    <version>unversioned</version>
+    <version>6961552</version>
     <packaging>pom</packaging>
     <name>document-generator</name>
     <description>Main Repo holding the sub modules for the generation of documents</description>
@@ -48,7 +48,7 @@
 
         <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
 
-        <api-sdk-java.version>4.1.2</api-sdk-java.version>
+        <api-sdk-java.version>4.1.26</api-sdk-java.version>
 
         <!-- Structured logging -->
         <structured-logging.version>1.4.0-rc2</structured-logging.version>

@@ -75,6 +75,9 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
     private ApiToTangibleAssetsNoteMapper apiToTangibleAssetsNoteMapper;
 
     @Autowired
+    private ApiToIntangibleAssetsNoteMapper apiToIntangibleAssetsNoteMapper;
+
+    @Autowired
     private ApiToFixedAssetsInvestmentsMapper apiToFixedAssetsInvestmentsMapper;
 
     private AccountsDatesHelper accountsDatesHelper = new AccountsDatesHelperImpl();
@@ -305,6 +308,9 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
 
         return netBookValue;
     }
+
+
+  /*INTANGIBLE ASSETS START HERE*/
 
     private CurrentAssetsInvestments mapCurrentAssetsInvestments(CurrentAssetsInvestmentsApi currentAssetsInvestmentsApi) {
         return apiToCurrentAssetsInvestmentsMapper
