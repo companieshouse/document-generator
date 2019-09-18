@@ -9,6 +9,7 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.currentassetsinvestments.CurrentAssetsInvestments;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.Debtors;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.fixedassetsinvestments.FixedAssetsInvestments;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.intangible.IntangibleAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.stocks.StocksNote;
 
@@ -26,6 +27,18 @@ public class BalanceSheetNotes {
 
     @JsonProperty("creditors_after_one_year")
     private CreditorsAfterOneYear creditorsAfterOneYearNote;
+
+    public IntangibleAssets getIntangibleAssets() {
+        return intangibleAssets;
+    }
+
+    public void setIntangibleAssets(IntangibleAssets intangibleAssets) {
+        this.intangibleAssets = intangibleAssets;
+    }
+
+    @JsonProperty("intangible_assets")
+    private IntangibleAssets intangibleAssets;
+
 
     @JsonProperty("tangible_assets")
     private TangibleAssets tangibleAssets;

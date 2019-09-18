@@ -15,6 +15,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear
 import uk.gov.companieshouse.api.model.accounts.smallfull.currentassetsinvestments.CurrentAssetsInvestmentsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.fixedassetsinvestments.FixedAssetsInvestmentsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.employees.EmployeesApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.intangible.IntangibleApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.SmallFullApiData;
@@ -27,6 +28,10 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.Debtors;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.fixedassetsinvestments.FixedAssetsInvestments;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.employees.Employees;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.intangible.IntangibleAssets;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.intangible.IntangibleAssetsAmortisation;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.intangible.IntangibleAssetsCost;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.intangible.IntangibleAssetsNetBookValue;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.AdditionalNotes;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.BalanceSheetNotes;
@@ -118,6 +123,13 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
         BalanceSheetNotes balanceSheetNotes = new BalanceSheetNotes();
         Boolean hasBalanceSheetNotes = false;
 
+        if (smallFullApiData.getIntangibleAssets() != null) {
+
+            balanceSheetNotes.setIntangibleAssets(mapIntangibleAssets(smallFullApiData.getIntangibleAssets()));
+
+            hasBalanceSheetNotes = true;
+        }
+
         if (smallFullApiData.getTangibleAssets() != null) {
 
             balanceSheetNotes.setTangibleAssets(mapTangibleAssets(smallFullApiData.getTangibleAssets()));
@@ -167,6 +179,8 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
             hasBalanceSheetNotes = true;
         }
 
+
+
         //We only want to set the additional notes if we have any
         if (hasAdditionalNotes) {
             smallFullAccountIxbrl.setAdditionalNotes(additionalNotes);
@@ -178,6 +192,64 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
         }
 
         return smallFullAccountIxbrl;
+    }
+
+    private IntangibleAssets mapIntangibleAssets(IntangibleApi intangible) {
+
+        IntangibleAssets intangibleAssets =
+                apiToIntangibleAssetsNoteMapper.apiToIntangibleAssetsNoteAdditionalInformation(intangible);
+
+        intangibleAssets.setCost(mapIntangibleAssetsCost(intangible));
+        intangibleAssets.setAmortisation(mapIntangibleAssetsAmortisation(intangible));
+        intangibleAssets.setNetBookValue(mapIntangibleAssetsNetBookValue(intangible));
+
+        return intangibleAssets;
+    }
+
+    private IntangibleAssetsNetBookValue mapIntangibleAssetsNetBookValue(IntangibleApi intangible) {
+
+        IntangibleAssetsNetBookValue netBookValue = new IntangibleAssetsNetBookValue();
+
+        netBookValue.setCurrentPeriod(apiToIntangibleAssetsNoteMapper
+                .apiToIntangibleAssetsNetBookValueCurrentPeriodMapper(intangible));
+        netBookValue.setPreviousPeriod(apiToIntangibleAssetsNoteMapper
+                .apiToIntangibleAssetsNetBookValuePreviousPeriodMapper(intangible));
+
+        return netBookValue;
+
+    }
+
+    private IntangibleAssetsAmortisation mapIntangibleAssetsAmortisation(IntangibleApi intangible) {
+
+        IntangibleAssetsAmortisation amortisation = new IntangibleAssetsAmortisation();
+
+        amortisation.setAtPeriodEnd(apiToIntangibleAssetsNoteMapper
+                .apiToIntangibleAssetsAmortisationAtPeriodEndMapper(intangible));
+        amortisation.setAtPeriodStart(apiToIntangibleAssetsNoteMapper
+                .apiToIntangibleAssetsAmortisationAtPeriodStartMapper(intangible));
+        amortisation.setChargeForYear(apiToIntangibleAssetsNoteMapper
+                .apiToIntangibleAssetsAmortisationChargeForYearMapper(intangible));
+        amortisation.setOnDisposals(apiToIntangibleAssetsNoteMapper
+                .apiToIntangibleAssetsAmortisationOnDisposalsMapper(intangible));
+        amortisation.setOtherAdjustments(apiToIntangibleAssetsNoteMapper
+                .apiToIntangibleAssetsAmortisationOtherAdjustmentsMapper(intangible));
+
+        return amortisation;
+
+    }
+
+    private IntangibleAssetsCost mapIntangibleAssetsCost(IntangibleApi intangible) {
+
+        IntangibleAssetsCost cost = new IntangibleAssetsCost();
+
+        cost.setAdditions(apiToIntangibleAssetsNoteMapper.apiToIntangibleAssetsCostAdditionsMapper(intangible));
+        cost.setAtPeriodEnd(apiToIntangibleAssetsNoteMapper.apiToIntangibleAssetsCostAtPeriodEndMapper(intangible));
+        cost.setAtPeriodStart(apiToIntangibleAssetsNoteMapper.apiToIntangibleAssetsCostAtPeriodStartMapper(intangible));
+        cost.setDisposals(apiToIntangibleAssetsNoteMapper.apiToIntangibleAssetsCostDisposalsMapper(intangible));
+        cost.setRevaluations(apiToIntangibleAssetsNoteMapper.apiToIntangibleAssetsCostRevaluationsMapper(intangible));
+        cost.setTransfers(apiToIntangibleAssetsNoteMapper.apiToIntangibleAssetsCostTransfersMapper(intangible));
+
+        return cost;
     }
 
     private BalanceSheet setBalanceSheet(CurrentPeriodApi currentPeriod,
