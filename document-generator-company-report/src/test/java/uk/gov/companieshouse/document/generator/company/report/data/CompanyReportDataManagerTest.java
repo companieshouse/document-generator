@@ -27,15 +27,7 @@ import uk.gov.companieshouse.document.generator.company.report.exception.ApiData
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.company.report.handler.RequestParameters;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
-import uk.gov.companieshouse.document.generator.company.report.service.ChargesService;
-import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
-import uk.gov.companieshouse.document.generator.company.report.service.InsolvencyService;
-import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
-import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
-import uk.gov.companieshouse.document.generator.company.report.service.RecentFilingHistoryService;
-import uk.gov.companieshouse.document.generator.company.report.service.RegistersService;
-import uk.gov.companieshouse.document.generator.company.report.service.StatementsService;
-import uk.gov.companieshouse.document.generator.company.report.service.UkEstablishmentService;
+import uk.gov.companieshouse.document.generator.company.report.service.CompanyReportService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -54,31 +46,7 @@ import static org.mockito.Mockito.when;
 public class CompanyReportDataManagerTest {
 
     @Mock
-    private CompanyService mockCompanyService;
-
-    @Mock
-    private PscsService mockPscsService;
-
-    @Mock
-    private OfficerService mockOfficerService;
-
-    @Mock
-    private UkEstablishmentService mockUkEstablishmentService;
-
-    @Mock
-    private RecentFilingHistoryService mockRecentFilingHistoryService;
-
-    @Mock
-    private StatementsService mockStatementsService;
-
-    @Mock
-    private InsolvencyService mockInsolvencyService;
-
-    @Mock
-    private RegistersService mockRegistersService;
-
-    @Mock
-    private ChargesService mockChargesService;
+    private CompanyReportService mockCompanyReportService;
 
     @InjectMocks
     private CompanyReportDataManager companyReportDataManager;
@@ -91,15 +59,15 @@ public class CompanyReportDataManagerTest {
     @DisplayName("Test get company report data is successful")
     void testCompanyReportDataSuccessful() throws ServiceException, ApiDataException {
 
-        when(mockCompanyService.getCompanyProfile(anyString())).thenReturn(createCompanyProfileApi());
-        when(mockPscsService.getPscs(anyString())).thenReturn(new PscsApi());
-        when(mockOfficerService.getOfficers(anyString())).thenReturn(new OfficersApi());
-        when(mockUkEstablishmentService.getUkEstablishments(anyString())).thenReturn(new UkEstablishmentsApi());
-        when(mockRecentFilingHistoryService.getFilingHistory(anyString())).thenReturn(createFilingHistoryApi());
-        when(mockStatementsService.getStatements(anyString())).thenReturn(createStatementsApi());
-        when(mockInsolvencyService.getInsolvency(anyString())).thenReturn(createInsolvencyApi());
-        when(mockRegistersService.getCompanyRegisters(anyString())).thenReturn(createCompanyRegistersApi());
-        when(mockChargesService.getCharges(anyString())).thenReturn(new ChargesApi());
+        when(mockCompanyReportService.getCompanyProfile(anyString())).thenReturn(createCompanyProfileApi());
+        when(mockCompanyReportService.getPscs(anyString())).thenReturn(new PscsApi());
+        when(mockCompanyReportService.getOfficers(anyString())).thenReturn(new OfficersApi());
+        when(mockCompanyReportService.getUkEstablishments(anyString())).thenReturn(new UkEstablishmentsApi());
+        when(mockCompanyReportService.getFilingHistory(anyString())).thenReturn(createFilingHistoryApi());
+        when(mockCompanyReportService.getStatements(anyString())).thenReturn(createStatementsApi());
+        when(mockCompanyReportService.getInsolvency(anyString())).thenReturn(createInsolvencyApi());
+        when(mockCompanyReportService.getCompanyRegisters(anyString())).thenReturn(createCompanyRegistersApi());
+        when(mockCompanyReportService.getCharges(anyString())).thenReturn(new ChargesApi());
 
         CompanyReportApiData companyReportApiData =
             companyReportDataManager.getCompanyReportData(createRequestParameters());
@@ -120,15 +88,15 @@ public class CompanyReportDataManagerTest {
     @DisplayName("Test service exception thrown from all but company profile")
     void testServiceExceptionThrownNotCompanyProfile() throws ServiceException, ApiDataException {
 
-        when(mockCompanyService.getCompanyProfile(anyString())).thenReturn(createCompanyProfileApi());
-        when(mockPscsService.getPscs(anyString())).thenThrow(ServiceException.class);
-        when(mockOfficerService.getOfficers(anyString())).thenThrow(ServiceException.class);
-        when(mockUkEstablishmentService.getUkEstablishments(anyString())).thenThrow(ServiceException.class);
-        when(mockRecentFilingHistoryService.getFilingHistory(anyString())).thenThrow(ServiceException.class);
-        when(mockStatementsService.getStatements(anyString())).thenThrow(ServiceException.class);
-        when(mockInsolvencyService.getInsolvency(anyString())).thenThrow(ServiceException.class);
-        when(mockRegistersService.getCompanyRegisters(anyString())).thenThrow(ServiceException.class);
-        when(mockChargesService.getCharges(anyString())).thenThrow(ServiceException.class);
+        when(mockCompanyReportService.getCompanyProfile(anyString())).thenReturn(createCompanyProfileApi());
+        when(mockCompanyReportService.getPscs(anyString())).thenThrow(ServiceException.class);
+        when(mockCompanyReportService.getOfficers(anyString())).thenThrow(ServiceException.class);
+        when(mockCompanyReportService.getUkEstablishments(anyString())).thenThrow(ServiceException.class);
+        when(mockCompanyReportService.getFilingHistory(anyString())).thenThrow(ServiceException.class);
+        when(mockCompanyReportService.getStatements(anyString())).thenThrow(ServiceException.class);
+        when(mockCompanyReportService.getInsolvency(anyString())).thenThrow(ServiceException.class);
+        when(mockCompanyReportService.getCompanyRegisters(anyString())).thenThrow(ServiceException.class);
+        when(mockCompanyReportService.getCharges(anyString())).thenThrow(ServiceException.class);
 
         CompanyReportApiData companyReportApiData =
             companyReportDataManager.getCompanyReportData(createRequestParameters());
@@ -149,7 +117,7 @@ public class CompanyReportDataManagerTest {
     @DisplayName("Test service exception thrown from company profile")
     void testServiceExceptionThrownFromCompanyProfile() throws ServiceException {
 
-        when(mockCompanyService.getCompanyProfile(anyString())).thenThrow(ServiceException.class);
+        when(mockCompanyReportService.getCompanyProfile(anyString())).thenThrow(ServiceException.class);
 
         assertThrows(ApiDataException.class,
             () -> companyReportDataManager.getCompanyReportData(createRequestParameters()));

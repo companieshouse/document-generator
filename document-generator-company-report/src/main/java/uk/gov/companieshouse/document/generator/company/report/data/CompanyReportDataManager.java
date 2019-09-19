@@ -17,15 +17,7 @@ import uk.gov.companieshouse.document.generator.company.report.exception.ApiData
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
 import uk.gov.companieshouse.document.generator.company.report.handler.RequestParameters;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
-import uk.gov.companieshouse.document.generator.company.report.service.ChargesService;
-import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
-import uk.gov.companieshouse.document.generator.company.report.service.InsolvencyService;
-import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
-import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
-import uk.gov.companieshouse.document.generator.company.report.service.RecentFilingHistoryService;
-import uk.gov.companieshouse.document.generator.company.report.service.RegistersService;
-import uk.gov.companieshouse.document.generator.company.report.service.StatementsService;
-import uk.gov.companieshouse.document.generator.company.report.service.UkEstablishmentService;
+import uk.gov.companieshouse.document.generator.company.report.service.CompanyReportService;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
@@ -40,43 +32,10 @@ import static uk.gov.companieshouse.document.generator.company.report.CompanyRep
 @Component
 public class CompanyReportDataManager {
 
-    private CompanyService companyService;
+    private CompanyReportService companyReportService;
 
-    private PscsService pscsService;
-
-    private OfficerService officerService;
-
-    private UkEstablishmentService ukEstablishmentService;
-
-    private RecentFilingHistoryService recentFilingHistoryService;
-
-    private StatementsService statementsService;
-
-    private InsolvencyService insolvencyService;
-
-    private RegistersService registersService;
-
-    private ChargesService chargesService;
-
-    public CompanyReportDataManager (CompanyService companyService,
-                                     PscsService pscsService,
-                                     OfficerService officerService,
-                                     UkEstablishmentService ukEstablishmentService,
-                                     RecentFilingHistoryService recentFilingHistoryService,
-                                     StatementsService statementsService,
-                                     InsolvencyService insolvencyService,
-                                     RegistersService registersService,
-                                     ChargesService chargesService) {
-
-        this.companyService = companyService;
-        this.pscsService = pscsService;
-        this.officerService = officerService;
-        this.ukEstablishmentService = ukEstablishmentService;
-        this.recentFilingHistoryService = recentFilingHistoryService;
-        this.statementsService = statementsService;
-        this.insolvencyService = insolvencyService;
-        this.registersService = registersService;
-        this.chargesService = chargesService;
+    public CompanyReportDataManager (CompanyReportService companyReportService) {
+        this.companyReportService = companyReportService;
     }
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
@@ -120,7 +79,7 @@ public class CompanyReportDataManager {
         try {
             LOG.infoContext(requestParameters.getRequestId(),"Attempting to retrieve company profile data for company: "
                 + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
-            return companyService.getCompanyProfile(requestParameters.getCompanyNumber());
+            return companyReportService.getCompanyProfile(requestParameters.getCompanyNumber());
         } catch (ServiceException se) {
             throw new ApiDataException("error occurred obtaining the company profile data for company: "
                 + requestParameters.getCompanyNumber(), se);
@@ -135,7 +94,7 @@ public class CompanyReportDataManager {
             try {
                 LOG.infoContext(requestParameters.getRequestId(),"Attempting to retrieve company officers data for company: "
                     + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
-                companyReportApiData.setOfficersApi(officerService.getOfficers(requestParameters.getCompanyNumber()));
+                companyReportApiData.setOfficersApi(companyReportService.getOfficers(requestParameters.getCompanyNumber()));
             } catch (ServiceException se) {
                 LOG.infoContext(requestParameters.getRequestId(), "Failed to get company officer data for company: "
                     + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
@@ -151,7 +110,7 @@ public class CompanyReportDataManager {
             try {
                 LOG.infoContext(requestParameters.getRequestId(), "Attempting to retrieve uk establishment data for company: "
                     + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
-                companyReportApiData.setUkEstablishmentsApi(ukEstablishmentService
+                companyReportApiData.setUkEstablishmentsApi(companyReportService
                     .getUkEstablishments(requestParameters.getCompanyNumber()));
             } catch (ServiceException se) {
                 LOG.infoContext(requestParameters.getRequestId(), "Failed to get uk establishment data for company: "
@@ -169,7 +128,7 @@ public class CompanyReportDataManager {
                 LOG.infoContext(requestParameters.getRequestId(), "Attempting to retrieve company filing history data for company: "
                     + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
                 companyReportApiData.setFilingHistoryApi(sortFilingHistory(
-                    recentFilingHistoryService.getFilingHistory(requestParameters.getCompanyNumber())));
+                    companyReportService.getFilingHistory(requestParameters.getCompanyNumber())));
             } catch (ServiceException se) {
                 LOG.infoContext(requestParameters.getRequestId(), "Failed to get company filing history data for company: "
                     + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
@@ -198,7 +157,7 @@ public class CompanyReportDataManager {
             try {
                 LOG.infoContext(requestParameters.getRequestId(), "Attempting to retrieve company psc statements data for company: "
                     + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
-                companyReportApiData.setStatementsApi(sortStatements(statementsService
+                companyReportApiData.setStatementsApi(sortStatements(companyReportService
                     .getStatements(requestParameters.getCompanyNumber())));
             } catch (ServiceException se) {
                 LOG.infoContext(requestParameters.getRequestId(), "Failed to get company psc statements data for company: "
@@ -229,7 +188,7 @@ public class CompanyReportDataManager {
             try {
                 LOG.infoContext(requestParameters.getRequestId(), "Attempting to retrieve company PSCS data for company: "
                         + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
-                companyReportApiData.setPscsApi(pscsService.getPscs(requestParameters.getCompanyNumber()));
+                companyReportApiData.setPscsApi(companyReportService.getPscs(requestParameters.getCompanyNumber()));
             } catch (ServiceException se) {
                 LOG.infoContext(requestParameters.getRequestId(), "Failed to get company PSCS data for company: "
                     + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
@@ -247,7 +206,7 @@ public class CompanyReportDataManager {
                 LOG.infoContext(requestParameters.getRequestId(),
                     "Attempting to retrieve company insolvency data for company: " + requestParameters.getCompanyNumber(),
                     getDebugMap(requestParameters.getResourceUri()));
-                companyReportApiData.setInsolvencyApi(sortInsolvency(insolvencyService.getInsolvency(requestParameters.getCompanyNumber())));
+                companyReportApiData.setInsolvencyApi(sortInsolvency(companyReportService.getInsolvency(requestParameters.getCompanyNumber())));
             } catch (ServiceException se) {
                 LOG.infoContext(requestParameters.getRequestId(), "Failed to get company insolvency data for company: "
                     + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
@@ -288,7 +247,7 @@ public class CompanyReportDataManager {
                 LOG.infoContext(requestParameters.getRequestId(),
                     "Attempting to retrieve company registers data for company: " + requestParameters.getCompanyNumber(),
                     getDebugMap(requestParameters.getResourceUri()));
-                companyReportApiData.setCompanyRegistersApi(sortEachRegistersDates(registersService.getCompanyRegisters(requestParameters.getCompanyNumber())));
+                companyReportApiData.setCompanyRegistersApi(sortEachRegistersDates(companyReportService.getCompanyRegisters(requestParameters.getCompanyNumber())));
             } catch (ServiceException se) {
                 LOG.infoContext(requestParameters.getRequestId(), "Failed to get company registers data for company: "
                     + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
@@ -363,7 +322,7 @@ public class CompanyReportDataManager {
                 LOG.infoContext(requestParameters.getRequestId(),
                     "Attempting to retrieve company charges data for company: " + requestParameters.getCompanyNumber(),
                     getDebugMap(requestParameters.getResourceUri()));
-                companyReportApiData.setChargesApi(chargesService.getCharges(requestParameters.getCompanyNumber()));
+                companyReportApiData.setChargesApi(companyReportService.getCharges(requestParameters.getCompanyNumber()));
             } catch (ServiceException se) {
                 LOG.infoContext(requestParameters.getRequestId(), "Failed to get company charges data for company: "
                     + requestParameters.getCompanyNumber(), getDebugMap(requestParameters.getResourceUri()));
