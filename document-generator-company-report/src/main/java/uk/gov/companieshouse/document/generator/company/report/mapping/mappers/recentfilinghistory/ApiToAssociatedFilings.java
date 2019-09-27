@@ -24,77 +24,38 @@ public abstract class ApiToAssociatedFilings {
     private RetrieveApiEnumerationDescription retrieveApiEnumerationDescription;
 
     private static final String FILING_HISTORY_DESCRIPTIONS = "FILING_HISTORY_DESCRIPTIONS";
-    private static final String STATEMENT_OF_CAPITAL ="statement-of-capital";
+    private static final String STATEMENT_OF_CAPITAL = "statement-of-capital";
     private static final String YYYY_MM_DD = "yyyy-MM-dd";
 
     public abstract AssociatedFilings apiToAssociatedFilings(AssociatedFilingsApi associatedFilingsApi);
 
     public abstract List<AssociatedFilings> apiToAssociatedFilings(List<AssociatedFilingsApi> associatedFilingsApi);
 
+
     @AfterMapping
     protected void convertAssociatedFilingsDescription(AssociatedFilingsApi associatedFilingsApi,
                                                        @MappingTarget AssociatedFilings associatedFilings){
 
-        associatedFilings.setDescription(setAssociatedFilingsDescription(associatedFilingsApi.getDescription(), associatedFilingsApi.getDescriptionValues()));
+        associatedFilings.setDescription(setAssociatedFilingsDescription(associatedFilingsApi.getDescription(),
+            associatedFilingsApi.getDescriptionValues()));
     }
 
     private String setAssociatedFilingsDescription(String description, Map<String, Object> descriptionValues) {
 
-        Object test =
-        descriptionValues.entrySet().stream()
-            .filter(descriptionsEntrySet -> descriptionsEntrySet.getKey().equals("capital"))
-            .map(Map.Entry::getValue)
-            .findFirst();
+        if (!description.equals(STATEMENT_OF_CAPITAL)) {
+            return descriptionValues.get("description").toString();
+        } else {
 
-        return test.toString();
+        String associatedFilingsDescription = (retrieveApiEnumerationDescription
+            .getApiEnumerationDescription(FILING_HISTORY_DESCRIPTIONS, "description",
+                description, getDebugMap(description))) + "\n" +
+                getStatementOfCapitalDescriptionValues(descriptionValues);
 
-//
-//
-//       return test2.get(1).toString();
-//        if (!description.equals(STATEMENT_OF_CAPITAL)) {
-//
-//            return descriptionValues.get("description").toString();
-//        } else {
-
-//            Object test =  descriptionValues.get("capital");
-//
-//            descriptionValues.entrySet()
-
-//            Map<String, Map<String, String>> map = new HashMap<String, Map<String, String>>();
-//
-//            test = map;
-//
-//            String figure = ((HashMap) test).get("figure").toString();
-
-//            List test2 = new ArrayList();
-//
-//        List<HashMap<String, String>> listofmaps = new ArrayList<HashMap<String, String>>();
-//
-//            for (int i = 0; i < 10; i++) {
-//                HashMap<String, String> mMap = new HashMap<String, String>();
-//                mMap.put((test2.get(i).toString()), (test2.get(i).toString()));
-//                listofmaps.add(mMap);
-//            }
-
-//            ObjectMapper objectMapper = new ObjectMapper();
-//
-//            Map<String, Object> map = objectMapper.convertValue(test2, Map.class);
-//
-//            String currency = map.get("currency").toString();
-//            String figure = map.get("figure").toString();
-//            System.out.println(currency + figure);
-//        }
-
-
-//        String associatedFilingsDescription = (retrieveApiEnumerationDescription
-//            .getApiEnumerationDescription(FILING_HISTORY_DESCRIPTIONS, "description",
-//                description, getDebugMap(description)));
-//
-//        if (descriptionValues != null) {
-//
-//            return populateParameters(associatedFilingsDescription, descriptionValues);
-//        } else
-//            return associatedFilingsDescription;
+        if (descriptionValues != null) {
+            return populateParameters(associatedFilingsDescription, descriptionValues);
+        } else
+            return associatedFilingsDescription;
+        }
     }
 
     private String populateParameters(Object description, Map<String, Object> parameters) {
@@ -103,6 +64,20 @@ public abstract class ApiToAssociatedFilings {
         StrSubstitutor sub = new StrSubstitutor(parameters, "{", "}");
 
         return sub.replace(description);
+    }
+
+    private String getStatementOfCapitalDescriptionValues(Map<String, Object> descriptionValues) {
+
+        List<Map<String, Object>> list = (List) descriptionValues.get("capital");
+        String valueSentence = "";
+
+//        for (Map<String, Object> entry : list) {
+//            for (String key : entry.keySet()) {
+//                Object value = entry.get(key);
+//            }
+            valueSentence = list.get(0).get("currency").toString() + " " + list.get(0).get("figure").toString();
+//        }
+        return valueSentence;
     }
 
     private void formatDateParameters(Map<String, Object> parameters) {

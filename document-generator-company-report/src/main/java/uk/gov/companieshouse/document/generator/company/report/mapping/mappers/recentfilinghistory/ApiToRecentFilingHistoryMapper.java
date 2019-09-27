@@ -48,14 +48,17 @@ public abstract class ApiToRecentFilingHistoryMapper {
 
     private String setFilingDescription(String description, Map<String, Object> descriptionValues) {
 
-        if (description.equals("legacy")) {
-
+        if (description != null && description.equals("legacy") && descriptionValues != null) {
             return descriptionValues.get("description").toString();
         }
 
-        String filingDescription = regexAsteriskRemoved(retrieveApiEnumerationDescription
+        String filingDescription = "";
+
+         if( description != null) {
+            filingDescription = regexAsteriskRemoved(retrieveApiEnumerationDescription
                 .getApiEnumerationDescription(FILING_HISTORY_DESCRIPTIONS, "description",
-                        description, getDebugMap(description)));
+                    description, getDebugMap(description)));
+        }
 
         if (descriptionValues != null) {
 

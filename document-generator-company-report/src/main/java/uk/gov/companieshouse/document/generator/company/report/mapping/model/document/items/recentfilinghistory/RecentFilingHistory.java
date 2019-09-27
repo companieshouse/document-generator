@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.recentfilinghistory;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -8,7 +9,9 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.recentfilinghistory.items.Resolutions;
 
 import java.util.List;
+import java.util.Map;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class RecentFilingHistory {
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
@@ -29,6 +32,9 @@ public class RecentFilingHistory {
 
     @JsonProperty("associated_filings")
     private List<AssociatedFilings> associatedFilings;
+
+    @JsonProperty("description_values")
+    private Map<String, Object> descriptionValues;
 
     public String getDate() {
         return date;
@@ -76,5 +82,13 @@ public class RecentFilingHistory {
 
     public void setAssociatedFilings(List<AssociatedFilings> associatedFilings) {
         this.associatedFilings = associatedFilings;
+    }
+
+    public Map<String, Object> getDescriptionValues() {
+        return descriptionValues;
+    }
+
+    public void setDescriptionValues(Map<String, Object> descriptionValues) {
+        this.descriptionValues = descriptionValues;
     }
 }
