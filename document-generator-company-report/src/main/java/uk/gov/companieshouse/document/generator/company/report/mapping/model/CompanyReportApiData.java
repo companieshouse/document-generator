@@ -1,10 +1,12 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.model;
 
+import uk.gov.companieshouse.api.model.charges.ChargesApi;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
+import uk.gov.companieshouse.api.model.exemptions.CompanyExemptionsApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
 import uk.gov.companieshouse.api.model.insolvency.InsolvencyApi;
-import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
+import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.api.model.registers.CompanyRegistersApi;
 import uk.gov.companieshouse.api.model.statements.StatementsApi;
 import uk.gov.companieshouse.api.model.ukestablishments.UkEstablishmentsApi;
@@ -26,6 +28,10 @@ public class CompanyReportApiData {
     private CompanyRegistersApi companyRegistersApi;
 
     private InsolvencyApi insolvencyApi;
+
+    private CompanyExemptionsApi companyExemptionsApi;
+
+    private ChargesApi chargesApi;
 
     public CompanyProfileApi getCompanyProfileApi() {
         return companyProfileApi;
@@ -89,5 +95,21 @@ public class CompanyReportApiData {
 
     public void setInsolvencyApi(InsolvencyApi insolvencyApi) {
         this.insolvencyApi = insolvencyApi;
+    }
+
+    public CompanyExemptionsApi getCompanyExemptionsApi() {
+        return companyExemptionsApi;
+    }
+
+    public void setCompanyExemptionsApi(CompanyExemptionsApi companyExemptionsApi) {
+        this.companyExemptionsApi = companyExemptionsApi;
+    }
+
+    public ChargesApi getChargesApi() {
+        return chargesApi;
+    }
+
+    public void setChargesApi(ChargesApi chargesApi) {
+        this.chargesApi = chargesApi;
     }
 }

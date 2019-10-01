@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model;
 
 import uk.gov.companieshouse.api.model.accounts.CompanyAccountsApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.intangible.IntangibleApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.ApprovalApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
@@ -35,6 +36,8 @@ public class SmallFullApiData {
     private AccountingPoliciesApi accountingPolicies;
 
     private TangibleApi tangibleAssets;
+
+    private IntangibleApi intangibleAssets;
 
     private StocksApi stocks;
 
@@ -106,6 +109,14 @@ public class SmallFullApiData {
 
     public void setTangibleAssets(TangibleApi tangibleAssets) {
         this.tangibleAssets = tangibleAssets;
+    }
+
+    public IntangibleApi getIntangibleAssets() {
+        return intangibleAssets;
+    }
+
+    public void setIntangibleAssets(IntangibleApi intangibleAssets) {
+        this.intangibleAssets = intangibleAssets;
     }
     
     public StocksApi getStocks() {

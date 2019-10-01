@@ -10,6 +10,7 @@ import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.accounts.Accounts;
 import uk.gov.companieshouse.api.model.accounts.CompanyAccountsApi;
 import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.intangible.IntangibleApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.CreditorsAfterOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
@@ -192,6 +193,14 @@ public class AccountsManager {
                 smallFullApiData.setTangibleAssets(tangible);
             }
 
+            if(!StringUtils.isEmpty(smallFull.getLinks().getIntangibleAssetsNote())) {
+
+                errorString = "intangible assets";
+
+                IntangibleApi intangibleApi = apiClient.smallFull().intangible()
+                        .get(smallFull.getLinks().getIntangibleAssetsNote()).execute().getData();
+                smallFullApiData.setIntangibleAssets(intangibleApi);
+            }
 
             if (!StringUtils.isEmpty(smallFull.getLinks().getEmployeesNote())) {
 
