@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.document.generator.company.report.mapping.mappers;
+package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.recentfilinghistory;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,8 +9,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.filinghistory.FilingApi;
 import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
-import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.recentfilinghistory.ApiToRecentFilingHistoryMapper;
-import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.recentfilinghistory.ApiToRecentFilingHistoryMapperImpl;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.recentfilinghistory.RecentFilingHistory;
 
 import java.time.LocalDate;
@@ -36,12 +34,21 @@ public class ApiToRecentFilingHistoryMapperTest {
     private static final String FILING_DESCRIPTION = "filing description 1";
     private static final String FORM_TYPE = "form type 1";
 
-    @InjectMocks
-    private ApiToRecentFilingHistoryMapper apiToRecentFilingHistoryMapper =
-            new ApiToRecentFilingHistoryMapperImpl();
-
     @Mock
     private RetrieveApiEnumerationDescription mockRetrieveApiEnumerations;
+
+    @Mock
+    private ApiToResolutions mockApiToResolutions;
+
+    @Mock
+    private ApiToAnnotations mockApiToAnnotations;
+
+    @Mock
+    private ApiToAssociatedFilings mockApiToAssociatedFilings;
+
+    @InjectMocks
+    private ApiToRecentFilingHistoryMapper apiToRecentFilingHistoryMapper =
+        new ApiToRecentFilingHistoryMapperImpl();
 
     @Test
     @DisplayName("test filing api data maps correctly to recent filing history")
@@ -122,10 +129,10 @@ public class ApiToRecentFilingHistoryMapperTest {
         when(mockRetrieveApiEnumerations.getApiEnumerationDescription(anyString(), anyString(), anyString(), any())).thenReturn("test description with {made_up_date}");
 
         RecentFilingHistory recentFilingHistory =  apiToRecentFilingHistoryMapper
-                .apiToRecentFilingHistoryMapper(createFilingWithDateDescription());
+            .apiToRecentFilingHistoryMapper(createFilingWithDateDescription());
 
-     assertNotNull(recentFilingHistory.getDescription());
-     assertEquals("test description with 1 January 1999", recentFilingHistory.getDescription());
+        assertNotNull(recentFilingHistory.getDescription());
+        assertEquals("test description with 1 January 1999", recentFilingHistory.getDescription());
 
     }
 

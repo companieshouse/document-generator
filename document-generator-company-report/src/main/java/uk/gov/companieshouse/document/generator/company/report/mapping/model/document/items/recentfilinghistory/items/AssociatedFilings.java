@@ -12,6 +12,9 @@ public class AssociatedFilings {
     @JsonProperty("description")
     private String description;
 
+    @JsonProperty("capital_description")
+    private String capitalDescription;
+
     public String getType() {
         return type;
     }
@@ -26,5 +29,13 @@ public class AssociatedFilings {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getCapitalDescription() {
+        return capitalDescription;
+    }
+
+    public void setCapitalDescription(String capitalDescription) {
+        this.capitalDescription = capitalDescription;
     }
 }

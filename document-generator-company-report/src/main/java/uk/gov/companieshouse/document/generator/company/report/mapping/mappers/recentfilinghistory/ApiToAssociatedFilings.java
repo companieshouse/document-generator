@@ -48,7 +48,7 @@ public abstract class ApiToAssociatedFilings {
 
         String associatedFilingsDescription = (retrieveApiEnumerationDescription
             .getApiEnumerationDescription(FILING_HISTORY_DESCRIPTIONS, "description",
-                description, getDebugMap(description))) + "\n" +
+                description, getDebugMap(description))) + "\r" +
                 getStatementOfCapitalDescriptionValues(descriptionValues);
 
         if (descriptionValues != null) {
@@ -68,16 +68,13 @@ public abstract class ApiToAssociatedFilings {
 
     private String getStatementOfCapitalDescriptionValues(Map<String, Object> descriptionValues) {
 
-        List<Map<String, Object>> list = (List) descriptionValues.get("capital");
-        String valueSentence = "";
+        if (descriptionValues != null) {
+            List<Map<String, Object>> list = (List) descriptionValues.get("capital");
+            String valueSentence = list.get(0).get("currency").toString() + " " + list.get(0).get("figure").toString();
 
-//        for (Map<String, Object> entry : list) {
-//            for (String key : entry.keySet()) {
-//                Object value = entry.get(key);
-//            }
-            valueSentence = list.get(0).get("currency").toString() + " " + list.get(0).get("figure").toString();
-//        }
-        return valueSentence;
+            return valueSentence;
+        }
+        return "";
     }
 
     private void formatDateParameters(Map<String, Object> parameters) {
