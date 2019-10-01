@@ -31,7 +31,6 @@ public abstract class ApiToAssociatedFilings {
 
     public abstract List<AssociatedFilings> apiToAssociatedFilings(List<AssociatedFilingsApi> associatedFilingsApi);
 
-
     @AfterMapping
     protected void convertAssociatedFilingsDescription(AssociatedFilingsApi associatedFilingsApi,
                                                        @MappingTarget AssociatedFilings associatedFilings){

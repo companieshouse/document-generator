@@ -1,6 +1,5 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.recentfilinghistory;
 
-
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;

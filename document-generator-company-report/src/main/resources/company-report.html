@@ -704,7 +704,6 @@
                         {{- range .associated_filings -}}
                             {{if eq .type "SH01"}}
                                 {{.description}}
-                    <!--need gbp and figure, also use correct date within description_values-->
                             {{else}}
                                 <ul class="list list-bullet">
                                     <li>{{.type}} {{.description}}</li>
