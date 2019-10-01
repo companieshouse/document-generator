@@ -68,10 +68,6 @@
         text-transform: uppercase;
       }
 
-      .underlined {
-        text-decoration: underline;
-      }
-
       .bold {
         font-weight: 700px;
       }
@@ -792,7 +788,7 @@
         {{if $charges := $mortgageChargeDetails.charges}}
             {{- range $charges -}}
                 <div class="charge">
-                <h2 class="heading-medium underlined">{{.charge_description}}</h2>
+                <h2 class="heading-medium">{{.charge_description}}</h2>
 
                 <div class="grid-row">
                     <div class="column-quarter">
