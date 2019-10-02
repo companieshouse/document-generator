@@ -22,6 +22,7 @@ public class CompanyReportApiClientService {
     private static final String X_REQUEST_ID_HEADER = "x-request-id";
 
     public ApiClient getApiClient() {
+
         HttpClient httpClient = new ApiKeyHttpClient(chsApiKey);
 
         setRequestId(httpClient);
@@ -39,8 +40,10 @@ public class CompanyReportApiClientService {
      * @param httpClient
      */
     private static void setRequestId(HttpClient httpClient) {
+
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder
             .currentRequestAttributes();
+
         HttpServletRequest request = attr.getRequest();
 
         String requestId = (String) request.getAttribute(X_REQUEST_ID_HEADER);

@@ -12,3 +12,4 @@ public interface ApiToPscsMapper {
     Pscs apiToPscsMapper(PscsApi pscsApi);
 
 }
+

@@ -10,14 +10,45 @@
 {{$pscs := .company_report.pscs}}
 {{$ukEstablishment := .company_report.uk_establishment}}
 {{$pscStatements := .company_report.psc_statements}}
+{{$registers := .company_report.registers}}
+{{$insolvency := .company_report.insolvency}}
+{{$mortgageChargeDetails := .company_report.mortgage_charge_details}}
+{{$exemptions := .company_report.exemptions}}
 
 <head>
-    <meta charset="UTF-8">
+    <meta content="application/xhtml+xml; charset=UTF-8" http-equiv="content-type"/>
     <title>{{$companyRegistrationInformation.company_name}}</title>
     <style type="text/css">
 
       main {
         padding-bottom: 3em;
+      }
+
+      .grid-row {
+        margin: 0 -15px;
+      }
+
+      .column-quarter {
+        float: left;
+        width: 25%;
+      }
+
+      .column-half {
+        float: left;
+        width: 50%;
+      }
+
+      .data {
+        font-weight: bold;
+      }
+
+      .normal {
+        font-weight: normal;
+      }
+
+      .heading-with-border {
+        border-top: 1px solid #bec0c2;
+        padding-top: 1.25em;
       }
 
       .pagebreak {
@@ -35,6 +66,22 @@
 
       .sentence-case::first-letter {
         text-transform: uppercase;
+      }
+
+      .underlined {
+        text-decoration: underline;
+      }
+
+      .bold {
+        font-weight: 700px;
+      }
+
+      .charge {
+        margin: 20px 0px;
+      }
+
+      .particulars {
+        margin-top: 20px;
       }
 
       @media print {
@@ -85,8 +132,7 @@
 <body id="page-container">
 
 <header role="banner">
-    <a href="https://beta.companieshouse.gov.uk/company/00006400">
-        <span class="visually-hidden">{{$companyRegistrationInformation.company_name}}</span><img src="https://document-render-assets-registry.s3-eu-west-1.amazonaws.com/accounts/images/ch-logo.png" alt=""></a>
+    <span class="visually-hidden">{{$companyRegistrationInformation.company_name}}</span><img src="https://document-render-assets-registry.s3-eu-west-1.amazonaws.com/accounts/images/ch-logo.png" alt="">
 
     <h1 class="heading-xlarge">{{$companyRegistrationInformation.company_name}}<br/>
         {{$companyRegistrationInformation.company_number}}</h1>
@@ -164,7 +210,7 @@
         {{end}}
 
     </ul>
-    
+
     {{if $foreignCompanyDetails}}
 
         {{if (eq $foreignCompanyDetails.is_a_credit_financial_institution true)}}
@@ -315,7 +361,6 @@
     </ul>
     {{end}}
 
-
     <h2 class="heading-large">People</h2>
 
     <h2 class="heading-medium">Officers:<br>
@@ -435,13 +480,59 @@
         <p>There are no officer details available for this company.</p>
     {{end}}
 
-    <!--PSC & STATMENTS-->
+    <!--PSC & STATMENTS & PSC EXEMPTIONS-->
 
-    <h2 class="heading-medium">Persons with significant control:<br>
+    <h2 class="heading-medium">Persons with significant control:</h2>
+
+        {{if $exemptions}}
+            {{if $pscs.active_count}}
+                <h3 class="heading-small">The PSC information is no longer updated at Companies House because:</h3>
+            {{else}}
+                <h3 class="heading-small">The PSC information is not available because:</h3>
+            {{end}}
+                <ul class="list list-bullet">
+                    {{if $exemptions.disclosure_transparency_rules_chapter_five_applies}}
+                        {{range $exemptions.disclosure_transparency_rules_chapter_five_applies.items}}
+                            {{if not .exempt_to}}
+                            <li>From {{$exemptions.disclosure_transparency_rules_chapter_five_applies.moved_on_date_formatted}}
+                                {{$exemptions.disclosure_transparency_rules_chapter_five_applies.exemption_type}}</li>
+                            {{end}}
+                        {{end}}
+                    {{end}}
+
+                    {{if $exemptions.psc_exempt_as_shares_admitted_on_market}}
+                        {{range $exemptions.psc_exempt_as_shares_admitted_on_market.items}}
+                            {{if not .exempt_to}}
+                            <li>From {{$exemptions.psc_exempt_as_shares_admitted_on_market.moved_on_date_formatted}}
+                                {{$exemptions.psc_exempt_as_shares_admitted_on_market.exemption_type}}</li>
+                            {{end}}
+                        {{end}}
+                    {{end}}
+
+                    {{if $exemptions.psc_exempt_as_trading_on_regulated_market}}
+                        {{range $exemptions.psc_exempt_as_trading_on_regulated_market.items}}
+                            {{if not .exempt_to}}
+                                <li>From {{$exemptions.psc_exempt_as_trading_on_regulated_market.moved_on_date_formatted}}
+                                    {{$exemptions.psc_exempt_as_trading_on_regulated_market.exemption_type}}</li>
+                            {{end}}
+                        {{end}}
+                    {{end}}
+
+                    {{if $exemptions.psc_exempt_as_trading_on_uk_regulated_market}}
+                        {{range $exemptions.psc_exempt_as_trading_on_uk_regulated_market.items}}
+                            {{if not .exempt_to}}
+                                <li>From {{$exemptions.psc_exempt_as_trading_on_uk_regulated_market.moved_on_date_formatted}}
+                                    {{$exemptions.psc_exempt_as_trading_on_uk_regulated_market.exemption_type}}</li>
+                            {{end}}
+                        {{end}}
+                    {{end}}
+                </ul>
+        {{end}}
+
+    <h2 class="heading-medium">
         {{if $pscs.active_count}} {{$pscs.active_count}} active person with significant control {{else}} 0 active person with significant control {{end}} /
         {{if $pscStatements.active_count}} {{$pscStatements.active_count}} active statements {{else}} 0 active statements {{end}}
     </h2>
-
     {{if or $pscs $pscStatements}}
         {{if $pscs}}
             {{range $pscs.items}}
@@ -450,9 +541,9 @@
                     <li>{{.name}}
 
                         {{ if .ceased_on }}
-                        <span id="officer-status-tag-resigned" class="status-tag ceased-tag">Ceased</span>
+                        <span id="pscs-status-tag-resigned" class="status-tag ceased-tag">Ceased</span>
                         {{else}}
-                        <span id="officer-status-tag-active" class="status-tag">Active</span>
+                        <span id="pscs-status-tag-active" class="status-tag">Active</span>
                         {{end}}
                     </li>
 
@@ -614,6 +705,57 @@
         </table>
     {{end}}
 
+    {{if $insolvency}}
+        <h3 class="heading-large">Insolvency</h3>
+        <h2 class="heading-medium">
+            {{if $insolvency.total_insolvency_cases}} {{$insolvency.total_insolvency_cases}} Insolvency Case {{else}} Insolvency Case {{end}}
+        </h2>
+
+            {{if $insolvency.cases}}
+                {{- range $insolvency.cases -}}
+                <h2 class="heading-medium heading-with-border"> Case number {{.case_number}} - {{.case_type}}</h2>
+                {{if .dates}}
+                    <div class="grid-row">
+                        {{- range .dates -}}
+                        <div class="column-quarter">
+                            <p>{{.type}}<br>
+                                <span class="data">{{.date}}</span>
+                            </p>
+                        </div>
+                        {{end}}
+                    </div>
+                {{end}}
+
+                {{if .practitioners}}
+                    {{- range .practitioners}}
+                        <div class="grid-row">
+                            <div class="column-half">
+                                <p>Practitioner<br>
+                                    <span class="data">{{.name}}</span><br>
+                                    <span>{{if .address.address_line_1}} {{.address.address_line_1}}{{end}}{{if .address.address_line_2}}, {{.address.address_line_2}}{{end}}{{if .address.locality}}, {{.address.locality}}{{end}}{{if .address.region}}, {{.address.region}}{{end}}{{if .address.postal_code}}, {{.address.postal_code}} {{end}}</span>
+                                </p>
+                            </div>
+                            {{if .appointed_on}}
+                            <div class="column-quarter">
+                                <p>Appointed on<br>
+                                    <span class="data">{{.appointed_on}}</span>
+                                </p>
+                            </div>
+                            {{end}}
+                            {{if .ceased_to_act_on}}
+                                <div class="column-quarter">
+                                    <p>Ceased to act<br>
+                                        <span class="data">{{.ceased_to_act_on}}</span>
+                                    </p>
+                                </div>
+                            {{end}}
+                        </div>
+                    {{end}}
+                {{end}}
+            {{end}}
+        {{end}}
+    {{end}}
+
     {{if $ukEstablishment}}
     <h3 class="heading-small">UK establishments</h3>
     <table>
@@ -640,6 +782,269 @@
     </table>
     {{end}}
 
+    {{if $mortgageChargeDetails}}
+        <h3 class="heading-large">Charges</h3>
+        <h2 class="heading-medium">{{$mortgageChargeDetails.total_count}} charges registered<br>
+            <span class="heading-small normal">{{$mortgageChargeDetails.outstanding}} outstanding, {{$mortgageChargeDetails.satisfied_count}} satisfied, {{$mortgageChargeDetails.part_satisfied_count}} part satisfied</span>
+        </h2>
+
+        {{if $charges := $mortgageChargeDetails.charges}}
+            {{- range $charges -}}
+                <div class="charge">
+                <h2 class="heading-medium underlined">{{.charge_description}}</h2>
+
+                <div class="grid-row">
+                    <div class="column-quarter">
+                        <p>Created<br>
+                        <span class="data">{{.created}}</span></p>
+                    </div>
+                    <div class="column-quarter">
+                        <p>Delivered<br>
+                            <span class="data">{{.delivered}}</span></p>
+                    </div>
+                    <div class="column-half">
+                        <p>Status<br>
+                            <span class="data">{{.status}}
+                                {{if .satisfied_on}}
+                                  {{if eq .status "Satisfied"}}
+                                       <span class="normal">on</span> {{.satisfied_on}}
+                                  {{else}}
+                                  {{end}}
+                                {{end}}
+                            </span></p>
+                    </div>
+                </div>
+
+                {{if .assets_ceased_released}}
+                <div>
+                    <p class="data">Assets ceased/released<br>
+                        <span class="normal">{{.assets_ceased_released}}</span>
+                    </p>
+                </div>
+                {{end}}
+
+                {{if .persons_entitled}}
+                <div>
+                    <p class="data">Persons entitled<br>
+                    {{- range .persons_entitled}}
+                        <span class="normal">{{.name}}</span><br>
+                    </p>
+                    {{end}}
+                    {{if .more_than_four_persons_entitled}}
+                    <p>There are more than four persons entitled to the charge. Please see the deed to view their names.</p>
+                    {{end}}
+                </div>
+                {{end}}
+
+                {{if .secured_details}}
+                    <div>
+                        <p class="data">{{.secured_details.type}}<br>
+                            <span class="normal">{{.secured_details.description}}</span>
+                        </p>
+                    </div>
+                {{end}}
+
+                {{if .particulars}}
+                    <div>
+                        <p class="data">
+                        {{if .particulars.type}}
+                            {{.particulars.type}}<br>
+                        {{else}}
+                                <span class="bold">Brief description</span>
+                        {{end}}
+                            <span class="normal">{{.particulars.description}}
+                            {{- range $key, $value := .particulars.extra_particular_statements}}
+                                <span class="normal"><br>{{$value}}.</span>
+                            {{end}}
+                            </span>
+                        </p>
+                    </div>
+                {{end}}
+                <hr>
+                </div>
+            {{end}}
+        {{end}}
+    {{end}}
+
+    {{if $registers}}
+    <h3 class="heading-large">Registers</h3>
+    {{if $registers.directors}}
+    <h3 class="heading-small">Register of {{$registers.directors.register_type}}</h3>
+    <p>{{if eq $registers.directors.information "public register"}}
+        Information held on
+        {{else}}
+        Information
+        {{end}}<b>{{$registers.directors.information}}</b> since {{$registers.directors.information_moved_on_date}}</p>
+    <table>
+        <caption class="visually-hidden">Registers</caption>
+        <!-- this hidden caption is needed for screen-readers-->
+        <thead>
+        <tr>
+            <th scope="col">Dates</th>
+            <th scope="col">Location</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{- range $registers.directors.items -}}
+        <tr>
+            <td>{{.formatted_date}}</td>
+            <td scope="row">{{.register_moved_to}}</td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+    {{end}}
+
+    {{if $registers.llp_members}}
+    <h3 class="heading-small">Register of {{$registers.llp_members.register_type}}</h3>
+    <p>{{if eq $registers.llp_members.information "public register"}}
+        Information held on
+        {{else}}
+        Information
+        {{end}}<b>{{$registers.llp_members.information}}</b> since {{$registers.llp_members.information_moved_on_date}}</p>
+    <table>
+        <thead>
+        <tr>
+            <th scope="col">Dates</th>
+            <th scope="col">Location</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{- range $registers.llp_members.items -}}
+        <tr>
+            <td>{{.formatted_date}}</td>
+            <td scope="row">{{.register_moved_to}}</td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+    {{end}}
+
+    {{if $registers.llp_usual_residential_address}}
+    <h3 class="heading-small">Register of {{$registers.llp_usual_residential_address.register_type}}</h3>
+    <p>{{if eq $registers.llp_usual_residential_address.information "public register"}}
+        Information held on
+        {{else}}
+        Information
+        {{end}}<b>{{$registers.llp_usual_residential_address.information}}</b> since {{$registers.llp_usual_residential_address.information_moved_on_date}}</p>
+    <table>
+        <thead>
+        <tr>
+            <th scope="col">Dates</th>
+            <th scope="col">Location</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{- range $registers.llp_usual_residential_address.items -}}
+        <tr>
+            <td>{{.formatted_date}}</td>
+            <td scope="row">{{.register_moved_to}}</td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+    {{end}}
+
+    {{if $registers.members}}
+    <h3 class="heading-small">Register of {{$registers.members.register_type}}</h3>
+    <p>{{if eq $registers.members.information "public register"}}
+        Information held on
+        {{else}}
+        Information
+        {{end}}<b>{{$registers.members.information}}</b> since {{$registers.members.information_moved_on_date}}</p>
+    <table>
+        <thead>
+        <tr>
+            <th scope="col">Dates</th>
+            <th scope="col">Location</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{- range $registers.members.items -}}
+        <tr>
+            <td>{{.formatted_date}}</td>
+            <td scope="row">{{.register_moved_to}}</td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+    {{end}}
+
+    {{if $registers.persons_with_significant_control}}
+        <h3 class="heading-small">Register of {{$registers.persons_with_significant_control.register_type}}</h3>
+        <p>{{if eq $registers.persons_with_significant_control.information "public register"}}
+            Information held on
+            {{else}}
+            Information
+            {{end}}<b>{{$registers.persons_with_significant_control.information}}</b> since {{$registers.persons_with_significant_control.information_moved_on_date}}</p>
+        <table>
+            <thead>
+            <tr>
+                <th scope="col">Dates</th>
+                <th scope="col">Location</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{- range $registers.persons_with_significant_control.items -}}
+            <tr>
+                <td>{{.formatted_date}}</td>
+                <td scope="row">{{.register_moved_to}}</td>
+            </tr>
+            {{end}}
+            </tbody>
+        </table>
+        {{end}}
+
+        {{if $registers.secretaries}}
+        <h3 class="heading-small">Register of {{$registers.secretaries.register_type}}</h3>
+        <p>{{if eq $registers.secretaries.information "public register"}}
+            Information held on
+            {{else}}
+            Information
+            {{end}}<b>{{$registers.secretaries.information}}</b> since {{$registers.secretaries.information_moved_on_date}}</p>
+        <table>
+            <thead>
+            <tr>
+                <th scope="col">Dates</th>
+                <th scope="col">Location</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{- range $registers.secretaries.items -}}
+            <tr>
+                <td>{{.formatted_date}}</td>
+                <td scope="row">{{.register_moved_to}}</td>
+            </tr>
+            {{end}}
+            </tbody>
+        </table>
+        {{end}}
+
+        {{if $registers.usual_residential_address}}
+        <h3 class="heading-small">Register of {{$registers.usual_residential_address.register_type}}</h3>
+        <p>{{if eq $registers.usual_residential_address.information "public register"}}
+            Information held on
+            {{else}}
+            Information
+            {{end}}<b>{{$registers.usual_residential_address.information}}</b> since {{$registers.usual_residential_address.information_moved_on_date}}</p>
+        <table>
+            <thead>
+            <tr>
+                <th scope="col">Dates</th>
+                <th scope="col">Location</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{- range $registers.usual_residential_address.items -}}
+            <tr>
+                <td>{{.formatted_date}}</td>
+                <td scope="row">{{.register_moved_to}}</td>
+            </tr>
+            {{end}}
+            </tbody>
+        </table>
+        {{end}}
+    {{end}}
 </main>
 </body>
 </html>
