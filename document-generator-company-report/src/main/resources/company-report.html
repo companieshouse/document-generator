@@ -795,10 +795,12 @@
                         <p>Created<br>
                         <span class="data">{{.created}}</span></p>
                     </div>
+                    {{if .delivered}}
                     <div class="column-quarter">
                         <p>Delivered<br>
                             <span class="data">{{.delivered}}</span></p>
                     </div>
+                    {{end}}
                     <div class="column-half">
                         <p>Status<br>
                             <span class="data">{{.status}}
