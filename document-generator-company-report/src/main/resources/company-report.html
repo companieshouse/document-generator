@@ -16,7 +16,7 @@
 {{$exemptions := .company_report.exemptions}}
 
 <head>
-    <meta charset="UTF-8">
+    <meta content="application/xhtml+xml; charset=UTF-8" http-equiv="content-type"/>
     <title>{{$companyRegistrationInformation.company_name}}</title>
     <style type="text/css">
 
@@ -128,8 +128,7 @@
 <body id="page-container">
 
 <header role="banner">
-    <a href="https://beta.companieshouse.gov.uk/company/00006400">
-        <span class="visually-hidden">{{$companyRegistrationInformation.company_name}}</span><img src="https://document-render-assets-registry.s3-eu-west-1.amazonaws.com/accounts/images/ch-logo.png" alt=""></a>
+    <span class="visually-hidden">{{$companyRegistrationInformation.company_name}}</span><img src="https://document-render-assets-registry.s3-eu-west-1.amazonaws.com/accounts/images/ch-logo.png" alt="">
 
     <h1 class="heading-xlarge">{{$companyRegistrationInformation.company_name}}<br/>
         {{$companyRegistrationInformation.company_number}}</h1>
