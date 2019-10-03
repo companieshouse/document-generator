@@ -32,6 +32,7 @@ public abstract class ApiToRecentFilingHistoryMapper {
     private static final String CAPITAL_ALLOMENT_DESCRIPTION = "capital-allotment-shares";
     private static final String D_MMMM_UUU = "d MMM uuu";
     private static final String D_MMMMM_UUU = "d MMMM uuu";
+    private static final String DESCRIPTION = "description";
 
     @Mappings({
             @Mapping(source = "type", target = "form")
@@ -52,13 +53,13 @@ public abstract class ApiToRecentFilingHistoryMapper {
 
         if (description != null && descriptionValues != null && description.equals("legacy") ||
             description.equals("certificate-change-of-name-company") || description.equals("court-order")) {
-            return descriptionValues.get("description").toString();
+            return descriptionValues.get(DESCRIPTION).toString();
         }
 
         if (description.equals(CAPITAL_STATEMENT_DESCRIPTION) || description.equals(CAPITAL_ALLOMENT_DESCRIPTION)
                 && descriptionValues != null) {
             String filingDescription = regexAsteriskRemoved(retrieveApiEnumerationDescription
-                .getApiEnumerationDescription(FILING_HISTORY_DESCRIPTIONS, "description",
+                .getApiEnumerationDescription(FILING_HISTORY_DESCRIPTIONS, DESCRIPTION,
                     description, getDebugMap(description))) + "\r" +
                 getStatementOfCapitalDescriptionValues(descriptionValues);
 
@@ -72,7 +73,7 @@ public abstract class ApiToRecentFilingHistoryMapper {
 
          if (description != null) {
             filingDescription = regexAsteriskRemoved(retrieveApiEnumerationDescription
-                .getApiEnumerationDescription(FILING_HISTORY_DESCRIPTIONS, "description",
+                .getApiEnumerationDescription(FILING_HISTORY_DESCRIPTIONS, DESCRIPTION,
                     description, getDebugMap(description)));
         }
 
