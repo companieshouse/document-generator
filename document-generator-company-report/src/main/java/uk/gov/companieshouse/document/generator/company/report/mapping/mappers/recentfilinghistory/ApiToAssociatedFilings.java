@@ -26,10 +26,12 @@ public abstract class ApiToAssociatedFilings {
     private static final String FILING_HISTORY_DESCRIPTIONS = "FILING_HISTORY_DESCRIPTIONS";
     private static final String STATEMENT_OF_CAPITAL = "statement-of-capital";
     private static final String YYYY_MM_DD = "yyyy-MM-dd";
+    private static final String DESCRIPTION = "description";
 
     public abstract AssociatedFilings apiToAssociatedFilings(AssociatedFilingsApi associatedFilingsApi);
 
     public abstract List<AssociatedFilings> apiToAssociatedFilings(List<AssociatedFilingsApi> associatedFilingsApi);
+
 
     @AfterMapping
     protected void convertAssociatedFilingsDescription(AssociatedFilingsApi associatedFilingsApi,
@@ -41,12 +43,32 @@ public abstract class ApiToAssociatedFilings {
 
     private String setAssociatedFilingsDescription(String description, Map<String, Object> descriptionValues) {
 
+        if (description != null && description.equals("legacy") && descriptionValues != null) {
+            return descriptionValues.get(DESCRIPTION).toString();
+        }
+
+        String filingDescription = "";
+
         if (!description.equals(STATEMENT_OF_CAPITAL)) {
-            return descriptionValues.get("description").toString();
+            if( description != null) {
+                filingDescription = regexAsteriskRemoved(retrieveApiEnumerationDescription
+                    .getApiEnumerationDescription(FILING_HISTORY_DESCRIPTIONS, DESCRIPTION,
+                        description, getDebugMap(description)));
+                if(descriptionValues == null) {
+                    filingDescription = description;
+                }
+            }
+
+            if (descriptionValues != null) {
+
+                return populateParameters(filingDescription, descriptionValues);
+            } else
+                return filingDescription;
+
         } else {
 
         String associatedFilingsDescription = (retrieveApiEnumerationDescription
-            .getApiEnumerationDescription(FILING_HISTORY_DESCRIPTIONS, "description",
+            .getApiEnumerationDescription(FILING_HISTORY_DESCRIPTIONS, DESCRIPTION,
                 description, getDebugMap(description))) + "\r" +
                 getStatementOfCapitalDescriptionValues(descriptionValues);
 
@@ -69,9 +91,7 @@ public abstract class ApiToAssociatedFilings {
 
         if (descriptionValues != null) {
             List<Map<String, Object>> list = (List) descriptionValues.get("capital");
-            String valueSentence = list.get(0).get("currency").toString() + " " + list.get(0).get("figure").toString();
-
-            return valueSentence;
+            return list.get(0).get("currency").toString() + " " + list.get(0).get("figure").toString();
         }
         return "";
     }
@@ -101,5 +121,9 @@ public abstract class ApiToAssociatedFilings {
         debugMap.put("Enumeration mapping :", debugString);
 
         return debugMap;
+    }
+
+    private String regexAsteriskRemoved(String filingDescription) {
+        return filingDescription.replaceAll("[*]", "");
     }
 }

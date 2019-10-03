@@ -42,6 +42,8 @@ public class ApiToAssociatedFilingsTest {
     @DisplayName("test associated filings api data maps to model")
     void testAssociatedFilingsApiDataMaps() {
 
+        when(mockRetrieveApiEnumerations.getApiEnumerationDescription(anyString(), anyString(), anyString(), any())).thenReturn(MAPPED_VALUE);
+
         AssociatedFilingsApi associatedFilingsApi = createAssociatedFilingsApiData();
 
         AssociatedFilings associatedFilings = apiToAssociatedFilings.apiToAssociatedFilings(associatedFilingsApi);
@@ -53,6 +55,8 @@ public class ApiToAssociatedFilingsTest {
     @Test
     @DisplayName("test a list of associated filings api data maps to model")
     void testListOfAssociatedFilingsApiDataMaps() {
+
+        when(mockRetrieveApiEnumerations.getApiEnumerationDescription(anyString(), anyString(), anyString(), any())).thenReturn(MAPPED_VALUE);
 
         List<AssociatedFilingsApi> associatedFilingsApi = createListOfAssociatedFilingsApiData();
 

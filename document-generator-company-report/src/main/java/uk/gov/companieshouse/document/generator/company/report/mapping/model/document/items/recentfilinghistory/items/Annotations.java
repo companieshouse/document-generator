@@ -12,6 +12,9 @@ public class Annotations {
     @JsonProperty("description")
     private String description;
 
+    @JsonProperty("date")
+    private String date;
+
     public String getType() {
         return type;
     }
@@ -26,5 +29,13 @@ public class Annotations {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }
