@@ -84,6 +84,10 @@ public interface ApiToBalanceSheetMapper {
             PreviousPeriodApi previousPeriod);
 
     @Mappings({
+            @Mapping(source = "currentPeriod.balanceSheet.fixedAssets.intangible",
+            target = "intangibleAssets.currentAmount"),
+            @Mapping(source = "previousPeriod.balanceSheet.fixedAssets.intangible",
+                    target = "intangibleAssets.previousAmount"),
             @Mapping(source = "currentPeriod.balanceSheet.fixedAssets.tangible",
                     target = "tangibleAssets.currentAmount"),
             @Mapping(source = "previousPeriod.balanceSheet.fixedAssets.tangible",
