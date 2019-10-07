@@ -20,54 +20,27 @@ public abstract class  ApiToExemptionsMapper {
     @AfterMapping
     void checkActiveExemption(ExemptionsApi exemptionsApi, @MappingTarget Exemptions exemptions) {
 
-        List<ExemptionItemsApi> disclosureTransparencyRulesChapterFiveAppliesList = new ArrayList<>();
-        List<ExemptionItemsApi> pscExemptAsSharesAdmittedOnMarketList = new ArrayList<>();
-        List<ExemptionItemsApi> pscExemptAsTradingOnRegulatedMarketList = new ArrayList<>();
-        List<ExemptionItemsApi> pscExemptAsTradingOnUkRegulatedMarketList = new ArrayList<>();
+        List<List<ExemptionItemsApi>> exemptionItemsList = new ArrayList<>();
 
         if(exemptionsApi.getDisclosureTransparencyRulesChapterFiveApplies() != null) {
-            disclosureTransparencyRulesChapterFiveAppliesList = exemptionsApi.getDisclosureTransparencyRulesChapterFiveApplies().getItems();
-
-            exemptions.setActiveExemption(false);
-
-            for (int i = 0; i < disclosureTransparencyRulesChapterFiveAppliesList.size(); i++) {
-                if (disclosureTransparencyRulesChapterFiveAppliesList.get(i).getExemptTo() == null) {
-                    exemptions.setActiveExemption(true);
-                }
-            }
+            exemptionItemsList.add(exemptionsApi.getDisclosureTransparencyRulesChapterFiveApplies().getItems());
         }
         if(exemptionsApi.getPscExemptAsSharesAdmittedOnMarket() != null) {
-            pscExemptAsSharesAdmittedOnMarketList = exemptionsApi.getPscExemptAsSharesAdmittedOnMarket().getItems();
-
-            exemptions.setActiveExemption(false);
-
-            for (int i = 0; i < pscExemptAsSharesAdmittedOnMarketList.size(); i++) {
-
-                if (pscExemptAsSharesAdmittedOnMarketList.get(i).getExemptTo() == null) {
-                    exemptions.setActiveExemption(true);
-                }
-            }
+            exemptionItemsList.add(exemptionsApi.getPscExemptAsSharesAdmittedOnMarket().getItems());
+        }
+        if(exemptionsApi.getPscExemptAsTradingOnRegulatedMarket() != null) {
+            exemptionItemsList.add(exemptionsApi.getPscExemptAsTradingOnRegulatedMarket().getItems());
         }
         if(exemptionsApi.getPscExemptAsTradingOnUkRegulatedMarket() != null) {
-            pscExemptAsTradingOnRegulatedMarketList = exemptionsApi.getPscExemptAsTradingOnUkRegulatedMarket().getItems();
-
-            exemptions.setActiveExemption(false);
-
-            for (int i = 0; i < pscExemptAsTradingOnRegulatedMarketList.size(); i++) {
-                if (pscExemptAsTradingOnRegulatedMarketList.get(i).getExemptTo() == null) {
-                    exemptions.setActiveExemption(true);
-                }
-            }
+            exemptionItemsList.add(exemptionsApi.getPscExemptAsTradingOnUkRegulatedMarket().getItems());
         }
-        if(exemptionsApi.getPscExemptAsTradingOnUkRegulatedMarket() != null) {
-            pscExemptAsTradingOnUkRegulatedMarketList = exemptionsApi.getPscExemptAsTradingOnUkRegulatedMarket().getItems();
 
-            exemptions.setActiveExemption(false);
-
-            for (int i = 0; i < pscExemptAsTradingOnUkRegulatedMarketList.size(); i++) {
-                if (pscExemptAsTradingOnUkRegulatedMarketList.get(i).getExemptTo() == null) {
-                    exemptions.setActiveExemption(true);
-                }
+        for( int x =0; x < exemptionItemsList.size(); x ++){
+            for(int y = 0; y <exemptionItemsList.get(x).size(); y ++ ) {
+                exemptions.setActiveExemption(false);
+                    if(exemptionItemsList.get(x).get(y).getExemptTo() == null){
+                        exemptions.setActiveExemption(true);
+                    }
             }
         }
     }
