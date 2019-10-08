@@ -25,8 +25,8 @@ import static org.mockito.Mockito.when;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ApiToExemptionsMapperTest {
 
-    private static LocalDate EXEMPT_FROM = LocalDate.of(2016,01,01);
-    private static String EXEMPTION_TYPE = "exemption type";
+    private static final LocalDate EXEMPT_FROM = LocalDate.of(2016,01,01);
+    private static final String EXEMPTION_TYPE = "exemption type";
 
     @InjectMocks
     private ApiToExemptionsMapper apiToExemptionsMapper = new ApiToExemptionsMapperImpl();
@@ -85,7 +85,4 @@ public class ApiToExemptionsMapperTest {
 
             return exemptionItem;
         }
-
 }
-
-
