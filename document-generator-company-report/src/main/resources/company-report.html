@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 {{$companyRegistrationInformation := .company_report.company_registration_information}}
@@ -16,7 +17,7 @@
 {{$exemptions := .company_report.exemptions}}
 
 <head>
-    <meta charset="UTF-8">
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
     <title>{{$companyRegistrationInformation.company_name}}</title>
     <style type="text/css">
 
@@ -66,10 +67,6 @@
 
       .sentence-case::first-letter {
         text-transform: uppercase;
-      }
-
-      .underlined {
-        text-decoration: underline;
       }
 
       .bold {
@@ -132,8 +129,7 @@
 <body id="page-container">
 
 <header role="banner">
-    <a href="https://beta.companieshouse.gov.uk/company/00006400">
-        <span class="visually-hidden">{{$companyRegistrationInformation.company_name}}</span><img src="https://document-render-assets-registry.s3-eu-west-1.amazonaws.com/accounts/images/ch-logo.png" alt=""></a>
+    <span class="visually-hidden">{{$companyRegistrationInformation.company_name}}</span><img src="https://document-render-assets-registry.s3-eu-west-1.amazonaws.com/accounts/images/ch-logo.png" alt="">
 
     <h1 class="heading-xlarge">{{$companyRegistrationInformation.company_name}}<br/>
         {{$companyRegistrationInformation.company_number}}</h1>
@@ -816,17 +812,19 @@
         {{if $charges := $mortgageChargeDetails.charges}}
             {{- range $charges -}}
                 <div class="charge">
-                <h2 class="heading-medium underlined">{{.charge_description}}</h2>
+                <h2 class="heading-medium">{{.charge_description}}</h2>
 
                 <div class="grid-row">
                     <div class="column-quarter">
                         <p>Created<br>
                         <span class="data">{{.created}}</span></p>
                     </div>
+                    {{if .delivered}}
                     <div class="column-quarter">
                         <p>Delivered<br>
                             <span class="data">{{.delivered}}</span></p>
                     </div>
+                    {{end}}
                     <div class="column-half">
                         <p>Status<br>
                             <span class="data">{{.status}}
