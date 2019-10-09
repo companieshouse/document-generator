@@ -51,6 +51,10 @@ public abstract class ApiToRecentFilingHistoryMapper {
 
     private String setFilingDescription(String description, Map<String, Object> descriptionValues) {
 
+        if (description == null && descriptionValues == null) {
+            return "";
+        }
+
         if (description != null && descriptionValues != null && description.equals("legacy") ||
             description.equals("certificate-change-of-name-company") || description.equals("court-order") ||
             description.equals("miscellaneous-limited-liability-partnership") ||
