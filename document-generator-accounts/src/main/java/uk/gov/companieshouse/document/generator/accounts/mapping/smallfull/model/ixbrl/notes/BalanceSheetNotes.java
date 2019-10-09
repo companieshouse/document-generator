@@ -28,17 +28,8 @@ public class BalanceSheetNotes {
     @JsonProperty("creditors_after_one_year")
     private CreditorsAfterOneYear creditorsAfterOneYearNote;
 
-    public IntangibleAssets getIntangibleAssets() {
-        return intangibleAssets;
-    }
-
-    public void setIntangibleAssets(IntangibleAssets intangibleAssets) {
-        this.intangibleAssets = intangibleAssets;
-    }
-
     @JsonProperty("intangible_assets")
     private IntangibleAssets intangibleAssets;
-
 
     @JsonProperty("tangible_assets")
     private TangibleAssets tangibleAssets;
@@ -49,6 +40,13 @@ public class BalanceSheetNotes {
     @JsonProperty("current_assets_investments")
     private CurrentAssetsInvestments currentAssetsInvestments;
 
+    public IntangibleAssets getIntangibleAssets() {
+        return intangibleAssets;
+    }
+
+    public void setIntangibleAssets(IntangibleAssets intangibleAssets) {
+        this.intangibleAssets = intangibleAssets;
+    }
 
     public StocksNote getStocksNote() {
         return stocksNote;
@@ -108,25 +106,22 @@ public class BalanceSheetNotes {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (! (o instanceof BalanceSheetNotes))
-            return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         BalanceSheetNotes that = (BalanceSheetNotes) o;
-        return Objects.equals(getStocksNote(), that.getStocksNote()) &&
-                Objects.equals(getDebtorsNote(), that.getDebtorsNote()) &&
-                Objects.equals(getCreditorsWithinOneYearNote(),
-                        that.getCreditorsWithinOneYearNote()) &&
-                Objects.equals(getCreditorsAfterOneYearNote(),
-                        that.getCreditorsAfterOneYearNote()) &&
-                Objects.equals(getTangibleAssets(), that.getTangibleAssets()) &&
-                Objects.equals(getFixedAssetsInvestments(), that.getFixedAssetsInvestments()) &&
-                Objects.equals(getCurrentAssetsInvestments(), that.getCurrentAssetsInvestments());
+        return stocksNote.equals(that.stocksNote) &&
+                debtorsNote.equals(that.debtorsNote) &&
+                creditorsWithinOneYearNote.equals(that.creditorsWithinOneYearNote) &&
+                creditorsAfterOneYearNote.equals(that.creditorsAfterOneYearNote) &&
+                intangibleAssets.equals(that.intangibleAssets) &&
+                tangibleAssets.equals(that.tangibleAssets) &&
+                fixedAssetsInvestments.equals(that.fixedAssetsInvestments) &&
+                currentAssetsInvestments.equals(that.currentAssetsInvestments);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getStocksNote(), getDebtorsNote(), getCreditorsWithinOneYearNote(), getCreditorsAfterOneYearNote(), getTangibleAssets(), getFixedAssetsInvestments(), getCurrentAssetsInvestments());
+        return Objects.hash(getStocksNote(), getDebtorsNote(), getCreditorsWithinOneYearNote(), getCreditorsAfterOneYearNote(), getIntangibleAssets(), getTangibleAssets(), getFixedAssetsInvestments(), getCurrentAssetsInvestments());
     }
 
     @Override
@@ -136,6 +131,7 @@ public class BalanceSheetNotes {
                 ", debtorsNote=" + debtorsNote +
                 ", creditorsWithinOneYearNote=" + creditorsWithinOneYearNote +
                 ", creditorsAfterOneYearNote=" + creditorsAfterOneYearNote +
+                ", intangibleAssets=" + intangibleAssets +
                 ", tangibleAssets=" + tangibleAssets +
                 ", fixedAssetsInvestments=" + fixedAssetsInvestments +
                 ", currentAssetsInvestments=" + currentAssetsInvestments +
