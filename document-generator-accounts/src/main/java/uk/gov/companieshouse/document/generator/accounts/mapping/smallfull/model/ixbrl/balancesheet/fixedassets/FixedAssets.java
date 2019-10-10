@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.Gson;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.fixedassets.items.IntangibleAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.fixedassets.items.Investments;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.fixedassets.items.TangibleAssets;
 
@@ -14,6 +15,17 @@ public class FixedAssets {
 
     @JsonProperty("tangible")
     public TangibleAssets tangibleAssets;
+
+    @JsonProperty("intangible")
+    public IntangibleAssets intangibleAssets;
+
+    public IntangibleAssets getIntangibleAssets() {
+        return intangibleAssets;
+    }
+
+    public void setIntangibleAssets(IntangibleAssets intangibleAssets) {
+        this.intangibleAssets = intangibleAssets;
+    }
 
     @JsonProperty("investments")
     public Investments investments;
@@ -58,26 +70,26 @@ public class FixedAssets {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (! (o instanceof FixedAssets))
-            return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         FixedAssets that = (FixedAssets) o;
-        return Objects.equals(getTangibleAssets(), that.getTangibleAssets()) &&
-                Objects.equals(getInvestments(), that.getInvestments()) &&
-                Objects.equals(getTotalFixedAssetsCurrent(), that.getTotalFixedAssetsCurrent()) &&
-                Objects.equals(getTotalFixedAssetsPrevious(), that.getTotalFixedAssetsPrevious());
+        return Objects.equals(tangibleAssets, that.tangibleAssets) &&
+                Objects.equals(intangibleAssets, that.intangibleAssets) &&
+                Objects.equals(investments, that.investments) &&
+                Objects.equals(totalFixedAssetsCurrent, that.totalFixedAssetsCurrent) &&
+                Objects.equals(totalFixedAssetsPrevious, that.totalFixedAssetsPrevious);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getTangibleAssets(), getInvestments(), getTotalFixedAssetsCurrent(), getTotalFixedAssetsPrevious());
+        return Objects.hash(getTangibleAssets(), getIntangibleAssets(), getInvestments(), getTotalFixedAssetsCurrent(), getTotalFixedAssetsPrevious());
     }
 
     @Override
     public String toString() {
         return "FixedAssets{" +
                 "tangibleAssets=" + tangibleAssets +
+                ", intangibleAssets=" + intangibleAssets +
                 ", investments=" + investments +
                 ", totalFixedAssetsCurrent=" + totalFixedAssetsCurrent +
                 ", totalFixedAssetsPrevious=" + totalFixedAssetsPrevious +

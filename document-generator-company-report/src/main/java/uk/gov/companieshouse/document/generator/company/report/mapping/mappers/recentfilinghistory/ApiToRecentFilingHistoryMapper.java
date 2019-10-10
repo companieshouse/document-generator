@@ -19,15 +19,20 @@ import java.util.List;
 import java.util.Map;
 
 @RequestScope
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {ApiToResolutions.class, ApiToAnnotations.class,
+                                            ApiToAssociatedFilings.class})
+
 public abstract class ApiToRecentFilingHistoryMapper {
 
     @Autowired
     private RetrieveApiEnumerationDescription retrieveApiEnumerationDescription;
 
     private static final String FILING_HISTORY_DESCRIPTIONS = "FILING_HISTORY_DESCRIPTIONS";
+    private static final String CAPITAL_STATEMENT_DESCRIPTION ="capital-statement-capital-company-with-date-currency-figure";
+    private static final String CAPITAL_ALLOMENT_DESCRIPTION = "capital-allotment-shares";
     private static final String D_MMMM_UUU = "d MMM uuu";
     private static final String D_MMMMM_UUU = "d MMMM uuu";
+    private static final String DESCRIPTION = "description";
 
     @Mappings({
             @Mapping(source = "type", target = "form")
@@ -46,14 +51,38 @@ public abstract class ApiToRecentFilingHistoryMapper {
 
     private String setFilingDescription(String description, Map<String, Object> descriptionValues) {
 
-        if (description.equals("legacy")) {
-
-            return descriptionValues.get("description").toString();
+        if (description == null && descriptionValues == null) {
+            return "";
         }
 
-        String filingDescription = regexAsteriskRemoved(retrieveApiEnumerationDescription
-                .getApiEnumerationDescription(FILING_HISTORY_DESCRIPTIONS, "description",
-                        description, getDebugMap(description)));
+        if (description != null && descriptionValues != null && description.equals("legacy") ||
+            description.equals("certificate-change-of-name-company") || description.equals("court-order") ||
+            description.equals("miscellaneous-limited-liability-partnership") ||
+            description.equals("miscellaneous"))
+        {
+            return descriptionValues.get(DESCRIPTION).toString();
+        }
+
+        if (description.equals(CAPITAL_STATEMENT_DESCRIPTION) || description.equals(CAPITAL_ALLOMENT_DESCRIPTION)
+                && descriptionValues != null) {
+            String filingDescription = regexAsteriskRemoved(retrieveApiEnumerationDescription
+                .getApiEnumerationDescription(FILING_HISTORY_DESCRIPTIONS, DESCRIPTION,
+                    description, getDebugMap(description))) + "\r" +
+                getStatementOfCapitalDescriptionValues(descriptionValues);
+
+            if (descriptionValues != null) {
+                return populateParameters(filingDescription, descriptionValues);
+            } else
+                return filingDescription;
+        }
+
+        String filingDescription = "";
+
+         if (description != null) {
+            filingDescription = regexAsteriskRemoved(retrieveApiEnumerationDescription
+                .getApiEnumerationDescription(FILING_HISTORY_DESCRIPTIONS, DESCRIPTION,
+                    description, getDebugMap(description)));
+        }
 
         if (descriptionValues != null) {
 
@@ -92,6 +121,15 @@ public abstract class ApiToRecentFilingHistoryMapper {
                         parameters.get(parameterKey), localDate.format(getParamDateFormatter()));
             }
         }
+    }
+
+    private String getStatementOfCapitalDescriptionValues(Map<String, Object> descriptionValues) {
+
+        if (descriptionValues != null) {
+            List<Map<String, Object>> list = (List) descriptionValues.get("capital");
+            return list.get(0).get("currency").toString() + " " + list.get(0).get("figure").toString();
+        }
+        return "";
     }
 
     private String regexAsteriskRemoved(String filingDescription) {

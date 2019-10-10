@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.document.generator.company.report.mapping.mappers;
+package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.recentfilinghistory;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,14 +9,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.filinghistory.FilingApi;
 import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
-import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.recentfilinghistory.ApiToRecentFilingHistoryMapper;
-import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.recentfilinghistory.ApiToRecentFilingHistoryMapperImpl;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.recentfilinghistory.RecentFilingHistory;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -35,13 +34,25 @@ public class ApiToRecentFilingHistoryMapperTest {
     private static final String FILING_DATE_STRING = "1 Jan 1999";
     private static final String FILING_DESCRIPTION = "filing description 1";
     private static final String FORM_TYPE = "form type 1";
-
-    @InjectMocks
-    private ApiToRecentFilingHistoryMapper apiToRecentFilingHistoryMapper =
-            new ApiToRecentFilingHistoryMapperImpl();
+    private static final String CAPITAL_STATEMENT_DESCRIPTION ="capital-statement-capital-company-with-date-currency-figure";
+    private static final String CAPITAL_DESCRIPTION = "GBP 111";
+    public static final String TYPE = "type";
 
     @Mock
     private RetrieveApiEnumerationDescription mockRetrieveApiEnumerations;
+
+    @Mock
+    private ApiToResolutions mockApiToResolutions;
+
+    @Mock
+    private ApiToAnnotations mockApiToAnnotations;
+
+    @Mock
+    private ApiToAssociatedFilings mockApiToAssociatedFilings;
+
+    @InjectMocks
+    private ApiToRecentFilingHistoryMapper apiToRecentFilingHistoryMapper =
+        new ApiToRecentFilingHistoryMapperImpl();
 
     @Test
     @DisplayName("test filing api data maps correctly to recent filing history")
@@ -103,7 +114,7 @@ public class ApiToRecentFilingHistoryMapperTest {
     }
 
     @Test
-    @DisplayName("test filing api with legacy as the filing description is handled")
+    @DisplayName("test filing api with legacy as the description is handled")
     void testFilingApiWithDescriptionSetToLegacy() {
 
         RecentFilingHistory recentFilingHistory =  apiToRecentFilingHistoryMapper
@@ -111,7 +122,6 @@ public class ApiToRecentFilingHistoryMapperTest {
 
         assertNotNull(recentFilingHistory.getDescription());
         assertEquals(recentFilingHistory.getDescription(), LEGACY_VALUE);
-
     }
 
     @Test
@@ -122,11 +132,24 @@ public class ApiToRecentFilingHistoryMapperTest {
         when(mockRetrieveApiEnumerations.getApiEnumerationDescription(anyString(), anyString(), anyString(), any())).thenReturn("test description with {made_up_date}");
 
         RecentFilingHistory recentFilingHistory =  apiToRecentFilingHistoryMapper
-                .apiToRecentFilingHistoryMapper(createFilingWithDateDescription());
+            .apiToRecentFilingHistoryMapper(createFilingWithDateDescription());
 
-     assertNotNull(recentFilingHistory.getDescription());
-     assertEquals("test description with 1 January 1999", recentFilingHistory.getDescription());
+        assertNotNull(recentFilingHistory.getDescription());
+        assertEquals("test description with 1 January 1999", recentFilingHistory.getDescription());
+    }
 
+    @Test
+    @DisplayName("test associated filings api data with description of statement of capital maps to model")
+    void testAssociatedFilingsApiDataMapsStatementOfCapital() {
+
+        when(mockRetrieveApiEnumerations.getApiEnumerationDescription(anyString(), anyString(), anyString(), any())).thenReturn(CAPITAL_STATEMENT_DESCRIPTION);
+
+        FilingApi filingApi = createFilingApiDataWithStatementOfCapitalDescription();
+
+        RecentFilingHistory recentFilingHistory = apiToRecentFilingHistoryMapper.apiToRecentFilingHistoryMapper(filingApi);
+
+        assertNotNull(recentFilingHistory);
+        assertEquals(CAPITAL_STATEMENT_DESCRIPTION + "\r" + CAPITAL_DESCRIPTION, recentFilingHistory.getDescription());
     }
 
     private FilingApi createFiling(){
@@ -167,6 +190,30 @@ public class ApiToRecentFilingHistoryMapperTest {
         filingApi.setDescription("test description with {made_up_date}");
         filingApi.setType(FORM_TYPE);
         filingApi.setDescriptionValues(descriptionValue);
+
+        return filingApi;
+    }
+
+    private FilingApi createFilingApiDataWithStatementOfCapitalDescription() {
+
+        Map<String, Object> values = new HashMap<>();
+        values.put("currency", "GBP");
+        values.put("figure", "111");
+
+        List<Map<String, Object>> capitalList = new ArrayList<>();
+        capitalList.add(values);
+
+        HashMap<String, Object> filingsDescription = new HashMap<>();
+        filingsDescription.put("capital", capitalList);
+
+        LocalDate descriptionDate = LocalDate.of(
+            2019, 05, 05);
+        filingsDescription.put("date", descriptionDate);
+
+        FilingApi filingApi = new FilingApi();
+        filingApi.setDescriptionValues(filingsDescription);
+        filingApi.setDescription(CAPITAL_STATEMENT_DESCRIPTION);
+        filingApi.setType(TYPE);
 
         return filingApi;
     }

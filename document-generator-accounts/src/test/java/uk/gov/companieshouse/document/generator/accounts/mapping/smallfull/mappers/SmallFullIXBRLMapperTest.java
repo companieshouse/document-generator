@@ -22,6 +22,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.currentassetsinvestments.CurrentAssetsInvestmentsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.fixedassetsinvestments.FixedAssetsInvestmentsApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.intangible.IntangibleApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.FixedAssetsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.OtherLiabilitiesOrAssetsApi;
@@ -49,6 +50,8 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import java.time.LocalDate;
 
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.employees.Employees;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.intangible.IntangibleAssets;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.intangible.IntangibleAssetsColumns;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssetsColumns;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.period.Period;
@@ -98,6 +101,9 @@ public class SmallFullIXBRLMapperTest {
 
     @Mock
     private ApiToTangibleAssetsNoteMapper apiToTangibleAssetsNoteMapper;
+
+    @Mock
+    private ApiToIntangibleAssetsNoteMapper apiToIntangibleAssetsNoteMapper;
 
     @Mock
     private ApiToCurrentAssetsInvestmentsMapper apiToCurrentAssetsInvestmentsMapper;
@@ -154,7 +160,13 @@ public class SmallFullIXBRLMapperTest {
     private TangibleAssets tangibleAssets;
 
     @Mock
+    private IntangibleAssets intangibleAssets;
+
+    @Mock
     private TangibleAssetsColumns column;
+
+    @Mock
+    private IntangibleAssetsColumns intangibleAssetsColumns;
 
     @Mock
     private CurrentAssetsInvestments currentAssetsInvestments;
@@ -388,6 +400,70 @@ public class SmallFullIXBRLMapperTest {
         when(apiToFixedAssetsInvestmentsMapper.apiToFixedAssetsInvestments(
                 smallFullApiData.getFixedAssetsInvestments()))
                 .thenReturn(fixedAssetsInvestments);
+
+        when(apiToIntangibleAssetsNoteMapper.apiToIntangibleAssetsNoteAdditionalInformation(
+                 smallFullApiData.getIntangibleAssets()))
+                 .thenReturn(intangibleAssets);
+
+        when(apiToIntangibleAssetsNoteMapper.apiToIntangibleAssetsCostAtPeriodStartMapper(
+                smallFullApiData.getIntangibleAssets()))
+                .thenReturn(intangibleAssetsColumns);
+
+        when(apiToIntangibleAssetsNoteMapper.apiToIntangibleAssetsCostAdditionsMapper(
+                smallFullApiData.getIntangibleAssets()))
+                .thenReturn(intangibleAssetsColumns);
+
+        when(apiToIntangibleAssetsNoteMapper.apiToIntangibleAssetsCostDisposalsMapper(
+                smallFullApiData.getIntangibleAssets()))
+                .thenReturn(intangibleAssetsColumns);
+
+        when(apiToIntangibleAssetsNoteMapper.apiToIntangibleAssetsCostRevaluationsMapper(
+                smallFullApiData.getIntangibleAssets()))
+                .thenReturn(intangibleAssetsColumns);
+
+        when(apiToIntangibleAssetsNoteMapper.apiToIntangibleAssetsCostTransfersMapper(
+                smallFullApiData.getIntangibleAssets()))
+                .thenReturn(intangibleAssetsColumns);
+
+        when(apiToIntangibleAssetsNoteMapper.apiToIntangibleAssetsCostAtPeriodEndMapper(
+                smallFullApiData.getIntangibleAssets()))
+                .thenReturn(intangibleAssetsColumns);
+
+        when(apiToIntangibleAssetsNoteMapper.apiToIntangibleAssetsAmortisationAtPeriodStartMapper(
+                smallFullApiData.getIntangibleAssets()))
+                .thenReturn(intangibleAssetsColumns);
+
+        when(apiToIntangibleAssetsNoteMapper.apiToIntangibleAssetsAmortisationChargeForYearMapper(
+                smallFullApiData.getIntangibleAssets()))
+                .thenReturn(intangibleAssetsColumns);
+
+        when(apiToIntangibleAssetsNoteMapper.apiToIntangibleAssetsAmortisationOnDisposalsMapper(
+                smallFullApiData.getIntangibleAssets()))
+                .thenReturn(intangibleAssetsColumns);
+
+        when(apiToIntangibleAssetsNoteMapper.apiToIntangibleAssetsAmortisationOtherAdjustmentsMapper(
+                smallFullApiData.getIntangibleAssets()))
+                .thenReturn(intangibleAssetsColumns);
+
+        when(apiToIntangibleAssetsNoteMapper.apiToIntangibleAssetsAmortisationAtPeriodEndMapper(
+                smallFullApiData.getIntangibleAssets()))
+                .thenReturn(intangibleAssetsColumns);
+
+        when(apiToIntangibleAssetsNoteMapper.apiToIntangibleAssetsNetBookValueCurrentPeriodMapper(
+                smallFullApiData.getIntangibleAssets()))
+                .thenReturn(intangibleAssetsColumns);
+
+        when(apiToIntangibleAssetsNoteMapper.apiToIntangibleAssetsNetBookValuePreviousPeriodMapper(
+                smallFullApiData.getIntangibleAssets()))
+                .thenReturn(intangibleAssetsColumns);
+
+        when(apiToCurrentAssetsInvestmentsMapper.apiToCurrentAssetsInvestments(
+                smallFullApiData.getCurrentAssetsInvestments()))
+                .thenReturn(currentAssetsInvestments);
+
+        when(apiToFixedAssetsInvestmentsMapper.apiToFixedAssetsInvestments(
+                smallFullApiData.getFixedAssetsInvestments()))
+                .thenReturn(fixedAssetsInvestments);
     }
 
     private void verifyOptionalFieldMappersExecuted(SmallFullApiData smallFullApiData) {
@@ -456,6 +532,50 @@ public class SmallFullIXBRLMapperTest {
 
         verify(apiToTangibleAssetsNoteMapper, times(1)).apiToTangibleAssetsNetBookValuePreviousPeriodMapper(
                 smallFullApiData.getTangibleAssets());
+
+
+        verify(apiToIntangibleAssetsNoteMapper, times(1)).apiToIntangibleAssetsNoteAdditionalInformation(
+                smallFullApiData.getIntangibleAssets());
+
+        verify(apiToIntangibleAssetsNoteMapper, times(1)).apiToIntangibleAssetsCostAtPeriodStartMapper(
+                smallFullApiData.getIntangibleAssets());
+
+        verify(apiToIntangibleAssetsNoteMapper, times(1)).apiToIntangibleAssetsCostAdditionsMapper(
+                smallFullApiData.getIntangibleAssets());
+
+        verify(apiToIntangibleAssetsNoteMapper, times(1)).apiToIntangibleAssetsCostDisposalsMapper(
+                smallFullApiData.getIntangibleAssets());
+
+        verify(apiToIntangibleAssetsNoteMapper, times(1)).apiToIntangibleAssetsCostRevaluationsMapper(
+                smallFullApiData.getIntangibleAssets());
+
+        verify(apiToIntangibleAssetsNoteMapper, times(1)).apiToIntangibleAssetsCostTransfersMapper(
+                smallFullApiData.getIntangibleAssets());
+
+        verify(apiToIntangibleAssetsNoteMapper, times(1)).apiToIntangibleAssetsCostAtPeriodEndMapper(
+                smallFullApiData.getIntangibleAssets());
+
+        verify(apiToIntangibleAssetsNoteMapper, times(1)).apiToIntangibleAssetsAmortisationAtPeriodStartMapper(
+                smallFullApiData.getIntangibleAssets());
+
+        verify(apiToIntangibleAssetsNoteMapper, times(1)).apiToIntangibleAssetsAmortisationChargeForYearMapper(
+                smallFullApiData.getIntangibleAssets());
+
+        verify(apiToIntangibleAssetsNoteMapper, times(1)).apiToIntangibleAssetsAmortisationOnDisposalsMapper(
+                smallFullApiData.getIntangibleAssets());
+
+        verify(apiToIntangibleAssetsNoteMapper, times(1)).apiToIntangibleAssetsAmortisationOtherAdjustmentsMapper(
+                smallFullApiData.getIntangibleAssets());
+
+        verify(apiToIntangibleAssetsNoteMapper, times(1)).apiToIntangibleAssetsAmortisationAtPeriodEndMapper(
+                smallFullApiData.getIntangibleAssets());
+
+        verify(apiToIntangibleAssetsNoteMapper, times(1)).apiToIntangibleAssetsNetBookValueCurrentPeriodMapper(
+                smallFullApiData.getIntangibleAssets());
+
+        verify(apiToIntangibleAssetsNoteMapper, times(1)).apiToIntangibleAssetsNetBookValuePreviousPeriodMapper(
+                smallFullApiData.getIntangibleAssets());
+
     }
 
     private void assertIbxrlOptionalDataMapped(SmallFullAccountIxbrl smallFullAccountIxbrl) {
@@ -475,6 +595,8 @@ public class SmallFullIXBRLMapperTest {
                 smallFullAccountIxbrl.getBalanceSheetNotes().getCreditorsAfterOneYearNote());
         assertEquals(tangibleAssets,
                 smallFullAccountIxbrl.getBalanceSheetNotes().getTangibleAssets());
+        assertEquals(intangibleAssets,
+                smallFullAccountIxbrl.getBalanceSheetNotes().getIntangibleAssets());
         assertEquals(currentAssetsInvestments, smallFullAccountIxbrl.getBalanceSheetNotes().getCurrentAssetsInvestments());
         assertEquals(fixedAssetsInvestments,
                 smallFullAccountIxbrl.getBalanceSheetNotes().getFixedAssetsInvestments());
@@ -507,6 +629,7 @@ public class SmallFullIXBRLMapperTest {
             smallFullApiData.setCreditorsWithinOneYear(createCreditorsWithinOneYear());
             smallFullApiData.setCreditorsAfterOneYear(createCreditorsAfterOneYear());
             smallFullApiData.setTangibleAssets(createTangible());
+            smallFullApiData.setIntangibleAssets(createIntangible());
             smallFullApiData.setFixedAssetsInvestments(createFixedAssetsInvestments());
             smallFullApiData.setEmployees(createEmployees());
         }
@@ -630,6 +753,11 @@ public class SmallFullIXBRLMapperTest {
     private TangibleApi createTangible() {
 
         return new TangibleApi();
+    }
+
+    private IntangibleApi createIntangible() {
+
+        return new IntangibleApi();
     }
 
     private FixedAssetsInvestmentsApi createFixedAssetsInvestments() {
