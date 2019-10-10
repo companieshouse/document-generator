@@ -695,7 +695,31 @@
             <tr>
                 <td nowrap="nowrap">{{.date}}</td>
                 <td scope="row">{{.form}}</td>
-                <td>{{.description}}</td>
+                <td>{{.description}}<br>
+                    {{if .associated_filings}}
+                        {{- range .associated_filings -}}
+                            {{if eq .type "SH01"}}
+                                {{.description}}
+                            {{else}}
+                                <ul class="list list-bullet">
+                                    <li>{{.type}} {{.description}}</li>
+                                </ul>
+                            {{end}}
+                        {{end}}
+                    {{end}}
+                    <ul class="list list-bullet">
+                    {{if .resolutions}}
+                        {{- range .resolutions -}}
+                           <li>{{.type}} - {{.description}}</li>
+                        {{end}}
+                    {{end}}
+                    {{if .annotations}}
+                        {{- range .annotations -}}
+                            <li>{{.type}} {{.description}}</li>
+                        {{end}}
+                    {{end}}
+                    </ul>
+                </td>
             </tr>
             {{end}}
             </tbody>
@@ -1044,6 +1068,8 @@
         </table>
         {{end}}
     {{end}}
+
+
 </main>
 </body>
 </html>
