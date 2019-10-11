@@ -21,17 +21,21 @@
     <title>{{$companyRegistrationInformation.company_name}}</title>
     <style type="text/css">
 
-      html {
-        -webkit-font-smoothing: antialiased;
-        font-family: "proxima_nova", Arial, sans-serif;
-      }
-
-      body {
-        margin: 0 30px;
-      }
-
       #page-container {
         max-width: 960px;
+        margin: 0 15px;
+      }
+
+      @media (min-width: 641px) {
+        #page-container {
+            margin: 0 30px;
+         }
+       }
+
+       @media (min-width: 1020px) {
+        #page-container {
+          margin: 0 auto;
+        }
       }
 
       h1.heading-xlarge {
@@ -137,11 +141,8 @@
         width: 100%;
       }
 
-      @media (min-width: 641px) {
-      table th, table td {
-        font-size: 19px;
-        line-height: 1.31579;
-        }
+      table tr td {
+        vertical-align: text-top;
       }
 
       table th, table td {
@@ -152,6 +153,13 @@
         text-align: left;
         color: #0b0c0c;
         border-bottom: 1px solid #bfc1c3;
+      }
+
+      @media (min-width: 641px) {
+      table th, table td {
+        font-size: 19px;
+        line-height: 1.31579;
+        }
       }
 
        table th {
