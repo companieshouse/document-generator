@@ -38,6 +38,20 @@
         }
       }
 
+     main {
+        padding-bottom: 3em;
+        font-family: "proxima_nova", Arial, sans-serif;
+        font-weight: 400;
+        text-transform: none;
+      }
+
+      @media (min-width: 641px) {
+      main {
+        font-size: 19px;
+        line-height: 1.31579;
+        }
+      }
+
       h1.heading-xlarge {
         word-wrap: break-word;
         font: 48px proxima_nova, Arial, sans-serif;
@@ -46,13 +60,6 @@
         margin: 30px 0 60px;
       }
 
-        @media (min-width: 641px) {
-          .heading-large {
-            font-size: 36px;
-            line-height: 1.11111;
-          }
-        }
-
       .heading-large {
         margin-bottom: 1em;
         font-family: "proxima_nova", Arial, sans-serif;
@@ -60,37 +67,50 @@
         text-transform: none;
       }
 
+       @media (min-width: 641px) {
+         .heading-large {
+           font-size: 36px;
+           line-height: 1.11111;
+         }
+       }
+
       .heading-medium {
         font-size: 24px;
         font-weight: 700;
         line-height: 1.25;
       }
 
-      @media (min-width: 641px)
-      .heading-medium {
-        margin-top: 1.875em;
-        margin-bottom: 0.83333em;
-      }
+      @media (min-width: 641px) {
+          .heading-medium {
+            margin-top: 1.875em;
+            margin-bottom: 0.83333em;
+          }
+       }
 
       .heading-small {
         font-family: "proxima_nova", Arial, sans-serif;
         font-weight: 700;
         text-transform: none;
+        margin-bottom: 0.3125em
       }
 
-      li {
-        display: list-item;
-        text-align: -webkit-match-parent;
-        font-size: 16px;
-       }
+       @media (min-width: 641px) {
+         .heading-small {
+           margin-top: 1.05263em;
+           font-size: 19px;
+           line-height: 1.31579;
+           }
+        }
 
-      .list li {
-        margin-bottom: 5px;
+     .list {
+        padding: 0;
+        margin-top: 5px;
+        margin-bottom: 20px;
       }
 
-      ul.list.list-bullet {
-        margin: 5px 0px 20px;
-        padding: 0px 0px 0px 20px;
+      .list-bullet {
+       list-style-type: disc;
+       padding-left: 20px;
       }
 
       .visually-hidden {
@@ -122,19 +142,6 @@
         background-color: #4B5253;
       }
 
-      @media (min-width: 641px)
-      main {
-        font-size: 19px;
-        line-height: 1.31579;
-      }
-
-      main {
-        padding-bottom: 3em;
-        font-family: "proxima_nova", Arial, sans-serif;
-        font-weight: 400;
-        text-transform: none;
-      }
-
       table {
         border-collapse: collapse;
         border-spacing: 0;
@@ -149,7 +156,7 @@
         font-family: "proxima_nova", Arial, sans-serif;
         font-weight: 400;
         text-transform: none;
-        padding: 0.63158em 1.05263em 0.47368em 0;
+        padding: 0.6em 1em 1em 0;
         text-align: left;
         color: #0b0c0c;
         border-bottom: 1px solid #bfc1c3;
