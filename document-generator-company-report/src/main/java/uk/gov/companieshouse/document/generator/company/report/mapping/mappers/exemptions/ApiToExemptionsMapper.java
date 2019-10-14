@@ -40,8 +40,8 @@ public abstract class  ApiToExemptionsMapper {
             checkAndSetActiveExemption(pscExemptAsSharesAdmittedOnMarketList, exemptions);
         }
 
-        if(exemptionsApi.getPscExemptAsTradingOnUkRegulatedMarket() != null) {
-            pscExemptAsTradingOnRegulatedMarketList = exemptionsApi.getPscExemptAsTradingOnUkRegulatedMarket().getItems();
+        if(exemptionsApi.getPscExemptAsTradingOnRegulatedMarket() != null) {
+            pscExemptAsTradingOnRegulatedMarketList = exemptionsApi.getPscExemptAsTradingOnRegulatedMarket().getItems();
 
             exemptions.setActiveExemption(false);
 
