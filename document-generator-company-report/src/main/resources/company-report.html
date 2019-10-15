@@ -482,48 +482,50 @@
     <h2 class="heading-medium">Persons with significant control:</h2>
 
         {{if $exemptions}}
-            {{if $pscs.active_count}}
-                <h3 class="heading-small">The PSC information is no longer updated at Companies House because:</h3>
-            {{else}}
-                <h3 class="heading-small">The PSC information is not available because:</h3>
+            {{if $exemptions.active_exemption}}
+                {{if $pscs.active_count}}
+                    <h3 class="heading-small">The PSC information is no longer updated at Companies House because:</h3>
+                {{else}}
+                    <h3 class="heading-small">The PSC information is not available because:</h3>
+                {{end}}
             {{end}}
-                <ul class="list list-bullet">
-                    {{if $exemptions.disclosure_transparency_rules_chapter_five_applies}}
-                        {{range $exemptions.disclosure_transparency_rules_chapter_five_applies.items}}
-                            {{if not .exempt_to}}
-                            <li>From {{$exemptions.disclosure_transparency_rules_chapter_five_applies.moved_on_date_formatted}}
-                                {{$exemptions.disclosure_transparency_rules_chapter_five_applies.exemption_type}}</li>
+                    <ul class="list list-bullet">
+                        {{if $exemptions.disclosure_transparency_rules_chapter_five_applies}}
+                            {{range $exemptions.disclosure_transparency_rules_chapter_five_applies.items}}
+                                {{if not .exempt_to}}
+                                <li>From {{$exemptions.disclosure_transparency_rules_chapter_five_applies.moved_on_date_formatted}}
+                                    {{$exemptions.disclosure_transparency_rules_chapter_five_applies.exemption_type}}</li>
+                                {{end}}
                             {{end}}
                         {{end}}
-                    {{end}}
 
-                    {{if $exemptions.psc_exempt_as_shares_admitted_on_market}}
-                        {{range $exemptions.psc_exempt_as_shares_admitted_on_market.items}}
-                            {{if not .exempt_to}}
-                            <li>From {{$exemptions.psc_exempt_as_shares_admitted_on_market.moved_on_date_formatted}}
-                                {{$exemptions.psc_exempt_as_shares_admitted_on_market.exemption_type}}</li>
+                        {{if $exemptions.psc_exempt_as_shares_admitted_on_market}}
+                            {{range $exemptions.psc_exempt_as_shares_admitted_on_market.items}}
+                                {{if not .exempt_to}}
+                                <li>From {{$exemptions.psc_exempt_as_shares_admitted_on_market.moved_on_date_formatted}}
+                                    {{$exemptions.psc_exempt_as_shares_admitted_on_market.exemption_type}}</li>
+                                {{end}}
                             {{end}}
                         {{end}}
-                    {{end}}
 
-                    {{if $exemptions.psc_exempt_as_trading_on_regulated_market}}
-                        {{range $exemptions.psc_exempt_as_trading_on_regulated_market.items}}
-                            {{if not .exempt_to}}
-                                <li>From {{$exemptions.psc_exempt_as_trading_on_regulated_market.moved_on_date_formatted}}
-                                    {{$exemptions.psc_exempt_as_trading_on_regulated_market.exemption_type}}</li>
+                        {{if $exemptions.psc_exempt_as_trading_on_regulated_market}}
+                            {{range $exemptions.psc_exempt_as_trading_on_regulated_market.items}}
+                                {{if not .exempt_to}}
+                                    <li>From {{$exemptions.psc_exempt_as_trading_on_regulated_market.moved_on_date_formatted}}
+                                        {{$exemptions.psc_exempt_as_trading_on_regulated_market.exemption_type}}</li>
+                                {{end}}
                             {{end}}
                         {{end}}
-                    {{end}}
 
-                    {{if $exemptions.psc_exempt_as_trading_on_uk_regulated_market}}
-                        {{range $exemptions.psc_exempt_as_trading_on_uk_regulated_market.items}}
-                            {{if not .exempt_to}}
-                                <li>From {{$exemptions.psc_exempt_as_trading_on_uk_regulated_market.moved_on_date_formatted}}
-                                    {{$exemptions.psc_exempt_as_trading_on_uk_regulated_market.exemption_type}}</li>
+                        {{if $exemptions.psc_exempt_as_trading_on_uk_regulated_market}}
+                            {{range $exemptions.psc_exempt_as_trading_on_uk_regulated_market.items}}
+                                {{if not .exempt_to}}
+                                    <li>From {{$exemptions.psc_exempt_as_trading_on_uk_regulated_market.moved_on_date_formatted}}
+                                        {{$exemptions.psc_exempt_as_trading_on_uk_regulated_market.exemption_type}}</li>
+                                {{end}}
                             {{end}}
                         {{end}}
-                    {{end}}
-                </ul>
+                    </ul>
         {{end}}
 
     <h2 class="heading-medium">
