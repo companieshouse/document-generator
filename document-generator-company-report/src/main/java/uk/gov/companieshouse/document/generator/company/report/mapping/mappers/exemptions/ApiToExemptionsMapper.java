@@ -24,12 +24,12 @@ public abstract class  ApiToExemptionsMapper {
         List<ExemptionItemsApi> pscExemptAsTradingOnRegulatedMarketList;
         List<ExemptionItemsApi> pscExemptAsTradingOnUkRegulatedMarketList;
 
+        exemptions.setActiveExemption(false);
+
         if(exemptionsApi.getDisclosureTransparencyRulesChapterFiveApplies() != null) {
              disclosureTransparencyRulesChapterFiveAppliesList = exemptionsApi.getDisclosureTransparencyRulesChapterFiveApplies().getItems();
 
              if(!exemptions.isActiveExemption()) {
-                 exemptions.setActiveExemption(false);
-
                  checkAndSetActiveExemption(disclosureTransparencyRulesChapterFiveAppliesList, exemptions);
              }
         }
@@ -38,8 +38,6 @@ public abstract class  ApiToExemptionsMapper {
             pscExemptAsSharesAdmittedOnMarketList = exemptionsApi.getPscExemptAsSharesAdmittedOnMarket().getItems();
 
             if(!exemptions.isActiveExemption()) {
-                exemptions.setActiveExemption(false);
-
                 checkAndSetActiveExemption(pscExemptAsSharesAdmittedOnMarketList, exemptions);
             }
         }
@@ -48,8 +46,6 @@ public abstract class  ApiToExemptionsMapper {
             pscExemptAsTradingOnRegulatedMarketList = exemptionsApi.getPscExemptAsTradingOnRegulatedMarket().getItems();
 
             if(!exemptions.isActiveExemption()) {
-                exemptions.setActiveExemption(false);
-
                 checkAndSetActiveExemption(pscExemptAsTradingOnRegulatedMarketList, exemptions);
             }
         }
@@ -58,8 +54,6 @@ public abstract class  ApiToExemptionsMapper {
             pscExemptAsTradingOnUkRegulatedMarketList = exemptionsApi.getPscExemptAsTradingOnUkRegulatedMarket().getItems();
 
             if(!exemptions.isActiveExemption()) {
-                exemptions.setActiveExemption(false);
-
                 checkAndSetActiveExemption(pscExemptAsTradingOnUkRegulatedMarketList, exemptions);
             }
         }
