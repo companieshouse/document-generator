@@ -27,33 +27,41 @@ public abstract class  ApiToExemptionsMapper {
         if(exemptionsApi.getDisclosureTransparencyRulesChapterFiveApplies() != null) {
              disclosureTransparencyRulesChapterFiveAppliesList = exemptionsApi.getDisclosureTransparencyRulesChapterFiveApplies().getItems();
 
-            exemptions.setActiveExemption(false);
+             if(exemptions.isActiveExemption() != true) {
+                 exemptions.setActiveExemption(false);
 
-            checkAndSetActiveExemption(disclosureTransparencyRulesChapterFiveAppliesList, exemptions);
+                 checkAndSetActiveExemption(disclosureTransparencyRulesChapterFiveAppliesList, exemptions);
+             }
         }
 
         if(exemptionsApi.getPscExemptAsSharesAdmittedOnMarket() != null) {
             pscExemptAsSharesAdmittedOnMarketList = exemptionsApi.getPscExemptAsSharesAdmittedOnMarket().getItems();
 
-            exemptions.setActiveExemption(false);
+            if(exemptions.isActiveExemption() != true) {
+                exemptions.setActiveExemption(false);
 
-            checkAndSetActiveExemption(pscExemptAsSharesAdmittedOnMarketList, exemptions);
+                checkAndSetActiveExemption(pscExemptAsSharesAdmittedOnMarketList, exemptions);
+            }
         }
 
         if(exemptionsApi.getPscExemptAsTradingOnRegulatedMarket() != null) {
             pscExemptAsTradingOnRegulatedMarketList = exemptionsApi.getPscExemptAsTradingOnRegulatedMarket().getItems();
 
-            exemptions.setActiveExemption(false);
+            if(exemptions.isActiveExemption() != true) {
+                exemptions.setActiveExemption(false);
 
-            checkAndSetActiveExemption(pscExemptAsTradingOnRegulatedMarketList, exemptions);
+                checkAndSetActiveExemption(pscExemptAsTradingOnRegulatedMarketList, exemptions);
+            }
         }
 
         if(exemptionsApi.getPscExemptAsTradingOnUkRegulatedMarket() != null) {
             pscExemptAsTradingOnUkRegulatedMarketList = exemptionsApi.getPscExemptAsTradingOnUkRegulatedMarket().getItems();
 
-            exemptions.setActiveExemption(false);
+            if(exemptions.isActiveExemption() != true) {
+                exemptions.setActiveExemption(false);
 
-            checkAndSetActiveExemption(pscExemptAsTradingOnUkRegulatedMarketList, exemptions);
+                checkAndSetActiveExemption(pscExemptAsTradingOnUkRegulatedMarketList, exemptions);
+            }
         }
     }
 
