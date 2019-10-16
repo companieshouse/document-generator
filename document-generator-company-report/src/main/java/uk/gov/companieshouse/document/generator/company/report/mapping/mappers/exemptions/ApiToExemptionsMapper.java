@@ -27,7 +27,7 @@ public abstract class  ApiToExemptionsMapper {
         if(exemptionsApi.getDisclosureTransparencyRulesChapterFiveApplies() != null) {
              disclosureTransparencyRulesChapterFiveAppliesList = exemptionsApi.getDisclosureTransparencyRulesChapterFiveApplies().getItems();
 
-             if(exemptions.isActiveExemption() != true) {
+             if(!exemptions.isActiveExemption()) {
                  exemptions.setActiveExemption(false);
 
                  checkAndSetActiveExemption(disclosureTransparencyRulesChapterFiveAppliesList, exemptions);
@@ -37,7 +37,7 @@ public abstract class  ApiToExemptionsMapper {
         if(exemptionsApi.getPscExemptAsSharesAdmittedOnMarket() != null) {
             pscExemptAsSharesAdmittedOnMarketList = exemptionsApi.getPscExemptAsSharesAdmittedOnMarket().getItems();
 
-            if(exemptions.isActiveExemption() != true) {
+            if(!exemptions.isActiveExemption()) {
                 exemptions.setActiveExemption(false);
 
                 checkAndSetActiveExemption(pscExemptAsSharesAdmittedOnMarketList, exemptions);
@@ -47,7 +47,7 @@ public abstract class  ApiToExemptionsMapper {
         if(exemptionsApi.getPscExemptAsTradingOnRegulatedMarket() != null) {
             pscExemptAsTradingOnRegulatedMarketList = exemptionsApi.getPscExemptAsTradingOnRegulatedMarket().getItems();
 
-            if(exemptions.isActiveExemption() != true) {
+            if(!exemptions.isActiveExemption()) {
                 exemptions.setActiveExemption(false);
 
                 checkAndSetActiveExemption(pscExemptAsTradingOnRegulatedMarketList, exemptions);
@@ -57,7 +57,7 @@ public abstract class  ApiToExemptionsMapper {
         if(exemptionsApi.getPscExemptAsTradingOnUkRegulatedMarket() != null) {
             pscExemptAsTradingOnUkRegulatedMarketList = exemptionsApi.getPscExemptAsTradingOnUkRegulatedMarket().getItems();
 
-            if(exemptions.isActiveExemption() != true) {
+            if(!exemptions.isActiveExemption()) {
                 exemptions.setActiveExemption(false);
 
                 checkAndSetActiveExemption(pscExemptAsTradingOnUkRegulatedMarketList, exemptions);
