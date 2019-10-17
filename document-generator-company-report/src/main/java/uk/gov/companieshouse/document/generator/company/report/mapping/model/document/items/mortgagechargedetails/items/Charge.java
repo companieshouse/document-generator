@@ -9,6 +9,9 @@ public class Charge {
     @JsonProperty("charge_description")
     private String chargeDescription;
 
+    @JsonProperty("type")
+    private String type;
+
     @JsonProperty("created")
     private String created;
 
@@ -117,5 +120,13 @@ public class Charge {
     public void setParticulars(
         Particulars particulars) {
         this.particulars = particulars;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
