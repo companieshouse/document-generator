@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model;
 
 import uk.gov.companieshouse.api.model.accounts.CompanyAccountsApi;
+import uk.gov.companieshouse.api.model.accounts.profitandloss.ProfitAndLossApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.intangible.IntangibleApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.ApprovalApi;
@@ -52,6 +53,16 @@ public class SmallFullApiData {
     private CreditorsAfterOneYearApi creditorsAfterOneYear;
     
     private FixedAssetsInvestmentsApi fixedAssetsInvestments;
+
+    private ProfitAndLossApi profitAndLossApi;
+
+    public ProfitAndLossApi getProfitAndLossApi() {
+        return profitAndLossApi;
+    }
+
+    public void setProfitAndLossApi(ProfitAndLossApi profitAndLossApi) {
+        this.profitAndLossApi = profitAndLossApi;
+    }
 
     public CurrentPeriodApi getCurrentPeriod() {
         return currentPeriod;
