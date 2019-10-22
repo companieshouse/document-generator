@@ -54,15 +54,9 @@ public class SmallFullApiData {
     
     private FixedAssetsInvestmentsApi fixedAssetsInvestments;
 
-    private ProfitAndLossApi profitAndLossApi;
+    private ProfitAndLossApi currentPeriodProfitAndLoss;
 
-    public ProfitAndLossApi getProfitAndLossApi() {
-        return profitAndLossApi;
-    }
-
-    public void setProfitAndLossApi(ProfitAndLossApi profitAndLossApi) {
-        this.profitAndLossApi = profitAndLossApi;
-    }
+    private ProfitAndLossApi previousPeriodProfitAndLoss;
 
     public CurrentPeriodApi getCurrentPeriod() {
         return currentPeriod;
@@ -185,6 +179,21 @@ public class SmallFullApiData {
     public void setFixedAssetsInvestments(FixedAssetsInvestmentsApi fixedAssetsInvestments) {
         this.fixedAssetsInvestments = fixedAssetsInvestments;
     }
+    public ProfitAndLossApi getCurrentPeriodProfitAndLoss() {
+        return currentPeriodProfitAndLoss;
+    }
+
+    public void setCurrentPeriodProfitAndLoss(ProfitAndLossApi currentPeriodProfitAndLoss) {
+        this.currentPeriodProfitAndLoss = currentPeriodProfitAndLoss;
+    }
+
+    public ProfitAndLossApi getPreviousPeriodProfitAndLoss() {
+        return previousPeriodProfitAndLoss;
+    }
+
+    public void setPreviousPeriodProfitAndLoss(ProfitAndLossApi previousPeriodProfitAndLoss) {
+        this.previousPeriodProfitAndLoss = previousPeriodProfitAndLoss;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -207,7 +216,9 @@ public class SmallFullApiData {
                 Objects.equals(getCurrentAssetsInvestments(), that.getCurrentAssetsInvestments()) &&
                 Objects.equals(getCreditorsWithinOneYear(), that.getCreditorsWithinOneYear()) &&
                 Objects.equals(getCreditorsAfterOneYear(), that.getCreditorsAfterOneYear()) &&
-                Objects.equals(getFixedAssetsInvestments(), that.getFixedAssetsInvestments());
+                Objects.equals(getFixedAssetsInvestments(), that.getFixedAssetsInvestments()) &&
+                Objects.equals(getCurrentPeriodProfitAndLoss(), that.getCurrentPeriodProfitAndLoss()) &&
+                Objects.equals(getPreviousPeriodProfitAndLoss(), that.getPreviousPeriodProfitAndLoss());
     }
 
     @Override
@@ -216,7 +227,8 @@ public class SmallFullApiData {
                 getCompanyAccounts(), getApproval(), getBalanceSheetStatements(),
                 getAccountingPolicies(), getTangibleAssets(), getStocks(), getDebtors(),
                 getEmployees(), getCurrentAssetsInvestments(), getCreditorsWithinOneYear(),
-                getCreditorsAfterOneYear(), getFixedAssetsInvestments());
+                getCreditorsAfterOneYear(), getFixedAssetsInvestments(), getCurrentPeriodProfitAndLoss(),
+                getPreviousPeriodProfitAndLoss());
     }
 
     @Override
@@ -237,6 +249,8 @@ public class SmallFullApiData {
                 ", creditorsWithinOneYear=" + creditorsWithinOneYear +
                 ", creditorsAfterOneYear=" + creditorsAfterOneYear +
                 ", fixedAssetsInvestments=" + fixedAssetsInvestments +
+                ", currentPeriodProfitAndLoss=" + currentPeriodProfitAndLoss +
+                ", previousPeriodProfitAndLoss=" + previousPeriodProfitAndLoss +
                 '}';
     }
 }
