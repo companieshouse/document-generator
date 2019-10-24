@@ -32,6 +32,7 @@ public abstract class ApiToChargesMapper {
 
     @Mappings({
         @Mapping(source = "classification.type", target = "type"),
+        @Mapping(source = "classification.description", target = "classificationDescription"),
         @Mapping(source = "createdOn", target = "created", dateFormat = D_MMMM_UUUU),
         @Mapping(source = "deliveredOn", target = "delivered", dateFormat = D_MMMM_UUUU),
         @Mapping(source = "satisfiedOn", target = "satisfiedOn", dateFormat = D_MMMM_UUUU),

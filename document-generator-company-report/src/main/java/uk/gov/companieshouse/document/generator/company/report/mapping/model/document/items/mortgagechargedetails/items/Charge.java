@@ -12,6 +12,9 @@ public class Charge {
     @JsonProperty("type")
     private String type;
 
+    @JsonProperty("classification_description")
+    private String classificationDescription;
+
     @JsonProperty("created")
     private String created;
 
@@ -128,5 +131,13 @@ public class Charge {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getClassificationDescription() {
+        return classificationDescription;
+    }
+
+    public void setClassificationDescription(String classificationDescription) {
+        this.classificationDescription = classificationDescription;
     }
 }

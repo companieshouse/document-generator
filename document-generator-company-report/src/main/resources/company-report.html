@@ -825,7 +825,9 @@
                 {{if eq .type "NATURE_OF_CHARGE"}}
                 <div>
                     <p class="data">Nature of charge<br>
-                        <span class="normal">{{.charge_description}}</span>
+                        {{if .classification_description}}
+                            <span class="normal">{{.classification_description}}</span>
+                        {{end}}
                 </div>
                 {{end}}
 
