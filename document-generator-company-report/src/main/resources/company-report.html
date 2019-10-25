@@ -848,6 +848,15 @@
                 </div>
                 {{end}}
 
+                {{if eq .type "NATURE_OF_CHARGE"}}
+                <div>
+                    <p class="data">Nature of charge<br>
+                        {{if .classification_description}}
+                            <span class="normal">{{.classification_description}}</span>
+                        {{end}}
+                </div>
+                {{end}}
+
                 {{if .persons_entitled}}
                 <div>
                     <p class="data">Persons entitled<br>
