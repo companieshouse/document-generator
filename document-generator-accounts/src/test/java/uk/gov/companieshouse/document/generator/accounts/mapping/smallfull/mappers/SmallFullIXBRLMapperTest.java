@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.companieshouse.api.model.accounts.profitandloss.ProfitAndLossApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.ApprovalApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetApi;
@@ -55,6 +56,7 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssetsColumns;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.period.Period;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.profitandloss.ProfitAndLoss;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.stocks.StocksNote;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -71,6 +73,9 @@ public class SmallFullIXBRLMapperTest {
 
     @Mock
     private SmallFullIXBRLMapper internalSmallFullIXBRLMapper;
+
+    @Mock
+    private ApiToProfitAndLossMapper apiToProfitAndLossMapper;
 
     @Mock
     private ApiToCompanyMapper apiToCompanyMapper;
@@ -110,6 +115,9 @@ public class SmallFullIXBRLMapperTest {
 
     @Mock
     private ApiToFixedAssetsInvestmentsMapper apiToFixedAssetsInvestmentsMapper;
+
+    @Mock
+    private ProfitAndLoss profitAndLoss;
 
     @Mock
     private CalledUpSharedCapitalNotPaid calledUpSharedCapitalNotPaid;
@@ -311,6 +319,11 @@ public class SmallFullIXBRLMapperTest {
 
     private void mockOptionalFieldMappers(SmallFullApiData smallFullApiData) {
 
+        when(apiToProfitAndLossMapper.apiToProfitAndLoss(
+                smallFullApiData.getCurrentPeriodProfitAndLoss(),
+                smallFullApiData.getPreviousPeriodProfitAndLoss()))
+                .thenReturn(profitAndLoss);
+
         when(apiToAccountingPoliciesMapper.apiToAccountingPolicies(smallFullApiData.getAccountingPolicies()))
                 .thenReturn(accountingPolicies);
 
@@ -468,6 +481,10 @@ public class SmallFullIXBRLMapperTest {
 
     private void verifyOptionalFieldMappersExecuted(SmallFullApiData smallFullApiData) {
 
+        verify(apiToProfitAndLossMapper, times(1))
+                .apiToProfitAndLoss(smallFullApiData.getCurrentPeriodProfitAndLoss(),
+                        smallFullApiData.getPreviousPeriodProfitAndLoss());
+
         verify(apiToAccountingPoliciesMapper, times(1))
                 .apiToAccountingPolicies(smallFullApiData.getAccountingPolicies());
 
@@ -581,6 +598,8 @@ public class SmallFullIXBRLMapperTest {
     private void assertIbxrlOptionalDataMapped(SmallFullAccountIxbrl smallFullAccountIxbrl) {
 
         assertNotNull(smallFullAccountIxbrl.getAdditionalNotes());
+        assertEquals(profitAndLoss,
+                smallFullAccountIxbrl.getProfitAndLoss());
         assertEquals(accountingPolicies,
                 smallFullAccountIxbrl.getAdditionalNotes().getAccountingPolicies());
 
@@ -632,6 +651,8 @@ public class SmallFullIXBRLMapperTest {
             smallFullApiData.setIntangibleAssets(createIntangible());
             smallFullApiData.setFixedAssetsInvestments(createFixedAssetsInvestments());
             smallFullApiData.setEmployees(createEmployees());
+            smallFullApiData.setCurrentPeriodProfitAndLoss(createProfitAndLoss());
+            smallFullApiData.setPreviousPeriodProfitAndLoss(createProfitAndLoss());
         }
 
         return smallFullApiData;
@@ -758,6 +779,11 @@ public class SmallFullIXBRLMapperTest {
     private IntangibleApi createIntangible() {
 
         return new IntangibleApi();
+    }
+
+    private ProfitAndLossApi createProfitAndLoss() {
+
+        return new ProfitAndLossApi();
     }
 
     private FixedAssetsInvestmentsApi createFixedAssetsInvestments() {

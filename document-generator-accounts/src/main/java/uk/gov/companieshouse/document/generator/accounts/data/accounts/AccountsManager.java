@@ -145,6 +145,12 @@ public class AccountsManager {
                 PreviousPeriodApi previousPeriod = apiClient.smallFull().previousPeriod()
                         .get(smallFull.getLinks().getPreviousPeriod()).execute().getData();
                 smallFullApiData.setPreviousPeriod(previousPeriod);
+
+                if (!StringUtils.isEmpty(previousPeriod.getLinks().getProfitAndLoss())) {
+                    smallFullApiData.setPreviousPeriodProfitAndLoss(
+                            apiClient.smallFull().previousPeriodProfitAndLoss()
+                                    .get(previousPeriod.getLinks().getProfitAndLoss()).execute().getData());
+                }
             }
 
             if (!StringUtils.isEmpty(smallFull.getLinks().getCurrentPeriod())) {
@@ -154,6 +160,12 @@ public class AccountsManager {
                 CurrentPeriodApi currentPeriod = apiClient.smallFull().currentPeriod()
                         .get(smallFull.getLinks().getCurrentPeriod()).execute().getData();
                 smallFullApiData.setCurrentPeriod(currentPeriod);
+
+                if (!StringUtils.isEmpty(currentPeriod.getLinks().getProfitAndLoss())) {
+                    smallFullApiData.setCurrentPeriodProfitAndLoss(
+                            apiClient.smallFull().currentPeriodProfitAndLoss()
+                                    .get(currentPeriod.getLinks().getProfitAndLoss()).execute().getData());
+                }
             }
 
             if (!StringUtils.isEmpty(smallFull.getLinks().getApproval())) {
