@@ -19,6 +19,9 @@ public class Exemptions {
     @JsonProperty("psc_exempt_as_trading_on_uk_regulated_market")
     private Exemption pscExemptAsTradingOnUkRegulatedMarket;
 
+    @JsonProperty("active_exemption")
+    private boolean activeExemption;
+
     public Exemption getDisclosureTransparencyRulesChapterFiveApplies() {
         return disclosureTransparencyRulesChapterFiveApplies;
     }
@@ -49,5 +52,13 @@ public class Exemptions {
 
     public void setPscExemptAsTradingOnUkRegulatedMarket(Exemption pscExemptAsTradingOnUkRegulatedMarket) {
         this.pscExemptAsTradingOnUkRegulatedMarket = pscExemptAsTradingOnUkRegulatedMarket;
+    }
+
+    public boolean isActiveExemption() {
+        return activeExemption;
+    }
+
+    public void setActiveExemption(boolean activeExemption) {
+        this.activeExemption = activeExemption;
     }
 }
