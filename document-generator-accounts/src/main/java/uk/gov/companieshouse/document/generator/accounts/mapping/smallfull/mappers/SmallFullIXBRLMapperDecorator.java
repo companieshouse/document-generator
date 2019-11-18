@@ -47,6 +47,9 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
     private SmallFullIXBRLMapper smallFullIXBRLMapper;
 
     @Autowired
+    private ApiToProfitAndLossMapper apiToProfitAndLossMapper;
+
+    @Autowired
     private ApiToCompanyMapper apiToCompanyMapper;
 
     @Autowired
@@ -92,6 +95,14 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
 
         SmallFullAccountIxbrl smallFullAccountIxbrl =
                 smallFullIXBRLMapper.mapSmallFullIXBRLModel(smallFullApiData);
+
+        if (smallFullApiData.getCurrentPeriodProfitAndLoss() != null) {
+            smallFullAccountIxbrl.setProfitAndLoss(
+                    apiToProfitAndLossMapper.apiToProfitAndLoss(
+                            smallFullApiData.getCurrentPeriodProfitAndLoss(),
+                            smallFullApiData.getPreviousPeriodProfitAndLoss()));
+        }
+
         smallFullAccountIxbrl.setBalanceSheet(
                 setBalanceSheet(smallFullApiData.getCurrentPeriod(),
                         smallFullApiData.getPreviousPeriod(),

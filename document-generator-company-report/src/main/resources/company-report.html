@@ -18,21 +18,177 @@
 
 <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+    <meta name="format-detection" content="telephone=no">
     <title>{{$companyRegistrationInformation.company_name}}</title>
     <style type="text/css">
 
-      main {
+      #page-container {
+        max-width: 960px;
+        margin: 0 15px;
+      }
+
+      @media (min-width: 641px) {
+        #page-container {
+            margin: 0 30px;
+         }
+       }
+
+       @media (min-width: 1020px) {
+        #page-container {
+          margin: 0 auto;
+        }
+      }
+
+     main {
         padding-bottom: 3em;
+        font-family: "proxima_nova", Arial, sans-serif;
+        font-weight: 400;
+        text-transform: none;
+      }
+
+      @media (min-width: 641px) {
+      main {
+        font-size: 19px;
+        line-height: 1.31579;
+        }
+      }
+
+      h1.heading-xlarge {
+        word-wrap: break-word;
+        font: 48px proxima_nova, Arial, sans-serif;
+        font-weight: 700;
+        text-transform: none;
+        margin: 30px 0 60px;
+      }
+
+      .heading-large {
+        margin-bottom: 1em;
+        font-family: "proxima_nova", Arial, sans-serif;
+        font-weight: 700;
+        text-transform: none;
+      }
+
+       @media (min-width: 641px) {
+         .heading-large {
+           font-size: 36px;
+           line-height: 1.11111;
+         }
+       }
+
+      .heading-medium {
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 1.25;
+      }
+
+      @media (min-width: 641px) {
+          .heading-medium {
+            margin-top: 1.875em;
+            margin-bottom: 0.83333em;
+          }
+       }
+
+      .heading-small {
+        font-family: "proxima_nova", Arial, sans-serif;
+        font-weight: 700;
+        text-transform: none;
+        margin-bottom: 0.3125em
+      }
+
+       @media (min-width: 641px) {
+         .heading-small {
+           margin-top: 1.05263em;
+           font-size: 19px;
+           line-height: 1.31579;
+           }
+        }
+
+     .list {
+        padding: 0;
+        margin-top: 5px;
+        margin-bottom: 20px;
+      }
+
+      .list-bullet {
+       list-style-type: disc;
+       padding-left: 20px;
+      }
+
+      .visually-hidden {
+        position: absolute;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        width: 1px;
+        margin: -1px;
+        padding: 0;
+        border: 0;
+      }
+
+      span.status-tag {
+        background-color: #006435;
+        color: #fff;
+        margin-left: 0.75em;
+        vertical-align: baseline;
+        padding: 2px 5px 1px;
+        font-weight: 700;
+        font-size: 14px;
+        text-transform: uppercase;
+        display: inline-block;
+        position: relative;
+        top: -0.05em;
+      }
+
+      span.status-tag.ceased-tag {
+        background-color: #4B5253;
+      }
+
+      table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+      }
+
+      table tr td {
+        vertical-align: text-top;
+      }
+
+      table th, table td {
+        font-family: "proxima_nova", Arial, sans-serif;
+        font-weight: 400;
+        text-transform: none;
+        padding: 0.6em 1em 1em 0;
+        text-align: left;
+        color: #0b0c0c;
+        border-bottom: 1px solid #bfc1c3;
+      }
+
+      @media (min-width: 641px) {
+      table th, table td {
+        font-size: 19px;
+        line-height: 1.31579;
+        }
+      }
+
+       table th {
+        font-weight: 700;
       }
 
       .grid-row {
         margin: 0 -15px;
       }
 
-      .column-quarter {
-        float: left;
-        width: 25%;
-      }
+      @media (min-width: 641px) {
+        .column-quarter {
+           float: left;
+           width: 25%;
+         }
+       }
+
+        .column-quarter {
+          padding: 0 15px;
+          box-sizing: border-box;
+        }
 
       .column-half {
         float: left;
@@ -75,6 +231,10 @@
 
       .charge {
         margin: 20px 0px;
+      }
+
+      .spacer {
+        width: 50%;
       }
 
       .particulars {
@@ -738,41 +898,30 @@
                 {{- range $insolvency.cases -}}
                 <h2 class="heading-medium heading-with-border"> Case number {{.case_number}} - {{.case_type}}</h2>
                 {{if .dates}}
-                    <div class="grid-row">
                         {{- range .dates -}}
-                        <div class="column-quarter">
                             <p>{{.type}}<br>
                                 <span class="data">{{.date}}</span>
                             </p>
-                        </div>
                         {{end}}
-                    </div>
                 {{end}}
 
                 {{if .practitioners}}
                     {{- range .practitioners}}
-                        <div class="grid-row">
-                            <div class="column-half">
-                                <p>Practitioner<br>
-                                    <span class="data">{{.name}}</span><br>
-                                    <span>{{if .address.address_line_1}} {{.address.address_line_1}}{{end}}{{if .address.address_line_2}}, {{.address.address_line_2}}{{end}}{{if .address.locality}}, {{.address.locality}}{{end}}{{if .address.region}}, {{.address.region}}{{end}}{{if .address.postal_code}}, {{.address.postal_code}} {{end}}</span>
-                                </p>
-                            </div>
-                            {{if .appointed_on}}
-                            <div class="column-quarter">
-                                <p>Appointed on<br>
-                                    <span class="data">{{.appointed_on}}</span>
-                                </p>
-                            </div>
-                            {{end}}
-                            {{if .ceased_to_act_on}}
-                                <div class="column-quarter">
-                                    <p>Ceased to act<br>
-                                        <span class="data">{{.ceased_to_act_on}}</span>
-                                    </p>
-                                </div>
-                            {{end}}
-                        </div>
+                        <hr class="spacer">
+                        <p>Practitioner<br>
+                             <span class="data">{{.name}}</span><br>
+                             <span>{{if .address.address_line_1}} {{.address.address_line_1}}{{end}}{{if .address.address_line_2}}, {{.address.address_line_2}}{{end}}{{if .address.locality}}, {{.address.locality}}{{end}}{{if .address.region}}, {{.address.region}}{{end}}{{if .address.postal_code}}, {{.address.postal_code}} {{end}}</span>
+                        </p>
+                        {{if .appointed_on}}
+                            <p>Appointed on<br>
+                                <span class="data">{{.appointed_on}}</span>
+                            </p>
+                        {{end}}
+                        {{if .ceased_to_act_on}}
+                            <p>Ceased to act<br>
+                                <span class="data">{{.ceased_to_act_on}}</span>
+                            </p>
+                        {{end}}
                     {{end}}
                 {{end}}
             {{end}}
@@ -845,6 +994,15 @@
                     <p class="data">Assets ceased/released<br>
                         <span class="normal">{{.assets_ceased_released}}</span>
                     </p>
+                </div>
+                {{end}}
+
+                {{if eq .type "NATURE_OF_CHARGE"}}
+                <div>
+                    <p class="data">Nature of charge<br>
+                        {{if .classification_description}}
+                            <span class="normal">{{.classification_description}}</span>
+                        {{end}}
                 </div>
                 {{end}}
 

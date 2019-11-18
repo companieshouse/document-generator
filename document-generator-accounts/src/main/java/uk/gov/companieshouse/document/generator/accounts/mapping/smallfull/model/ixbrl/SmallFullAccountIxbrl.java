@@ -3,7 +3,6 @@ package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.mode
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.gson.Gson;
 import uk.gov.companieshouse.document.generator.accounts.mapping.PeriodAwareIxbrl;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.BalanceSheet;
@@ -13,9 +12,13 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.period.Period;
 
 import java.util.Objects;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.profitandloss.ProfitAndLoss;
 
 @JsonInclude(Include.NON_NULL)
 public class SmallFullAccountIxbrl implements PeriodAwareIxbrl {
+
+    @JsonProperty("profit_and_loss")
+    private ProfitAndLoss profitAndLoss;
 
     @JsonProperty("period")
     private Period period;
@@ -38,7 +41,14 @@ public class SmallFullAccountIxbrl implements PeriodAwareIxbrl {
     @JsonProperty("approval_name")
     private String approvalName;
 
-    @Override
+    public ProfitAndLoss getProfitAndLoss() {
+        return profitAndLoss;
+    }
+
+    public void setProfitAndLoss(ProfitAndLoss profitAndLoss) {
+        this.profitAndLoss = profitAndLoss;
+    }
+
     public Period getPeriod() {
         return period;
     }
@@ -98,7 +108,8 @@ public class SmallFullAccountIxbrl implements PeriodAwareIxbrl {
         if (this == o) return true;
         if (!(o instanceof SmallFullAccountIxbrl)) return false;
         SmallFullAccountIxbrl smallFullAccountIxbrl = (SmallFullAccountIxbrl) o;
-        return Objects.equals(getPeriod(), smallFullAccountIxbrl.getPeriod()) &&
+        return Objects.equals(getProfitAndLoss(), smallFullAccountIxbrl.getProfitAndLoss()) &&
+                Objects.equals(getPeriod(), smallFullAccountIxbrl.getPeriod()) &&
                 Objects.equals(getBalanceSheet(), smallFullAccountIxbrl.getBalanceSheet()) &&
                 Objects.equals(getAdditionalNotes(), smallFullAccountIxbrl.getAdditionalNotes()) &&
                 Objects.equals(getCompany(), smallFullAccountIxbrl.getCompany()) &&
@@ -110,7 +121,7 @@ public class SmallFullAccountIxbrl implements PeriodAwareIxbrl {
     @Override
     public int hashCode() {
 
-        return Objects.hash(getPeriod(), getBalanceSheet(), getAdditionalNotes(), getCompany(), getApprovalDate(),
+        return Objects.hash(getProfitAndLoss(), getPeriod(), getBalanceSheet(), getAdditionalNotes(), getCompany(), getApprovalDate(),
                 getApprovalName(), getBalanceSheetNotes());
     }
 
