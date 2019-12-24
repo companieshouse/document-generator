@@ -31,6 +31,8 @@ public abstract class ApiToChargesMapper {
     private static final String D_MMMM_UUUU = "d MMMM uuuu";
 
     @Mappings({
+        @Mapping(source = "classification.type", target = "type"),
+        @Mapping(source = "classification.description", target = "classificationDescription"),
         @Mapping(source = "createdOn", target = "created", dateFormat = D_MMMM_UUUU),
         @Mapping(source = "deliveredOn", target = "delivered", dateFormat = D_MMMM_UUUU),
         @Mapping(source = "satisfiedOn", target = "satisfiedOn", dateFormat = D_MMMM_UUUU),
@@ -45,7 +47,7 @@ public abstract class ApiToChargesMapper {
     protected void setChargeDescription(ChargeApi chargeApi, @MappingTarget Charge charge) {
 
         if(chargeApi != null) {
-            if(chargeApi.getAcquiredOn() != null || chargeApi.getChargeCode() == null) {
+            if(chargeApi.getChargeCode() == null) {
                 charge.setChargeDescription(Optional.of(chargeApi)
                     .map(ChargeApi::getClassification)
                     .map(ClassificationApi::getDescription)
