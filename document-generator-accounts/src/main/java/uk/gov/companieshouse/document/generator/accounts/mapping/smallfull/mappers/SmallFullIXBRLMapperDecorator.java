@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.companieshouse.accountsdates.AccountsDatesHelper;
 import uk.gov.companieshouse.accountsdates.impl.AccountsDatesHelperImpl;
+import uk.gov.companieshouse.api.model.accounts.directorsreport.StatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
@@ -26,6 +27,7 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorswithinoneyear.CreditorsWithinOneYear;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.currentassetsinvestments.CurrentAssetsInvestments;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.Debtors;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.directorsreport.DirectorsReport;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.fixedassetsinvestments.FixedAssetsInvestments;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.employees.Employees;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.intangible.IntangibleAssets;
@@ -87,6 +89,9 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
 
     @Autowired
     private ApiToFixedAssetsInvestmentsMapper apiToFixedAssetsInvestmentsMapper;
+
+    @Autowired
+    private ApiToDirectorsReportMapper apiToDirectorsReportMapper;
 
     private AccountsDatesHelper accountsDatesHelper = new AccountsDatesHelperImpl();
 
@@ -190,6 +195,11 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
             hasBalanceSheetNotes = true;
         }
 
+        if (smallFullApiData.getDirectorsReportStatements() != null) {
+
+            smallFullAccountIxbrl.setDirectorsReport(setDirectorsReport(
+                            smallFullApiData.getDirectorsReportStatements()));
+        }
 
 
         //We only want to set the additional notes if we have any
@@ -294,6 +304,17 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
         }
 
         return balanceSheet;
+    }
+
+    private DirectorsReport setDirectorsReport( StatementsApi directorsReportStatements) {
+
+        DirectorsReport directorsReport = new DirectorsReport();
+
+        if (directorsReportStatements != null) {
+            directorsReport.setDirectorsReportStatements(apiToDirectorsReportMapper.apiToStatements(directorsReportStatements));
+        }
+
+        return directorsReport;
     }
 
     private AccountingPolicies mapAccountingPolicies(AccountingPoliciesApi accountingPolicies) {

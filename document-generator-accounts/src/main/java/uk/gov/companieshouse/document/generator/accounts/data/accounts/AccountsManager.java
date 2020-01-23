@@ -10,6 +10,10 @@ import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.accounts.Accounts;
 import uk.gov.companieshouse.api.model.accounts.CompanyAccountsApi;
 import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
+import uk.gov.companieshouse.api.model.accounts.directorsreport.DirectorApi;
+import uk.gov.companieshouse.api.model.accounts.directorsreport.DirectorsReportApi;
+import uk.gov.companieshouse.api.model.accounts.directorsreport.DirectorsReportLinks;
+import uk.gov.companieshouse.api.model.accounts.directorsreport.StatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.intangible.IntangibleApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.CreditorsAfterOneYearApi;
@@ -131,6 +135,8 @@ public class AccountsManager {
         try {
 
             SmallFullApi smallFull = apiClient.smallFull().get(link).execute().getData();
+            DirectorsReportApi directorsReport = apiClient.smallFull().directorsReport().get(link).execute().getData();
+
 
             errorString = "company accounts";
 
@@ -283,6 +289,15 @@ public class AccountsManager {
                         .get(smallFull.getLinks().getFixedAssetsInvestmentsNote()).execute().getData();
 
                 smallFullApiData.setFixedAssetsInvestments(fixedAssetsInvestmentsApi);
+            }
+
+            if (!StringUtils.isEmpty(directorsReport.getLinks().getStatements())) {
+
+                errorString = "statements";
+
+                StatementsApi statements = apiClient.smallFull().directorsReport().statements()
+                        .get(directorsReport.getLinks().getStatements()).execute().getData();
+                smallFullApiData.setDirectorsReportStatements(statements);
             }
 
         } catch (ApiErrorResponseException e) {

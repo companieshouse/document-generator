@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.companieshouse.api.model.accounts.directorsreport.StatementsApi;
 import uk.gov.companieshouse.api.model.accounts.profitandloss.ProfitAndLossApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.ApprovalApi;
@@ -47,6 +48,7 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorswithinoneyear.CreditorsWithinOneYear;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.currentassetsinvestments.CurrentAssetsInvestments;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.Debtors;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.directorsreport.DirectorsReportStatements;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.fixedassetsinvestments.FixedAssetsInvestments;
 import java.time.LocalDate;
 
@@ -85,6 +87,9 @@ public class SmallFullIXBRLMapperTest {
 
     @Mock
     private ApiToBalanceSheetMapper apiToBalanceSheetMapper;
+
+    @Mock
+    private ApiToDirectorsReportMapper apiToDirectorsReportMapper;
 
     @Mock
     private ApiToAccountingPoliciesMapper apiToAccountingPoliciesMapper;
@@ -140,6 +145,8 @@ public class SmallFullIXBRLMapperTest {
     @Mock
     private BalanceSheetStatements balanceSheetStatements;
 
+    @Mock
+    private DirectorsReportStatements directorsReportStatements;
     @Mock
     private Company company;
 
@@ -254,6 +261,9 @@ public class SmallFullIXBRLMapperTest {
         when(apiToBalanceSheetMapper.apiToStatements(smallFullApiData.getBalanceSheetStatements()))
                 .thenReturn(balanceSheetStatements);
 
+        when(apiToDirectorsReportMapper.apiToStatements(smallFullApiData.getDirectorsReportStatements()))
+                .thenReturn(directorsReportStatements);
+
         when(apiToCompanyMapper.apiToCompany(smallFullApiData.getCompanyProfile()))
                 .thenReturn(company);
 
@@ -285,6 +295,9 @@ public class SmallFullIXBRLMapperTest {
 
         verify(apiToBalanceSheetMapper, times(1))
                 .apiToStatements(smallFullApiData.getBalanceSheetStatements());
+
+        verify(apiToDirectorsReportMapper, times(1))
+                .apiToStatements(smallFullApiData.getDirectorsReportStatements());
 
         verify(apiToCompanyMapper, times(1))
                 .apiToCompany(smallFullApiData.getCompanyProfile());
@@ -640,6 +653,7 @@ public class SmallFullIXBRLMapperTest {
         smallFullApiData.setPreviousPeriod(createPreviousPeriod());
         smallFullApiData.setBalanceSheetStatements(createBalanceSheetStatements());
         smallFullApiData.setCurrentAssetsInvestments(createCurrentAssetsInvestments());
+        smallFullApiData.setDirectorsReportStatements(createDirectorsReportStatements());
 
         if (hasOptionalResources) {
             smallFullApiData.setAccountingPolicies(createAccountingPolicies());
@@ -690,6 +704,11 @@ public class SmallFullIXBRLMapperTest {
     private BalanceSheetStatementsApi createBalanceSheetStatements() {
 
         return new BalanceSheetStatementsApi();
+    }
+
+    private StatementsApi createDirectorsReportStatements() {
+
+        return new StatementsApi();
     }
 
     private ApprovalApi createApproval() {
