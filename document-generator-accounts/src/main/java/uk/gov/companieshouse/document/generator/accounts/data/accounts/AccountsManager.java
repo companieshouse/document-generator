@@ -10,9 +10,7 @@ import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.accounts.Accounts;
 import uk.gov.companieshouse.api.model.accounts.CompanyAccountsApi;
 import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
-import uk.gov.companieshouse.api.model.accounts.directorsreport.DirectorApi;
 import uk.gov.companieshouse.api.model.accounts.directorsreport.DirectorsReportApi;
-import uk.gov.companieshouse.api.model.accounts.directorsreport.DirectorsReportLinks;
 import uk.gov.companieshouse.api.model.accounts.directorsreport.StatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.intangible.IntangibleApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
@@ -135,8 +133,6 @@ public class AccountsManager {
         try {
 
             SmallFullApi smallFull = apiClient.smallFull().get(link).execute().getData();
-            DirectorsReportApi directorsReport = apiClient.smallFull().directorsReport().get(link).execute().getData();
-
 
             errorString = "company accounts";
 
@@ -291,13 +287,20 @@ public class AccountsManager {
                 smallFullApiData.setFixedAssetsInvestments(fixedAssetsInvestmentsApi);
             }
 
-            if (!StringUtils.isEmpty(directorsReport.getLinks().getStatements())) {
+            if (!StringUtils.isEmpty(smallFull.getLinks().getDirectorsReport())) {
 
                 errorString = "statements";
+                DirectorsReportApi directorsReport = apiClient.smallFull().directorsReport()
+                        .get(smallFull.getLinks().getDirectorsReport()).execute().getData();
 
-                StatementsApi statements = apiClient.smallFull().directorsReport().statements()
-                        .get(directorsReport.getLinks().getStatements()).execute().getData();
-                smallFullApiData.setDirectorsReportStatements(statements);
+                smallFullApiData.setDirectorsReport(directorsReport);
+
+                if (!StringUtils.isEmpty(directorsReport.getLinks().getStatements())) {
+
+                    StatementsApi statements = apiClient.smallFull().directorsReport().statements()
+                            .get(directorsReport.getLinks().getStatements()).execute().getData();
+                    smallFullApiData.setDirectorsReportStatements(statements);
+                }
             }
 
         } catch (ApiErrorResponseException e) {

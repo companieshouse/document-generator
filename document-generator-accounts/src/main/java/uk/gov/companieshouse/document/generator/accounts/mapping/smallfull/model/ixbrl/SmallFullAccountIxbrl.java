@@ -46,27 +46,6 @@ public class SmallFullAccountIxbrl implements PeriodAwareIxbrl {
     @JsonProperty("directors_report")
     private DirectorsReport directorsReport;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SmallFullAccountIxbrl that = (SmallFullAccountIxbrl) o;
-        return Objects.equals(profitAndLoss, that.profitAndLoss) &&
-                Objects.equals(period, that.period) &&
-                Objects.equals(balanceSheet, that.balanceSheet) &&
-                Objects.equals(additionalNotes, that.additionalNotes) &&
-                Objects.equals(balanceSheetNotes, that.balanceSheetNotes) &&
-                Objects.equals(company, that.company) &&
-                Objects.equals(approvalDate, that.approvalDate) &&
-                Objects.equals(approvalName, that.approvalName) &&
-                Objects.equals(directorsReport, that.directorsReport);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(profitAndLoss, period, balanceSheet, additionalNotes, balanceSheetNotes, company, approvalDate, approvalName, directorsReport);
-    }
-
     public DirectorsReport getDirectorsReport() {
         return directorsReport;
     }
@@ -135,6 +114,27 @@ public class SmallFullAccountIxbrl implements PeriodAwareIxbrl {
 
     public void setBalanceSheetNotes(BalanceSheetNotes balanceSheetNotes) {
         this.balanceSheetNotes = balanceSheetNotes;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SmallFullAccountIxbrl that = (SmallFullAccountIxbrl) o;
+        return Objects.equals(profitAndLoss, that.profitAndLoss) &&
+                Objects.equals(period, that.period) &&
+                Objects.equals(balanceSheet, that.balanceSheet) &&
+                Objects.equals(additionalNotes, that.additionalNotes) &&
+                Objects.equals(balanceSheetNotes, that.balanceSheetNotes) &&
+                Objects.equals(company, that.company) &&
+                Objects.equals(approvalDate, that.approvalDate) &&
+                Objects.equals(approvalName, that.approvalName) &&
+                Objects.equals(directorsReport, that.directorsReport);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(profitAndLoss, period, balanceSheet, additionalNotes, balanceSheetNotes, company, approvalDate, approvalName, directorsReport);
     }
 
     @Override

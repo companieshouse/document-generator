@@ -326,6 +326,9 @@ public class SmallFullIXBRLMapperTest {
         assertEquals(balanceSheetStatements,
                 smallFullAccountIxbrl.getBalanceSheet().getBalanceSheetStatements());
 
+        assertEquals(directorsReportStatements,
+                smallFullAccountIxbrl.getDirectorsReport().getDirectorsReportStatements());
+
         assertEquals(company, smallFullAccountIxbrl.getCompany());
         assertEquals(period, smallFullAccountIxbrl.getPeriod());
     }

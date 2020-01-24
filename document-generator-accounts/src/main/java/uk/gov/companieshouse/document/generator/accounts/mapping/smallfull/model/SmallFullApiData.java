@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model;
 
 import uk.gov.companieshouse.api.model.accounts.CompanyAccountsApi;
+import uk.gov.companieshouse.api.model.accounts.directorsreport.DirectorsReportApi;
 import uk.gov.companieshouse.api.model.accounts.directorsreport.StatementsApi;
 import uk.gov.companieshouse.api.model.accounts.profitandloss.ProfitAndLossApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.intangible.IntangibleApi;
@@ -33,37 +34,6 @@ public class SmallFullApiData {
 
     private ApprovalApi approval;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SmallFullApiData that = (SmallFullApiData) o;
-        return Objects.equals(currentPeriod, that.currentPeriod) &&
-                Objects.equals(previousPeriod, that.previousPeriod) &&
-                Objects.equals(companyProfile, that.companyProfile) &&
-                Objects.equals(companyAccounts, that.companyAccounts) &&
-                Objects.equals(approval, that.approval) &&
-                Objects.equals(balanceSheetStatements, that.balanceSheetStatements) &&
-                Objects.equals(accountingPolicies, that.accountingPolicies) &&
-                Objects.equals(tangibleAssets, that.tangibleAssets) &&
-                Objects.equals(intangibleAssets, that.intangibleAssets) &&
-                Objects.equals(stocks, that.stocks) &&
-                Objects.equals(debtors, that.debtors) &&
-                Objects.equals(employees, that.employees) &&
-                Objects.equals(currentAssetsInvestments, that.currentAssetsInvestments) &&
-                Objects.equals(creditorsWithinOneYear, that.creditorsWithinOneYear) &&
-                Objects.equals(creditorsAfterOneYear, that.creditorsAfterOneYear) &&
-                Objects.equals(fixedAssetsInvestments, that.fixedAssetsInvestments) &&
-                Objects.equals(currentPeriodProfitAndLoss, that.currentPeriodProfitAndLoss) &&
-                Objects.equals(previousPeriodProfitAndLoss, that.previousPeriodProfitAndLoss) &&
-                Objects.equals(directorsReportStatements, that.directorsReportStatements);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(currentPeriod, previousPeriod, companyProfile, companyAccounts, approval, balanceSheetStatements, accountingPolicies, tangibleAssets, intangibleAssets, stocks, debtors, employees, currentAssetsInvestments, creditorsWithinOneYear, creditorsAfterOneYear, fixedAssetsInvestments, currentPeriodProfitAndLoss, previousPeriodProfitAndLoss, directorsReportStatements);
-    }
-
     private BalanceSheetStatementsApi balanceSheetStatements;
 
     private AccountingPoliciesApi accountingPolicies;
@@ -90,6 +60,8 @@ public class SmallFullApiData {
 
     private ProfitAndLossApi previousPeriodProfitAndLoss;
 
+    private DirectorsReportApi directorsReport;
+
     private StatementsApi directorsReportStatements;
 
     public StatementsApi getDirectorsReportStatements() {
@@ -98,6 +70,14 @@ public class SmallFullApiData {
 
     public void setDirectorsReportStatements(StatementsApi directorsReportStatements) {
         this.directorsReportStatements = directorsReportStatements;
+    }
+
+    public DirectorsReportApi getDirectorsReport() {
+        return directorsReport;
+    }
+
+    public void setDirectorsReport(DirectorsReportApi directorsReport) {
+        this.directorsReport = directorsReport;
     }
 
     public CurrentPeriodApi getCurrentPeriod() {
@@ -248,6 +228,7 @@ public class SmallFullApiData {
                 ", balanceSheetStatements=" + balanceSheetStatements +
                 ", accountingPolicies=" + accountingPolicies +
                 ", tangibleAssets=" + tangibleAssets +
+                ", intangibleAssets=" + intangibleAssets +
                 ", stocks=" + stocks +
                 ", debtors=" + debtors +
                 ", employees=" + employees +
@@ -257,6 +238,41 @@ public class SmallFullApiData {
                 ", fixedAssetsInvestments=" + fixedAssetsInvestments +
                 ", currentPeriodProfitAndLoss=" + currentPeriodProfitAndLoss +
                 ", previousPeriodProfitAndLoss=" + previousPeriodProfitAndLoss +
+                ", directorsReportApi=" + directorsReport +
+                ", directorsReportStatements=" + directorsReportStatements +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SmallFullApiData that = (SmallFullApiData) o;
+        return Objects.equals(currentPeriod, that.currentPeriod) &&
+                Objects.equals(previousPeriod, that.previousPeriod) &&
+                Objects.equals(companyProfile, that.companyProfile) &&
+                Objects.equals(companyAccounts, that.companyAccounts) &&
+                Objects.equals(approval, that.approval) &&
+                Objects.equals(balanceSheetStatements, that.balanceSheetStatements) &&
+                Objects.equals(accountingPolicies, that.accountingPolicies) &&
+                Objects.equals(tangibleAssets, that.tangibleAssets) &&
+                Objects.equals(intangibleAssets, that.intangibleAssets) &&
+                Objects.equals(stocks, that.stocks) &&
+                Objects.equals(debtors, that.debtors) &&
+                Objects.equals(employees, that.employees) &&
+                Objects.equals(currentAssetsInvestments, that.currentAssetsInvestments) &&
+                Objects.equals(creditorsWithinOneYear, that.creditorsWithinOneYear) &&
+                Objects.equals(creditorsAfterOneYear, that.creditorsAfterOneYear) &&
+                Objects.equals(fixedAssetsInvestments, that.fixedAssetsInvestments) &&
+                Objects.equals(currentPeriodProfitAndLoss, that.currentPeriodProfitAndLoss) &&
+                Objects.equals(previousPeriodProfitAndLoss, that.previousPeriodProfitAndLoss) &&
+                Objects.equals(directorsReport, that.directorsReport) &&
+                Objects.equals(directorsReportStatements, that.directorsReportStatements);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(currentPeriod, previousPeriod, companyProfile, companyAccounts, approval, balanceSheetStatements, accountingPolicies, tangibleAssets, intangibleAssets, stocks, debtors, employees, currentAssetsInvestments, creditorsWithinOneYear, creditorsAfterOneYear, fixedAssetsInvestments, currentPeriodProfitAndLoss, previousPeriodProfitAndLoss, directorsReport, directorsReportStatements);
+    }
+
 }
