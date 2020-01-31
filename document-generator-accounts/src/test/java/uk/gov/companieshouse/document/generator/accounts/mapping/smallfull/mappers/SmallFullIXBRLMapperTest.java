@@ -261,9 +261,6 @@ public class SmallFullIXBRLMapperTest {
         when(apiToBalanceSheetMapper.apiToStatements(smallFullApiData.getBalanceSheetStatements()))
                 .thenReturn(balanceSheetStatements);
 
-        when(apiToDirectorsReportMapper.apiToStatements(smallFullApiData.getDirectorsReportStatements()))
-                .thenReturn(directorsReportStatements);
-
         when(apiToCompanyMapper.apiToCompany(smallFullApiData.getCompanyProfile()))
                 .thenReturn(company);
 
@@ -296,9 +293,6 @@ public class SmallFullIXBRLMapperTest {
         verify(apiToBalanceSheetMapper, times(1))
                 .apiToStatements(smallFullApiData.getBalanceSheetStatements());
 
-        verify(apiToDirectorsReportMapper, times(1))
-                .apiToStatements(smallFullApiData.getDirectorsReportStatements());
-
         verify(apiToCompanyMapper, times(1))
                 .apiToCompany(smallFullApiData.getCompanyProfile());
 
@@ -325,9 +319,6 @@ public class SmallFullIXBRLMapperTest {
                 smallFullAccountIxbrl.getBalanceSheet().getMembersFunds());
         assertEquals(balanceSheetStatements,
                 smallFullAccountIxbrl.getBalanceSheet().getBalanceSheetStatements());
-
-        assertEquals(directorsReportStatements,
-                smallFullAccountIxbrl.getDirectorsReport().getDirectorsReportStatements());
 
         assertEquals(company, smallFullAccountIxbrl.getCompany());
         assertEquals(period, smallFullAccountIxbrl.getPeriod());
@@ -656,7 +647,6 @@ public class SmallFullIXBRLMapperTest {
         smallFullApiData.setPreviousPeriod(createPreviousPeriod());
         smallFullApiData.setBalanceSheetStatements(createBalanceSheetStatements());
         smallFullApiData.setCurrentAssetsInvestments(createCurrentAssetsInvestments());
-        smallFullApiData.setDirectorsReportStatements(createDirectorsReportStatements());
 
         if (hasOptionalResources) {
             smallFullApiData.setAccountingPolicies(createAccountingPolicies());
@@ -707,11 +697,6 @@ public class SmallFullIXBRLMapperTest {
     private BalanceSheetStatementsApi createBalanceSheetStatements() {
 
         return new BalanceSheetStatementsApi();
-    }
-
-    private StatementsApi createDirectorsReportStatements() {
-
-        return new StatementsApi();
     }
 
     private ApprovalApi createApproval() {
