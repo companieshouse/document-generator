@@ -1,14 +1,17 @@
 package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.mappers;
 
+import org.apache.tomcat.jni.Local;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.accounts.directorsreport.ApprovalApi;
+import uk.gov.companieshouse.api.model.accounts.directorsreport.DirectorApi;
 import uk.gov.companieshouse.api.model.accounts.directorsreport.SecretaryApi;
 import uk.gov.companieshouse.api.model.accounts.directorsreport.StatementsApi;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.directorsreport.Approval;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.directorsreport.Directors;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.directorsreport.DirectorsReportStatements;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.directorsreport.Secretary;
 
@@ -20,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ApiToDirectorsReportMapperTest {
 
+    private static final String DIRECTOR = "director";
     private ApiToDirectorsReportMapper apiToDirectorsReportMapper = new ApiToDirectorsReportMapperImpl();
 
 
@@ -50,6 +54,8 @@ class ApiToDirectorsReportMapperTest {
         assertEquals(COMPANY_POLICY_ON_DISABLE_EMPLOYEES, directorsReportStatements.getCompanyPolicyOnDisabledEmployees());
         assertEquals(PRINCIPAL_ACTIVITIES, directorsReportStatements.getPrincipalActivities());
         assertEquals(POLITICAL_AND_CHARITABLE_DONATIONS, directorsReportStatements.getPoliticalAndCharitableDonations());
+
+        assertNull(apiToDirectorsReportMapper.apiToStatements(null));
     }
 
     @Test
@@ -60,6 +66,7 @@ class ApiToDirectorsReportMapperTest {
                 apiToDirectorsReportMapper.apiToSecretary(createSecretary());
 
         assertNotNull(secretary);
+        assertNull(apiToDirectorsReportMapper.apiToSecretary(null));
        }
 
     @Test
@@ -70,6 +77,23 @@ class ApiToDirectorsReportMapperTest {
                 apiToDirectorsReportMapper.apiToApproval(createApproval());
 
         assertNotNull(approval);
+        assertNull(apiToDirectorsReportMapper.apiToApproval(null));
+    }
+
+    @Test
+    @DisplayName("tests that the directors report directors map to directors report statements IXBRL model")
+    void testApiToDirectorsMapsCorrectly() {
+
+        Directors[] directors =
+                apiToDirectorsReportMapper.apiToDirector(createDirectors());
+
+        Directors director = directors[0];
+        assertNotNull(directors);
+        assertNotNull(director);
+        assertNotNull(director.getAppointmentDate());
+        assertNotNull(director.getResignationDate());
+
+        assertNull(apiToDirectorsReportMapper.apiToDirector(null));
     }
 
     private ApprovalApi createApproval() {
@@ -103,4 +127,17 @@ class ApiToDirectorsReportMapperTest {
         return directorsStatements;
     }
 
+    private DirectorApi[] createDirectors() {
+
+        DirectorApi[] directors = new DirectorApi[1];
+        DirectorApi director = new DirectorApi();
+
+        director.setAppointmentDate(DATE);
+        director.setResignationDate(DATE);
+        director.setName(DIRECTOR);
+
+        directors[0] = director;
+
+        return directors;
+    }
 }
