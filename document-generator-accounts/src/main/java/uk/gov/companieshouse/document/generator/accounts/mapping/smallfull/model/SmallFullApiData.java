@@ -1,7 +1,9 @@
 package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model;
 
 import uk.gov.companieshouse.api.model.accounts.CompanyAccountsApi;
+import uk.gov.companieshouse.api.model.accounts.directorsreport.DirectorApi;
 import uk.gov.companieshouse.api.model.accounts.directorsreport.DirectorsReportApi;
+import uk.gov.companieshouse.api.model.accounts.directorsreport.SecretaryApi;
 import uk.gov.companieshouse.api.model.accounts.directorsreport.StatementsApi;
 import uk.gov.companieshouse.api.model.accounts.profitandloss.ProfitAndLossApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.intangible.IntangibleApi;
@@ -20,6 +22,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.employees.EmployeesApi
 import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 
+import java.util.List;
 import java.util.Objects;
 
 public class SmallFullApiData {
@@ -63,6 +66,36 @@ public class SmallFullApiData {
     private DirectorsReportApi directorsReport;
 
     private StatementsApi directorsReportStatements;
+
+    private DirectorApi[] directors;
+
+    private SecretaryApi secretary;
+
+    public SecretaryApi getSecretary() {
+        return secretary;
+    }
+
+    public void setSecretary(SecretaryApi secretary) {
+        this.secretary = secretary;
+    }
+
+    public uk.gov.companieshouse.api.model.accounts.directorsreport.ApprovalApi getDirectorsApproval() {
+        return directorsApproval;
+    }
+
+    public void setDirectorsApproval(uk.gov.companieshouse.api.model.accounts.directorsreport.ApprovalApi directorsApproval) {
+        this.directorsApproval = directorsApproval;
+    }
+
+    private uk.gov.companieshouse.api.model.accounts.directorsreport.ApprovalApi directorsApproval;
+
+    public DirectorApi[] getDirectors() {
+        return directors;
+    }
+
+    public void setDirectors(DirectorApi[] directors) {
+        this.directors = directors;
+    }
 
     public StatementsApi getDirectorsReportStatements() {
         return directorsReportStatements;

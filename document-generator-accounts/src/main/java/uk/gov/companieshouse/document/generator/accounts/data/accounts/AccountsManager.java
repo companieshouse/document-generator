@@ -10,22 +10,24 @@ import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.accounts.Accounts;
 import uk.gov.companieshouse.api.model.accounts.CompanyAccountsApi;
 import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
+import uk.gov.companieshouse.api.model.accounts.directorsreport.DirectorApi;
 import uk.gov.companieshouse.api.model.accounts.directorsreport.DirectorsReportApi;
+import uk.gov.companieshouse.api.model.accounts.directorsreport.SecretaryApi;
 import uk.gov.companieshouse.api.model.accounts.directorsreport.StatementsApi;
-import uk.gov.companieshouse.api.model.accounts.smallfull.intangible.IntangibleApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.ApprovalApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.SmallFullApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.CreditorsAfterOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.currentassetsinvestments.CurrentAssetsInvestmentsApi;
-import uk.gov.companieshouse.api.model.accounts.smallfull.fixedassetsinvestments.FixedAssetsInvestmentsApi;
-import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
-import uk.gov.companieshouse.api.model.accounts.smallfull.SmallFullApi;
-import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
-import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
-import uk.gov.companieshouse.api.model.accounts.smallfull.ApprovalApi;
-import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
-import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.employees.EmployeesApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.fixedassetsinvestments.FixedAssetsInvestmentsApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.intangible.IntangibleApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
 import uk.gov.companieshouse.document.generator.accounts.exception.ServiceException;
@@ -300,6 +302,28 @@ public class AccountsManager {
                     StatementsApi statements = apiClient.smallFull().directorsReport().statements()
                             .get(directorsReport.getLinks().getStatements()).execute().getData();
                     smallFullApiData.setDirectorsReportStatements(statements);
+                }
+
+                Object directorLinks =  directorsReport.getDirectors().values().toArray()[0];
+
+                String directorsLink = (String) directorLinks;
+                directorsLink = directorsLink.substring(0, directorsLink.lastIndexOf('/'));
+                DirectorApi[] directors = apiClient.smallFull().directorsReport().directors().getAll(directorsLink).execute().getData();
+
+                smallFullApiData.setDirectors(directors);
+
+                if (!StringUtils.isEmpty(directorsReport.getLinks().getSecretary())) {
+
+                    SecretaryApi secretary = apiClient.smallFull().directorsReport().secretary()
+                            .get(directorsReport.getLinks().getSecretary()).execute().getData();
+                    smallFullApiData.setSecretary(secretary);
+                }
+
+                if (!StringUtils.isEmpty(directorsReport.getLinks().getApproval())) {
+
+                    uk.gov.companieshouse.api.model.accounts.directorsreport.ApprovalApi approval = apiClient.smallFull().directorsReport().approval()
+                            .get(directorsReport.getLinks().getApproval()).execute().getData();
+                    smallFullApiData.setDirectorsApproval(approval);
                 }
             }
 
