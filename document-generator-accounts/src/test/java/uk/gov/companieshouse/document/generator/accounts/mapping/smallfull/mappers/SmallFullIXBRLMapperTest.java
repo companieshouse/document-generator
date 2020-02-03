@@ -7,6 +7,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.companieshouse.accountsdates.AccountsDatesHelper;
+import uk.gov.companieshouse.accountsdates.impl.AccountsDatesHelperImpl;
+import uk.gov.companieshouse.api.model.accounts.directorsreport.DirectorApi;
+import uk.gov.companieshouse.api.model.accounts.directorsreport.DirectorsReportApi;
+import uk.gov.companieshouse.api.model.accounts.directorsreport.SecretaryApi;
+import uk.gov.companieshouse.api.model.accounts.directorsreport.StatementsApi;
 import uk.gov.companieshouse.api.model.accounts.profitandloss.ProfitAndLossApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.ApprovalApi;
@@ -32,6 +38,8 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.employees.EmployeesApi
 import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
 
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
+import uk.gov.companieshouse.api.model.statements.StatementApi;
+import uk.gov.companieshouse.document.generator.accounts.mapping.cic.model.Statements;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.SmallFullApiData;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.SmallFullAccountIxbrl;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.accountingpolicies.AccountingPolicies;
@@ -47,8 +55,16 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorswithinoneyear.CreditorsWithinOneYear;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.currentassetsinvestments.CurrentAssetsInvestments;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.Debtors;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.directorsreport.Approval;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.directorsreport.Directors;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.directorsreport.DirectorsReport;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.directorsreport.DirectorsReportStatements;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.directorsreport.Secretary;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.fixedassetsinvestments.FixedAssetsInvestments;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.employees.Employees;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.intangible.IntangibleAssets;
@@ -84,7 +100,13 @@ public class SmallFullIXBRLMapperTest {
     private ApiToPeriodMapper apiToPeriodMapper;
 
     @Mock
+    private AccountsDatesHelper accountsDatesHelper;
+
+    @Mock
     private ApiToBalanceSheetMapper apiToBalanceSheetMapper;
+
+    @Mock
+    private ApiToDirectorsReportMapper apiToDirectorsReportMapper;
 
     @Mock
     private ApiToAccountingPoliciesMapper apiToAccountingPoliciesMapper;
@@ -141,6 +163,19 @@ public class SmallFullIXBRLMapperTest {
     private BalanceSheetStatements balanceSheetStatements;
 
     @Mock
+    private DirectorsReport directorsReport;
+
+    @Mock
+    private Secretary secretary;
+
+    private Directors[] directors;
+
+    @Mock
+    private Map<String, List<DirectorApi>> directorsList;
+
+    @Mock
+    private DirectorsReportStatements directorsReportStatements;
+    @Mock
     private Company company;
 
     @Mock
@@ -181,6 +216,9 @@ public class SmallFullIXBRLMapperTest {
 
     @Mock
     private FixedAssetsInvestments fixedAssetsInvestments;
+
+    @Mock
+    private Approval directorApproval;
 
     @InjectMocks
     private SmallFullIXBRLMapper smallFullIXBRLMapper = new SmallFullIXBRLMapperImpl();
@@ -318,6 +356,17 @@ public class SmallFullIXBRLMapperTest {
     }
 
     private void mockOptionalFieldMappers(SmallFullApiData smallFullApiData) {
+
+        directorApproval = new Approval();
+
+        directorApproval.setSecretary(false);
+
+        directorApproval.setDate(accountsDatesHelper.convertLocalDateToDisplayDate(accountsDatesHelper.convertStringToDate(directorApproval.getDate())));
+        directorApproval.setName("director");
+
+
+        when(apiToBalanceSheetMapper.apiToStatements(smallFullApiData.getBalanceSheetStatements()))
+                .thenReturn(balanceSheetStatements);
 
         when(apiToProfitAndLossMapper.apiToProfitAndLoss(
                 smallFullApiData.getCurrentPeriodProfitAndLoss(),
@@ -477,6 +526,9 @@ public class SmallFullIXBRLMapperTest {
         when(apiToFixedAssetsInvestmentsMapper.apiToFixedAssetsInvestments(
                 smallFullApiData.getFixedAssetsInvestments()))
                 .thenReturn(fixedAssetsInvestments);
+
+        when(apiToDirectorsReportMapper.apiToApproval(smallFullApiData.getDirectorsApproval()))
+                .thenReturn(directorApproval);
     }
 
     private void verifyOptionalFieldMappersExecuted(SmallFullApiData smallFullApiData) {
@@ -593,6 +645,14 @@ public class SmallFullIXBRLMapperTest {
         verify(apiToIntangibleAssetsNoteMapper, times(1)).apiToIntangibleAssetsNetBookValuePreviousPeriodMapper(
                 smallFullApiData.getIntangibleAssets());
 
+        verify(apiToDirectorsReportMapper, times(1)).apiToSecretary(
+                smallFullApiData.getSecretary());
+
+        verify(apiToDirectorsReportMapper, times(1)).apiToStatements(
+                smallFullApiData.getDirectorsReportStatements());
+
+       verify(apiToDirectorsReportMapper, times(1)).apiToApproval(
+                smallFullApiData.getDirectorsApproval());
     }
 
     private void assertIbxrlOptionalDataMapped(SmallFullAccountIxbrl smallFullAccountIxbrl) {
@@ -653,9 +713,49 @@ public class SmallFullIXBRLMapperTest {
             smallFullApiData.setEmployees(createEmployees());
             smallFullApiData.setCurrentPeriodProfitAndLoss(createProfitAndLoss());
             smallFullApiData.setPreviousPeriodProfitAndLoss(createProfitAndLoss());
+            smallFullApiData.setDirectors(createDirectors());
+            smallFullApiData.setSecretary(new SecretaryApi());
+            smallFullApiData.setDirectorsApproval(createDirectorsApproval());
+            smallFullApiData.setDirectorsReportStatements(new StatementsApi());
+            smallFullApiData.setDirectorsReport(createDirectorsReport());
         }
 
         return smallFullApiData;
+    }
+
+    private DirectorApi[] createDirectors() {
+
+        DirectorApi[] directors = new DirectorApi[1];
+
+        DirectorApi director = new DirectorApi();
+
+        director.setName("director");
+        director.setResignationDate(LocalDate.of(2018, 01, 02));
+        director.setAppointmentDate(LocalDate.of(2018, 01, 01));
+        directors[0] = director;
+
+        return directors;
+    }
+
+    private uk.gov.companieshouse.api.model.accounts.directorsreport.ApprovalApi createDirectorsApproval() {
+
+        uk.gov.companieshouse.api.model.accounts.directorsreport.ApprovalApi approvalApi = new uk.gov.companieshouse.api.model.accounts.directorsreport.ApprovalApi();
+
+        approvalApi.setDate(LocalDate.of(2018, 1, 1));
+        approvalApi.setName(NAME);
+
+        return approvalApi;
+    }
+
+    private DirectorsReportApi createDirectorsReport() {
+
+        Map<String, String> directors = new HashMap<>();
+
+        DirectorsReportApi directorsReportApi = new DirectorsReportApi();
+
+        directorsReportApi.setDirectors(directors);
+
+        return directorsReportApi;
     }
 
     private CurrentPeriodApi createCurrentPeriod() {
