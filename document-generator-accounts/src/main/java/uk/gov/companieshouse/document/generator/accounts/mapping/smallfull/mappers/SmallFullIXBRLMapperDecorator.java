@@ -394,11 +394,11 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
 
             for (int j = 0; j < directors.get(i).getDirectors().size() ; j++){
 
-                if (directorsApproval.getName().equals(directors.get(i).getDirectors().get(j).getName())) {
+                if (directors.get(i).getDirectors().get(j).getName().equals(directorsApproval.getName())) {
                     directorsApproval.setDirectorIndex(x);
                 }
 
-                if (smallFullAccountIxbrl.getApprovalName().equals(directors.get(i).getDirectors().get(j).getName())) {
+                if (directors.get(i).getDirectors().get(j).getName().equals(smallFullAccountIxbrl.getApprovalName())) {
                     smallFullAccountIxbrl.setApprovalIndex(x);
 
                 }
