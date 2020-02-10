@@ -43,8 +43,19 @@ public class SmallFullAccountIxbrl implements PeriodAwareIxbrl {
     @JsonProperty("approval_name")
     private String approvalName;
 
+    @JsonProperty("approval_index")
+    private int approvalIndex = 1;
+
     @JsonProperty("directors_report")
     private DirectorsReport directorsReport;
+
+    public int getApprovalIndex() {
+        return approvalIndex;
+    }
+
+    public void setApprovalIndex(int approvalIndex) {
+        this.approvalIndex = approvalIndex;
+    }
 
     public DirectorsReport getDirectorsReport() {
         return directorsReport;

@@ -10,8 +10,8 @@ import java.util.Objects;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Directors {
 
-    @JsonProperty("names")
-    private List<String> names = new ArrayList<>();
+    @JsonProperty("directors")
+    private List<Director> directors = new ArrayList<>();
 
     @JsonProperty("appointment_date_formatted")
     private String appointmentDate;
@@ -19,12 +19,12 @@ public class Directors {
     @JsonProperty("resignation_date_formatted")
     private String resignationDate;
 
-    public List<String> getNames() {
-        return names;
+    public List<Director> getDirectors() {
+        return directors;
     }
 
-    public void setNames(List<String> names) {
-        this.names = names;
+    public void setDirectors(List<Director> directors) {
+        this.directors = directors;
     }
 
     public String getAppointmentDate() {
@@ -46,7 +46,7 @@ public class Directors {
     @Override
     public String toString() {
         return "Directors{" +
-                "names=" + names +
+                "directors=" + directors +
                 ", appointmentDate='" + appointmentDate + '\'' +
                 ", resignationDate='" + resignationDate + '\'' +
                 '}';
@@ -57,13 +57,13 @@ public class Directors {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Directors directors = (Directors) o;
-        return Objects.equals(names, directors.names) &&
+        return Objects.equals(directors, directors.directors) &&
                 Objects.equals(appointmentDate, directors.appointmentDate) &&
                 Objects.equals(resignationDate, directors.resignationDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(names, appointmentDate, resignationDate);
+        return Objects.hash(directors, appointmentDate, resignationDate);
     }
 }
