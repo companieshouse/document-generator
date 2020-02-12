@@ -16,6 +16,9 @@ public class Approval {
     @JsonProperty("approval_name")
     private String name;
 
+    @JsonProperty("director_index")
+    private int directorIndex;
+
     @JsonProperty("is_secretary")
     private Boolean isSecretary;
 
@@ -33,6 +36,14 @@ public class Approval {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getDirectorIndex() {
+        return directorIndex;
+    }
+
+    public void setDirectorIndex(int directorIndex) {
+        this.directorIndex = directorIndex;
     }
 
     public Boolean getSecretary() {

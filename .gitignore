@@ -16,3 +16,4 @@ bin/
 # Mac files
 .DS_Store
 ._*
+/build.log

@@ -47,6 +47,7 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.currentassetsinvestments.CurrentAssetsInvestments;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.Debtors;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.directorsreport.Approval;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.directorsreport.Director;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.directorsreport.Directors;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.directorsreport.DirectorsReport;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.fixedassetsinvestments.FixedAssetsInvestments;
@@ -225,7 +226,7 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
 
             smallFullAccountIxbrl.setDirectorsReport(setDirectorsReport(
                             smallFullApiData.getDirectorsReportStatements(), smallFullApiData.getDirectors(),
-                    smallFullApiData.getSecretary(), smallFullApiData.getDirectorsApproval()));
+                    smallFullApiData.getSecretary(), smallFullApiData.getDirectorsApproval(), smallFullAccountIxbrl));
         }
 
 
@@ -334,7 +335,7 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
     }
 
     private DirectorsReport setDirectorsReport(StatementsApi directorsReportStatements, DirectorApi[] directorsApi,
-                                               SecretaryApi secretary, ApprovalApi approval) {
+                                               SecretaryApi secretary, ApprovalApi approval, SmallFullAccountIxbrl smallFullAccountIxbrl) {
 
         DirectorsReport directorsReport = new DirectorsReport();
 
@@ -358,7 +359,7 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
 
         List<Directors> directors = new ArrayList<>();
 
-         Iterator<Map.Entry<String, List<DirectorApi>>> iterator = keys.iterator();
+        Iterator<Map.Entry<String, List<DirectorApi>>> iterator = keys.iterator();
         while(iterator.hasNext()) {
 
             Directors dir = new Directors();
@@ -372,10 +373,9 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
 
                     dir.setResignationDate(convertToDisplayDate(d.getResignationDate()));
                 }
-                dir.getNames().add(d.getName());
+                dir.getDirectors().add(new Director(d.getName()));
             }
 
-            dir.getNames().sort(Comparator.naturalOrder());
             directors.add(dir);
         }
 
@@ -389,9 +389,28 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
                 directorsApproval.setSecretary(true);
         }
 
-        directorsReport.setApproval(directorsApproval);
+        int x = 1;
+        for (int i = 0; i < directors.size(); i++){
 
-        directorsReport.setSortedDirectors(directors );
+            for (int j = 0; j < directors.get(i).getDirectors().size() ; j++){
+
+                if (directors.get(i).getDirectors().get(j).getName().equals(directorsApproval.getName())) {
+                    directorsApproval.setDirectorIndex(x);
+                }
+
+                if (directors.get(i).getDirectors().get(j).getName().equals(smallFullAccountIxbrl.getApprovalName())) {
+                    smallFullAccountIxbrl.setApprovalIndex(x);
+
+                }
+
+                directors.get(i).getDirectors().get(j).setIndex(x);
+                x++;
+            }
+        }
+
+        directorsReport.setSortedDirectors(directors);
+
+        directorsReport.setApproval(directorsApproval);
 
         return directorsReport;
     }
