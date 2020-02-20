@@ -1,10 +1,30 @@
 package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.mappers;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.companieshouse.accountsdates.AccountsDatesHelper;
 import uk.gov.companieshouse.accountsdates.impl.AccountsDatesHelperImpl;
+import uk.gov.companieshouse.api.model.accounts.directorsreport.ApprovalApi;
+import uk.gov.companieshouse.api.model.accounts.directorsreport.DirectorApi;
+import uk.gov.companieshouse.api.model.accounts.directorsreport.DirectorsReportApi;
+import uk.gov.companieshouse.api.model.accounts.directorsreport.SecretaryApi;
+import uk.gov.companieshouse.api.model.accounts.directorsreport.StatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
@@ -26,6 +46,10 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorswithinoneyear.CreditorsWithinOneYear;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.currentassetsinvestments.CurrentAssetsInvestments;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.Debtors;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.directorsreport.Approval;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.directorsreport.Director;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.directorsreport.Directors;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.directorsreport.DirectorsReport;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.fixedassetsinvestments.FixedAssetsInvestments;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.employees.Employees;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.intangible.IntangibleAssets;
@@ -39,6 +63,11 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssetsDepreciation;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssetsNetBookValue;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.stocks.StocksNote;
+
+import static java.util.Arrays.asList;
+import static java.util.Arrays.sort;
+import static java.util.Map.Entry.comparingByKey;
+import static java.util.stream.Collectors.toMap;
 
 public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMapper {
 
@@ -87,6 +116,9 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
 
     @Autowired
     private ApiToFixedAssetsInvestmentsMapper apiToFixedAssetsInvestmentsMapper;
+
+    @Autowired
+    private ApiToDirectorsReportMapper apiToDirectorsReportMapper;
 
     private AccountsDatesHelper accountsDatesHelper = new AccountsDatesHelperImpl();
 
@@ -190,6 +222,12 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
             hasBalanceSheetNotes = true;
         }
 
+        if (smallFullApiData.getDirectorsReport() != null) {
+
+            smallFullAccountIxbrl.setDirectorsReport(setDirectorsReport(
+                            smallFullApiData.getDirectorsReportStatements(), smallFullApiData.getDirectors(),
+                    smallFullApiData.getSecretary(), smallFullApiData.getDirectorsApproval(), smallFullAccountIxbrl));
+        }
 
 
         //We only want to set the additional notes if we have any
@@ -295,6 +333,94 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
 
         return balanceSheet;
     }
+
+    private DirectorsReport setDirectorsReport(StatementsApi directorsReportStatements, DirectorApi[] directorsApi,
+                                               SecretaryApi secretary, ApprovalApi approval, SmallFullAccountIxbrl smallFullAccountIxbrl) {
+
+        DirectorsReport directorsReport = new DirectorsReport();
+
+        if (directorsReportStatements != null) {
+            directorsReport.setDirectorsReportStatements(apiToDirectorsReportMapper.apiToStatements(directorsReportStatements));
+        }
+
+        if(secretary != null) {
+            directorsReport.setSecretary(apiToDirectorsReportMapper.apiToSecretary(secretary));
+        }
+
+        Map<String, List<DirectorApi>> sortedDirectors = new TreeMap<>(Collections.reverseOrder());
+
+        sortedDirectors.putAll( Arrays.stream(directorsApi)
+                .collect(
+                        Collectors.groupingBy(d ->
+                                (d.getAppointmentDate() == null ? "null" : d.getAppointmentDate().toString()) +
+                                        (d.getResignationDate() == null ? "null" : d.getResignationDate().toString()))));
+
+        Set<Map.Entry<String, List<DirectorApi>>> keys = sortedDirectors.entrySet();
+
+        List<Directors> directors = new ArrayList<>();
+
+        Iterator<Map.Entry<String, List<DirectorApi>>> iterator = keys.iterator();
+        while(iterator.hasNext()) {
+
+            Directors dir = new Directors();
+            List<DirectorApi> directorList = iterator.next().getValue();
+
+            for(DirectorApi d : directorList) {
+
+                if(d.getAppointmentDate() != null) {
+                    dir.setAppointmentDate(convertToDisplayDate(d.getAppointmentDate()));
+                } else {
+                    dir.setAppointmentDate(smallFullAccountIxbrl.getPeriod().getCurrentPeriodStartOnFormatted());
+                }
+
+                if (d.getResignationDate() != null) {
+                    dir.setResignationDate(convertToDisplayDate(d.getResignationDate()));
+                } else {
+                    dir.setResignationDate(smallFullAccountIxbrl.getPeriod().getCurrentPeriodEndOnFormatted());
+                }
+
+                dir.getDirectors().add(new Director(d.getName()));
+            }
+
+            directors.add(dir);
+        }
+
+        Approval directorsApproval = apiToDirectorsReportMapper.apiToApproval(approval);
+
+        directorsApproval.setDate(convertToDisplayDate(accountsDatesHelper.convertStringToDate(directorsApproval.getDate())));
+
+        if(directorsReport.getSecretary() != null &&
+                        directorsApproval.getName().equals(directorsReport.getSecretary().getName())) {
+
+                directorsApproval.setSecretary(true);
+        }
+
+        int x = 1;
+        for (int i = 0; i < directors.size(); i++){
+
+            for (int j = 0; j < directors.get(i).getDirectors().size() ; j++){
+
+                if (directors.get(i).getDirectors().get(j).getName().equals(directorsApproval.getName())) {
+                    directorsApproval.setDirectorIndex(x);
+                }
+
+                if (directors.get(i).getDirectors().get(j).getName().equals(smallFullAccountIxbrl.getApprovalName())) {
+                    smallFullAccountIxbrl.setApprovalIndex(x);
+
+                }
+
+                directors.get(i).getDirectors().get(j).setIndex(x);
+                x++;
+            }
+        }
+
+        directorsReport.setSortedDirectors(directors);
+
+        directorsReport.setApproval(directorsApproval);
+
+        return directorsReport;
+    }
+
 
     private AccountingPolicies mapAccountingPolicies(AccountingPoliciesApi accountingPolicies) {
 

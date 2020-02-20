@@ -7,6 +7,8 @@ import com.google.gson.Gson;
 import uk.gov.companieshouse.document.generator.accounts.mapping.PeriodAwareIxbrl;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.BalanceSheet;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.company.Company;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.directorsreport.DirectorsReport;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.directorsreport.DirectorsReportStatements;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.AdditionalNotes;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.BalanceSheetNotes;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.period.Period;
@@ -40,6 +42,28 @@ public class SmallFullAccountIxbrl implements PeriodAwareIxbrl {
 
     @JsonProperty("approval_name")
     private String approvalName;
+
+    @JsonProperty("approval_index")
+    private int approvalIndex = 1;
+
+    @JsonProperty("directors_report")
+    private DirectorsReport directorsReport;
+
+    public int getApprovalIndex() {
+        return approvalIndex;
+    }
+
+    public void setApprovalIndex(int approvalIndex) {
+        this.approvalIndex = approvalIndex;
+    }
+
+    public DirectorsReport getDirectorsReport() {
+        return directorsReport;
+    }
+
+    public void setDirectorsReport(DirectorsReport directorsReport) {
+        this.directorsReport = directorsReport;
+    }
 
     public ProfitAndLoss getProfitAndLoss() {
         return profitAndLoss;
@@ -106,27 +130,27 @@ public class SmallFullAccountIxbrl implements PeriodAwareIxbrl {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof SmallFullAccountIxbrl)) return false;
-        SmallFullAccountIxbrl smallFullAccountIxbrl = (SmallFullAccountIxbrl) o;
-        return Objects.equals(getProfitAndLoss(), smallFullAccountIxbrl.getProfitAndLoss()) &&
-                Objects.equals(getPeriod(), smallFullAccountIxbrl.getPeriod()) &&
-                Objects.equals(getBalanceSheet(), smallFullAccountIxbrl.getBalanceSheet()) &&
-                Objects.equals(getAdditionalNotes(), smallFullAccountIxbrl.getAdditionalNotes()) &&
-                Objects.equals(getCompany(), smallFullAccountIxbrl.getCompany()) &&
-                Objects.equals(getApprovalDate(), smallFullAccountIxbrl.getApprovalDate()) &&
-                Objects.equals(getApprovalName(), smallFullAccountIxbrl.getApprovalName()) &&
-                Objects.equals(getBalanceSheetNotes(), smallFullAccountIxbrl.getBalanceSheetNotes());
+        if (o == null || getClass() != o.getClass()) return false;
+        SmallFullAccountIxbrl that = (SmallFullAccountIxbrl) o;
+        return Objects.equals(profitAndLoss, that.profitAndLoss) &&
+                Objects.equals(period, that.period) &&
+                Objects.equals(balanceSheet, that.balanceSheet) &&
+                Objects.equals(additionalNotes, that.additionalNotes) &&
+                Objects.equals(balanceSheetNotes, that.balanceSheetNotes) &&
+                Objects.equals(company, that.company) &&
+                Objects.equals(approvalDate, that.approvalDate) &&
+                Objects.equals(approvalName, that.approvalName) &&
+                Objects.equals(directorsReport, that.directorsReport);
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(getProfitAndLoss(), getPeriod(), getBalanceSheet(), getAdditionalNotes(), getCompany(), getApprovalDate(),
-                getApprovalName(), getBalanceSheetNotes());
+        return Objects.hash(profitAndLoss, period, balanceSheet, additionalNotes, balanceSheetNotes, company, approvalDate, approvalName, directorsReport);
     }
 
     @Override
     public String toString() {
         return new Gson().toJson(this);
     }
+
 }
