@@ -366,13 +366,19 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
             List<DirectorApi> directorList = iterator.next().getValue();
 
             for(DirectorApi d : directorList) {
+
                 if(d.getAppointmentDate() != null) {
                     dir.setAppointmentDate(convertToDisplayDate(d.getAppointmentDate()));
+                } else {
+                    dir.setAppointmentDate(smallFullAccountIxbrl.getPeriod().getCurrentPeriodStartOnFormatted());
                 }
-                if(d.getResignationDate() != null) {
 
+                if (d.getResignationDate() != null) {
                     dir.setResignationDate(convertToDisplayDate(d.getResignationDate()));
+                } else {
+                    dir.setResignationDate(smallFullAccountIxbrl.getPeriod().getCurrentPeriodEndOnFormatted());
                 }
+
                 dir.getDirectors().add(new Director(d.getName()));
             }
 
