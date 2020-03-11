@@ -27,6 +27,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.currentassetsinvestmen
 import uk.gov.companieshouse.api.model.accounts.smallfull.employees.EmployeesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.fixedassetsinvestments.FixedAssetsInvestmentsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.intangible.IntangibleApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.offBalanceSheet.OffBalanceSheetApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
 import uk.gov.companieshouse.document.generator.accounts.data.transaction.Transaction;
@@ -287,6 +288,16 @@ public class AccountsManager {
                         .get(smallFull.getLinks().getFixedAssetsInvestmentsNote()).execute().getData();
 
                 smallFullApiData.setFixedAssetsInvestments(fixedAssetsInvestmentsApi);
+            }
+
+            if (!StringUtils.isEmpty(smallFull.getLinks().getOffBalanceSheetArrangementsNote())) {
+
+                errorString = "off balance sheet arrangements";
+
+                OffBalanceSheetApi offBalanceSheetApi = apiClient.smallFull().offBalanceSheet()
+                        .get(smallFull.getLinks().getOffBalanceSheetArrangementsNote()).execute().getData();
+
+                smallFullApiData.setOffBalanceSheet(offBalanceSheetApi);
             }
 
             if (!StringUtils.isEmpty(smallFull.getLinks().getDirectorsReport())) {
