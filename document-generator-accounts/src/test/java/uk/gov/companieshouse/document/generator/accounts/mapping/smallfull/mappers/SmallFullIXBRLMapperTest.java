@@ -696,7 +696,6 @@ public class SmallFullIXBRLMapperTest {
                 smallFullAccountIxbrl.getBalanceSheetNotes().getFixedAssetsInvestments());
         assertEquals(employees, smallFullAccountIxbrl.getAdditionalNotes().getEmployees());
         assertEquals(offBalanceSheetArrangements, smallFullAccountIxbrl.getBalanceSheetNotes().getOffBalanceSheetArrangements());
-
     }
 
     private SmallFullAccountIxbrl createSmallFullAccountIxbrl() {
