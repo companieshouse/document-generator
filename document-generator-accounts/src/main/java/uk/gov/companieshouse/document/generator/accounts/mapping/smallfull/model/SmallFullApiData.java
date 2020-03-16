@@ -16,6 +16,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.currentassetsinvestments.CurrentAssetsInvestmentsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.fixedassetsinvestments.FixedAssetsInvestmentsApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.offBalanceSheet.OffBalanceSheetApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.employees.EmployeesApi;
@@ -70,6 +71,16 @@ public class SmallFullApiData {
     private DirectorApi[] directors;
 
     private SecretaryApi secretary;
+
+    private OffBalanceSheetApi offBalanceSheet;
+
+    public OffBalanceSheetApi getOffBalanceSheet() {
+        return offBalanceSheet;
+    }
+
+    public void setOffBalanceSheet(OffBalanceSheetApi offBalanceSheet) {
+        this.offBalanceSheet = offBalanceSheet;
+    }
 
     public SecretaryApi getSecretary() {
         return secretary;

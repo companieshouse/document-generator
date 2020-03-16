@@ -36,6 +36,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.currentassetsinvestmen
 import uk.gov.companieshouse.api.model.accounts.smallfull.fixedassetsinvestments.FixedAssetsInvestmentsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.employees.EmployeesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.intangible.IntangibleApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.offBalanceSheet.OffBalanceSheetApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.SmallFullApiData;
@@ -62,6 +63,7 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssetsCost;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssetsDepreciation;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssetsNetBookValue;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.offbalancesheetarrangements.OffBalanceSheetArrangements;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.stocks.StocksNote;
 
 import static java.util.Arrays.asList;
@@ -119,6 +121,9 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
 
     @Autowired
     private ApiToDirectorsReportMapper apiToDirectorsReportMapper;
+
+    @Autowired
+    private ApiToOffBalanceSheetArrangementsMapper apiToOffBalanceSheetArrangementsMapper;
 
     private AccountsDatesHelper accountsDatesHelper = new AccountsDatesHelperImpl();
 
@@ -218,6 +223,13 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
         if (smallFullApiData.getFixedAssetsInvestments() != null) {
 
             balanceSheetNotes.setFixedAssetsInvestments(mapFixedAssetInvestments(smallFullApiData.getFixedAssetsInvestments()));
+
+            hasBalanceSheetNotes = true;
+        }
+
+        if (smallFullApiData.getOffBalanceSheet() != null) {
+
+            balanceSheetNotes.setOffBalanceSheetArrangements(mapOffBalanceSheetArrangements(smallFullApiData.getOffBalanceSheet()));
 
             hasBalanceSheetNotes = true;
         }
@@ -419,6 +431,11 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
         directorsReport.setApproval(directorsApproval);
 
         return directorsReport;
+    }
+
+    private OffBalanceSheetArrangements mapOffBalanceSheetArrangements(OffBalanceSheetApi offBalanceSheet) {
+
+        return apiToOffBalanceSheetArrangementsMapper.apiToOffBalanceSheetArrangements(offBalanceSheet);
     }
 
 
