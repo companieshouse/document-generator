@@ -318,23 +318,29 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
 
         BalanceSheet balanceSheet = new BalanceSheet();
 
-        if (currentPeriod.getBalanceSheet() != null) {
-            if (currentPeriod.getBalanceSheet().getCalledUpShareCapitalNotPaid() != null) {
+        if (currentPeriod.getBalanceSheet() != null || previousPeriod.getBalanceSheet() != null) {
+            if (currentPeriod.getBalanceSheet().getCalledUpShareCapitalNotPaid() != null ||
+                    previousPeriod.getBalanceSheet().getCalledUpShareCapitalNotPaid() != null) {
                 balanceSheet.setCalledUpSharedCapitalNotPaid(apiToBalanceSheetMapper.apiToCalledUpSharedCapitalNotPaid(currentPeriod, previousPeriod));
             }
-            if (currentPeriod.getBalanceSheet().getOtherLiabilitiesOrAssets() != null) {
+            if (currentPeriod.getBalanceSheet().getOtherLiabilitiesOrAssets() != null ||
+                    previousPeriod.getBalanceSheet().getOtherLiabilitiesOrAssets() != null) {
                 balanceSheet.setOtherLiabilitiesOrAssets(apiToBalanceSheetMapper.apiToOtherLiabilitiesOrAssets(currentPeriod, previousPeriod));
             }
-            if (currentPeriod.getBalanceSheet().getFixedAssets() != null) {
+            if (currentPeriod.getBalanceSheet().getFixedAssets() != null ||
+                    previousPeriod.getBalanceSheet().getFixedAssets() != null) {
                 balanceSheet.setFixedAssets(apiToBalanceSheetMapper.apiToFixedAssets(currentPeriod, previousPeriod));
             }
-            if (currentPeriod.getBalanceSheet().getCurrentAssets() != null) {
+            if (currentPeriod.getBalanceSheet().getCurrentAssets() != null ||
+                    previousPeriod.getBalanceSheet().getCurrentAssets() != null) {
                 balanceSheet.setCurrentAssets(apiToBalanceSheetMapper.apiToCurrentAssets(currentPeriod, previousPeriod));
             }
-            if (currentPeriod.getBalanceSheet().getCapitalAndReserves() != null) {
+            if (currentPeriod.getBalanceSheet().getCapitalAndReserves() != null ||
+                    previousPeriod.getBalanceSheet().getCapitalAndReserves() != null) {
                 balanceSheet.setCapitalAndReserve(apiToBalanceSheetMapper.apiToCapitalAndReserve(currentPeriod, previousPeriod));
             }
-            if (currentPeriod.getBalanceSheet().getMembersFunds() != null) {
+            if (currentPeriod.getBalanceSheet().getMembersFunds() != null ||
+                    previousPeriod.getBalanceSheet().getMembersFunds() != null) {
                 balanceSheet.setMembersFunds(apiToBalanceSheetMapper.apiToMembersFunds(currentPeriod, previousPeriod));
             }
         }
