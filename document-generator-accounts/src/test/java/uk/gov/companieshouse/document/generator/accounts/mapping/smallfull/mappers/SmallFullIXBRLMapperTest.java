@@ -30,6 +30,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear
 import uk.gov.companieshouse.api.model.accounts.smallfull.currentassetsinvestments.CurrentAssetsInvestmentsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.fixedassetsinvestments.FixedAssetsInvestmentsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.intangible.IntangibleApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.offBalanceSheet.OffBalanceSheetApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.FixedAssetsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.OtherLiabilitiesOrAssetsApi;
@@ -71,6 +72,7 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.intangible.IntangibleAssetsColumns;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssetsColumns;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.offbalancesheetarrangements.OffBalanceSheetArrangements;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.period.Period;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.profitandloss.ProfitAndLoss;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.stocks.StocksNote;
@@ -139,6 +141,9 @@ public class SmallFullIXBRLMapperTest {
     private ApiToFixedAssetsInvestmentsMapper apiToFixedAssetsInvestmentsMapper;
 
     @Mock
+    private ApiToOffBalanceSheetArrangementsMapper apiToOffBalanceSheetArrangementsMapper;
+
+    @Mock
     private ProfitAndLoss profitAndLoss;
 
     @Mock
@@ -175,6 +180,10 @@ public class SmallFullIXBRLMapperTest {
 
     @Mock
     private DirectorsReportStatements directorsReportStatements;
+
+    @Mock
+    private OffBalanceSheetArrangements offBalanceSheetArrangements;
+
     @Mock
     private Company company;
 
@@ -529,6 +538,9 @@ public class SmallFullIXBRLMapperTest {
 
         when(apiToDirectorsReportMapper.apiToApproval(smallFullApiData.getDirectorsApproval()))
                 .thenReturn(directorApproval);
+
+        when(apiToOffBalanceSheetArrangementsMapper.apiToOffBalanceSheetArrangements(smallFullApiData.getOffBalanceSheet()))
+                .thenReturn(offBalanceSheetArrangements);
     }
 
     private void verifyOptionalFieldMappersExecuted(SmallFullApiData smallFullApiData) {
@@ -653,6 +665,9 @@ public class SmallFullIXBRLMapperTest {
 
        verify(apiToDirectorsReportMapper, times(1)).apiToApproval(
                 smallFullApiData.getDirectorsApproval());
+
+       verify(apiToOffBalanceSheetArrangementsMapper, times(1)).apiToOffBalanceSheetArrangements(
+               smallFullApiData.getOffBalanceSheet());
     }
 
     private void assertIbxrlOptionalDataMapped(SmallFullAccountIxbrl smallFullAccountIxbrl) {
@@ -680,7 +695,7 @@ public class SmallFullIXBRLMapperTest {
         assertEquals(fixedAssetsInvestments,
                 smallFullAccountIxbrl.getBalanceSheetNotes().getFixedAssetsInvestments());
         assertEquals(employees, smallFullAccountIxbrl.getAdditionalNotes().getEmployees());
-
+        assertEquals(offBalanceSheetArrangements, smallFullAccountIxbrl.getBalanceSheetNotes().getOffBalanceSheetArrangements());
     }
 
     private SmallFullAccountIxbrl createSmallFullAccountIxbrl() {
@@ -718,6 +733,7 @@ public class SmallFullIXBRLMapperTest {
             smallFullApiData.setDirectorsApproval(createDirectorsApproval());
             smallFullApiData.setDirectorsReportStatements(new StatementsApi());
             smallFullApiData.setDirectorsReport(createDirectorsReport());
+            smallFullApiData.setOffBalanceSheet(new OffBalanceSheetApi());
         }
 
         return smallFullApiData;

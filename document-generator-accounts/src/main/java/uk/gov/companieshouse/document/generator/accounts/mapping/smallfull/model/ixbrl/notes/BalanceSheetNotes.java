@@ -11,6 +11,7 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.fixedassetsinvestments.FixedAssetsInvestments;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.intangible.IntangibleAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssets;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.offbalancesheetarrangements.OffBalanceSheetArrangements;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.stocks.StocksNote;
 
 @JsonInclude(Include.NON_NULL)
@@ -39,6 +40,9 @@ public class BalanceSheetNotes {
 
     @JsonProperty("current_assets_investments")
     private CurrentAssetsInvestments currentAssetsInvestments;
+
+    @JsonProperty("off_balance_sheet_arrangements")
+    private OffBalanceSheetArrangements offBalanceSheetArrangements;
 
     public IntangibleAssets getIntangibleAssets() {
         return intangibleAssets;
@@ -104,6 +108,15 @@ public class BalanceSheetNotes {
         this.fixedAssetsInvestments = fixedAssetsInvestments;
     }
 
+    public OffBalanceSheetArrangements getOffBalanceSheetArrangements() {
+        return offBalanceSheetArrangements;
+    }
+
+    public void setOffBalanceSheetArrangements(
+            OffBalanceSheetArrangements offBalanceSheetArrangements) {
+        this.offBalanceSheetArrangements = offBalanceSheetArrangements;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -116,12 +129,13 @@ public class BalanceSheetNotes {
                 intangibleAssets.equals(that.intangibleAssets) &&
                 tangibleAssets.equals(that.tangibleAssets) &&
                 fixedAssetsInvestments.equals(that.fixedAssetsInvestments) &&
-                currentAssetsInvestments.equals(that.currentAssetsInvestments);
+                currentAssetsInvestments.equals(that.currentAssetsInvestments) &&
+                offBalanceSheetArrangements.equals(that.offBalanceSheetArrangements);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getStocksNote(), getDebtorsNote(), getCreditorsWithinOneYearNote(), getCreditorsAfterOneYearNote(), getIntangibleAssets(), getTangibleAssets(), getFixedAssetsInvestments(), getCurrentAssetsInvestments());
+        return Objects.hash(getStocksNote(), getDebtorsNote(), getCreditorsWithinOneYearNote(), getCreditorsAfterOneYearNote(), getIntangibleAssets(), getTangibleAssets(), getFixedAssetsInvestments(), getCurrentAssetsInvestments(), getOffBalanceSheetArrangements());
     }
 
     @Override
@@ -135,6 +149,7 @@ public class BalanceSheetNotes {
                 ", tangibleAssets=" + tangibleAssets +
                 ", fixedAssetsInvestments=" + fixedAssetsInvestments +
                 ", currentAssetsInvestments=" + currentAssetsInvestments +
+                ", offBalanceSheetArrangements=" + offBalanceSheetArrangements +
                 '}';
     }
 }
