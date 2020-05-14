@@ -191,12 +191,12 @@ public class AccountsManager {
                 smallFullApiData.setBalanceSheetStatements(statements);
             }
 
-            if (!StringUtils.isEmpty(smallFull.getLinks().getAccountingPolicyNote())) {
+            if (!StringUtils.isEmpty(smallFull.getLinks().getAccountingPoliciesNote())) {
 
                 errorString = "accounting policies";
 
                 AccountingPoliciesApi policies = apiClient.smallFull().accountingPolicies()
-                        .get(smallFull.getLinks().getAccountingPolicyNote()).execute().getData();
+                        .get(smallFull.getLinks().getAccountingPoliciesNote()).execute().getData();
                 smallFullApiData.setAccountingPolicies(policies);
             }
 
