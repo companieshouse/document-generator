@@ -6,6 +6,7 @@ import uk.gov.companieshouse.api.model.accounts.directorsreport.DirectorsReportA
 import uk.gov.companieshouse.api.model.accounts.directorsreport.SecretaryApi;
 import uk.gov.companieshouse.api.model.accounts.directorsreport.StatementsApi;
 import uk.gov.companieshouse.api.model.accounts.profitandloss.ProfitAndLossApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.SmallFullApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.intangible.IntangibleApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.ApprovalApi;
@@ -34,7 +35,7 @@ public class SmallFullApiData {
 
     private CompanyProfileApi companyProfile;
 
-    private CompanyAccountsApi companyAccounts;
+    private SmallFullApi smallFull;
 
     private ApprovalApi approval;
 
@@ -148,10 +149,12 @@ public class SmallFullApiData {
         this.companyProfile = companyProfile;
     }
 
-    public CompanyAccountsApi getCompanyAccounts() { return companyAccounts; }
+    public SmallFullApi getSmallFull() {
+        return smallFull;
+    }
 
-    public void setCompanyAccounts(CompanyAccountsApi companyAccounts) {
-        this.companyAccounts = companyAccounts;
+    public void setSmallFull(SmallFullApi smallFull) {
+        this.smallFull = smallFull;
     }
 
     public ApprovalApi getApproval() {
@@ -267,7 +270,7 @@ public class SmallFullApiData {
                 "currentPeriod=" + currentPeriod +
                 ", previousPeriod=" + previousPeriod +
                 ", companyProfile=" + companyProfile +
-                ", companyAccounts=" + companyAccounts +
+                ", smallFull=" + smallFull +
                 ", approval=" + approval +
                 ", balanceSheetStatements=" + balanceSheetStatements +
                 ", accountingPolicies=" + accountingPolicies +
@@ -295,7 +298,7 @@ public class SmallFullApiData {
         return Objects.equals(currentPeriod, that.currentPeriod) &&
                 Objects.equals(previousPeriod, that.previousPeriod) &&
                 Objects.equals(companyProfile, that.companyProfile) &&
-                Objects.equals(companyAccounts, that.companyAccounts) &&
+                Objects.equals(smallFull, that.smallFull) &&
                 Objects.equals(approval, that.approval) &&
                 Objects.equals(balanceSheetStatements, that.balanceSheetStatements) &&
                 Objects.equals(accountingPolicies, that.accountingPolicies) &&
@@ -316,7 +319,7 @@ public class SmallFullApiData {
 
     @Override
     public int hashCode() {
-        return Objects.hash(currentPeriod, previousPeriod, companyProfile, companyAccounts, approval, balanceSheetStatements, accountingPolicies, tangibleAssets, intangibleAssets, stocks, debtors, employees, currentAssetsInvestments, creditorsWithinOneYear, creditorsAfterOneYear, fixedAssetsInvestments, currentPeriodProfitAndLoss, previousPeriodProfitAndLoss, directorsReport, directorsReportStatements);
+        return Objects.hash(currentPeriod, previousPeriod, companyProfile, smallFull, approval, balanceSheetStatements, accountingPolicies, tangibleAssets, intangibleAssets, stocks, debtors, employees, currentAssetsInvestments, creditorsWithinOneYear, creditorsAfterOneYear, fixedAssetsInvestments, currentPeriodProfitAndLoss, previousPeriodProfitAndLoss, directorsReport, directorsReportStatements);
     }
 
 }

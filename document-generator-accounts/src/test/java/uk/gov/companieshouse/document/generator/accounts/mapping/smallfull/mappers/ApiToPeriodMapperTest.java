@@ -7,8 +7,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.companieshouse.api.model.accounts.AccountingPeriodApi;
-import uk.gov.companieshouse.api.model.accounts.CompanyAccountsApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPeriodApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.SmallFullApi;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.period.Period;
 
 import java.time.LocalDate;
@@ -51,12 +51,12 @@ public class ApiToPeriodMapperTest {
     @DisplayName("tests that the dates from Api are mapped to Period IXBRL model for multi year filings")
     void testApiMapsDatesToPeriodModelForMultiYearFiling() {
 
-        CompanyAccountsApi companyAccountsApi = createAccountsFilingDates(true);
+        SmallFullApi smallFullApi = createAccountsFilingDates(true);
 
         when(internalApiToPeriodMapper
-                .apiToPeriod(companyAccountsApi)).thenReturn(createPeriod(true));
+                .apiToPeriod(smallFullApi)).thenReturn(createPeriod(true));
 
-        Period period = apiToPeriodMapper.apiToPeriod(companyAccountsApi);
+        Period period = apiToPeriodMapper.apiToPeriod(smallFullApi);
 
         assertNotNull(period);
         assertEquals(CURRENT_PERIOD_START_ON_FORMATTED, period.getCurrentPeriodStartOnFormatted());
@@ -71,12 +71,12 @@ public class ApiToPeriodMapperTest {
     @DisplayName("tests that the dates from Api are mapped to Period IXBRL model for single year filings")
     void testApiMapsDatesToPeriodModelForSingleYearFiling() {
 
-        CompanyAccountsApi companyAccountsApi = createAccountsFilingDates(false);
+        SmallFullApi smallFullApi = createAccountsFilingDates(false);
 
         when(internalApiToPeriodMapper
-                .apiToPeriod(companyAccountsApi)).thenReturn(createPeriod(false));
+                .apiToPeriod(smallFullApi)).thenReturn(createPeriod(false));
 
-        Period period = apiToPeriodMapper.apiToPeriod(companyAccountsApi);
+        Period period = apiToPeriodMapper.apiToPeriod(smallFullApi);
 
         assertNotNull(period);
         assertEquals(CURRENT_PERIOD_START_ON_FORMATTED, period.getCurrentPeriodStartOnFormatted());
@@ -87,9 +87,9 @@ public class ApiToPeriodMapperTest {
         assertEquals(null, period.getPreviousPeriodBSDate());
     }
 
-    private CompanyAccountsApi createAccountsFilingDates(boolean multiYearFiling) {
+    private SmallFullApi createAccountsFilingDates(boolean multiYearFiling) {
 
-        CompanyAccountsApi companyAccountsApi = new CompanyAccountsApi();
+        SmallFullApi smallFullApi = new SmallFullApi();
         AccountingPeriodApi lastAccountsApi = new AccountingPeriodApi();
         AccountingPeriodApi nextAccountsApi = new AccountingPeriodApi();
 
@@ -101,10 +101,10 @@ public class ApiToPeriodMapperTest {
         nextAccountsApi.setPeriodEndOn(LocalDate.of(2018,12,31));
         nextAccountsApi.setPeriodStartOn(LocalDate.of(2018,01,01));
 
-        companyAccountsApi.setLastAccounts(lastAccountsApi);
-        companyAccountsApi.setNextAccounts(nextAccountsApi);
+        smallFullApi.setLastAccounts(lastAccountsApi);
+        smallFullApi.setNextAccounts(nextAccountsApi);
 
-        return companyAccountsApi;
+        return smallFullApi;
     }
 
     private Period createPeriod(boolean multiYearFiling) {
