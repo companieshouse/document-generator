@@ -88,8 +88,7 @@ public class SmallFullApiData {
         return loansToDirectors;
     }
 
-    public void setLoansToDirectors(
-            LoansToDirectorsApi loansToDirectors) {
+    public void setLoansToDirectors(LoansToDirectorsApi loansToDirectors) {
         this.loansToDirectors = loansToDirectors;
     }
 
@@ -105,8 +104,7 @@ public class SmallFullApiData {
         return loansAdditionalInfo;
     }
 
-    public void setLoansAdditionalInfo(
-            AdditionalInformationApi loansAdditionalInfo) {
+    public void setLoansAdditionalInfo(AdditionalInformationApi loansAdditionalInfo) {
         this.loansAdditionalInfo = loansAdditionalInfo;
     }
 
