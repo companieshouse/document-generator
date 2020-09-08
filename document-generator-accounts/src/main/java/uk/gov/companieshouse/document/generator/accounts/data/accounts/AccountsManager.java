@@ -375,7 +375,7 @@ public class AccountsManager {
                 String loanId =
                         loansToDirectors.getLoans()
                                 .keySet().stream().findFirst()
-                                .orElseThrow(RuntimeException::new);
+                                        .orElseThrow(() -> new IllegalStateException("No loans found in links"));
 
                 // Use the loan id to derive a loan self link from the map of loans
                 String loanSelfLink = loansToDirectors.getLoans().get(loanId);
