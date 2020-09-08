@@ -27,6 +27,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.currentassetsinvestmen
 import uk.gov.companieshouse.api.model.accounts.smallfull.employees.EmployeesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.fixedassetsinvestments.FixedAssetsInvestmentsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.intangible.IntangibleApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.loanstodirectors.LoansToDirectorsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.offBalanceSheet.OffBalanceSheetApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
@@ -297,6 +298,45 @@ public class AccountsManager {
                         .get(smallFull.getLinks().getOffBalanceSheetArrangementsNote()).execute().getData();
 
                 smallFullApiData.setOffBalanceSheet(offBalanceSheetApi);
+            }
+
+            if (!StringUtils.isEmpty(smallFull.getLinks().getLoansToDirectors())) {
+
+                errorString = "loans to directors";
+
+                LoansToDirectorsApi loansToDirectors =
+                        apiClient.smallFull().loansToDirectors()
+                                .get(smallFull.getLinks().getLoansToDirectors()).execute().getData();
+
+                smallFullApiData.setLoansToDirectors(loansToDirectors);
+
+                if (!loansToDirectors.getLoans().isEmpty()) {
+
+                    errorString = "loans";
+
+                    // Find the first loan id from the map of loans
+                    String loanId =
+                            loansToDirectors.getLoans()
+                                    .keySet().stream().findFirst()
+                                    .orElseThrow(RuntimeException::new);
+
+                    // Use the loan id to derive a loan self link from the map of loans
+                    String loanSelfLink = loansToDirectors.getLoans().get(loanId);
+
+                    // Trim the end of the self link to calculate a generic 'loans' link, used to fetch all loans
+                    String loansLink = loanSelfLink.substring(0, loanSelfLink.lastIndexOf('/'));
+
+                    smallFullApiData.setLoans(apiClient.smallFull().loansToDirectors().loans().getAll(loansLink).execute().getData());
+                }
+
+                if (!StringUtils.isEmpty(loansToDirectors.getLinks().getAdditionalInformation())) {
+
+                    errorString = "loans additional info";
+
+                    smallFullApiData.setLoansAdditionalInfo(
+                            apiClient.smallFull().loansToDirectors().additionalInformation()
+                                    .get(loansToDirectors.getLinks().getAdditionalInformation()).execute().getData());
+                }
             }
 
             if (!StringUtils.isEmpty(smallFull.getLinks().getDirectorsReport())) {
