@@ -552,7 +552,7 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
         if (smallFull.getLoans() != null) {
             List<Loan> loans = new ArrayList<>();
 
-            int x = 2;
+            int directorIndex = 2;
 
             for (LoanApi loanApi : smallFull.getLoans()) {
 
@@ -576,8 +576,8 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
                         loan.setDirectorIndex(directorIndexes.get(loan.getDirectorName()));
                     } else {
                         // No names match the loan name, so we establish a new index and increment for the next loan
-                        directorIndexes.put(loan.getDirectorName(), x);
-                        x++;
+                        directorIndexes.put(loan.getDirectorName(), directorIndex);
+                        directorIndex++;
                     }
                 }
 
