@@ -3,18 +3,14 @@ package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.mapp
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,7 +18,6 @@ import uk.gov.companieshouse.accountsdates.AccountsDatesHelper;
 import uk.gov.companieshouse.accountsdates.impl.AccountsDatesHelperImpl;
 import uk.gov.companieshouse.api.model.accounts.directorsreport.ApprovalApi;
 import uk.gov.companieshouse.api.model.accounts.directorsreport.DirectorApi;
-import uk.gov.companieshouse.api.model.accounts.directorsreport.DirectorsReportApi;
 import uk.gov.companieshouse.api.model.accounts.directorsreport.SecretaryApi;
 import uk.gov.companieshouse.api.model.accounts.directorsreport.StatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
@@ -36,6 +31,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.currentassetsinvestmen
 import uk.gov.companieshouse.api.model.accounts.smallfull.fixedassetsinvestments.FixedAssetsInvestmentsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.employees.EmployeesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.intangible.IntangibleApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.loanstodirectors.LoanApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.offBalanceSheet.OffBalanceSheetApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
@@ -53,6 +49,9 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.directorsreport.DirectorsReport;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.fixedassetsinvestments.FixedAssetsInvestments;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.employees.Employees;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.loanstodirectors.AdditionalInformation;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.loanstodirectors.Loan;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.loanstodirectors.LoansToDirectors;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.intangible.IntangibleAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.intangible.IntangibleAssetsAmortisation;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.intangible.IntangibleAssetsCost;
@@ -132,6 +131,8 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
 
         SmallFullAccountIxbrl smallFullAccountIxbrl =
                 smallFullIXBRLMapper.mapSmallFullIXBRLModel(smallFullApiData);
+
+        Map<String, Integer> directorIndexes = new HashMap<>();
 
         if (smallFullApiData.getCurrentPeriodProfitAndLoss() != null) {
             smallFullAccountIxbrl.setProfitAndLoss(
@@ -238,7 +239,14 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
 
             smallFullAccountIxbrl.setDirectorsReport(setDirectorsReport(
                             smallFullApiData.getDirectorsReportStatements(), smallFullApiData.getDirectors(),
-                    smallFullApiData.getSecretary(), smallFullApiData.getDirectorsApproval(), smallFullAccountIxbrl));
+                    smallFullApiData.getSecretary(), smallFullApiData.getDirectorsApproval(), smallFullAccountIxbrl, directorIndexes));
+        }
+
+        if (smallFullApiData.getLoansToDirectors() != null) {
+
+            balanceSheetNotes.setLoansToDirectors(mapLoansToDirectors(smallFullApiData, directorIndexes));
+
+            hasBalanceSheetNotes = true;
         }
 
 
@@ -347,7 +355,8 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
     }
 
     private DirectorsReport setDirectorsReport(StatementsApi directorsReportStatements, DirectorApi[] directorsApi,
-                                               SecretaryApi secretary, ApprovalApi approval, SmallFullAccountIxbrl smallFullAccountIxbrl) {
+                                               SecretaryApi secretary, ApprovalApi approval, SmallFullAccountIxbrl smallFullAccountIxbrl,
+                                               Map<String, Integer> directorIndexes) {
 
         DirectorsReport directorsReport = new DirectorsReport();
 
@@ -418,10 +427,11 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
 
                 if (directors.get(i).getDirectors().get(j).getName().equals(smallFullAccountIxbrl.getApprovalName())) {
                     smallFullAccountIxbrl.setApprovalIndex(x);
-
                 }
 
                 directors.get(i).getDirectors().get(j).setIndex(x);
+
+                directorIndexes.put(directors.get(i).getDirectors().get(j).getName(), x);
                 x++;
             }
         }
@@ -533,6 +543,56 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
                 .apiToTangibleAssetsNetBookValuePreviousPeriodMapper(tangible));
 
         return netBookValue;
+    }
+
+    private LoansToDirectors mapLoansToDirectors(SmallFullApiData smallFull, Map<String, Integer> directorIndexes) {
+
+        LoansToDirectors loansToDirectors = new LoansToDirectors();
+
+        if (smallFull.getLoans() != null) {
+            List<Loan> loans = new ArrayList<>();
+
+            int directorIndex = 2;
+
+            for (LoanApi loanApi : smallFull.getLoans()) {
+
+                Loan loan = new Loan(
+                        loanApi.getDirectorName(),
+                        loanApi.getDescription(),
+                        loanApi.getBreakdown().getBalanceAtPeriodStart(),
+                        loanApi.getBreakdown().getAdvancesCreditsMade(),
+                        loanApi.getBreakdown().getAdvancesCreditsRepaid(),
+                        loanApi.getBreakdown().getBalanceAtPeriodEnd());
+
+                if (smallFull.getDirectorsReport() != null) {
+                    // If DR is present, set index according to `directorIndexes`, which corresponds with DR data
+                    loan.setDirectorIndex(directorIndexes.get(loan.getDirectorName()));
+                } else {
+                    if (smallFull.getApproval().getName().equals(loan.getDirectorName())) {
+                        // No DR, so if loan name matches approval name, set index to 1
+                        loan.setDirectorIndex(1);
+                    } else if (directorIndexes.isEmpty() && directorIndexes.get(loan.getDirectorName()) != null) {
+                        // We hit this logic if more than one loan is given to the same director - who is not the approver - so we reuse the same index
+                        loan.setDirectorIndex(directorIndexes.get(loan.getDirectorName()));
+                    } else {
+                        // No names match the loan name, so we establish a new index and increment for the next loan
+                        directorIndexes.put(loan.getDirectorName(), directorIndex);
+                        directorIndex++;
+                    }
+                }
+
+                loans.add(loan);
+            }
+
+            loansToDirectors.setLoans(loans);
+        }
+
+        if (smallFull.getLoansAdditionalInfo() != null) {
+
+            loansToDirectors.setAdditionalInformation(new AdditionalInformation(smallFull.getLoansAdditionalInfo().getDetails()));
+        }
+
+        return loansToDirectors;
     }
 
 

@@ -9,6 +9,7 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.currentassetsinvestments.CurrentAssetsInvestments;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.Debtors;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.fixedassetsinvestments.FixedAssetsInvestments;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.loanstodirectors.LoansToDirectors;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.intangible.IntangibleAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.notes.tangible.TangibleAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.offbalancesheetarrangements.OffBalanceSheetArrangements;
@@ -43,6 +44,18 @@ public class BalanceSheetNotes {
 
     @JsonProperty("off_balance_sheet_arrangements")
     private OffBalanceSheetArrangements offBalanceSheetArrangements;
+
+    @JsonProperty("loans_to_directors")
+    private LoansToDirectors loansToDirectors;
+
+    public LoansToDirectors getLoansToDirectors() {
+        return loansToDirectors;
+    }
+
+    public void setLoansToDirectors(
+            LoansToDirectors loansToDirectors) {
+        this.loansToDirectors = loansToDirectors;
+    }
 
     public IntangibleAssets getIntangibleAssets() {
         return intangibleAssets;
