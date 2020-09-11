@@ -367,7 +367,7 @@ public class AccountsManager {
 
             smallFullApiData.setLoansToDirectors(loansToDirectors);
 
-            if (loansToDirectors != null && !loansToDirectors.getLoans().isEmpty()) {
+            if (loansToDirectors.getLoans() != null && !loansToDirectors.getLoans().isEmpty()) {
 
                 errorString = "loans";
 
