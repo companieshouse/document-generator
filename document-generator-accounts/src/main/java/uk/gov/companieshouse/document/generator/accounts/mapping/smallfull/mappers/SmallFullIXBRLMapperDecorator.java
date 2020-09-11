@@ -568,10 +568,10 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
                     // If DR is present, set index according to `directorIndexes`, which corresponds with DR data
                     loan.setDirectorIndex(directorIndexes.get(loan.getDirectorName()));
                 } else {
-                    if (smallFull.getApproval().getName().equals(loan.getDirectorName())) {
+                    if (smallFull.getApproval() != null && smallFull.getApproval().getName().equals(loan.getDirectorName())) {
                         // No DR, so if loan name matches approval name, set index to 1
                         loan.setDirectorIndex(1);
-                    } else if (directorIndexes.isEmpty() && directorIndexes.get(loan.getDirectorName()) != null) {
+                    } else if (!directorIndexes.isEmpty() && directorIndexes.get(loan.getDirectorName()) != null) {
                         // We hit this logic if more than one loan is given to the same director - who is not the approver - so we reuse the same index
                         loan.setDirectorIndex(directorIndexes.get(loan.getDirectorName()));
                     } else {
