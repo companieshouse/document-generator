@@ -4,17 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Loan {
 
-    public Loan(String directorName, String description, Long balanceAtPeriodStart,
-                Long advancesCreditsMade, Long advancesCreditsRepaid, Long balanceAtPeriodEnd) {
-
-        this.directorName = directorName;
-        this.description = description;
-        this.balanceAtPeriodStart = balanceAtPeriodStart;
-        this.advancesCreditsMade = advancesCreditsMade;
-        this.advancesCreditsRepaid = advancesCreditsRepaid;
-        this.balanceAtPeriodEnd = balanceAtPeriodEnd;
-    }
-
     @JsonProperty("director_name")
     private String directorName;
 
@@ -35,6 +24,20 @@ public class Loan {
 
     @JsonProperty("balance_at_period_end")
     private Long balanceAtPeriodEnd;
+
+    @JsonProperty("director_loan_index")
+    private Integer directorLoanIndex;
+
+    public Loan(String directorName, String description, Long balanceAtPeriodStart,
+                Long advancesCreditsMade, Long advancesCreditsRepaid, Long balanceAtPeriodEnd) {
+
+        this.directorName = directorName;
+        this.description = description;
+        this.balanceAtPeriodStart = balanceAtPeriodStart;
+        this.advancesCreditsMade = advancesCreditsMade;
+        this.advancesCreditsRepaid = advancesCreditsRepaid;
+        this.balanceAtPeriodEnd = balanceAtPeriodEnd;
+    }
 
     public String getDirectorName() {
         return directorName;
@@ -90,5 +93,13 @@ public class Loan {
 
     public void setBalanceAtPeriodEnd(Long balanceAtPeriodEnd) {
         this.balanceAtPeriodEnd = balanceAtPeriodEnd;
+    }
+
+    public Integer getDirectorLoanIndex() {
+        return directorLoanIndex;
+    }
+
+    public void setDirectorLoanIndex(Integer directorLoanIndex) {
+        this.directorLoanIndex = directorLoanIndex;
     }
 }

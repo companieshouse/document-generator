@@ -65,12 +65,11 @@ import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.offbalancesheetarrangements.OffBalanceSheetArrangements;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.stocks.StocksNote;
 
-import static java.util.Arrays.asList;
-import static java.util.Arrays.sort;
-import static java.util.Map.Entry.comparingByKey;
-import static java.util.stream.Collectors.toMap;
-
 public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMapper {
+
+    private static final int INDEX_OF_FIRST_DIRECTOR_THAT_DID_NOT_APPROVE_DIRECTORS_REPORT = 2;
+    private static final int INDEX_OF_DIRECTOR_THAT_APPROVED_DIRECTORS_REPORT = 1;
+    private static final int INDEX_OF_FIRST_LOAN_FOR_A_DIRECTOR = 1;
 
     @Autowired
     @Qualifier("delegate")
@@ -552,9 +551,14 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
         if (smallFull.getLoans() != null) {
             List<Loan> loans = new ArrayList<>();
 
-            int directorIndex = 2;
+            int directorIndexCounter = INDEX_OF_FIRST_DIRECTOR_THAT_DID_NOT_APPROVE_DIRECTORS_REPORT;
 
+            // this map keeps a count of the loans that each director has,
+            // so that, for each director, that director's loans can be given sequential IDs
+            // starting at 1
+            Map<Integer,Integer> directorIndexMappedToloanToDirectorCounter = new HashMap<>();
             for (LoanApi loanApi : smallFull.getLoans()) {
+
 
                 Loan loan = new Loan(
                         loanApi.getDirectorName(),
@@ -564,23 +568,29 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
                         loanApi.getBreakdown().getAdvancesCreditsRepaid(),
                         loanApi.getBreakdown().getBalanceAtPeriodEnd());
 
+                String directorName = loan.getDirectorName();
                 if (smallFull.getDirectorsReport() != null) {
                     // If DR is present, set index according to `directorIndexes`, which corresponds with DR data
-                    loan.setDirectorIndex(directorIndexes.get(loan.getDirectorName()));
+                    loan.setDirectorIndex(directorIndexes.get(directorName));
                 } else {
-                    if (smallFull.getApproval() != null && smallFull.getApproval().getName().equals(loan.getDirectorName())) {
+                    if (smallFull.getApproval() != null && smallFull.getApproval().getName().equals(directorName)) {
                         // No DR, so if loan name matches approval name, set index to 1
-                        loan.setDirectorIndex(1);
-                    } else if (!directorIndexes.isEmpty() && directorIndexes.get(loan.getDirectorName()) != null) {
+                        loan.setDirectorIndex(INDEX_OF_DIRECTOR_THAT_APPROVED_DIRECTORS_REPORT);
+                    } else if (!directorIndexes.isEmpty() && directorIndexes.get(directorName) != null) {
                         // We hit this logic if more than one loan is given to the same director - who is not the approver - so we reuse the same index
-                        loan.setDirectorIndex(directorIndexes.get(loan.getDirectorName()));
+                        loan.setDirectorIndex(directorIndexes.get(directorName));
                     } else {
                         // No names match the loan name, so we establish a new index and increment for the next loan
-                        loan.setDirectorIndex(directorIndex);
-                        directorIndexes.put(loan.getDirectorName(), directorIndex);
-                        directorIndex++;
+                        loan.setDirectorIndex(directorIndexCounter);
+                        directorIndexes.put(directorName, directorIndexCounter);
+                        directorIndexCounter++;
                     }
                 }
+
+                Integer directorIndex = loan.getDirectorIndex();
+                Integer directorScopedLoanIndex = directorIndexMappedToloanToDirectorCounter.getOrDefault(directorIndex, INDEX_OF_FIRST_LOAN_FOR_A_DIRECTOR);
+                directorIndexMappedToloanToDirectorCounter.put(directorIndex, directorScopedLoanIndex + 1);
+                loan.setDirectorLoanIndex(directorScopedLoanIndex);
 
                 loans.add(loan);
             }
@@ -595,7 +605,6 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
 
         return loansToDirectors;
     }
-
 
   /*INTANGIBLE ASSETS START HERE*/
 
