@@ -17,6 +17,9 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.currentassetsinvestments.CurrentAssetsInvestmentsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.fixedassetsinvestments.FixedAssetsInvestmentsApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.loanstodirectors.AdditionalInformationApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.loanstodirectors.LoanApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.loanstodirectors.LoansToDirectorsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.offBalanceSheet.OffBalanceSheetApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
@@ -74,6 +77,36 @@ public class SmallFullApiData {
     private SecretaryApi secretary;
 
     private OffBalanceSheetApi offBalanceSheet;
+
+    private LoansToDirectorsApi loansToDirectors;
+
+    private LoanApi[] loans;
+
+    private AdditionalInformationApi loansAdditionalInfo;
+
+    public LoansToDirectorsApi getLoansToDirectors() {
+        return loansToDirectors;
+    }
+
+    public void setLoansToDirectors(LoansToDirectorsApi loansToDirectors) {
+        this.loansToDirectors = loansToDirectors;
+    }
+
+    public LoanApi[] getLoans() {
+        return loans;
+    }
+
+    public void setLoans(LoanApi[] loans) {
+        this.loans = loans;
+    }
+
+    public AdditionalInformationApi getLoansAdditionalInfo() {
+        return loansAdditionalInfo;
+    }
+
+    public void setLoansAdditionalInfo(AdditionalInformationApi loansAdditionalInfo) {
+        this.loansAdditionalInfo = loansAdditionalInfo;
+    }
 
     public OffBalanceSheetApi getOffBalanceSheet() {
         return offBalanceSheet;
