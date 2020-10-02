@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.api.ApiClient;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
+import uk.gov.companieshouse.api.handler.smallfull.financialcommitments.FinancialCommitmentsApi;
 import uk.gov.companieshouse.api.model.accounts.Accounts;
 import uk.gov.companieshouse.api.model.accounts.CompanyAccountsApi;
 import uk.gov.companieshouse.api.model.accounts.abridged.AbridgedAccountsApi;
@@ -298,6 +299,16 @@ public class AccountsManager {
                         .get(smallFull.getLinks().getOffBalanceSheetArrangementsNote()).execute().getData();
 
                 smallFullApiData.setOffBalanceSheet(offBalanceSheetApi);
+            }
+
+            if (!StringUtils.isEmpty(smallFull.getLinks().getFinancialCommitmentsNote())) {
+
+                errorString = "financial commitments";
+
+                FinancialCommitmentsApi financialCommitmentsApi = apiClient.smallFull().financialCommitments()
+                        .get(smallFull.getLinks().getFinancialCommitmentsNote()).execute().getData();
+
+                smallFullApiData.setFinancialCommitments(financialCommitmentsApi);
             }
 
             if (!StringUtils.isEmpty(smallFull.getLinks().getLoansToDirectors())) {
