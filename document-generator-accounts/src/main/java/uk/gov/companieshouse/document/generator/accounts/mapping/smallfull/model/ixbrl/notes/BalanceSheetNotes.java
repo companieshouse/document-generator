@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
+
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.FinancialCommitments;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorsafteroneyear.CreditorsAfterOneYear;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.creditorswithinoneyear.CreditorsWithinOneYear;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.currentassetsinvestments.CurrentAssetsInvestments;
@@ -44,6 +46,9 @@ public class BalanceSheetNotes {
 
     @JsonProperty("off_balance_sheet_arrangements")
     private OffBalanceSheetArrangements offBalanceSheetArrangements;
+
+    @JsonProperty("financial_commitments")
+    private FinancialCommitments financialCommitments;
 
     @JsonProperty("loans_to_directors")
     private LoansToDirectors loansToDirectors;
@@ -130,25 +135,35 @@ public class BalanceSheetNotes {
         this.offBalanceSheetArrangements = offBalanceSheetArrangements;
     }
 
+    public FinancialCommitments getFinancialCommitments() {
+        return financialCommitments;
+    }
+
+    public void setFinancialCommitments(FinancialCommitments financialCommitments) {
+        this.financialCommitments = financialCommitments;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BalanceSheetNotes that = (BalanceSheetNotes) o;
-        return stocksNote.equals(that.stocksNote) &&
-                debtorsNote.equals(that.debtorsNote) &&
-                creditorsWithinOneYearNote.equals(that.creditorsWithinOneYearNote) &&
-                creditorsAfterOneYearNote.equals(that.creditorsAfterOneYearNote) &&
-                intangibleAssets.equals(that.intangibleAssets) &&
-                tangibleAssets.equals(that.tangibleAssets) &&
-                fixedAssetsInvestments.equals(that.fixedAssetsInvestments) &&
-                currentAssetsInvestments.equals(that.currentAssetsInvestments) &&
-                offBalanceSheetArrangements.equals(that.offBalanceSheetArrangements);
+        return Objects.equals(stocksNote, that.stocksNote) &&
+                Objects.equals(debtorsNote, that.debtorsNote) &&
+                Objects.equals(creditorsWithinOneYearNote, that.creditorsWithinOneYearNote) &&
+                Objects.equals(creditorsAfterOneYearNote, that.creditorsAfterOneYearNote) &&
+                Objects.equals(intangibleAssets, that.intangibleAssets) &&
+                Objects.equals(tangibleAssets, that.tangibleAssets) &&
+                Objects.equals(fixedAssetsInvestments, that.fixedAssetsInvestments) &&
+                Objects.equals(currentAssetsInvestments, that.currentAssetsInvestments) &&
+                Objects.equals(offBalanceSheetArrangements, that.offBalanceSheetArrangements) &&
+                Objects.equals(financialCommitments, that.financialCommitments) &&
+                Objects.equals(loansToDirectors, that.loansToDirectors);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getStocksNote(), getDebtorsNote(), getCreditorsWithinOneYearNote(), getCreditorsAfterOneYearNote(), getIntangibleAssets(), getTangibleAssets(), getFixedAssetsInvestments(), getCurrentAssetsInvestments(), getOffBalanceSheetArrangements());
+        return Objects.hash(stocksNote, debtorsNote, creditorsWithinOneYearNote, creditorsAfterOneYearNote, intangibleAssets, tangibleAssets, fixedAssetsInvestments, currentAssetsInvestments, offBalanceSheetArrangements, financialCommitments, loansToDirectors);
     }
 
     @Override
@@ -163,6 +178,8 @@ public class BalanceSheetNotes {
                 ", fixedAssetsInvestments=" + fixedAssetsInvestments +
                 ", currentAssetsInvestments=" + currentAssetsInvestments +
                 ", offBalanceSheetArrangements=" + offBalanceSheetArrangements +
+                ", financialCommitments=" + financialCommitments +
+                ", loansToDirectors=" + loansToDirectors +
                 '}';
     }
 }

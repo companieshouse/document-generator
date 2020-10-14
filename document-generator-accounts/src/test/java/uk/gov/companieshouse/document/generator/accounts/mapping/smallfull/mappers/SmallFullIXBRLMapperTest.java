@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.accountsdates.AccountsDatesHelper;
 import uk.gov.companieshouse.accountsdates.impl.AccountsDatesHelperImpl;
+import uk.gov.companieshouse.api.handler.smallfull.financialcommitments.FinancialCommitmentsApi;
 import uk.gov.companieshouse.api.model.accounts.directorsreport.DirectorApi;
 import uk.gov.companieshouse.api.model.accounts.directorsreport.DirectorsReportApi;
 import uk.gov.companieshouse.api.model.accounts.directorsreport.SecretaryApi;
@@ -42,6 +43,7 @@ import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.statements.StatementApi;
 import uk.gov.companieshouse.document.generator.accounts.mapping.cic.model.Statements;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.SmallFullApiData;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.FinancialCommitments;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.SmallFullAccountIxbrl;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.accountingpolicies.AccountingPolicies;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.BalanceSheetStatements;
@@ -144,6 +146,9 @@ public class SmallFullIXBRLMapperTest {
     private ApiToOffBalanceSheetArrangementsMapper apiToOffBalanceSheetArrangementsMapper;
 
     @Mock
+    private ApiToFinancialCommitmentsMapper apiToFinancialCommitmentsMapper;
+
+    @Mock
     private ProfitAndLoss profitAndLoss;
 
     @Mock
@@ -183,6 +188,9 @@ public class SmallFullIXBRLMapperTest {
 
     @Mock
     private OffBalanceSheetArrangements offBalanceSheetArrangements;
+
+    @Mock
+    private FinancialCommitments financialCommitments;
 
     @Mock
     private Company company;
@@ -541,6 +549,9 @@ public class SmallFullIXBRLMapperTest {
 
         when(apiToOffBalanceSheetArrangementsMapper.apiToOffBalanceSheetArrangements(smallFullApiData.getOffBalanceSheet()))
                 .thenReturn(offBalanceSheetArrangements);
+
+        when(apiToFinancialCommitmentsMapper.apiToFinancialCommitments(smallFullApiData.getFinancialCommitments()))
+                .thenReturn(financialCommitments);
     }
 
     private void verifyOptionalFieldMappersExecuted(SmallFullApiData smallFullApiData) {
@@ -696,6 +707,7 @@ public class SmallFullIXBRLMapperTest {
                 smallFullAccountIxbrl.getBalanceSheetNotes().getFixedAssetsInvestments());
         assertEquals(employees, smallFullAccountIxbrl.getAdditionalNotes().getEmployees());
         assertEquals(offBalanceSheetArrangements, smallFullAccountIxbrl.getBalanceSheetNotes().getOffBalanceSheetArrangements());
+        assertEquals(financialCommitments, smallFullAccountIxbrl.getBalanceSheetNotes().getFinancialCommitments());
     }
 
     private SmallFullAccountIxbrl createSmallFullAccountIxbrl() {
@@ -734,6 +746,7 @@ public class SmallFullIXBRLMapperTest {
             smallFullApiData.setDirectorsReportStatements(new StatementsApi());
             smallFullApiData.setDirectorsReport(createDirectorsReport());
             smallFullApiData.setOffBalanceSheet(new OffBalanceSheetApi());
+            smallFullApiData.setFinancialCommitments(new FinancialCommitmentsApi());
         }
 
         return smallFullApiData;

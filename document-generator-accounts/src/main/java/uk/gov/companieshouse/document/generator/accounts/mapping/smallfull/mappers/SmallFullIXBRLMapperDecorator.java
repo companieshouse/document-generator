@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.companieshouse.accountsdates.AccountsDatesHelper;
 import uk.gov.companieshouse.accountsdates.impl.AccountsDatesHelperImpl;
+import uk.gov.companieshouse.api.handler.smallfull.financialcommitments.FinancialCommitmentsApi;
 import uk.gov.companieshouse.api.model.accounts.directorsreport.ApprovalApi;
 import uk.gov.companieshouse.api.model.accounts.directorsreport.DirectorApi;
 import uk.gov.companieshouse.api.model.accounts.directorsreport.SecretaryApi;
@@ -36,6 +37,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.offBalanceSheet.OffBal
 import uk.gov.companieshouse.api.model.accounts.smallfull.stocks.StocksApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.SmallFullApiData;
+import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.FinancialCommitments;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.SmallFullAccountIxbrl;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.accountingpolicies.AccountingPolicies;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.BalanceSheet;
@@ -122,6 +124,9 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
 
     @Autowired
     private ApiToOffBalanceSheetArrangementsMapper apiToOffBalanceSheetArrangementsMapper;
+
+    @Autowired
+    private ApiToFinancialCommitmentsMapper apiToFinancialCommitmentsMapper;
 
     private AccountsDatesHelper accountsDatesHelper = new AccountsDatesHelperImpl();
 
@@ -230,6 +235,13 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
         if (smallFullApiData.getOffBalanceSheet() != null) {
 
             balanceSheetNotes.setOffBalanceSheetArrangements(mapOffBalanceSheetArrangements(smallFullApiData.getOffBalanceSheet()));
+
+            hasBalanceSheetNotes = true;
+        }
+
+        if (smallFullApiData.getFinancialCommitments() != null) {
+
+            balanceSheetNotes.setFinancialCommitments(mapFinancialCommitments(smallFullApiData.getFinancialCommitments()));
 
             hasBalanceSheetNotes = true;
         }
@@ -445,6 +457,11 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
     private OffBalanceSheetArrangements mapOffBalanceSheetArrangements(OffBalanceSheetApi offBalanceSheet) {
 
         return apiToOffBalanceSheetArrangementsMapper.apiToOffBalanceSheetArrangements(offBalanceSheet);
+    }
+
+    private FinancialCommitments mapFinancialCommitments(FinancialCommitmentsApi financialCommitments) {
+
+        return apiToFinancialCommitmentsMapper.apiToFinancialCommitments(financialCommitments);
     }
 
 

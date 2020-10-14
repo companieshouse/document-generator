@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model;
 
+import uk.gov.companieshouse.api.handler.smallfull.financialcommitments.FinancialCommitmentsApi;
 import uk.gov.companieshouse.api.model.accounts.CompanyAccountsApi;
 import uk.gov.companieshouse.api.model.accounts.directorsreport.DirectorApi;
 import uk.gov.companieshouse.api.model.accounts.directorsreport.DirectorsReportApi;
@@ -27,6 +28,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.employees.EmployeesApi
 import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -77,6 +79,8 @@ public class SmallFullApiData {
     private SecretaryApi secretary;
 
     private OffBalanceSheetApi offBalanceSheet;
+
+    private FinancialCommitmentsApi financialCommitments;
 
     private LoansToDirectorsApi loansToDirectors;
 
@@ -297,6 +301,14 @@ public class SmallFullApiData {
         this.previousPeriodProfitAndLoss = previousPeriodProfitAndLoss;
     }
 
+    public FinancialCommitmentsApi getFinancialCommitments() {
+        return financialCommitments;
+    }
+
+    public void setFinancialCommitments(FinancialCommitmentsApi financialCommitments) {
+        this.financialCommitments = financialCommitments;
+    }
+
     @Override
     public String toString() {
         return "SmallFullApiData{" +
@@ -318,8 +330,16 @@ public class SmallFullApiData {
                 ", fixedAssetsInvestments=" + fixedAssetsInvestments +
                 ", currentPeriodProfitAndLoss=" + currentPeriodProfitAndLoss +
                 ", previousPeriodProfitAndLoss=" + previousPeriodProfitAndLoss +
-                ", directorsReportApi=" + directorsReport +
+                ", directorsReport=" + directorsReport +
                 ", directorsReportStatements=" + directorsReportStatements +
+                ", directors=" + Arrays.toString(directors) +
+                ", secretary=" + secretary +
+                ", offBalanceSheet=" + offBalanceSheet +
+                ", financialCommitments=" + financialCommitments +
+                ", loansToDirectors=" + loansToDirectors +
+                ", loans=" + Arrays.toString(loans) +
+                ", loansAdditionalInfo=" + loansAdditionalInfo +
+                ", directorsApproval=" + directorsApproval +
                 '}';
     }
 
@@ -347,12 +367,22 @@ public class SmallFullApiData {
                 Objects.equals(currentPeriodProfitAndLoss, that.currentPeriodProfitAndLoss) &&
                 Objects.equals(previousPeriodProfitAndLoss, that.previousPeriodProfitAndLoss) &&
                 Objects.equals(directorsReport, that.directorsReport) &&
-                Objects.equals(directorsReportStatements, that.directorsReportStatements);
+                Objects.equals(directorsReportStatements, that.directorsReportStatements) &&
+                Arrays.equals(directors, that.directors) &&
+                Objects.equals(secretary, that.secretary) &&
+                Objects.equals(offBalanceSheet, that.offBalanceSheet) &&
+                Objects.equals(financialCommitments, that.financialCommitments) &&
+                Objects.equals(loansToDirectors, that.loansToDirectors) &&
+                Arrays.equals(loans, that.loans) &&
+                Objects.equals(loansAdditionalInfo, that.loansAdditionalInfo) &&
+                Objects.equals(directorsApproval, that.directorsApproval);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(currentPeriod, previousPeriod, companyProfile, smallFull, approval, balanceSheetStatements, accountingPolicies, tangibleAssets, intangibleAssets, stocks, debtors, employees, currentAssetsInvestments, creditorsWithinOneYear, creditorsAfterOneYear, fixedAssetsInvestments, currentPeriodProfitAndLoss, previousPeriodProfitAndLoss, directorsReport, directorsReportStatements);
+        int result = Objects.hash(currentPeriod, previousPeriod, companyProfile, smallFull, approval, balanceSheetStatements, accountingPolicies, tangibleAssets, intangibleAssets, stocks, debtors, employees, currentAssetsInvestments, creditorsWithinOneYear, creditorsAfterOneYear, fixedAssetsInvestments, currentPeriodProfitAndLoss, previousPeriodProfitAndLoss, directorsReport, directorsReportStatements, secretary, offBalanceSheet, financialCommitments, loansToDirectors, loansAdditionalInfo, directorsApproval);
+        result = 31 * result + Arrays.hashCode(directors);
+        result = 31 * result + Arrays.hashCode(loans);
+        return result;
     }
-
 }
