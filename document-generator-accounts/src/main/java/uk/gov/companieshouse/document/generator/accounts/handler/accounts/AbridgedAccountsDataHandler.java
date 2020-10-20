@@ -181,7 +181,6 @@ public class AbridgedAccountsDataHandler {
 
         JSONObject account = new JSONObject(accountData);
         JSONObject currentPeriod = account.getJSONObject("currentPeriodApi");
-        String periodEndOn = currentPeriod.get("periodEndDate").toString();
-        return periodEndOn;
+        return currentPeriod.get("periodEndDate").toString();
     }
 }

@@ -3,7 +3,6 @@ package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.mode
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.time.LocalDate;
 import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
