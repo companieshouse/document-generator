@@ -15,9 +15,8 @@ public class ConvertJsonHandlerImpl implements ConvertJsonHandler {
         if (jsonString != null && !jsonString.isEmpty()){
             JSONObject jsonObject = new JSONObject(jsonString);
 
-            String documentSize = Long.toString(jsonObject.getLong("document_size"));
+            return Long.toString(jsonObject.getLong("document_size"));
 
-            return documentSize;
         }
         return null;
     }

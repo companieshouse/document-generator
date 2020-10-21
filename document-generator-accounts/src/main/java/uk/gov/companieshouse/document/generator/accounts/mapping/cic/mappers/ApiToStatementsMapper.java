@@ -3,7 +3,6 @@ package uk.gov.companieshouse.document.generator.accounts.mapping.cic.mappers;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.mapstruct.factory.Mappers;
 import org.springframework.web.context.annotation.RequestScope;
 import uk.gov.companieshouse.api.model.accounts.cic.statements.CicStatementsApi;
 import uk.gov.companieshouse.document.generator.accounts.mapping.cic.model.Statements;

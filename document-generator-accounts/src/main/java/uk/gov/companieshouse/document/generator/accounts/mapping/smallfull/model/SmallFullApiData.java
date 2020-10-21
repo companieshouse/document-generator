@@ -1,7 +1,6 @@
 package uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model;
 
 import uk.gov.companieshouse.api.handler.smallfull.financialcommitments.FinancialCommitmentsApi;
-import uk.gov.companieshouse.api.model.accounts.CompanyAccountsApi;
 import uk.gov.companieshouse.api.model.accounts.directorsreport.DirectorApi;
 import uk.gov.companieshouse.api.model.accounts.directorsreport.DirectorsReportApi;
 import uk.gov.companieshouse.api.model.accounts.directorsreport.SecretaryApi;
@@ -29,7 +28,6 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.tangible.TangibleApi;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 public class SmallFullApiData {
