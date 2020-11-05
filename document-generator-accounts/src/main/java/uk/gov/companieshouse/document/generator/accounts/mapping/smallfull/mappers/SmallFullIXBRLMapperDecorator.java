@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.companieshouse.accountsdates.AccountsDatesHelper;
@@ -585,8 +586,10 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
                         loanApi.getBreakdown().getAdvancesCreditsRepaid(),
                         loanApi.getBreakdown().getBalanceAtPeriodEnd());
 
-                String directorName = loan.getDirectorName();
+                String directorName = StringUtils.isBlank(loan.getDirectorName()) ? "Not provided" : loan.getDirectorName();
+
                 if (smallFull.getDirectorsReport() != null) {
+                    directorIndexes.put("Not provided", directorIndexes.size());
                     // If DR is present, set index according to `directorIndexes`, which corresponds with DR data
                     loan.setDirectorIndex(directorIndexes.get(directorName));
                 } else {
