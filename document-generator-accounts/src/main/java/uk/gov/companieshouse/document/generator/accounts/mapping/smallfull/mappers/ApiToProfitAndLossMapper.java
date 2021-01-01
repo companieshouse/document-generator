@@ -5,16 +5,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.springframework.web.context.annotation.RequestScope;
 import uk.gov.companieshouse.api.model.accounts.profitandloss.ProfitAndLossApi;
-import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
-import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
-import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
-import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.BalanceSheetStatements;
-import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.CalledUpSharedCapitalNotPaid;
-import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.capitalandreserves.CapitalAndReserve;
-import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.currentassets.CurrentAssets;
-import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.fixedassets.FixedAssets;
-import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.membersfunds.MembersFunds;
-import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.balancesheet.otherliabilitiesandassets.OtherLiabilitiesOrAssets;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.profitandloss.ProfitAndLoss;
 
 @RequestScope

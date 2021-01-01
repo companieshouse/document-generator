@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.companieshouse.accountsdates.AccountsDatesHelper;
@@ -72,6 +73,7 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
     private static final int INDEX_OF_FIRST_DIRECTOR_THAT_DID_NOT_APPROVE_DIRECTORS_REPORT = 2;
     private static final int INDEX_OF_DIRECTOR_THAT_APPROVED_DIRECTORS_REPORT = 1;
     private static final int INDEX_OF_FIRST_LOAN_FOR_A_DIRECTOR = 1;
+    private static final String DIRECTOR_NAME_NOT_PROVIDED = "Not provided";
 
     @Autowired
     @Qualifier("delegate")
@@ -447,6 +449,8 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
             }
         }
 
+        directorIndexes.put(DIRECTOR_NAME_NOT_PROVIDED, directorIndexes.size() + 1);
+
         directorsReport.setSortedDirectors(directors);
 
         directorsReport.setApproval(directorsApproval);
@@ -585,8 +589,10 @@ public abstract class SmallFullIXBRLMapperDecorator implements SmallFullIXBRLMap
                         loanApi.getBreakdown().getAdvancesCreditsRepaid(),
                         loanApi.getBreakdown().getBalanceAtPeriodEnd());
 
-                String directorName = loan.getDirectorName();
+                String directorName = StringUtils.isBlank(loan.getDirectorName()) ? DIRECTOR_NAME_NOT_PROVIDED : loan.getDirectorName();
+
                 if (smallFull.getDirectorsReport() != null) {
+
                     // If DR is present, set index according to `directorIndexes`, which corresponds with DR data
                     loan.setDirectorIndex(directorIndexes.get(directorName));
                 } else {

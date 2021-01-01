@@ -141,7 +141,6 @@ public class AccountsManager {
 
             errorString = "company accounts";
 
-            String companyAccountsLink = StringUtils.stripEnd(link, "/" + SMALL_FULL_LINK_SUFFIX);
             smallFullApiData.setSmallFull(smallFull);
 
             if (!StringUtils.isEmpty(smallFull.getLinks().getPreviousPeriod())) {
