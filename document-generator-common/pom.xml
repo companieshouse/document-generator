@@ -18,7 +18,7 @@
     <description>Module for holding common classes/methods used in document generation</description>
 
     <properties>
-        <snakeyaml.version>1.17</snakeyaml.version>
+        <snakeyaml.version>1.26</snakeyaml.version>
     </properties>
 
     <dependencies>
