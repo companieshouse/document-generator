@@ -23,7 +23,7 @@
         <!-- JDK Version -->
         <jdk.version>1.8</jdk.version>
 
-        <apache-http-components.version>4.5.2</apache-http-components.version>
+        <apache-http-components.version>4.5.13</apache-http-components.version>
         
         <commons-io.version>2.4</commons-io.version>
 
