@@ -1,9 +1,6 @@
 artifact_name       := document-generator
 artifact_core_name  := document-generator-api
-commit              := $(shell git rev-parse --short HEAD)
-tag                 := $(shell git tag -l 'v*-rc*' --points-at HEAD)
-version             := $(shell if [[ -n "$(tag)" ]]; then echo $(tag) | sed 's/^v//'; else echo $(commit); fi)
-artifactory_publish := $(shell if [[ -n "$(tag)" ]]; then echo release; else echo dev; fi)
+version             := "unversioned"
 
 .PHONY: all
 all: build
@@ -35,13 +32,18 @@ test-unit: clean
 
 .PHONY: package
 package:
-	@test -s ./$(artifact_name).jar || { echo "ERROR: Service JAR not found: $(artifact_name)"; exit 1; }
-	$(eval tmpdir:=$(shell mktemp -d build-XXXXXXXXXX))
-	cp ./$(artifact_name).jar $(tmpdir)
+ifndef version
+	$(error No version given. Aborting)
+endif
+	$(info Packaging version: $(version))
+	mvn versions:set -DnewVersion=$(version) -DgenerateBackupPoms=false
+	mvn package -DskipTests=true
+	$(eval tmpdir:= $(shell mktemp -d build-XXXXXXXXXX))
 	cp ./start.sh $(tmpdir)
 	cp ./routes.yaml $(tmpdir)
 	mkdir $(tmpdir)/document-generator-common
 	cp -r ./document-generator-common/api-enumerations $(tmpdir)/document-generator-common
+	cp ./target/$(artifact_name)-$(version).jar $(tmpdir)/$(artifact_name).jar
 	cd $(tmpdir); zip -r ../$(artifact_name)-$(version).zip *
 	rm -rf $(tmpdir)
 
@@ -52,3 +54,6 @@ dist: clean build package
 sonar:
 	mvn sonar:sonar
 
+.PHONY: sonar-pr-analysis
+sonar-pr-analysis:
+	mvn sonar:sonar -P sonar-pr-analysis
