@@ -196,6 +196,27 @@
                                 </dependency>
                             </dependencies>
                         </plugin>
+                        <plugin>
+                            <groupId>com.google.cloud.tools</groupId>
+                            <artifactId>jib-maven-plugin</artifactId>
+                            <version>3.1.1</version>
+                            <configuration>
+                                <to>
+                                    <image>169942020521.dkr.ecr.eu-west-1.amazonaws.com/local/document-generator</image>
+                                </to>
+                                <container>
+                                    <mainClass>uk.gov.companieshouse.document.generator.api.DocumentGeneratorApplication</mainClass>
+                                </container>
+                                <extraDirectories>
+                                    <paths>
+                                        <path>
+                                            <from>../document-generator-common/api-enumerations</from>
+                                            <into>/app/document-generator-common/api-enumerations</into>
+                                        </path>
+                                    </paths>
+                                </extraDirectories>
+                            </configuration>
+                          </plugin>
                     </plugins>
                 </pluginManagement>
             </build>
