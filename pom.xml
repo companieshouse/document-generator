@@ -211,7 +211,7 @@
                                     <paths>
                                         <path>
                                             <from>../document-generator-common/api-enumerations</from>
-                                            <into>/app/document-generator-common/api-enumerations</into>
+                                            <into>/document-generator-common/api-enumerations</into>
                                         </path>
                                     </paths>
                                 </extraDirectories>
