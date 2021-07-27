@@ -43,3 +43,11 @@ Which returns the DocumentInfo model which will contain  String data, String tem
 ### document-generator-prosecution
 The document-generator-prosecution module is a sub module within document-generator, which is the prosecution implementation of the DocumentInfoService that contains the method getDocumentInfo. 
 Which returns the DocumentInfo model which will contain  String data, String templateName, String assetId, String path, String descriptionIdentifier and a Map<String, String> description Values for Ultimatum and SJP letters.
+
+## Docker
+
+This project uses `jib` for Docker image builds - in order to build the container please run `make submodules` first and then run `mvn package -DskipTests=true jib:dockerBuild` which will output a Docker image named:
+
+```
+169942020521.dkr.ecr.eu-west-1.amazonaws.com/local/document-generator
+```
