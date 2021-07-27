@@ -21,7 +21,7 @@ clean:
 build: submodules
 	mvn versions:set -DnewVersion=$(version) -DgenerateBackupPoms=false
 	mvn package -DskipTests=true
-	mv ./$(artifact_core_name)/target/$(artifact_core_name)-$(version).jar ./$(artifact_name).jar
+	cp ./$(artifact_core_name)/target/$(artifact_core_name)-$(version).jar ./$(artifact_name).jar
 
 .PHONY: test
 test: test-unit
