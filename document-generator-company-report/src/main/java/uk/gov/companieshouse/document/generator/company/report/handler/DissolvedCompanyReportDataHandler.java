@@ -71,6 +71,7 @@ public class DissolvedCompanyReportDataHandler {
         setCompanyReportData(companyNumber, requestId, companyReportApiData, companyProfileApi);
         LOG.info("Company num : " + companyNumber + " requestId : " + requestId + "companyProfileApi" + companyProfileApi.toString());
         LOG.info("Filing History : " + companyReportApiData.getFilingHistoryApi().toString());
+        LOG.info("Timestamp : " + timeStamp);
 
         return toJson(companyReportMapper.mapCompanyReport(companyReportApiData, requestId, companyNumber),
                 companyNumber, requestId, timeStamp);

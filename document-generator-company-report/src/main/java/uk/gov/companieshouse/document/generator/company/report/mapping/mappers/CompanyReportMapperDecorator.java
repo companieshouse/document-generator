@@ -101,10 +101,13 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
     @Override
     public CompanyReport mapCompanyReport(CompanyReportApiData companyReportApiData,
                                           String requestId, String companyNumber) {
+    	LOG.info("Mapping the company report");
 
         CompanyReport companyReport = companyReportMapper.mapCompanyReport(companyReportApiData, requestId, companyNumber);
+        LOG.info("Mapping the rest of the document");
 
         if (companyReportApiData.getCompanyProfileApi() != null) {
+        	LOG.info("Setting registration information");
             companyReport.setRegistrationInformation(setRegistrationInformation(companyReportApiData.getCompanyProfileApi()));
 
             if (companyReportApiData.getCompanyProfileApi().getPreviousCompanyNames() != null) {
