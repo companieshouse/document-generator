@@ -17,6 +17,7 @@ public class FilingHistoryServiceOracle {
     @Value("${ORACLE_QUERY_API_URL}")
     private String oracleQueryApiUrl;
     
+    @Autowired
     private RestTemplate restTemplate;
     
     @Autowired
