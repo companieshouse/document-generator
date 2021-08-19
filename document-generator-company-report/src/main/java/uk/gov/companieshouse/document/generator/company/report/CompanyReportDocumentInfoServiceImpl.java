@@ -44,7 +44,7 @@ public class CompanyReportDocumentInfoServiceImpl implements DocumentInfoService
         LOG.infoContext(requestId, "Started getting document information for company profile", debugMap);
 
         try {
-            if(isDissolvedCompanyReport(resourceUri)) {
+            if(resourceUri.startsWith("/dissolved-company-number")) {
                 return dissolvedCompanyReportDataHandler.getCompanyReport(companyNumber, requestId);
             } else {                
                 return companyReportDataHandler.getCompanyReport(resourceUri, requestId);
@@ -62,19 +62,11 @@ public class CompanyReportDocumentInfoServiceImpl implements DocumentInfoService
      * @return the 8 character company number
      */
     private String getCompanyNumber(String resourceUri) {
-        Pattern pattern = Pattern.compile("(?<=/company/).{8}");
+        Pattern pattern = Pattern.compile("(?<=company-number/).{8}");
         Matcher matcher = pattern.matcher(resourceUri);
         if (matcher.find()) {
             return (matcher.group());
         }
         return null;
-    }
-    
-    /**
-     * determine if the parameter indicating a dissolved company report is 
-     * present in the resourceUri
-     */
-    private boolean isDissolvedCompanyReport(String resourceUri) {
-        return resourceUri.contains("dissolved-report=true");
     }
 }
