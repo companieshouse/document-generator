@@ -1,9 +1,24 @@
 package uk.gov.companieshouse.document.generator.company.report.handler;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static uk.gov.companieshouse.document.generator.company.report.CompanyReportDocumentInfoServiceImpl.MODULE_NAME_SPACE;
+
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import uk.gov.companieshouse.api.model.charges.ChargesApi;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.exemptions.CompanyExemptionsApi;
@@ -39,17 +54,6 @@ import uk.gov.companieshouse.document.generator.company.report.service.UkEstabli
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
-
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import static uk.gov.companieshouse.document.generator.company.report.CompanyReportDocumentInfoServiceImpl.MODULE_NAME_SPACE;
 
 @Component
 public class CompanyReportDataHandler {
@@ -122,7 +126,7 @@ public class CompanyReportDataHandler {
 
         ZonedDateTime timeStamp = ZonedDateTime.now();
 
-        LOG.infoContext(requestId, "Getting data for report for company number: " + companyNumber, getDebugMap(companyNumber));
+        LOG.infoContext(requestId, "Getting data for report for company number: ", getDebugMap(companyNumber));
         return createDocumentInfoResponse(companyNumber, requestId, timeStamp);
     }
 
@@ -538,7 +542,12 @@ public class CompanyReportDataHandler {
     }
 
     protected String getCompanyNumberFromUri(String resourceUri) {
-        return resourceUri.replaceAll("^/company-number/", "");
+        Pattern pattern = Pattern.compile("(?<=/company/).{8}");
+        Matcher matcher = pattern.matcher(resourceUri);
+        if (matcher.find()) {
+            return (matcher.group());
+        }
+        return null;
     }
 
     private Map<String, Object> getDebugMap(String companyNumber) {
