@@ -26,7 +26,7 @@ public class FilingHistoryServiceOracle {
     
     public FilingHistoryApi getFilingHistory(String companyNumber) {
         String url = FILING_HISTORY_URI.expand(companyNumber).toString();
-        FilingHistoryApi response = restTemplate.getForObject(url, FilingHistoryApi.class);
+        FilingHistoryApi response = restTemplate.getForObject(oracleQueryApiUrl + url, FilingHistoryApi.class);
         
         return response;
     }
