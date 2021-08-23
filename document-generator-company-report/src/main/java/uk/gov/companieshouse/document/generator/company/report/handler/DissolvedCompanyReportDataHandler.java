@@ -37,7 +37,7 @@ public class DissolvedCompanyReportDataHandler {
 	@Autowired
 	private FilingHistoryServiceOracle filingHistoryServiceOracle;
 
-	//private CompanyReportMapper companyReportMapper;
+	private CompanyReportMapper companyReportMapper;
 
 	@Autowired
 	private ApiToRecentFilingHistoryMapper apiToRecentFilingHistoryMapper;
@@ -79,8 +79,8 @@ public class DissolvedCompanyReportDataHandler {
 		LOG.info("Filing History : " + companyReportApiData.getFilingHistoryApi().toString());
 		LOG.info("Timestamp : " + timeStamp);
 
-		return toJson(mapCompanyReport(companyProfileApi, companyReportApiData),
-				companyNumber, requestId, timeStamp);
+		return toJson(companyReportMapper.mapCompanyReport(companyReportApiData, requestId, companyNumber),
+                companyNumber, requestId, timeStamp);
 	}
 
 	private CompanyReport mapCompanyReport(CompanyProfileApi companyProfileApi,
