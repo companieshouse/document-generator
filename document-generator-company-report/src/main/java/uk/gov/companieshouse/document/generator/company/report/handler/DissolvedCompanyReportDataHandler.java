@@ -22,6 +22,7 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.r
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.RegistrationInformation;
+import uk.gov.companieshouse.document.generator.company.report.service.oracle.CompanyServiceOracle;
 import uk.gov.companieshouse.document.generator.company.report.service.oracle.FilingHistoryServiceOracle;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.logging.Logger;
@@ -36,6 +37,9 @@ public class DissolvedCompanyReportDataHandler {
 
 	@Autowired
 	private FilingHistoryServiceOracle filingHistoryServiceOracle;
+	
+	@Autowired
+	private CompanyServiceOracle companyServiceOracle;
 
 	private CompanyReportMapper companyReportMapper;
 
@@ -70,8 +74,7 @@ public class DissolvedCompanyReportDataHandler {
 			throws HandlerException {
 		CompanyReportApiData companyReportApiData = new CompanyReportApiData();
 
-		CompanyProfileApi companyProfileApi = new CompanyProfileApi();
-		companyProfileApi.setCompanyNumber(companyNumber);
+		CompanyProfileApi companyProfileApi = companyServiceOracle.getCompanyProfile(companyNumber);
 
 		setCompanyReportData(companyNumber, requestId, companyReportApiData, companyProfileApi);
 		LOG.info("Company num : " + companyNumber + " requestId : " + requestId + "companyProfileApi"
