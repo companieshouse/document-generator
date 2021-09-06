@@ -542,12 +542,7 @@ public class CompanyReportDataHandler {
     }
 
     protected String getCompanyNumberFromUri(String resourceUri) {
-        Pattern pattern = Pattern.compile("(?<=/company/).{8}");
-        Matcher matcher = pattern.matcher(resourceUri);
-        if (matcher.find()) {
-            return (matcher.group());
-        }
-        return null;
+        return resourceUri.replaceAll("^/company-number/", "");
     }
 
     private Map<String, Object> getDebugMap(String companyNumber) {
