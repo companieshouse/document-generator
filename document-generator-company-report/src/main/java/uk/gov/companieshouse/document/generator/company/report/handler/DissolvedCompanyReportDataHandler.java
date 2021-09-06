@@ -99,6 +99,7 @@ public class DissolvedCompanyReportDataHandler {
 
 	private void setCompanyReportData(String companyNumber, String requestId, CompanyReportApiData companyReportApiData,
 			CompanyProfileApi companyProfileApi) {
+	    companyReportApiData.setCompanyProfileApi(companyProfileApi);
 		setFilingHistoryData(companyNumber, requestId, companyReportApiData, companyProfileApi);
 	}
 
