@@ -18,10 +18,8 @@ import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.CompanyReportMapper;
-import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.recentfilinghistory.ApiToRecentFilingHistoryMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
-import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.RegistrationInformation;
 import uk.gov.companieshouse.document.generator.company.report.service.oracle.CompanyServiceOracle;
 import uk.gov.companieshouse.document.generator.company.report.service.oracle.FilingHistoryServiceOracle;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
@@ -41,10 +39,8 @@ public class DissolvedCompanyReportDataHandler {
 	@Autowired
 	private CompanyServiceOracle companyServiceOracle;
 
-	private CompanyReportMapper companyReportMapper;
-
 	@Autowired
-	private ApiToRecentFilingHistoryMapper apiToRecentFilingHistoryMapper;
+	private CompanyReportMapper companyReportMapper;
 
 	public DocumentInfoResponse getCompanyReport(String companyNumber, String requestId) throws HandlerException {
 
@@ -77,24 +73,9 @@ public class DissolvedCompanyReportDataHandler {
 		CompanyProfileApi companyProfileApi = companyServiceOracle.getCompanyProfile(companyNumber);
 
 		setCompanyReportData(companyNumber, requestId, companyReportApiData, companyProfileApi);
-		LOG.info("Company num : " + companyNumber + " requestId : " + requestId + "companyProfileApi"
-				+ companyProfileApi.toString());
-		LOG.info("Filing History : " + companyReportApiData.getFilingHistoryApi().toString());
-		LOG.info("Timestamp : " + timeStamp);
 
 		return toJson(companyReportMapper.mapCompanyReport(companyReportApiData, requestId, companyNumber),
                 companyNumber, requestId, timeStamp);
-	}
-
-	private CompanyReport mapCompanyReport(CompanyProfileApi companyProfileApi,
-			CompanyReportApiData companyReportApiData) {
-		CompanyReport companyReport = new CompanyReport();
-		RegistrationInformation registrationInformation = new RegistrationInformation();
-		registrationInformation.setCompanyNumber(companyProfileApi.getCompanyNumber());
-		companyReport.setRegistrationInformation(registrationInformation);
-		companyReport.setRecentFilingHistory(apiToRecentFilingHistoryMapper
-				.apiToRecentFilingHistoryMapper(companyReportApiData.getFilingHistoryApi().getItems()));
-		return companyReport;
 	}
 
 	private void setCompanyReportData(String companyNumber, String requestId, CompanyReportApiData companyReportApiData,
