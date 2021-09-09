@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.document.generator.company.report.handler;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -47,23 +48,6 @@ public class DissolvedCompanyReportDataHandlerTest {
     private static final String FILING_DESCRIPTION = "filing description";
     private static final String FORM_TYPE = "form type";
 
-    @Test
-    @DisplayName("Test get dissolved company report successful")
-    void testGetDocumentInfoSuccessful() throws Exception {
-        CompanyProfileApi companyProfileApi = createCompanyProfile();
-        FilingHistoryApi filingHistoryApi = createFilingHistory();
-
-        when(mockCompanyServiceOracle.getCompanyProfile(any(String.class))).thenReturn(companyProfileApi);
-        when(mockFilingHistoryServiceOracle.getFilingHistory(any(String.class))).thenReturn(filingHistoryApi);
-        when(mockCompanyReportMapper.mapCompanyReport(any(CompanyReportApiData.class), anyString(), anyString())).thenReturn(new CompanyReport());
-
-        DocumentInfoResponse documentInfoResponse = dissolvedCompanyReportDataHandler.getCompanyReport(COMPANY_NUMBER,
-                REQUEST_ID);
-
-        assertNotNull(documentInfoResponse);
-
-    }
-
     private CompanyProfileApi createCompanyProfile() {
 
         CompanyProfileApi companyProfileApi = new CompanyProfileApi();
@@ -88,6 +72,23 @@ public class DissolvedCompanyReportDataHandlerTest {
         filingHistoryApi.setItems(filingApiList);
 
         return filingHistoryApi;
+    }
+
+    @Test
+    @DisplayName("Test get dissolved company report successful")
+    void testGetDocumentInfoSuccessful() throws Exception {
+        CompanyProfileApi companyProfileApi = createCompanyProfile();
+        FilingHistoryApi filingHistoryApi = createFilingHistory();
+
+        when(mockCompanyServiceOracle.getCompanyProfile(any(String.class))).thenReturn(companyProfileApi);
+        when(mockFilingHistoryServiceOracle.getFilingHistory(any(String.class))).thenReturn(filingHistoryApi);
+        when(mockCompanyReportMapper.mapCompanyReport(any(CompanyReportApiData.class), anyString(), anyString())).thenReturn(new CompanyReport());
+
+        DocumentInfoResponse documentInfoResponse = dissolvedCompanyReportDataHandler.getCompanyReport(COMPANY_NUMBER,
+                REQUEST_ID);
+
+        assertNotNull(documentInfoResponse);
+
     }
 
 }
