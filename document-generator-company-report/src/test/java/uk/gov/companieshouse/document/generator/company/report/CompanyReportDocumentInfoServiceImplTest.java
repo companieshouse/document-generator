@@ -14,8 +14,10 @@ import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoReq
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,6 +37,7 @@ public class CompanyReportDocumentInfoServiceImplTest {
     CompanyReportDocumentInfoServiceImpl service;
 
     private static final String RESOURCE_URI = "/company-number/0064000";
+    private static final String DISSOLVED_RESOURCE_URI = "/dissolved-company-number/066400";
     private static final String REQUEST_ID = "request-id";
 
     @Test
@@ -69,5 +72,23 @@ public class CompanyReportDocumentInfoServiceImplTest {
         documentInfoResponse.setData("testData");
 
         return documentInfoResponse;
+    }
+
+    @Test
+    @DisplayName("Test if statement works when the resourceUri is dissolved")
+    void testResourceUriIsDissolved() throws Exception {
+
+        when(mockDocumentInfoRequest.getResourceUri()).thenReturn(DISSOLVED_RESOURCE_URI);
+
+        assertTrue(mockDocumentInfoRequest.getResourceUri().startsWith("/dissolved-company-number"));
+    }
+
+    @Test
+    @DisplayName("Test if statement goes to else when the resourceUri is not dissolved")
+    void testResourceUriIsNotDissolved() throws Exception {
+
+        when(mockDocumentInfoRequest.getResourceUri()).thenReturn(RESOURCE_URI);
+
+        assertFalse(mockDocumentInfoRequest.getResourceUri().startsWith("/dissolved-company-number"));
     }
 }
