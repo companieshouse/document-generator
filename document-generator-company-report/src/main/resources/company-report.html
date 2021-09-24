@@ -530,11 +530,18 @@
 
                 <li>{{.officer_role}} {{.name}}
 
-                    {{ if .resigned_on }}
-                        <span id="officer-status-tag-resigned" class="status-tag ceased-tag">Resigned</span>
+                    {{if ne $companyRegistrationInformation.status.company_status "Dissolved"}}
+                        {{if .resigned_on}}
+                            <span id="officer-status-tag-resigned" class="status-tag ceased-tag">Resigned</span>
                         {{else}}
-                        <span id="officer-status-tag-active" class="status-tag">Active</span>
+                            <span id="officer-status-tag-active" class="status-tag">Active</span>
                         {{end}}
+                    {{else}}
+                        {{if .resigned_on}}
+                            <span id="officer-status-tag-resigned" class="status-tag ceased-tag">Resigned</span>
+                        {{end}}
+                    {{end}}
+
                     </li>
 
                     {{if .nationality}}
