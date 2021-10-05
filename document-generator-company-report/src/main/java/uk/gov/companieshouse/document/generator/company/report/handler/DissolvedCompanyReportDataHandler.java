@@ -2,6 +2,9 @@ package uk.gov.companieshouse.document.generator.company.report.handler;
 
 import static uk.gov.companieshouse.document.generator.company.report.CompanyReportDocumentInfoServiceImpl.MODULE_NAME_SPACE;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -11,17 +14,16 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
+import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.CompanyReportMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
 import uk.gov.companieshouse.document.generator.company.report.service.oracle.CompanyServiceOracle;
 import uk.gov.companieshouse.document.generator.company.report.service.oracle.FilingHistoryServiceOracle;
+import uk.gov.companieshouse.document.generator.company.report.service.oracle.OfficerDetailsServiceOracle;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
@@ -35,6 +37,9 @@ public class DissolvedCompanyReportDataHandler {
 
 	@Autowired
 	private FilingHistoryServiceOracle filingHistoryServiceOracle;
+
+	@Autowired
+	private OfficerDetailsServiceOracle officerDetailsServiceOracle;
 	
 	@Autowired
 	private CompanyServiceOracle companyServiceOracle;
@@ -82,12 +87,19 @@ public class DissolvedCompanyReportDataHandler {
 			CompanyProfileApi companyProfileApi) {
 	    companyReportApiData.setCompanyProfileApi(companyProfileApi);
 		setFilingHistoryData(companyNumber, requestId, companyReportApiData, companyProfileApi);
+		setOfficerDetailsData(companyNumber, requestId, companyReportApiData, companyProfileApi);
 	}
 
 	private void setFilingHistoryData(String companyNumber, String requestId, CompanyReportApiData companyReportApiData,
 			CompanyProfileApi companyProfileApi) {
 		FilingHistoryApi filingHistoryApi = filingHistoryServiceOracle.getFilingHistory(companyNumber);
 		companyReportApiData.setFilingHistoryApi(filingHistoryApi);
+	}
+
+	private void setOfficerDetailsData(String companyNumber, String requestId, CompanyReportApiData companyReportApiData,
+			CompanyProfileApi companyProfileApi) {
+		OfficersApi officersApi = officerDetailsServiceOracle.getOfficerDetails(companyNumber);
+		companyReportApiData.setOfficersApi(officersApi);
 	}
 
 	private String createPathString() {
