@@ -2,8 +2,10 @@ package uk.gov.companieshouse.document.generator.company.report.service.oracle;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriTemplate;
+
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.environment.EnvironmentReader;
 
@@ -28,7 +30,11 @@ public class OfficerDetailsServiceOracle {
         String baseUrl = environmentReader.getMandatoryString(ORACLE_QUERY_API_URL_ENV_VARIABLE);
         String url = OFFICER_DETAILS_URI.expand(companyNumber).toString();
 
-        return restTemplate.getForObject(baseUrl + url, OfficersApi.class);
+        try {            
+            return restTemplate.getForObject(baseUrl + url, OfficersApi.class);
+        } catch (RestClientException rce) {
+            return null;
+        }
 
     }
 
