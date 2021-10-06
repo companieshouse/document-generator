@@ -99,7 +99,9 @@ public class DissolvedCompanyReportDataHandler {
 	private void setOfficerDetailsData(String companyNumber, String requestId, CompanyReportApiData companyReportApiData,
 			CompanyProfileApi companyProfileApi) {
 		OfficersApi officersApi = officerDetailsServiceOracle.getOfficerDetails(companyNumber);
-		companyReportApiData.setOfficersApi(officersApi);
+		if(officersApi != null) {		    
+		    companyReportApiData.setOfficersApi(officersApi);
+		}
 	}
 
 	private String createPathString() {

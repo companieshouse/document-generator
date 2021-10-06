@@ -19,6 +19,7 @@ import uk.gov.companieshouse.api.model.filinghistory.FilingApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
 import uk.gov.companieshouse.api.model.officers.CompanyOfficerApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
+import uk.gov.companieshouse.document.generator.company.report.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.CompanyReportMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
@@ -50,6 +51,44 @@ public class DissolvedCompanyReportDataHandlerTest {
     private static final String COMPANY_NUMBER = "00006400";
     private static final String FILING_DESCRIPTION = "filing description";
     private static final String FORM_TYPE = "form type";
+
+    @Test
+    @DisplayName("Test get dissolved company report successful")
+    void testGetDocumentInfoSuccessful() throws Exception {
+        CompanyProfileApi companyProfileApi = createCompanyProfile();
+        FilingHistoryApi filingHistoryApi = createFilingHistory();
+        OfficersApi officersApi = createOfficers();
+
+        when(mockCompanyServiceOracle.getCompanyProfile(any(String.class))).thenReturn(companyProfileApi);
+        when(mockFilingHistoryServiceOracle.getFilingHistory(any(String.class))).thenReturn(filingHistoryApi);
+        when(mockOfficerDetailsServiceOracle.getOfficerDetails(any(String.class))).thenReturn(officersApi);
+        when(mockCompanyReportMapper.mapCompanyReport(any(CompanyReportApiData.class), anyString(), anyString()))
+                .thenReturn(new CompanyReport());
+
+        DocumentInfoResponse documentInfoResponse = dissolvedCompanyReportDataHandler.getCompanyReport(COMPANY_NUMBER,
+                REQUEST_ID);
+
+        assertNotNull(documentInfoResponse);
+
+    }
+
+    @Test
+    @DisplayName("Test get dissolver company report is successful with a null officer details")
+    void testGetDocumentInfoNullOfficerDetails() throws Exception {
+        CompanyProfileApi companyProfileApi = createCompanyProfile();
+        FilingHistoryApi filingHistoryApi = createFilingHistory();
+
+        when(mockCompanyServiceOracle.getCompanyProfile(any(String.class))).thenReturn(companyProfileApi);
+        when(mockFilingHistoryServiceOracle.getFilingHistory(any(String.class))).thenReturn(filingHistoryApi);
+        when(mockOfficerDetailsServiceOracle.getOfficerDetails(any(String.class))).thenReturn(null);
+        when(mockCompanyReportMapper.mapCompanyReport(any(CompanyReportApiData.class), anyString(), anyString()))
+                .thenReturn(new CompanyReport());
+
+        DocumentInfoResponse documentInfoResponse = dissolvedCompanyReportDataHandler.getCompanyReport(COMPANY_NUMBER,
+                REQUEST_ID);
+
+        assertNotNull(documentInfoResponse);
+    }
 
     private CompanyProfileApi createCompanyProfile() {
 
@@ -93,24 +132,4 @@ public class DissolvedCompanyReportDataHandlerTest {
 
         return officersApi;
     }
-
-    @Test
-    @DisplayName("Test get dissolved company report successful")
-    void testGetDocumentInfoSuccessful() throws Exception {
-        CompanyProfileApi companyProfileApi = createCompanyProfile();
-        FilingHistoryApi filingHistoryApi = createFilingHistory();
-        OfficersApi officersApi = createOfficers();
-
-        when(mockCompanyServiceOracle.getCompanyProfile(any(String.class))).thenReturn(companyProfileApi);
-        when(mockFilingHistoryServiceOracle.getFilingHistory(any(String.class))).thenReturn(filingHistoryApi);
-        when(mockOfficerDetailsServiceOracle.getOfficerDetails(any(String.class))).thenReturn(officersApi);
-        when(mockCompanyReportMapper.mapCompanyReport(any(CompanyReportApiData.class), anyString(), anyString())).thenReturn(new CompanyReport());
-
-        DocumentInfoResponse documentInfoResponse = dissolvedCompanyReportDataHandler.getCompanyReport(COMPANY_NUMBER,
-                REQUEST_ID);
-
-        assertNotNull(documentInfoResponse);
-
-    }
-
 }
