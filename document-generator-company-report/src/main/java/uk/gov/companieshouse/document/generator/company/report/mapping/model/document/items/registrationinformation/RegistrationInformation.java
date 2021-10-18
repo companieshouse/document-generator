@@ -23,6 +23,9 @@ public class RegistrationInformation {
     @JsonProperty("date_of_incorporation")
     private String dateOfIncorporation;
 
+    @JsonProperty("date_of_dissolution")
+    private String dateOfDissolution;
+
     @JsonProperty("registered_office")
     private RegisteredOffice registeredOffice;
 
@@ -58,6 +61,14 @@ public class RegistrationInformation {
 
     public void setDateOfIncorporation(String dateOfIncorporation) {
         this.dateOfIncorporation = dateOfIncorporation;
+    }
+
+    public String getDateOfDissolution() {
+        return dateOfDissolution;
+    }
+
+    public void setDateOfDissolution(String dateOfDissolution) {
+        this.dateOfDissolution = dateOfDissolution;
     }
 
     public RegisteredOffice getRegisteredOffice() {

@@ -75,6 +75,11 @@ public abstract class ApiToRegistrationInformationMapper {
             registrationInformation.setDateOfIncorporation(companyProfileApi.getDateOfCreation().
                     format(DateTimeFormatter.ofPattern(REPORT_DATE_FORMAT)));
         }
+
+        if (companyProfileApi != null && companyProfileApi.getDateOfCessation() != null) {
+            registrationInformation.setDateOfDissolution(companyProfileApi.getDateOfCessation().
+                    format(DateTimeFormatter.ofPattern(REPORT_DATE_FORMAT)));
+        }
     }
 
     @AfterMapping

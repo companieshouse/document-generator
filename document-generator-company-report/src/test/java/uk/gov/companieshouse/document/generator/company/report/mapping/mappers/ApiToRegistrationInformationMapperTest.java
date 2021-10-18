@@ -1,5 +1,12 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -13,14 +20,6 @@ import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiE
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.registrationinformation.ApiToRegistrationInformationMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.registrationinformation.ApiToRegistrationInformationMapperImpl;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.RegistrationInformation;
-
-import java.time.LocalDate;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -42,6 +41,8 @@ public class ApiToRegistrationInformationMapperTest {
     private static final String COMPANY_SUB_TYPE = "subtype";
     private static final LocalDate DATE_OF_CREATION = LocalDate.of(2019, 06, 06);
     private static final String DATE_OF_CREATION_FORMATTED = "6 June 2019";
+    private static final LocalDate DATE_OF_CESSATION = LocalDate.of(2020, 06, 06);
+    private static final String DATE_OF_CESSATION_FORMATTED = "6 June 2020";
     private static final String CHARITY_NUMBER = "12345";
 
     private static final String ADDRESS_LINE_ONE = "address line 1";
@@ -73,6 +74,7 @@ public class ApiToRegistrationInformationMapperTest {
         assertEquals(MAPPED_VALUE, registrationInformation.getCompanyType().getType());
         assertEquals(MAPPED_VALUE, registrationInformation.getCompanyType().getSubtype());
         assertEquals(DATE_OF_CREATION_FORMATTED, registrationInformation.getDateOfIncorporation());
+        assertEquals(DATE_OF_CESSATION_FORMATTED, registrationInformation.getDateOfDissolution());
         assertEquals(MAPPED_VALUE, registrationInformation.getStatus().getCompanyStatus());
         assertEquals(MAPPED_VALUE, registrationInformation.getStatus().getCompanyStatusDetail());
         assertEquals(MAPPED_VALUE, registrationInformation.getDateOfIncorporationLabel());
@@ -91,6 +93,7 @@ public class ApiToRegistrationInformationMapperTest {
         companyProfileApi.setSubtype(COMPANY_SUB_TYPE);
         companyProfileApi.setSicCodes(SIC_CODES);
         companyProfileApi.setDateOfCreation(DATE_OF_CREATION);
+        companyProfileApi.setDateOfCessation(DATE_OF_CESSATION);
         companyProfileApi.setRegisteredOfficeAddress(setAddress());
         companyProfileApi.setExternalRegistrationNumber(CHARITY_NUMBER);
 
