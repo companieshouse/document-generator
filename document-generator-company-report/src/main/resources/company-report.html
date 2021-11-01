@@ -595,11 +595,13 @@
                             {{end}}
 
                             {{if .address.country}}
-                                {{index .address "country"}},
+                                {{index .address "country"}}
+                                {{if .address.postal_code}},
+                                {{end}}
                             {{end}}
 
                             {{if .address.postal_code}}
-                                {{index .address "postal_code"}}
+                            {{index .address "postal_code"}}
                             {{end}}
 
                         </li>
