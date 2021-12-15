@@ -25,4 +25,4 @@ else
     source "${APP_DIR}/app_env"
 fi
 
-exec java ${JAVA_MEM_ARGS} -jar -Dserver.port="${PORT}" -Dlog4j.configurationFile="${APP_DIR}/log4j2.xml" "${APP_DIR}/document-generator.jar"
+exec java ${JAVA_MEM_ARGS} -jar -Dserver.port="${PORT}" "${APP_DIR}/document-generator.jar"
