@@ -28,6 +28,15 @@ DOCUMENT_BUCKET_NAME                      | Bucket name to store the document   
 API_URL                                   | Api url to go through `eric`                                                 | ✓         |         | `api.orctel.internal:$ERIC_PORT`
 CHS_API_KEY                               | CHS api key encoded and used to make APi calls                               | ✓         |         | valid Api key
 
+## Services using this service
+
+Note that the calling services generally have a long route that involve messaging (in which document-generator-consumer interfaces with document-generator) before there message gets to the document-generator:
+
+- [ch.gov.uk](https://github.com/companieshouse/ch.gov.uk),
+- [search.web.ch.gov.uk](https://github.com/companieshouse/search.web.ch.gov.uk)
+- abridged accounts: [web](https://github.com/companieshouse/abridged.accounts.web.ch.gov.uk) and [api](https://github.com/companieshouse/abridged.accounts.api.ch.gov.uk)
+- small full accounts and cic : [web](https://github.com/companieshouse/company-accounts.web.ch.gov.uk) and [api](https://github.com/companieshouse/company-accounts.api.ch.gov.uk)
+
 ## Modules
 
 The following are the modules that exist within document generator.
