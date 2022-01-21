@@ -17,10 +17,6 @@
     <name>document-generator-common</name>
     <description>Module for holding common classes/methods used in document generation</description>
 
-    <properties>
-        <snakeyaml.version>1.17</snakeyaml.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.yaml</groupId>
