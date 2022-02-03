@@ -11,7 +11,7 @@ import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
 
 @Service
-public class RecentFilingHistoryService {
+public class FilingHistoryService {
 
     private CompanyReportApiClientService companyReportApiClientService;
 
@@ -20,7 +20,7 @@ public class RecentFilingHistoryService {
     private static final String START_INDEX_KEY = "start_index";
 
     @Autowired
-    public RecentFilingHistoryService(CompanyReportApiClientService companyReportApiClientService) {
+    public FilingHistoryService(CompanyReportApiClientService companyReportApiClientService) {
         this.companyReportApiClientService = companyReportApiClientService;
     }
 

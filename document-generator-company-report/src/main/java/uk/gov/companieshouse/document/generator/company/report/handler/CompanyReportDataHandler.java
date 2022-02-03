@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +45,7 @@ import uk.gov.companieshouse.document.generator.company.report.service.Exemption
 import uk.gov.companieshouse.document.generator.company.report.service.InsolvencyService;
 import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
 import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
-import uk.gov.companieshouse.document.generator.company.report.service.RecentFilingHistoryService;
+import uk.gov.companieshouse.document.generator.company.report.service.FilingHistoryService;
 import uk.gov.companieshouse.document.generator.company.report.service.RegistersService;
 import uk.gov.companieshouse.document.generator.company.report.service.StatementsService;
 import uk.gov.companieshouse.document.generator.company.report.service.UkEstablishmentService;
@@ -66,7 +64,7 @@ public class CompanyReportDataHandler {
 
     private UkEstablishmentService ukEstablishmentService;
 
-    private RecentFilingHistoryService recentFilingHistoryService;
+    private FilingHistoryService filingHistoryService;
 
     private CompanyReportMapper companyReportMapper;
 
@@ -85,7 +83,7 @@ public class CompanyReportDataHandler {
                                     PscsService pscsService,
                                     OfficerService officerService,
                                     UkEstablishmentService ukEstablishmentService,
-                                    RecentFilingHistoryService recentFilingHistoryService,
+                                    FilingHistoryService filingHistoryService,
                                     CompanyReportMapper companyReportMapper,
                                     StatementsService statementsService,
                                     InsolvencyService insolvencyService,
@@ -97,7 +95,7 @@ public class CompanyReportDataHandler {
         this.pscsService = pscsService;
         this.officerService = officerService;
         this.ukEstablishmentService = ukEstablishmentService;
-        this.recentFilingHistoryService = recentFilingHistoryService;
+        this.filingHistoryService = filingHistoryService;
         this.companyReportMapper = companyReportMapper;
         this.statementsService = statementsService;
         this.insolvencyService = insolvencyService;
@@ -357,7 +355,7 @@ public class CompanyReportDataHandler {
         String requestId) throws HandlerException {
         try {
             LOG.infoContext(requestId, "Attempting to retrieve company filing history", getDebugMap(companyNumber));
-            return sortFilingHistory(recentFilingHistoryService.getFilingHistory(companyNumber));
+            return sortFilingHistory(filingHistoryService.getFilingHistory(companyNumber));
         } catch (ServiceException se) {
             throw new HandlerException("error occurred obtaining the company filing history", se);
         }
