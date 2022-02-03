@@ -338,7 +338,9 @@
             {{index $roa "region"}},
             {{end}}
             {{if $roa.country}}
-            {{index $roa "country"}},
+            {{index $roa "country"}}
+                {{if .address.postal_code}},
+                {{end}}
             {{end}}
             {{if $roa.postal_code}}
             {{index $roa "postal_code"}}
