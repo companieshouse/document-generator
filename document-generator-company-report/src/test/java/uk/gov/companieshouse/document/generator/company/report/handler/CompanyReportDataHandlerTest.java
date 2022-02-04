@@ -33,7 +33,7 @@ import uk.gov.companieshouse.document.generator.company.report.service.CompanySe
 import uk.gov.companieshouse.document.generator.company.report.service.InsolvencyService;
 import uk.gov.companieshouse.document.generator.company.report.service.OfficerService;
 import uk.gov.companieshouse.document.generator.company.report.service.PscsService;
-import uk.gov.companieshouse.document.generator.company.report.service.RecentFilingHistoryService;
+import uk.gov.companieshouse.document.generator.company.report.service.FilingHistoryService;
 import uk.gov.companieshouse.document.generator.company.report.service.RegistersService;
 import uk.gov.companieshouse.document.generator.company.report.service.StatementsService;
 import uk.gov.companieshouse.document.generator.company.report.service.UkEstablishmentService;
@@ -77,7 +77,7 @@ public class CompanyReportDataHandlerTest {
     private UkEstablishmentService mockUkEstablishmentService;
 
     @Mock
-    private RecentFilingHistoryService mockRecentFilingHistoryService;
+    private FilingHistoryService mockFilingHistoryService;
 
     @Mock
     private RegistersService mockRegistersService;
@@ -121,7 +121,7 @@ public class CompanyReportDataHandlerTest {
         when(mockPscService.getPscs(any(String.class))).thenReturn(pscsApi);
         when(mockOfficerService.getOfficers(any(String.class))).thenReturn(officersApi);
         when(mockUkEstablishmentService.getUkEstablishments(any(String.class))).thenReturn(ukEstablishmentsApi);
-        when(mockRecentFilingHistoryService.getFilingHistory(any(String.class))).thenReturn(filingHistoryApi);
+        when(mockFilingHistoryService.getFilingHistory(any(String.class))).thenReturn(filingHistoryApi);
         when(mockCompanyReportMapper.mapCompanyReport(any(CompanyReportApiData.class), anyString(), anyString())).thenReturn(new CompanyReport());
         when(mockStatementsService.getStatements(any(String.class))).thenReturn(statementsApi);
         when(mockRegistersService.getCompanyRegisters(any(String.class))).thenReturn(companyRegistersApi);

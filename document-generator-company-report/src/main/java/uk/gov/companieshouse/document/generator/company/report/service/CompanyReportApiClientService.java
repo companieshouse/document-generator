@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.document.generator.company.report.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -15,21 +16,22 @@ import uk.gov.companieshouse.environment.impl.EnvironmentReaderImpl;
 @Service
 public class CompanyReportApiClientService {
 
-    private static final EnvironmentReader READER = new EnvironmentReaderImpl();
+    @Autowired
+    private EnvironmentReader environmentReader;
 
-    private static final String chsApiKey = READER.getMandatoryString("CHS_API_KEY");
-    private static final String apiUrl = READER.getMandatoryString("API_URL");
+    private static final String CHS_API_KEY = "CHS_API_KEY";
+    private static final String API_URL = "API_URL";
     private static final String X_REQUEST_ID_HEADER = "x-request-id";
 
     public ApiClient getApiClient() {
 
-        HttpClient httpClient = new ApiKeyHttpClient(chsApiKey);
+        HttpClient httpClient = new ApiKeyHttpClient(environmentReader.getMandatoryString(CHS_API_KEY));
 
         setRequestId(httpClient);
 
         ApiClient apiClient = new ApiClient(httpClient);
 
-        apiClient.setBasePath(apiUrl);
+        apiClient.setBasePath(environmentReader.getMandatoryString(API_URL));
 
         return apiClient;
     }
