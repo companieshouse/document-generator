@@ -24,7 +24,7 @@ public class FilingHistoryService {
         this.companyReportApiClientService = companyReportApiClientService;
     }
 
-    private static final UriTemplate GET_RECENT_FILING_HISTORY_URI =
+    private static final UriTemplate GET_FILING_HISTORY_URI =
         new UriTemplate("/company/{company_number}/filing-history");
 
     public FilingHistoryApi getFilingHistory(String companyNumber) throws ServiceException {
@@ -50,7 +50,7 @@ public class FilingHistoryService {
     private FilingHistoryApi retrieveFilingHistory(String companyNumber, ApiClient apiClient, Integer startIndex, Integer itemsPerPage)
         throws ServiceException {
 
-        String uri = GET_RECENT_FILING_HISTORY_URI.expand(companyNumber).toString();
+        String uri = GET_FILING_HISTORY_URI.expand(companyNumber).toString();
 
         FilingHistoryApi filingHistoryApi;
 
