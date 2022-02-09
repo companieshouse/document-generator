@@ -9,15 +9,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.ApiClient;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
-import uk.gov.companieshouse.api.handler.psc.PscsResourceHandler;
-import uk.gov.companieshouse.api.handler.psc.request.PscsList;
-import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,16 +29,10 @@ class PscsServiceTest {
     private CompanyReportApiClientService companyReportApiClientService;
 
     @Mock
+    private PscsPageRetrieverService pageRetrieverService;
+
+    @Mock
     private ApiClient apiClient;
-
-    @Mock
-    private PscsResourceHandler pscsResourceHandler;
-
-    @Mock
-    private PscsList pscsList;
-
-    @Mock
-    private ApiResponse<PscsApi> responseWithData;
 
     @Mock
     private ApiErrorResponseException apiErrorResponseException;
@@ -56,11 +49,7 @@ class PscsServiceTest {
 
         // Given
         when(companyReportApiClientService.getApiClient()).thenReturn(apiClient);
-        when(apiClient.pscs()).thenReturn(pscsResourceHandler);
-        when(pscsResourceHandler.list(PSCS_URI)).thenReturn(pscsList);
-
-        when(pscsList.execute()).thenReturn(responseWithData);
-        when(responseWithData.getData()).thenReturn(createPscsApi());
+        when(pageRetrieverService.retrieve(eq(PSCS_URI), eq(apiClient), anyInt())).thenReturn(createPscsApi());
 
         // When
         final PscsApi api =  pscsService.getPscs(COMPANY_NUMBER);
@@ -76,10 +65,7 @@ class PscsServiceTest {
 
         // Given
         when(companyReportApiClientService.getApiClient()).thenReturn(apiClient);
-        when(apiClient.pscs()).thenReturn(pscsResourceHandler);
-        when(pscsResourceHandler.list(PSCS_URI)).thenReturn(pscsList);
-
-        when(pscsList.execute()).thenThrow(apiErrorResponseException);
+        when(pageRetrieverService.retrieve(eq(PSCS_URI), eq(apiClient), anyInt())).thenThrow(apiErrorResponseException);
 
         // When and then
         final ServiceException exception = assertThrows(ServiceException.class, () ->
@@ -93,10 +79,7 @@ class PscsServiceTest {
 
         // Given
         when(companyReportApiClientService.getApiClient()).thenReturn(apiClient);
-        when(apiClient.pscs()).thenReturn(pscsResourceHandler);
-        when(pscsResourceHandler.list(PSCS_URI)).thenReturn(pscsList);
-
-        when(pscsList.execute()).thenThrow(uriValidationException);
+        when(pageRetrieverService.retrieve(eq(PSCS_URI), eq(apiClient), anyInt())).thenThrow(uriValidationException);
 
         // When and then
         final ServiceException exception = assertThrows(ServiceException.class, () ->
