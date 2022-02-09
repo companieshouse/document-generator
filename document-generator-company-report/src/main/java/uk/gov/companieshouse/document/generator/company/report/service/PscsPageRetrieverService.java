@@ -18,7 +18,7 @@ public class PscsPageRetrieverService {
     private static final String START_INDEX_KEY = "start_index";
 
     /**
-     * Retrieves all of the API items available by paging through them.
+     * Retrieves all the API items available by paging through them.
      * @param uri the request URI
      * @param apiClient the API client
      * @param itemsPerPage the number of items per page (page size)
