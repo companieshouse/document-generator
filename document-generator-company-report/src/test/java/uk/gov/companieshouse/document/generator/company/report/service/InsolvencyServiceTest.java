@@ -72,7 +72,7 @@ class InsolvencyServiceTest {
     }
 
     @Test
-    @DisplayName("Test get insolveny api throws service exception with api error exception")
+    @DisplayName("Test get insolvency api throws service exception with api error exception")
     void testGetInsolvencyApiErrorResponse() throws Exception {
 
         when(mockInsolvencyGet.execute()).thenThrow(ApiErrorResponseException.class);
