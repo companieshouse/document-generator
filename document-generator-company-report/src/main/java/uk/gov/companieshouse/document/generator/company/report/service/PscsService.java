@@ -31,7 +31,7 @@ public class PscsService {
         String uri = GET_PSCS_URI.expand(companyNumber).toString();
 
         try {
-            return pageRetrieverService.retrieve(uri, apiClient,  ITEMS_PER_PAGE_VALUE);
+            return pageRetrieverService.retrieve(uri, apiClient, ITEMS_PER_PAGE_VALUE);
         } catch (ApiErrorResponseException e) {
             throw new ServiceException("Error retrieving pscs", e);
         } catch (URIValidationException e) {
