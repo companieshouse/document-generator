@@ -25,15 +25,32 @@ public class OfficerService {
 
     public OfficersApi getOfficers(String companyNumber) throws ServiceException {
 
-        OfficersApi officersApi;
+        OfficersApi officersApi = null;
 
         ApiClient apiClient = companyReportApiClientService.getApiClient();
+        
+        Integer startIndex = 0;
+        Integer itemsPerPage = 100;
 
+        officersApi = retrieveOfficerAppointments(companyNumber, officersApi, apiClient, startIndex, itemsPerPage);
+        
+        while (officersApi.getItems().size() < officersApi.getTotalResults()) {
+        	startIndex += itemsPerPage;
+            OfficersApi moreResults = retrieveOfficerAppointments(companyNumber, officersApi, apiClient, startIndex, itemsPerPage);
+            officersApi.getItems().addAll(moreResults.getItems());
+        }
+        
+        return officersApi;
+    }
+
+    private OfficersApi retrieveOfficerAppointments(String companyNumber, OfficersApi officersApi, ApiClient apiClient, Integer startIndex, Integer itemsPerPage)
+            throws ServiceException {
         String uri = GET_OFFICERS_URI.expand(companyNumber).toString();
 
         try {
             OfficersList officersList = apiClient.officers().list(uri);
-            officersList.addQueryParams("items_per_page", "100");
+            officersList.addQueryParams("items_per_page", itemsPerPage.toString());
+            officersList.addQueryParams("start_index", startIndex.toString());
 
             officersApi = officersList.execute().getData();
         } catch (ApiErrorResponseException e) {
