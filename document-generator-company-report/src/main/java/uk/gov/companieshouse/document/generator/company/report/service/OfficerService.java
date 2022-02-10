@@ -9,11 +9,17 @@ import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.handler.officers.request.OfficersList;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
+import uk.gov.companieshouse.logging.Logger;
+import uk.gov.companieshouse.logging.LoggerFactory;
 
 @Service
 public class OfficerService {
 
     private CompanyReportApiClientService companyReportApiClientService;
+    
+    private static final String APPLICATION_NAME_SPACE = "document-generator-api";
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(APPLICATION_NAME_SPACE);
 
     @Autowired
     public OfficerService(CompanyReportApiClientService companyReportApiClientService) {
@@ -34,11 +40,20 @@ public class OfficerService {
 
         officersApi = retrieveOfficerAppointments(companyNumber, officersApi, apiClient, startIndex, itemsPerPage);
         
-        while (officersApi.getItems().size() < officersApi.getTotalResults()) {
-        	startIndex += itemsPerPage;
-            OfficersApi moreResults = retrieveOfficerAppointments(companyNumber, officersApi, apiClient, startIndex, itemsPerPage);
-            officersApi.getItems().addAll(moreResults.getItems());
-        }
+		while (officersApi.getItems().size() < officersApi.getTotalResults()) {
+			try {
+				startIndex += itemsPerPage;
+				OfficersApi moreResults = retrieveOfficerAppointments(companyNumber, officersApi, apiClient, startIndex, itemsPerPage);
+				officersApi.getItems().addAll(moreResults.getItems());
+			} catch (ServiceException se) {
+				if (officersApi.getItems().size() > 0) {
+					LOGGER.error("Possible data discrepancy while retrieving all appointments for " + companyNumber);
+					return officersApi;
+				} else {
+					throw se;
+				}
+			}
+		}
         
         return officersApi;
     }
