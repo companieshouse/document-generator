@@ -34,11 +34,19 @@ public class OfficerService {
 
         officersApi = retrieveOfficerAppointments(companyNumber, officersApi, apiClient, startIndex, itemsPerPage);
         
-        while (officersApi.getItems().size() < officersApi.getTotalResults()) {
-        	startIndex += itemsPerPage;
-            OfficersApi moreResults = retrieveOfficerAppointments(companyNumber, officersApi, apiClient, startIndex, itemsPerPage);
-            officersApi.getItems().addAll(moreResults.getItems());
-        }
+		while (officersApi.getItems().size() < officersApi.getTotalResults()) {
+			try {
+				startIndex += itemsPerPage;
+				OfficersApi moreResults = retrieveOfficerAppointments(companyNumber, officersApi, apiClient, startIndex, itemsPerPage);
+				officersApi.getItems().addAll(moreResults.getItems());
+			} catch (ServiceException se) {
+				if (officersApi.getItems().size() > 0) {
+					return officersApi;
+				} else {
+					throw se;
+				}
+			}
+		}
         
         return officersApi;
     }
