@@ -31,7 +31,7 @@ class PscsServiceTest {
     private CompanyReportApiClientService companyReportApiClientService;
 
     @Mock
-    private PscsPageRetrieverService pageRetrieverService;
+    private PageRetrieverService<PscsApi> pageRetrieverService;
 
     @Mock
     private ApiClient apiClient;
@@ -51,7 +51,7 @@ class PscsServiceTest {
 
         // Given
         when(companyReportApiClientService.getApiClient()).thenReturn(apiClient);
-        when(pageRetrieverService.retrieve(eq(PSCS_URI), eq(apiClient), anyInt())).thenReturn(createPscsApi());
+        when(pageRetrieverService.retrieveAllPages(eq(pscsService), eq(PSCS_URI), eq(apiClient), anyInt())).thenReturn(createPscsApi());
 
         // When
         final PscsApi api =  pscsService.getPscs(COMPANY_NUMBER);
@@ -67,7 +67,7 @@ class PscsServiceTest {
 
         // Given
         when(companyReportApiClientService.getApiClient()).thenReturn(apiClient);
-        when(pageRetrieverService.retrieve(eq(PSCS_URI), eq(apiClient), anyInt())).thenThrow(apiErrorResponseException);
+        when(pageRetrieverService.retrieveAllPages(eq(pscsService), eq(PSCS_URI), eq(apiClient), anyInt())).thenThrow(apiErrorResponseException);
 
         // When and then
         final ServiceException exception = assertThrows(ServiceException.class, () ->
@@ -81,7 +81,7 @@ class PscsServiceTest {
 
         // Given
         when(companyReportApiClientService.getApiClient()).thenReturn(apiClient);
-        when(pageRetrieverService.retrieve(eq(PSCS_URI), eq(apiClient), anyInt())).thenThrow(uriValidationException);
+        when(pageRetrieverService.retrieveAllPages(eq(pscsService), eq(PSCS_URI), eq(apiClient), anyInt())).thenThrow(uriValidationException);
 
         // When and then
         final ServiceException exception = assertThrows(ServiceException.class, () ->

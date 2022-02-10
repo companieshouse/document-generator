@@ -35,7 +35,7 @@ public class PscsService implements PageRetrieverClient<PscsApi> {
         String uri = GET_PSCS_URI.expand(companyNumber).toString();
 
         try {
-            return pageRetrieverService.retrieve(this, uri, apiClient, ITEMS_PER_PAGE_VALUE);
+            return pageRetrieverService.retrieveAllPages(this, uri, apiClient, ITEMS_PER_PAGE_VALUE);
         } catch (ApiErrorResponseException e) {
             throw new ServiceException("Error retrieving pscs", e);
         } catch (URIValidationException e) {
@@ -58,20 +58,11 @@ public class PscsService implements PageRetrieverClient<PscsApi> {
         api.getItems().addAll(moreResults.getItems());
     }
 
-    /**
-     * Retrieves a single page of API items.
-     * @param uri the request URI
-     * @param apiClient the API client
-     * @param startIndex the start of the next page (offset in items)
-     * @param itemsPerPage the number of items per page (page size)
-     * @return {@link PscsApi} instance containing the items on the page
-     * @throws ApiErrorResponseException possibly arising in communication with remote API
-     * @throws URIValidationException should the URI provided prove to be invalid
-     */
+    @Override
     public PscsApi retrievePage(final String uri,
-                           final ApiClient apiClient,
-                           final int startIndex,
-                           final int itemsPerPage) throws ApiErrorResponseException, URIValidationException {
+                                final ApiClient apiClient,
+                                final int startIndex,
+                                final int itemsPerPage) throws ApiErrorResponseException, URIValidationException {
 
         final PscsList pscsList = apiClient.pscs().list(uri);
         pscsList.addQueryParams(ITEMS_PER_PAGE_KEY, Integer.toString(itemsPerPage));
