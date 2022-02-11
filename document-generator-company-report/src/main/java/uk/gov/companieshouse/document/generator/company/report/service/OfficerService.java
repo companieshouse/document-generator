@@ -16,9 +16,9 @@ import uk.gov.companieshouse.logging.LoggerFactory;
 public class OfficerService {
 
     private CompanyReportApiClientService companyReportApiClientService;
-    
+
     private static final String APPLICATION_NAME_SPACE = "document-generator-api";
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(APPLICATION_NAME_SPACE);
 
     @Autowired
@@ -27,34 +27,37 @@ public class OfficerService {
     }
 
     private static final UriTemplate GET_OFFICERS_URI =
-        new UriTemplate("/company/{companyNumber}/officers");
+            new UriTemplate("/company/{companyNumber}/officers");
 
     public OfficersApi getOfficers(String companyNumber) throws ServiceException {
 
         OfficersApi officersApi = null;
 
         ApiClient apiClient = companyReportApiClientService.getApiClient();
-        
+
         Integer startIndex = 0;
         Integer itemsPerPage = 100;
 
         officersApi = retrieveOfficerAppointments(companyNumber, officersApi, apiClient, startIndex, itemsPerPage);
-        
-		while (officersApi.getItems().size() < officersApi.getTotalResults()) {
-			try {
-				startIndex += itemsPerPage;
-				OfficersApi moreResults = retrieveOfficerAppointments(companyNumber, officersApi, apiClient, startIndex, itemsPerPage);
-				officersApi.getItems().addAll(moreResults.getItems());
-			} catch (ServiceException se) {
-				if (officersApi.getItems().size() > 0) {
-					LOGGER.error("Possible data discrepancy while retrieving all appointments for " + companyNumber);
-					return officersApi;
-				} else {
-					throw se;
-				}
-			}
-		}
-        
+
+        while (officersApi.getItems().size() < officersApi.getTotalResults()) {
+            try {
+                startIndex += itemsPerPage;
+                OfficersApi moreResults = retrieveOfficerAppointments(companyNumber, officersApi, apiClient, startIndex, itemsPerPage);
+                officersApi.getItems().addAll(moreResults.getItems());
+
+            } catch (ServiceException se) {
+                if (officersApi.getItems().size() > 0) {
+                    LOGGER.error("Possible data discrepancy while retrieving all appointments for " + companyNumber +
+                            ", total item count = " + officersApi.getTotalResults() +
+                            ", total count of items actually retrieved = " + officersApi.getItems().size() +
+                            ". [Underlying error: " + se + ", " + se.getCause() + "]");
+                    return officersApi;
+                } else {
+                    throw se;
+                }
+            }
+        }
         return officersApi;
     }
 
