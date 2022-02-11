@@ -35,13 +35,8 @@ public class OfficerService implements PageRetrieverClient<OfficersApi> {
 
         String uri = GET_OFFICERS_URI.expand(companyNumber).toString();
 
-        try {
-            return pageRetrieverService.retrieveAllPages(this, uri, apiClient, ITEMS_PER_PAGE_VALUE);
-        } catch (ApiErrorResponseException e) {
-            throw new ServiceException("Error retrieving officers", e);
-        } catch (URIValidationException e) {
-            throw new ServiceException("Invalid URI for officers resource", e);
-        }
+        return pageRetrieverService.retrieveAllPages(this, uri, apiClient, ITEMS_PER_PAGE_VALUE, companyNumber);
+
     }
 
     @Override

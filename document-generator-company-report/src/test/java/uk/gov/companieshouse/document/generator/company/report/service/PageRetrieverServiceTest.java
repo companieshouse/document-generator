@@ -14,6 +14,7 @@ import uk.gov.companieshouse.api.handler.psc.request.PscsList;
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.model.psc.PscApi;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
+import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class PageRetrieverServiceTest {
 
+    private static final String COMPANY_NUMBER = "00000000";
     private static final String PSCS_URI = "/company/00000000/persons-with-significant-control";
 
     // Loop over 2 pages of 2 + 1 items = total 3 items.
@@ -48,7 +50,7 @@ class PageRetrieverServiceTest {
 
     @Test
     @DisplayName("retrieveAllPages() gets PscsApi instance containing all items successfully")
-    void retrieveAllPagesRetrievesSuccessfully() throws ApiErrorResponseException, URIValidationException {
+    void retrieveAllPagesRetrievesSuccessfully() throws Exception {
 
         // Given
         final PscsApi allPages = new PscsApi();
@@ -59,7 +61,7 @@ class PageRetrieverServiceTest {
 
         // When
         final PscsApi items =
-                pageRetrieverService.retrieveAllPages(pageRetrieverClient, PSCS_URI, apiClient, ITEMS_PER_PAGE);
+                pageRetrieverService.retrieveAllPages(pageRetrieverClient, PSCS_URI, apiClient, ITEMS_PER_PAGE, COMPANY_NUMBER);
 
         // Then
         assertNotNull(items);

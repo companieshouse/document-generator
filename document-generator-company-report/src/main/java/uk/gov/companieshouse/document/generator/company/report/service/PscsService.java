@@ -34,13 +34,7 @@ public class PscsService implements PageRetrieverClient<PscsApi> {
 
         String uri = GET_PSCS_URI.expand(companyNumber).toString();
 
-        try {
-            return pageRetrieverService.retrieveAllPages(this, uri, apiClient, ITEMS_PER_PAGE_VALUE);
-        } catch (ApiErrorResponseException e) {
-            throw new ServiceException("Error retrieving pscs", e);
-        } catch (URIValidationException e) {
-            throw new ServiceException("Invalid URI for pscs resource", e);
-        }
+        return pageRetrieverService.retrieveAllPages(this, uri, apiClient, ITEMS_PER_PAGE_VALUE, companyNumber);
     }
 
     @Override
