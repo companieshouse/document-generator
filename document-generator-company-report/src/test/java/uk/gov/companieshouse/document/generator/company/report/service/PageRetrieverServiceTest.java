@@ -31,7 +31,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class PageRetrieverServiceTest {
 
-    private static final String COMPANY_NUMBER = "00000000";
     private static final String PSCS_URI = "/company/00000000/persons-with-significant-control";
 
     // Loop over 2 pages of 2 + 1 items = total 3 items.
@@ -61,7 +60,7 @@ class PageRetrieverServiceTest {
 
         // When
         final PscsApi items =
-                pageRetrieverService.retrieveAllPages(pageRetrieverClient, PSCS_URI, apiClient, ITEMS_PER_PAGE, COMPANY_NUMBER);
+                pageRetrieverService.retrieveAllPages(pageRetrieverClient, PSCS_URI, apiClient, ITEMS_PER_PAGE);
 
         // Then
         assertNotNull(items);

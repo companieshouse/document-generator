@@ -8,14 +8,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.ApiClient;
-import uk.gov.companieshouse.api.error.ApiErrorResponseException;
-import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
-import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -48,7 +44,7 @@ class OfficerServiceTest {
     void testGetOfficersSuccessful() throws Exception {
 
         when(pageRetrieverService.retrieveAllPages(eq(officerService),
-                eq(OFFICERS_URI), eq(apiClient), anyInt(), eq(COMPANY_NUMBER))).thenReturn(createOfficersApi());
+                eq(OFFICERS_URI), eq(apiClient), anyInt())).thenReturn(createOfficersApi());
 
         OfficersApi officersApi = officerService.getOfficers(COMPANY_NUMBER);
 

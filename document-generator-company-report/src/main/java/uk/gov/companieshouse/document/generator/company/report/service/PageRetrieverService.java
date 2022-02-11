@@ -28,7 +28,6 @@ public class PageRetrieverService<T> {
      * @param uri           the request URI
      * @param apiClient     the API client
      * @param itemsPerPage  the number of items per page (page size)
-     * @param companyNumber the company number
      * @return T instance containing all the items
      * @throws ServiceException should the URI provided prove to be invalid or an error occur communicating
      * with remote API
@@ -36,8 +35,7 @@ public class PageRetrieverService<T> {
     public T retrieveAllPages(final PageRetrieverClient<T> client,
                               final String uri,
                               final ApiClient apiClient,
-                              final int itemsPerPage,
-                              final String companyNumber) throws ServiceException {
+                              final int itemsPerPage) throws ServiceException {
         int startIndex = 0;
         T allPages = null;
         try {

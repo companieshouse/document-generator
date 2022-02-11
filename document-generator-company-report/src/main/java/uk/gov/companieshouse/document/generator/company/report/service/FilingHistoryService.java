@@ -34,7 +34,7 @@ public class FilingHistoryService implements PageRetrieverClient<FilingHistoryAp
 
         String uri = GET_FILING_HISTORY_URI.expand(companyNumber).toString();
 
-        return pageRetrieverService.retrieveAllPages(this, uri, apiClient, ITEMS_PER_PAGE_VALUE, companyNumber);
+        return pageRetrieverService.retrieveAllPages(this, uri, apiClient, ITEMS_PER_PAGE_VALUE);
 
     }
 

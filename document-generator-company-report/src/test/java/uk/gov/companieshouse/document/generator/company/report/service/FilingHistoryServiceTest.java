@@ -8,17 +8,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.ApiClient;
-import uk.gov.companieshouse.api.error.ApiErrorResponseException;
-import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.filinghistory.FilingApi;
 import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
-import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
@@ -52,7 +48,7 @@ class FilingHistoryServiceTest {
     void testGetFilingHistorySuccessful() throws Exception {
 
         when(pageRetrieverService.retrieveAllPages(eq(filingHistoryService),
-                eq(FILING_HISTORY_URI), eq(mockApiClient), anyInt(), eq(COMPANY_NUMBER)))
+                eq(FILING_HISTORY_URI), eq(mockApiClient), anyInt()))
                 .thenReturn(createFilingHistoryApi());
 
         FilingHistoryApi filingHistoryApi = filingHistoryService.getFilingHistory(COMPANY_NUMBER);

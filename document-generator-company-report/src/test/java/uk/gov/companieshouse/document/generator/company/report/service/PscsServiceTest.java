@@ -7,8 +7,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.ApiClient;
-import uk.gov.companieshouse.api.error.ApiErrorResponseException;
-import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,12 +30,6 @@ class PscsServiceTest {
     @Mock
     private ApiClient apiClient;
 
-    @Mock
-    private ApiErrorResponseException apiErrorResponseException;
-
-    @Mock
-    private URIValidationException uriValidationException;
-
     private static final String COMPANY_NUMBER = "00000000";
     private static final String PSCS_URI = "/company/00000000/persons-with-significant-control";
 
@@ -47,7 +39,7 @@ class PscsServiceTest {
 
         // Given
         when(companyReportApiClientService.getApiClient()).thenReturn(apiClient);
-        when(pageRetrieverService.retrieveAllPages(eq(pscsService), eq(PSCS_URI), eq(apiClient), anyInt(), eq(COMPANY_NUMBER)))
+        when(pageRetrieverService.retrieveAllPages(eq(pscsService), eq(PSCS_URI), eq(apiClient), anyInt()))
                 .thenReturn(createPscsApi());
 
         // When
