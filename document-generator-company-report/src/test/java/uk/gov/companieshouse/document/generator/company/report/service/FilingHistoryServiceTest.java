@@ -57,31 +57,6 @@ class FilingHistoryServiceTest {
         assertEquals(1, filingHistoryApi.getItems().size());
     }
 
-    // TODO BI-10397 Replace these
-//    @Test
-//    @DisplayName("Test get filing history api throws service exception with api error exception")
-//    void testGetFilingHistoryApiErrorResponse() throws Exception {
-//
-//        when(pageRetrieverService.retrieveAllPages(eq(filingHistoryService),
-//                eq(FILING_HISTORY_URI), eq(mockApiClient), anyInt(), eq(COMPANY_NUMBER)))
-//                .thenThrow(ApiErrorResponseException.class);
-//
-//        assertThrows(ServiceException.class, () ->
-//                filingHistoryService.getFilingHistory(COMPANY_NUMBER));
-//    }
-//
-//    @Test
-//    @DisplayName("Test get filing history api throws service exception with uri validation exception")
-//    void testGetFilingHistoryURIValidation() throws Exception {
-//
-//        when(pageRetrieverService.retrieveAllPages(eq(filingHistoryService),
-//                eq(FILING_HISTORY_URI), eq(mockApiClient), anyInt(), eq(COMPANY_NUMBER)))
-//                .thenThrow(URIValidationException.class);
-//
-//        assertThrows(ServiceException.class, () ->
-//                filingHistoryService.getFilingHistory(COMPANY_NUMBER));
-//    }
-
     private FilingHistoryApi createFilingHistoryApi() {
 
         FilingHistoryApi filingHistoryApi = new FilingHistoryApi();

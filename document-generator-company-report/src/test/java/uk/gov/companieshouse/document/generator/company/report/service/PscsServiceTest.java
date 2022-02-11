@@ -50,37 +50,6 @@ class PscsServiceTest {
         assertEquals(2L, (long) api.getActiveCount());
     }
 
-    // TODO BI-10397 Replace these
-//    @Test
-//    @DisplayName("getPscs() propagates ApiErrorResponseException as a ServiceException")
-//    void getPscsPropagatesApiErrorResponseException() throws Exception {
-//
-//        // Given
-//        when(companyReportApiClientService.getApiClient()).thenReturn(apiClient);
-//        when(pageRetrieverService.retrieveAllPages(eq(pscsService), eq(PSCS_URI), eq(apiClient), anyInt(), eq(COMPANY_NUMBER)))
-//                .thenThrow(apiErrorResponseException);
-//
-//        // When and then
-//        final ServiceException exception = assertThrows(ServiceException.class, () ->
-//                pscsService.getPscs(COMPANY_NUMBER));
-//        assertThat(exception.getMessage(), is("Error retrieving pscs"));
-//    }
-//
-//    @Test
-//    @DisplayName("getPscs() propagates URIValidationException as a ServiceException")
-//    void getPscsPropagatesURIValidationException() throws Exception {
-//
-//        // Given
-//        when(companyReportApiClientService.getApiClient()).thenReturn(apiClient);
-//        when(pageRetrieverService.retrieveAllPages(eq(pscsService), eq(PSCS_URI), eq(apiClient), anyInt(), eq(COMPANY_NUMBER)))
-//                .thenThrow(uriValidationException);
-//
-//        // When and then
-//        final ServiceException exception = assertThrows(ServiceException.class, () ->
-//                pscsService.getPscs(COMPANY_NUMBER));
-//        assertThat(exception.getMessage(), is("Invalid URI for pscs resource"));
-//    }
-
     private PscsApi createPscsApi() {
         final PscsApi api = new PscsApi();
         api.setActiveCount(2L);

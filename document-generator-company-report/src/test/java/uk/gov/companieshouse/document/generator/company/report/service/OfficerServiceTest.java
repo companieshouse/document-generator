@@ -52,30 +52,6 @@ class OfficerServiceTest {
         assertEquals(2L, (long) officersApi.getActiveCount());
     }
 
-    // TODO BI-10397 Replace these
-//    @Test
-//    @DisplayName("Test get officers api throws service exception with api error exception")
-//    void testGetOfficersApiErrorResponse() throws Exception {
-//
-//        when(pageRetrieverService.retrieveAllPages(eq(officerService),
-//                eq(OFFICERS_URI), eq(apiClient), anyInt(), eq(COMPANY_NUMBER)))
-//                .thenThrow(ApiErrorResponseException.class);
-//
-//        assertThrows(ServiceException.class, () ->
-//                officerService.getOfficers(COMPANY_NUMBER));
-//    }
-//
-//    @Test
-//    @DisplayName("Test get officers api throws service exception with uri validation exception")
-//    void testGetOfficersURIValidation() throws Exception {
-//
-//        when(pageRetrieverService.retrieveAllPages(eq(officerService),
-//                eq(OFFICERS_URI), eq(apiClient), anyInt(), eq(COMPANY_NUMBER))).thenThrow(URIValidationException.class);
-//
-//        assertThrows(ServiceException.class, () ->
-//                officerService.getOfficers(COMPANY_NUMBER));
-//    }
-
     private OfficersApi createOfficersApi() {
         final OfficersApi api = new OfficersApi();
         api.setActiveCount(2L);
