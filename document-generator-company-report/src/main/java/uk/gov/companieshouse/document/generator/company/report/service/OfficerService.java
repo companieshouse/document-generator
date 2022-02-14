@@ -41,20 +41,20 @@ public class OfficerService {
 
         officersApi = retrieveOfficerAppointments(companyNumber, officersApi, apiClient, startIndex, itemsPerPage);
         
-		while (officersApi.getItems().size() < officersApi.getTotalResults()) {
-			try {
-				startIndex += itemsPerPage;
-				OfficersApi moreResults = retrieveOfficerAppointments(companyNumber, officersApi, apiClient, startIndex, itemsPerPage);
-				officersApi.getItems().addAll(moreResults.getItems());
-			} catch (ServiceException se) {
-				if (!CollectionUtils.isEmpty(officersApi.getItems())) {
-					LOGGER.error("Possible data discrepancy while retrieving all appointments for " + companyNumber);
-					return officersApi;
-				} else {
-					throw se;
-				}
-			}
-		}
+        while (officersApi.getItems().size() < officersApi.getTotalResults()) {
+            try {
+                startIndex += itemsPerPage;
+                OfficersApi moreResults = retrieveOfficerAppointments(companyNumber, officersApi, apiClient, startIndex, itemsPerPage);
+                officersApi.getItems().addAll(moreResults.getItems());
+            } catch (ServiceException se) {
+                if (!CollectionUtils.isEmpty(officersApi.getItems())) {
+                    LOGGER.error("Possible data discrepancy while retrieving all appointments for " + companyNumber);
+                    return officersApi;
+                } else {
+                    throw se;
+                }
+            }
+        }
         
         return officersApi;
     }
