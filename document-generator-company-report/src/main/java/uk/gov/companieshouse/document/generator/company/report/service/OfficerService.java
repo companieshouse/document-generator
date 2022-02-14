@@ -2,6 +2,7 @@ package uk.gov.companieshouse.document.generator.company.report.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.util.UriTemplate;
 import uk.gov.companieshouse.api.ApiClient;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
@@ -46,7 +47,7 @@ public class OfficerService {
 				OfficersApi moreResults = retrieveOfficerAppointments(companyNumber, officersApi, apiClient, startIndex, itemsPerPage);
 				officersApi.getItems().addAll(moreResults.getItems());
 			} catch (ServiceException se) {
-				if (officersApi.getItems().size() > 0) {
+				if (!CollectionUtils.isEmpty(officersApi.getItems())) {
 					LOGGER.error("Possible data discrepancy while retrieving all appointments for " + companyNumber);
 					return officersApi;
 				} else {
