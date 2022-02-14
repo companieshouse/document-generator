@@ -16,8 +16,8 @@ public class PscsService implements PageRetrieverClient<PscsApi> {
             new UriTemplate("/company/{companyNumber}/persons-with-significant-control");
     private static final int ITEMS_PER_PAGE_VALUE = 100;
 
-    private static final String ITEMS_PER_PAGE_KEY = "items_per_page";
-    private static final String START_INDEX_KEY = "start_index";
+    public static final String ITEMS_PER_PAGE_KEY = "items_per_page";
+    public static final String START_INDEX_KEY = "start_index";
 
     private final CompanyReportApiClientService companyReportApiClientService;
     private final PageRetrieverService<PscsApi> pageRetrieverService;
