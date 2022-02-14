@@ -122,6 +122,17 @@ class OfficerServiceTest {
 		when(mockOfficersList.execute()).thenThrow(URIValidationException.class);
 		assertThrows(ServiceException.class, () -> officerService.getOfficers(COMPANY_NUMBER));
 	}
+	
+	@Test
+	@DisplayName("Test returns a ServiceException following an empty items response")
+	void testGetOfficersServiceExceptionFollowingEmptyItems() throws ApiErrorResponseException, URIValidationException {
+		when(mockOfficersList.execute()).thenReturn(mockApiResponse).thenThrow(ApiErrorResponseException.class);
+		OfficersApi officersApi = createOfficersApi();
+		officersApi.setTotalResults(110);
+		when(mockApiResponse.getData()).thenReturn(officersApi);
+		
+		assertThrows(ServiceException.class, () -> officerService.getOfficers(COMPANY_NUMBER));
+	}
 
 	private OfficersApi createOfficersApi() {
 		OfficersApi officersApi = new OfficersApi();
