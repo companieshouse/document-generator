@@ -12,8 +12,8 @@ import uk.gov.companieshouse.document.generator.company.report.exception.Service
 @Service
 public class ChargesService implements PageRetrieverClient<ChargesApi> {
 
-    private static final String ITEMS_PER_PAGE_KEY = "items_per_page";
-    private static final String START_INDEX_KEY = "start_index";
+    public static final String ITEMS_PER_PAGE_KEY = "items_per_page";
+    public static final String START_INDEX_KEY = "start_index";
     private static final UriTemplate GET_CHARGES_URI =
         new UriTemplate("/company/{companyNumber}/charges");
     private static final int ITEMS_PER_PAGE_VALUE = 100;

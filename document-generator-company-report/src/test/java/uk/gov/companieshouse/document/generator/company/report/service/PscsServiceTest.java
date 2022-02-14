@@ -32,6 +32,9 @@ import static uk.gov.companieshouse.document.generator.company.report.service.Ps
 @ExtendWith(MockitoExtension.class)
 class PscsServiceTest {
 
+    private static final String COMPANY_NUMBER = "00000000";
+    private static final String PSCS_URI = "/company/00000000/persons-with-significant-control";
+
     @InjectMocks
     private PscsService pscsService;
 
@@ -70,9 +73,6 @@ class PscsServiceTest {
 
     @Mock
     private URIValidationException uriValidationException;
-
-    private static final String COMPANY_NUMBER = "00000000";
-    private static final String PSCS_URI = "/company/00000000/persons-with-significant-control";
 
     @Test
     @DisplayName("getPscs() gets PscsApi instance successfully")

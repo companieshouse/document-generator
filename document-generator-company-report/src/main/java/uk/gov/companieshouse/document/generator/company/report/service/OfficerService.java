@@ -8,8 +8,6 @@ import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.handler.officers.request.OfficersList;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
-import uk.gov.companieshouse.logging.Logger;
-import uk.gov.companieshouse.logging.LoggerFactory;
 
 @Service
 public class OfficerService implements PageRetrieverClient<OfficersApi> {
@@ -18,8 +16,8 @@ public class OfficerService implements PageRetrieverClient<OfficersApi> {
             new UriTemplate("/company/{companyNumber}/officers");
     private static final int ITEMS_PER_PAGE_VALUE = 100;
 
-    private static final String ITEMS_PER_PAGE_KEY = "items_per_page";
-    private static final String START_INDEX_KEY = "start_index";
+    public static final String ITEMS_PER_PAGE_KEY = "items_per_page";
+    public static final String START_INDEX_KEY = "start_index";
 
     private final CompanyReportApiClientService companyReportApiClientService;
     private final PageRetrieverService<OfficersApi> pageRetrieverService;
