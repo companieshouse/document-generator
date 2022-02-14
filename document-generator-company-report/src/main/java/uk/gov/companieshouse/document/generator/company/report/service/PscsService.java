@@ -9,15 +9,15 @@ import uk.gov.companieshouse.api.handler.psc.request.PscsList;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
 
+import static uk.gov.companieshouse.document.generator.company.report.service.PageRetrieverClientConstants.ITEMS_PER_PAGE_KEY;
+import static uk.gov.companieshouse.document.generator.company.report.service.PageRetrieverClientConstants.ITEMS_PER_PAGE_VALUE;
+import static uk.gov.companieshouse.document.generator.company.report.service.PageRetrieverClientConstants.START_INDEX_KEY;
+
 @Service
 public class PscsService implements PageRetrieverClient<PscsApi> {
 
     private static final UriTemplate GET_PSCS_URI =
             new UriTemplate("/company/{companyNumber}/persons-with-significant-control");
-    private static final int ITEMS_PER_PAGE_VALUE = 100;
-
-    public static final String ITEMS_PER_PAGE_KEY = "items_per_page";
-    public static final String START_INDEX_KEY = "start_index";
 
     private final CompanyReportApiClientService companyReportApiClientService;
     private final PageRetrieverService<PscsApi> pageRetrieverService;

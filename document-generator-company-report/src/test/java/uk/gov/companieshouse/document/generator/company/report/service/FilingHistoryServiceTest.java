@@ -27,8 +27,8 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static uk.gov.companieshouse.document.generator.company.report.service.FilingHistoryService.ITEMS_PER_PAGE_KEY;
-import static uk.gov.companieshouse.document.generator.company.report.service.FilingHistoryService.START_INDEX_KEY;
+import static uk.gov.companieshouse.document.generator.company.report.service.PageRetrieverClientConstants.ITEMS_PER_PAGE_KEY;
+import static uk.gov.companieshouse.document.generator.company.report.service.PageRetrieverClientConstants.START_INDEX_KEY;
 
 @ExtendWith(MockitoExtension.class)
 class FilingHistoryServiceTest {

@@ -9,6 +9,10 @@ import uk.gov.companieshouse.api.handler.filinghistory.request.FilingHistoryList
 import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
 
+import static uk.gov.companieshouse.document.generator.company.report.service.PageRetrieverClientConstants.ITEMS_PER_PAGE_KEY;
+import static uk.gov.companieshouse.document.generator.company.report.service.PageRetrieverClientConstants.ITEMS_PER_PAGE_VALUE;
+import static uk.gov.companieshouse.document.generator.company.report.service.PageRetrieverClientConstants.START_INDEX_KEY;
+
 @Service
 public class FilingHistoryService implements PageRetrieverClient<FilingHistoryApi> {
 
@@ -17,10 +21,6 @@ public class FilingHistoryService implements PageRetrieverClient<FilingHistoryAp
 
     private static final UriTemplate GET_FILING_HISTORY_URI =
             new UriTemplate("/company/{company_number}/filing-history");
-    private static final int ITEMS_PER_PAGE_VALUE = 100;
-
-    public static final String ITEMS_PER_PAGE_KEY = "items_per_page";
-    public static final String START_INDEX_KEY = "start_index";
 
     public FilingHistoryService(CompanyReportApiClientService companyReportApiClientService,
                                 PageRetrieverService<FilingHistoryApi> pageRetrieverService) {
