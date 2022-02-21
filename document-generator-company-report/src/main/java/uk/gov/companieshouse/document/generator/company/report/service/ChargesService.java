@@ -1,6 +1,5 @@
 package uk.gov.companieshouse.document.generator.company.report.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriTemplate;
 import uk.gov.companieshouse.api.ApiClient;
@@ -10,58 +9,56 @@ import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.charges.ChargesApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
 
+import static uk.gov.companieshouse.document.generator.company.report.service.PageRetrieverClientConstants.ITEMS_PER_PAGE_KEY;
+import static uk.gov.companieshouse.document.generator.company.report.service.PageRetrieverClientConstants.ITEMS_PER_PAGE_VALUE;
+import static uk.gov.companieshouse.document.generator.company.report.service.PageRetrieverClientConstants.START_INDEX_KEY;
+
 @Service
-public class ChargesService {
+public class ChargesService implements PageRetrieverClient<ChargesApi> {
 
-    @Autowired
-    CompanyReportApiClientService companyReportApiClientService;
-
-    private static final String ITEMS_PER_PAGE_KEY = "items_per_page";
-    private static final String ITEMS_PER_PAGE = "100";
-    private static final String START_INDEX_KEY = "start_index";
     private static final UriTemplate GET_CHARGES_URI =
         new UriTemplate("/company/{companyNumber}/charges");
 
-    public ChargesApi getCharges(String companyNumber) throws ServiceException {
+    private final CompanyReportApiClientService companyReportApiClientService;
+    private final PageRetrieverService<ChargesApi> pageRetrieverService;
 
-        ChargesApi chargesApi = null;
+    public ChargesService(CompanyReportApiClientService companyReportApiClientService, PageRetrieverService<ChargesApi> pageRetrieverService) {
+        this.companyReportApiClientService = companyReportApiClientService;
+        this.pageRetrieverService = pageRetrieverService;
+    }
+
+    public ChargesApi getCharges(String companyNumber) throws ServiceException {
 
         ApiClient apiClient = companyReportApiClientService.getApiClient();
 
-        int startIndex = 0;
-        int itemsPerPage = Integer.parseInt(ITEMS_PER_PAGE);
-
-        chargesApi = retrieveChargesApi(companyNumber, apiClient, startIndex, itemsPerPage);
-
-        while (chargesApi.getItems().size() < chargesApi.getTotalCount()) {
-            startIndex += itemsPerPage;
-            ChargesApi moreResults = retrieveChargesApi(companyNumber, apiClient, startIndex, itemsPerPage);
-            chargesApi.getItems().addAll(moreResults.getItems());
-        }
-
-        return chargesApi;
-    }
-
-    private ChargesApi retrieveChargesApi(String companyNumber, ApiClient apiClient, Integer startIndex, Integer itemsPerPage) throws ServiceException {
-
         String uri = GET_CHARGES_URI.expand(companyNumber).toString();
 
-        ChargesApi chargesApi;
+        return pageRetrieverService.retrieveAllPages(this, uri, apiClient, ITEMS_PER_PAGE_VALUE);
+    }
 
-        try {
-            ChargesGet chargesGet = apiClient.charges().get(uri);
-            chargesGet.addQueryParams(ITEMS_PER_PAGE_KEY, ITEMS_PER_PAGE);
-            chargesGet.addQueryParams(START_INDEX_KEY, startIndex.toString());
+    @Override
+    public int getSize(ChargesApi allPages) {
+        return allPages.getItems().size();
+    }
 
-            chargesApi = chargesGet.execute().getData();
-        } catch (ApiErrorResponseException e) {
+    @Override
+    public long getTotalCount(ChargesApi allPages) {
+        return allPages.getTotalCount();
+    }
 
-            throw new ServiceException("Error retrieving company charges", e);
-        } catch (URIValidationException e) {
+    @Override
+    public void addPage(ChargesApi allPages, ChargesApi anotherPage) {
+        allPages.getItems().addAll(anotherPage.getItems());
+    }
 
-            throw new ServiceException("Invalid URI for company charges", e);
-        }
+    @Override
+    public ChargesApi retrievePage(String uri, ApiClient apiClient, int startIndex, int itemsPerPage)
+            throws ApiErrorResponseException, URIValidationException {
 
-        return chargesApi;
+        final ChargesGet chargesGet = apiClient.charges().get(uri);
+        chargesGet.addQueryParams(ITEMS_PER_PAGE_KEY, Integer.toString(itemsPerPage));
+        chargesGet.addQueryParams(START_INDEX_KEY, Integer.toString(startIndex));
+
+        return chargesGet.execute().getData();
     }
 }
