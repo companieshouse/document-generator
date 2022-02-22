@@ -1,11 +1,21 @@
 package uk.gov.companieshouse.document.generator.company.report.service;
 
+import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.ArrayList;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import uk.gov.companieshouse.api.ApiClient;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
@@ -14,191 +24,135 @@ import uk.gov.companieshouse.api.handler.officers.request.OfficersList;
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.model.officers.CompanyOfficerApi;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
-
-import java.util.List;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static uk.gov.companieshouse.document.generator.company.report.service.PageRetrieverClientConstants.ITEMS_PER_PAGE_KEY;
-import static uk.gov.companieshouse.document.generator.company.report.service.PageRetrieverClientConstants.START_INDEX_KEY;
+import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
 
 @ExtendWith(MockitoExtension.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class OfficerServiceTest {
-
-    private static final String COMPANY_NUMBER = "00000000";
-    private static final String OFFICERS_URI = "/company/00000000/officers";
 
     @InjectMocks
     private OfficerService officerService;
 
     @Mock
-    private ApiClient apiClient;
+    private ApiClient mockApiClient;
 
     @Mock
-    private CompanyReportApiClientService companyReportApiClientService;
+    private CompanyReportApiClientService mockCompanyReportApiClientService;
 
     @Mock
-    private PageRetrieverService<OfficersApi> pageRetrieverService;
+    private OfficersList mockOfficersList;
 
     @Mock
-    private OfficersApi allPages;
+    private OfficersResourceHandler mockResourceHandler;
 
     @Mock
-    private OfficersApi anotherPage;
+    private ApiResponse<OfficersApi> mockApiResponse;
 
-    @Mock
-    private List<CompanyOfficerApi> items;
+    private static final String COMPANY_NUMBER = "00000000";
+    private static final String OFFICERS_URI = "/company/00000000/officers";
 
-    @Mock
-    private List<CompanyOfficerApi> anotherPageItems;
-
-    @Mock
-    private OfficersResourceHandler resourceHandler;
-
-    @Mock
-    private OfficersList list;
-
-    @Mock
-    private ApiResponse<OfficersApi> response;
-
-    @Mock
-    private ApiErrorResponseException apiErrorResponseException;
-
-    @Mock
-    private URIValidationException uriValidationException;
-
-    @Test
-    @DisplayName("Test get officers api response is not null")
-    void testGetOfficersSuccessful() throws Exception {
-
-        when(companyReportApiClientService.getApiClient()).thenReturn(apiClient);
-        when(pageRetrieverService.retrieveAllPages(eq(officerService),
-                eq(OFFICERS_URI), eq(apiClient), anyInt())).thenReturn(createOfficersApi());
-
-        OfficersApi officersApi = officerService.getOfficers(COMPANY_NUMBER);
-
-        assertNotNull(officersApi);
-        assertEquals(2L, (long) officersApi.getActiveCount());
+    @BeforeEach
+    void init() {
+        when(mockCompanyReportApiClientService.getApiClient()).thenReturn(mockApiClient);
+        when(mockApiClient.officers()).thenReturn(mockResourceHandler);
+        when(mockResourceHandler.list(OFFICERS_URI)).thenReturn(mockOfficersList);
     }
 
     @Test
-    @DisplayName("getSize() behaves correctly")
-    void getSizeBehavesCorrectly() {
+    @DisplayName("Test is successful when it returns up to 100 appointments")
+    void testGetOfficersSuccessful() throws ApiErrorResponseException, URIValidationException, ServiceException {
+        when(mockOfficersList.execute()).thenReturn(mockApiResponse);
+        OfficersApi officersApi = createOfficersApi();
+        addOfficerItems(officersApi, 10);
+        when(mockApiResponse.getData()).thenReturn(officersApi);
 
-        // Given
-        when(allPages.getItems()).thenReturn(items);
-        when(items.size()).thenReturn(150);
+        OfficersApi returnedOfficers = officerService.getOfficers(COMPANY_NUMBER);
 
-        // When
-        final int size = officerService.getSize(allPages);
-
-        // Then
-        assertThat(size, is(150));
-        verify(allPages).getItems();
-        verify(items).size();
+        assertNotNull(returnedOfficers);
+        assertEquals(10, returnedOfficers.getItems().size());
     }
 
     @Test
-    @DisplayName("getTotalCount() behaves correctly")
-    void getTotalCountBehavesCorrectly() {
+    @DisplayName("Test is successful when it returns more than 100 appointments")
+    void testGetOfficersSuccessfulMoreThanOneHundredAppointments()
+            throws ApiErrorResponseException, URIValidationException, ServiceException {
+        when(mockOfficersList.execute()).thenReturn(mockApiResponse);
+        OfficersApi officersApi1 = createOfficersApi();
+        OfficersApi officersApi2 = createOfficersApi();
+        officersApi1.setTotalResults(110);
+        addOfficerItems(officersApi1, 100);
+        officersApi2.setTotalResults(110);
+        addOfficerItems(officersApi2, 10);
+        when(mockApiResponse.getData()).thenReturn(officersApi1).thenReturn(officersApi2);
 
-        // Given
-        when(allPages.getTotalResults()).thenReturn(150);
+        OfficersApi returnedOfficers = officerService.getOfficers(COMPANY_NUMBER);
 
-        // When
-        final long count = officerService.getTotalCount(allPages);
-
-        // Then
-        assertThat(count, is(150L));
-        verify(allPages).getTotalResults();
+        assertNotNull(returnedOfficers);
+        assertEquals(110, returnedOfficers.getItems().size());
     }
 
     @Test
-    @DisplayName("addPage() behaves correctly")
-    void addPageBehavesCorrectly() {
+    @DisplayName("Test is successful when more than 100 appointments then an ApiErrorResponseException")
+    void testGetOfficersSuccessfulFollowingApiErrorResponseException()
+            throws ApiErrorResponseException, URIValidationException, ServiceException {
+        when(mockOfficersList.execute()).thenReturn(mockApiResponse).thenThrow(ApiErrorResponseException.class);
+        OfficersApi officersApi = createOfficersApi();
+        officersApi.setTotalResults(110);
+        addOfficerItems(officersApi, 100);
+        when(mockApiResponse.getData()).thenReturn(officersApi);
 
-        // Given
-        when(allPages.getItems()).thenReturn(items);
-        when(anotherPage.getItems()).thenReturn(anotherPageItems);
+        OfficersApi returnedOfficers = officerService.getOfficers(COMPANY_NUMBER);
 
-        // When
-        officerService.addPage(allPages, anotherPage);
-
-        // Then
-        verify(allPages).getItems();
-        verify(anotherPage).getItems();
-        verify(items).addAll(anotherPageItems);
-
+        assertNotNull(returnedOfficers);
+        assertEquals(100, returnedOfficers.getItems().size());
     }
 
     @Test
-    @DisplayName("retrievePage() behaves correctly")
-    void retrievePageBehavesCorrectly() throws ApiErrorResponseException, URIValidationException {
-
-        // Given
-        when(apiClient.officers()).thenReturn(resourceHandler);
-        when(resourceHandler.list(OFFICERS_URI)).thenReturn(list);
-        when(list.execute()).thenReturn(response);
-        when(response.getData()).thenReturn(anotherPage);
-
-        // When
-        final OfficersApi pageRetrieved = officerService.retrievePage(OFFICERS_URI, apiClient, 200, 100);
-
-        // Then
-        assertThat(pageRetrieved, is(anotherPage));
-        verify(apiClient).officers();
-        verify(resourceHandler).list(OFFICERS_URI);
-        verify(list).addQueryParams(ITEMS_PER_PAGE_KEY, "100");
-        verify(list).addQueryParams(START_INDEX_KEY, "200");
-        verify(list).execute();
-        verify(response).getData();
+    @DisplayName("Test returns a ServiceException when an APIErrorResponseException is returned")
+    void testGetOfficersApiErrorResponseExceptionReturnsServiceException()
+            throws ApiErrorResponseException, URIValidationException {
+        when(mockOfficersList.execute()).thenThrow(ApiErrorResponseException.class);
+        assertThrows(ServiceException.class, () -> officerService.getOfficers(COMPANY_NUMBER));
     }
 
     @Test
-    @DisplayName("retrievePage() propagates ApiErrorResponseException")
-    void retrievePagePropagatesApiErrorResponseException() throws Exception {
-
-        // Given
-        when(apiClient.officers()).thenReturn(resourceHandler);
-        when(resourceHandler.list(OFFICERS_URI)).thenReturn(list);
-        when(list.execute()).thenThrow(apiErrorResponseException);
-        when(apiErrorResponseException.getMessage()).thenReturn("Test message");
-
-        // When and then
-        final ApiErrorResponseException ex = assertThrows(ApiErrorResponseException.class, () ->
-                officerService.retrievePage(OFFICERS_URI, apiClient, 200, 100));
-        assertThat(ex.getMessage(), is("Test message"));
-
+    @DisplayName("Test returns a ServiceException when a URIValidationException is returned")
+    void testGetOfficersURIValidationExceptionReturnsServiceException()
+            throws ApiErrorResponseException, URIValidationException {
+        when(mockOfficersList.execute()).thenThrow(URIValidationException.class);
+        assertThrows(ServiceException.class, () -> officerService.getOfficers(COMPANY_NUMBER));
     }
-
+    
     @Test
-    @DisplayName("retrievePage() propagates URIValidationException")
-    void retrievePagePropagatesURIValidationException() throws Exception {
-
-        // Given
-        when(apiClient.officers()).thenReturn(resourceHandler);
-        when(resourceHandler.list(OFFICERS_URI)).thenReturn(list);
-        when(list.execute()).thenThrow(uriValidationException);
-        when(uriValidationException.getMessage()).thenReturn("Test message");
-
-        // When and then
-        final URIValidationException ex = assertThrows(URIValidationException.class, () ->
-                officerService.retrievePage(OFFICERS_URI, apiClient, 200, 100));
-        assertThat(ex.getMessage(), is("Test message"));
-
+    @DisplayName("Test returns a ServiceException following an empty items response")
+    void testGetOfficersServiceExceptionFollowingEmptyItems() throws ApiErrorResponseException, URIValidationException {
+        when(mockOfficersList.execute()).thenReturn(mockApiResponse).thenThrow(ApiErrorResponseException.class);
+        OfficersApi officersApi = createOfficersApi();
+        officersApi.setTotalResults(110);
+        when(mockApiResponse.getData()).thenReturn(officersApi);
+        
+        assertThrows(ServiceException.class, () -> officerService.getOfficers(COMPANY_NUMBER));
     }
 
     private OfficersApi createOfficersApi() {
-        final OfficersApi api = new OfficersApi();
-        api.setActiveCount(2L);
-        return api;
+        OfficersApi officersApi = new OfficersApi();
+        officersApi.setActiveCount(20L);
+        officersApi.setInactiveCount(20L);
+        officersApi.setItemsPerPage(100L);
+        officersApi.setKind("kind");
+        officersApi.setEtag("etag");
+        officersApi.setResignedCount(20);
+        officersApi.setStartIndex(0);
+        officersApi.setTotalResults(0);
+
+        officersApi.setItems(new ArrayList<CompanyOfficerApi>());
+        return officersApi;
+    }
+
+    private void addOfficerItems(OfficersApi officersApi, int numberOfOfficers) {
+        for (int i = 0; i < numberOfOfficers; i++) {
+            officersApi.getItems().add(new CompanyOfficerApi());
+        }
     }
 
 }
