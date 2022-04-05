@@ -401,7 +401,7 @@
         {{end}}
 
         {{if $companyRegistrationInformation.date_of_dissolution}}
-            <li>Dissolved on: {{$companyRegistrationInformation.date_of_dissolution}}</li>
+            <li>{{if eq $companyRegistrationInformation.company_type.type "Registered overseas entity"}}Removed{{else}}Dissolved{{end}} on: {{$companyRegistrationInformation.date_of_dissolution}}</li>
         {{end}}
 
         {{if $companyRegistrationInformation.status.company_status}}
