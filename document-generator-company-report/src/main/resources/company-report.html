@@ -348,6 +348,43 @@
         </li>
         {{end}}
 
+        {{if $sa := $companyRegistrationInformation.service_address}}
+        <li>
+
+            Service address:
+
+            {{if $sa.care_of}}
+            {{index $sa "care_of"}},
+            {{end}}
+            {{if $sa.po_box}}
+            {{index $sa "po_box"}},
+            {{end}}
+            {{if $sa.premises}}
+            {{index $sa "premises"}},
+            {{end}}
+            {{if $sa.address_line_1}}
+            {{index $sa "address_line_1"}},
+            {{end}}
+            {{if $sa.address_line_2}}
+            {{index $sa "address_line_2"}},
+            {{end}}
+            {{if $sa.locality}}
+            {{index $sa "locality"}},
+            {{end}}
+            {{if $sa.region}}
+            {{index $sa "region"}},
+            {{end}}
+            {{if $sa.country}}
+            {{index $sa "country"}}
+            {{if .address.postal_code}},
+            {{end}}
+            {{end}}
+            {{if $sa.postal_code}}
+            {{index $sa "postal_code"}}
+            {{end}}
+        </li>
+        {{end}}
+
         {{if $companyRegistrationInformation.company_type.type}}
             <li>Company type: {{$companyRegistrationInformation.company_type.type}}
                 {{if $companyRegistrationInformation.company_type.subtype}}/{{$companyRegistrationInformation.company_type.subtype}}{{end}}</li>
