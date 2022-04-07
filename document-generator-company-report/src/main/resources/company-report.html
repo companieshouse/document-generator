@@ -393,7 +393,7 @@
                 {{if $companyRegistrationInformation.company_type.subtype}}/{{$companyRegistrationInformation.company_type.subtype}}{{end}}</li>
         {{end}}
 
-        {{if ne $companyRegistrationInformation.company_type.type "Overseas company"}}
+        {{if and (ne $companyRegistrationInformation.company_type.type "Overseas company") (ne $companyRegistrationInformation.company_type.type "Registered overseas entity")}}
             {{if $companyRegistrationInformation.external_registration_number}}
                 <li>Charity number: {{$companyRegistrationInformation.external_registration_number}}</li>
             {{end}}
