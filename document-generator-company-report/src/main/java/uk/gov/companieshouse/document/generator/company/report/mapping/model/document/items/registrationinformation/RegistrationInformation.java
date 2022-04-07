@@ -29,6 +29,9 @@ public class RegistrationInformation {
     @JsonProperty("registered_office")
     private RegisteredOffice registeredOffice;
 
+    @JsonProperty("service_address")
+    private RegisteredOffice serviceAddress;
+
     @JsonProperty("company_type")
     private CompanyType companyType;
 
@@ -77,6 +80,14 @@ public class RegistrationInformation {
 
     public void setRegisteredOffice(RegisteredOffice registeredOffice) {
         this.registeredOffice = registeredOffice;
+    }
+
+    public RegisteredOffice getServiceAddress() {
+        return serviceAddress;
+    }
+
+    public void setServiceAddress(RegisteredOffice serviceAddress) {
+        this.serviceAddress = serviceAddress;
     }
 
     public CompanyType getCompanyType() {

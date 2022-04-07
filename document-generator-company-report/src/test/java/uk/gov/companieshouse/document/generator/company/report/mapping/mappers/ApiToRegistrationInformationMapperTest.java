@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -23,7 +24,7 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 
 @ExtendWith({MockitoExtension.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ApiToRegistrationInformationMapperTest {
+class ApiToRegistrationInformationMapperTest {
 
     public static final String MAPPED_VALUE = "Mapped Value";
 
@@ -55,7 +56,8 @@ public class ApiToRegistrationInformationMapperTest {
     private static final String REGION = "region";
     private static final String PREMISE = "premise";
 
-    private String[] SIC_CODES = new String[]{"5231", "5232", "5233"};
+    private static final String[] SIC_CODES = new String[]{"5231", "5232", "5233"};
+    private static final RegisteredOfficeAddressApi ADDRESS = createAddress();
 
     @Test
     @DisplayName("tests company profile data maps to registration information model")
@@ -78,7 +80,9 @@ public class ApiToRegistrationInformationMapperTest {
         assertEquals(MAPPED_VALUE, registrationInformation.getStatus().getCompanyStatus());
         assertEquals(MAPPED_VALUE, registrationInformation.getStatus().getCompanyStatusDetail());
         assertEquals(MAPPED_VALUE, registrationInformation.getDateOfIncorporationLabel());
-        assertEquals(CHARITY_NUMBER,registrationInformation.getExternalRegistrationNumber());
+        assertEquals(CHARITY_NUMBER, registrationInformation.getExternalRegistrationNumber());
+        assertThat(registrationInformation.getRegisteredOffice()).isEqualToComparingFieldByField(ADDRESS);
+        assertThat(registrationInformation.getServiceAddress()).isEqualToComparingFieldByField(ADDRESS);
     }
 
     private CompanyProfileApi createCompanyReportApiData() {
@@ -94,13 +98,14 @@ public class ApiToRegistrationInformationMapperTest {
         companyProfileApi.setSicCodes(SIC_CODES);
         companyProfileApi.setDateOfCreation(DATE_OF_CREATION);
         companyProfileApi.setDateOfCessation(DATE_OF_CESSATION);
-        companyProfileApi.setRegisteredOfficeAddress(setAddress());
+        companyProfileApi.setRegisteredOfficeAddress(ADDRESS);
+        companyProfileApi.setServiceAddress(ADDRESS);
         companyProfileApi.setExternalRegistrationNumber(CHARITY_NUMBER);
 
         return  companyProfileApi;
     }
 
-    private RegisteredOfficeAddressApi setAddress() {
+    private static RegisteredOfficeAddressApi createAddress() {
 
         RegisteredOfficeAddressApi registeredOfficeAddress = new RegisteredOfficeAddressApi();
         registeredOfficeAddress.setAddressLine1(ADDRESS_LINE_ONE);
