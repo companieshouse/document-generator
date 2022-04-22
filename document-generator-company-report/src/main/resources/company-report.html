@@ -668,7 +668,7 @@
                     {{if .principal_office_address}}
                         <li>Principal office address:
                             {{if .principal_office_address.care_of}}
-                                {{index .address "care_of"}},
+                                {{index .principal_office_address "care_of"}},
                             {{end}}
 
                             {{if .principal_office_address.po_box}}
