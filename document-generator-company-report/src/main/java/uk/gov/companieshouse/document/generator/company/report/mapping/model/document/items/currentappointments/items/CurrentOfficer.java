@@ -133,14 +133,6 @@ public class CurrentOfficer {
         this.otherForenames = otherForenames;
     }
 
-    public Boolean getServicaAddressSameAsOfficeAddress() {
-        return serviceAddressSameAsOfficeAddress;
-    }
-
-    public void setServicaAddressSameAsOfficeAddress(Boolean serviceAddressSameAsOfficeAddress) {
-        this.serviceAddressSameAsOfficeAddress = serviceAddressSameAsOfficeAddress;
-    }
-
     public String getOfficerRole() {
         return officerRole;
     }
