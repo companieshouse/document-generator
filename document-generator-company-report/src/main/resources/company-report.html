@@ -655,9 +655,7 @@
                             {{end}}
 
                             {{if .address.country}}
-                                {{index .address "country"}}
-                                {{if .address.postal_code}},
-                                {{end}}
+                                {{index .address "country"}}{{if .address.postal_code}},{{end}}
                             {{end}}
 
                             {{if .address.postal_code}}
@@ -698,9 +696,7 @@
                             {{end}}
 
                             {{if .principal_office_address.country}}
-                                {{index .principal_office_address "country"}}
-                                {{if .principal_office_address.postal_code}},
-                                {{end}}
+                                {{index .principal_office_address "country"}}{{if .principal_office_address.postal_code}},{{end}}
                             {{end}}
 
                             {{if .principal_office_address.postal_code}}
@@ -793,9 +789,7 @@
                             {{end}}
 
                             {{if .contact_details.country}}
-                                {{index .contact_details "country"}}
-                                {{if .contact_details.postal_code}},
-                                {{end}}
+                                {{index .contact_details "country"}}{{if .contact_details.postal_code}},{{end}}
                             {{end}}
 
                             {{if .contact_details.postal_code}}
