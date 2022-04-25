@@ -3,6 +3,7 @@ package uk.gov.companieshouse.document.generator.company.report.mapping.model.do
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 import uk.gov.companieshouse.api.model.common.Address;
+import uk.gov.companieshouse.api.model.common.ContactDetails;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.DateDayMonthYear;
 
 
@@ -58,6 +59,15 @@ public class CurrentOfficer {
 
     @JsonProperty("identification")
     private Identification identification;
+
+    @JsonProperty("principal_office_address")
+    private Address principalOfficeAddress;
+
+    @JsonProperty("responsibilities")
+    private String responsibilities;
+
+    @JsonProperty("contact_details")
+    private ContactDetails contactDetails;
 
     public String getOccupation() {
         return occupation;
@@ -121,14 +131,6 @@ public class CurrentOfficer {
 
     public void setOtherForenames(String otherForenames) {
         this.otherForenames = otherForenames;
-    }
-
-    public Boolean getServicaAddressSameAsOfficeAddress() {
-        return serviceAddressSameAsOfficeAddress;
-    }
-
-    public void setServicaAddressSameAsOfficeAddress(Boolean serviceAddressSameAsOfficeAddress) {
-        this.serviceAddressSameAsOfficeAddress = serviceAddressSameAsOfficeAddress;
     }
 
     public String getOfficerRole() {
@@ -201,5 +203,29 @@ public class CurrentOfficer {
 
     public void setIdentification(Identification identification) {
         this.identification = identification;
+    }
+
+    public Address getPrincipalOfficeAddress() {
+        return principalOfficeAddress;
+    }
+
+    public void setPrincipalOfficeAddress(Address principalOfficeAddress) {
+        this.principalOfficeAddress = principalOfficeAddress;
+    }
+
+    public String getResponsibilities() {
+        return responsibilities;
+    }
+
+    public void setResponsibilities(String responsibilities) {
+        this.responsibilities = responsibilities;
+    }
+
+    public ContactDetails getContactDetails() {
+        return contactDetails;
+    }
+
+    public void setContactDetails(ContactDetails contactDetails) {
+        this.contactDetails = contactDetails;
     }
 }

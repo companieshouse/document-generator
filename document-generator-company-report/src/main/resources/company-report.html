@@ -655,9 +655,7 @@
                             {{end}}
 
                             {{if .address.country}}
-                                {{index .address "country"}}
-                                {{if .address.postal_code}},
-                                {{end}}
+                                {{index .address "country"}}{{if .address.postal_code}},{{end}}
                             {{end}}
 
                             {{if .address.postal_code}}
@@ -665,6 +663,51 @@
                             {{end}}
 
                         </li>
+                    {{end}}
+
+                    {{if .principal_office_address}}
+                        <li>Principal office address:
+                            {{if .principal_office_address.care_of}}
+                                {{index .principal_office_address "care_of"}},
+                            {{end}}
+
+                            {{if .principal_office_address.po_box}}
+                                {{index .principal_office_address "po_box"}},
+                            {{end}}
+
+                            {{if .principal_office_address.premises}}
+                                {{index .principal_office_address "premises"}},
+                            {{end}}
+
+                            {{if .principal_office_address.address_line_1}}
+                                {{index .principal_office_address "address_line_1"}},
+                            {{end}}
+
+                            {{if .principal_office_address.address_line_2}}
+                                {{index .principal_office_address "address_line_2"}},
+                            {{end}}
+
+                            {{if .principal_office_address.locality}}
+                                {{index .principal_office_address "locality"}},
+                            {{end}}
+
+                            {{if .principal_office_address.region}}
+                                {{index .principal_office_address "region"}},
+                            {{end}}
+
+                            {{if .principal_office_address.country}}
+                                {{index .principal_office_address "country"}}{{if .principal_office_address.postal_code}},{{end}}
+                            {{end}}
+
+                            {{if .principal_office_address.postal_code}}
+                               {{index .principal_office_address "postal_code"}}
+                            {{end}}
+
+                        </li>
+                    {{end}}
+
+                    {{if .responsibilities}}
+                        <li>Responsibilities: {{.responsibilities}}</li>
                     {{end}}
 
                     {{if .country_of_residence}}
@@ -694,7 +737,7 @@
                         {{end}}
 
                         {{if .identification.legal_authority}}
-                        <li>Legal authority: {{.identification.legal_authority}}</li>
+                        <li>Law governed: {{.identification.legal_authority}}</li>
                         {{end}}
 
                         {{if .identification.legal_form}}
@@ -703,7 +746,61 @@
 
                     {{end}}
 
-                 </ul>
+                    {{if .contact_details}}
+                        <li>Contact details:
+                            {{if .contact_details.forename}}
+                                {{index .contact_details "forename"}},
+                            {{end}}
+
+                            {{if .contact_details.middle_name}}
+                                {{index .contact_details "middle_name"}},
+                            {{end}}
+
+                            {{if .contact_details.surname}}
+                                {{index .contact_details "surname"}},
+                            {{end}}
+
+                            {{if .contact_details.care_of}}
+                                {{index .contact_details "care_of"}},
+                            {{end}}
+
+                            {{if .contact_details.po_box}}
+                                {{index .contact_details "po_box"}},
+                            {{end}}
+
+                            {{if .contact_details.premises}}
+                                {{index .contact_details "premises"}},
+                            {{end}}
+
+                            {{if .contact_details.address_line_1}}
+                                {{index .contact_details "address_line_1"}},
+                            {{end}}
+
+                            {{if .contact_details.address_line_2}}
+                                {{index .contact_details "address_line_2"}},
+                            {{end}}
+
+                            {{if .contact_details.locality}}
+                                {{index .contact_details "locality"}},
+                            {{end}}
+
+                            {{if .contact_details.region}}
+                                {{index .contact_details "region"}},
+                            {{end}}
+
+                            {{if .contact_details.country}}
+                                {{index .contact_details "country"}}{{if .contact_details.postal_code}},{{end}}
+                            {{end}}
+
+                            {{if .contact_details.postal_code}}
+                                {{index .contact_details "postal_code"}}
+                            {{end}}
+
+                        </li>
+                    {{end}}
+
+
+            </ul>
             <hr>
         {{end}}
     {{else}}

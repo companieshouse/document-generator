@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.common.Address;
+import uk.gov.companieshouse.api.model.common.ContactDetails;
 import uk.gov.companieshouse.api.model.common.DateOfBirth;
 import uk.gov.companieshouse.api.model.officers.CompanyOfficerApi;
 import uk.gov.companieshouse.api.model.officers.IdentificationApi;
@@ -24,7 +25,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ApiToCurrentOfficerTest {
+class ApiToCurrentOfficerTest {
 
     @Mock
     private RetrieveApiEnumerationDescription mockRetrieveApiEnumerations;
@@ -56,6 +57,11 @@ public class ApiToCurrentOfficerTest {
     private static final String LEGAL_FORM = "legal form";
     private static final String PLACE_REGISTRATION = "place registration";
     private static final String REGISTRATION_NUMBER = "registration number";
+
+    private static final String RESPONSIBILITIES = "Window cleaner and security guard";
+    private static final String FORENAME = "Craig";
+    private static final String MIDDLE_NAME = "Frankie";
+    private static final String SURNAME = "Baldwin";
 
     @Test
     @DisplayName("tests company profile data maps to registration information model")
@@ -93,16 +99,61 @@ public class ApiToCurrentOfficerTest {
 
     }
 
+    @Test
+    @DisplayName("managing officer fields are mapped correctly to model for ROE")
+    void testApiToModelMapsForManagingOfficers() {
+
+        final CompanyOfficerApi companyOfficerApi = createCompanyOfficerApi();
+
+        when(mockRetrieveApiEnumerations.getApiEnumerationDescription(anyString(), anyString(), anyString(), any())).thenReturn(IDENTIFICATION_TYPE);
+
+        final CurrentOfficer currentOfficer =
+                apiToCurrentOfficer.apiToCurrentOfficer(companyOfficerApi);
+
+        assertNotNull(currentOfficer);
+
+        assertEquals(ADDRESS_LINE_ONE, currentOfficer.getPrincipalOfficeAddress().getAddressLine1());
+        assertEquals(ADDRESS_LINE_TWO, currentOfficer.getPrincipalOfficeAddress().getAddressLine2());
+        assertEquals(CARE_OF, currentOfficer.getPrincipalOfficeAddress().getCareOf());
+        assertEquals(COUNTRY, currentOfficer.getPrincipalOfficeAddress().getCountry());
+        assertEquals(LOCALITY, currentOfficer.getPrincipalOfficeAddress().getLocality());
+        assertEquals(PO_BOX, currentOfficer.getPrincipalOfficeAddress().getPoBox());
+        assertEquals(POSTAL_CODE, currentOfficer.getPrincipalOfficeAddress().getPostalCode());
+        assertEquals(REGION, currentOfficer.getPrincipalOfficeAddress().getRegion());
+        assertEquals(PREMISE, currentOfficer.getPrincipalOfficeAddress().getPremises());
+
+        assertEquals(RESPONSIBILITIES, currentOfficer.getResponsibilities());
+
+
+        assertEquals(FORENAME, currentOfficer.getContactDetails().getForename());
+        assertEquals(MIDDLE_NAME, currentOfficer.getContactDetails().getMiddleName());
+        assertEquals(SURNAME, currentOfficer.getContactDetails().getSurname());
+        assertEquals(ADDRESS_LINE_ONE, currentOfficer.getContactDetails().getAddressLine1());
+        assertEquals(ADDRESS_LINE_TWO, currentOfficer.getContactDetails().getAddressLine2());
+        assertEquals(CARE_OF, currentOfficer.getContactDetails().getCareOf());
+        assertEquals(COUNTRY, currentOfficer.getContactDetails().getCountry());
+        assertEquals(LOCALITY, currentOfficer.getContactDetails().getLocality());
+        assertEquals(PO_BOX, currentOfficer.getContactDetails().getPoBox());
+        assertEquals(POSTAL_CODE, currentOfficer.getContactDetails().getPostalCode());
+        assertEquals(REGION, currentOfficer.getContactDetails().getRegion());
+        assertEquals(PREMISE, currentOfficer.getContactDetails().getPremises());
+
+    }
+
     private CompanyOfficerApi createCompanyOfficerApi() {
         CompanyOfficerApi companyOfficerApi = new CompanyOfficerApi();
 
+        final Address address = createAddress();
         companyOfficerApi.setName(NAME);
-        companyOfficerApi.setAddress(createAddress());
+        companyOfficerApi.setAddress(address);
         companyOfficerApi.setDateOfBirth(createDateOfBirth());
         companyOfficerApi.setCountryOfResidence(COUNTRY_OF_RESIDENCE);
         companyOfficerApi.setAppointedOn(APPOINTED_ON);
         companyOfficerApi.setResignedOn(RESIGNED_ON);
         companyOfficerApi.setIdentification(createIdentification());
+        companyOfficerApi.setPrincipalOfficeAddress(address);
+        companyOfficerApi.setResponsibilities(RESPONSIBILITIES);
+        companyOfficerApi.setContactDetails(createContactDetails());
 
         return companyOfficerApi;
     }
@@ -141,5 +192,24 @@ public class ApiToCurrentOfficerTest {
         identificationApi.setRegistrationNumber(REGISTRATION_NUMBER);
 
         return identificationApi;
+    }
+
+    private ContactDetails createContactDetails() {
+        final ContactDetails contactDetails = new ContactDetails();
+
+        contactDetails.setForename(FORENAME);
+        contactDetails.setMiddleName(MIDDLE_NAME);
+        contactDetails.setSurname(SURNAME);
+        contactDetails.setAddressLine1(ADDRESS_LINE_ONE);
+        contactDetails.setAddressLine2(ADDRESS_LINE_TWO);
+        contactDetails.setCareOf(CARE_OF);
+        contactDetails.setCountry(COUNTRY);
+        contactDetails.setLocality(LOCALITY);
+        contactDetails.setPoBox(PO_BOX);
+        contactDetails.setPostalCode(POSTAL_CODE);
+        contactDetails.setRegion(REGION);
+        contactDetails.setPremises(PREMISE);
+
+        return contactDetails;
     }
 }
