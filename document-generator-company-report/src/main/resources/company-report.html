@@ -720,7 +720,7 @@
 
                     {{if .identification}}
 
-                        {{if .identification.identification_type}}
+                        {{if and .identification.identification_type (ne .identification.identification_type "Corporate managing officer")}}
                         <li>{{.identification.identification_type}}</li>
                         {{end}}
 
