@@ -126,7 +126,7 @@ class ApiToCurrentOfficerTest {
 
 
         assertEquals(FORENAME, currentOfficer.getContactDetails().getForename());
-        assertEquals(MIDDLE_NAME, currentOfficer.getContactDetails().getMiddleName());
+        assertEquals(MIDDLE_NAME, currentOfficer.getContactDetails().getOtherForenames());
         assertEquals(SURNAME, currentOfficer.getContactDetails().getSurname());
         assertEquals(ADDRESS_LINE_ONE, currentOfficer.getContactDetails().getAddressLine1());
         assertEquals(ADDRESS_LINE_TWO, currentOfficer.getContactDetails().getAddressLine2());
@@ -198,7 +198,7 @@ class ApiToCurrentOfficerTest {
         final ContactDetails contactDetails = new ContactDetails();
 
         contactDetails.setForename(FORENAME);
-        contactDetails.setMiddleName(MIDDLE_NAME);
+        contactDetails.setOtherForenames(MIDDLE_NAME);
         contactDetails.setSurname(SURNAME);
         contactDetails.setAddressLine1(ADDRESS_LINE_ONE);
         contactDetails.setAddressLine2(ADDRESS_LINE_TWO);
