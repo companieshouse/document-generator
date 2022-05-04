@@ -594,7 +594,7 @@
 
                 <li>{{.officer_role}} {{.name}}
 
-                    {{if or (eq $companyRegistrationInformation.status.company_status "Dissolved") (eq $companyRegistrationInformation.status.company_status "Converted / Closed")}}
+                    {{if or (eq $companyRegistrationInformation.status.company_status "Dissolved") (eq $companyRegistrationInformation.status.company_status "Converted / Closed") (eq $companyRegistrationInformation.status.company_status "Removed")}}
                         {{if .resigned_on}}
                             <span id="officer-status-tag-resigned" class="status-tag ceased-tag">Resigned</span>
                         {{end}}
