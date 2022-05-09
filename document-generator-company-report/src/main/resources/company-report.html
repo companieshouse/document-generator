@@ -809,7 +809,13 @@
 
     <!--PSC & STATMENTS & PSC EXEMPTIONS-->
 
-    <h2 class="heading-medium">Persons with significant control:</h2>
+    <h2 class="heading-medium">
+        {{if eq $companyRegistrationInformation.company_type.type "Registered overseas entity"}}
+            Beneficial owners:
+        {{else}}
+            Persons with significant control:
+        {{end}}
+    </h2>
 
         {{if $exemptions}}
             {{if $exemptions.active_exemption}}
@@ -859,11 +865,19 @@
         {{end}}
 
     <h2 class="heading-medium">
-        {{if $pscs.active_count}}
-            {{$pscs.active_count}} active {{if eq $pscs.active_count 1.0}} person {{else}} people {{end}} with significant control
+        {{if eq $companyRegistrationInformation.company_type.type "Registered overseas entity"}}
+            {{if $pscs.active_count}}
+                {{$pscs.active_count}} active {{if eq $pscs.active_count 1.0}} beneficial owner {{else}} beneficial owners {{end}}
+            {{else}}
+                beneficial owners
+            {{end}} /
         {{else}}
-            0 active people with significant control
-        {{end}} /
+            {{if $pscs.active_count}}
+                {{$pscs.active_count}} active {{if eq $pscs.active_count 1.0}} person {{else}} people {{end}} with significant control
+            {{else}}
+                0 active people with significant control
+            {{end}} /
+        {{end}}
         {{if $pscStatements.active_count}}
             {{$pscStatements.active_count}} active statement{{if ne $pscStatements.active_count 1.0}}s{{end}}
         {{else}}
@@ -883,6 +897,10 @@
                         <span id="pscs-status-tag-active" class="status-tag">Active</span>
                         {{end}}
                     </li>
+
+                    {{if .is_sanctioned}}
+                    <li> Sanction declared </li>
+                    {{end}}
 
                     {{if .address}}
                     <li>Correspondence address:
@@ -921,6 +939,47 @@
 
                         {{if .address.postal_code}}
                         {{index .address "postal_code"}}
+                        {{end}}
+
+                    </li>
+                    {{end}}
+
+                    {{if .principal_office_address}}
+                    <li>Principal office address:
+                        {{if .principal_office_address.care_of}}
+                        {{index .principal_office_address "care_of"}},
+                        {{end}}
+
+                        {{if .principal_office_address.po_box}}
+                        {{index .principal_office_address "po_box"}},
+                        {{end}}
+
+                        {{if .principal_office_address.premises}}
+                        {{index .principal_office_address "premises"}},
+                        {{end}}
+
+                        {{if .principal_office_address.address_line_1}}
+                        {{index .principal_office_address "address_line_1"}},
+                        {{end}}
+
+                        {{if .principal_office_address.address_line_2}}
+                        {{index .principal_office_address "address_line_2"}},
+                        {{end}}
+
+                        {{if .principal_office_address.locality}}
+                        {{index .principal_office_address "locality"}},
+                        {{end}}
+
+                        {{if .principal_office_address.region}}
+                        {{index .principal_office_address "region"}},
+                        {{end}}
+
+                        {{if .principal_office_address.country}}
+                        {{index .principal_office_address "country"}}{{if .principal_office_address.postal_code}},{{end}}
+                        {{end}}
+
+                        {{if .principal_office_address.postal_code}}
+                        {{index .principal_office_address "postal_code"}}
                         {{end}}
 
                     </li>

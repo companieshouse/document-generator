@@ -51,7 +51,8 @@
 
         <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
 
-        <api-sdk-java.version>4.3.14</api-sdk-java.version>
+        <!-- TODO ROE-368: upgrade version to > 4.3.14 -->
+        <api-sdk-java.version>unversioned</api-sdk-java.version>
 
         <!-- Structured logging -->
         <structured-logging.version>1.4.0-rc2</structured-logging.version>
