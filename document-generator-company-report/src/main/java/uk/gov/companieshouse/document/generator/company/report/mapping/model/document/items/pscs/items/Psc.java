@@ -35,6 +35,12 @@ public class Psc {
     @JsonProperty("identification")
     private Identification identification;
 
+    @JsonProperty("is_sanctioned")
+    private boolean sanctioned;
+
+    @JsonProperty("principal_office_address")
+    private Address principalOfficeAddress;
+
     public Address getAddress() {
         return address;
     }
@@ -105,6 +111,22 @@ public class Psc {
 
     public void setIdentification(Identification identification) {
         this.identification = identification;
+    }
+
+    public boolean isSanctioned() {
+        return sanctioned;
+    }
+
+    public void setSanctioned(boolean sanctioned) {
+        this.sanctioned = sanctioned;
+    }
+
+    public Address getPrincipalOfficeAddress() {
+        return principalOfficeAddress;
+    }
+
+    public void setPrincipalOfficeAddress(Address principalOfficeAddress) {
+        this.principalOfficeAddress = principalOfficeAddress;
     }
 }
 

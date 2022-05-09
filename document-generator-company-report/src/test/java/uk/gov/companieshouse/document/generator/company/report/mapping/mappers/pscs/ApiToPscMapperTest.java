@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ApiToPscMapperTest {
+class ApiToPscMapperTest {
 
     private static final String MAPPED_VALUE = "mapped value";
     private static final String NAME = "name";
@@ -50,8 +50,9 @@ public class ApiToPscMapperTest {
     private static final String LEGAL_FORM = "legal form";
     private static final String PLACE_REGISTRATION = "place registration";
     private static final String REGISTRATION_NUMBER = "registration number";
+    private static final boolean IS_SANCTIONED = true;
 
-    private String[] NATURE_OF_CONTROL = new String[]{"test1", "test2", "test3"};
+    private final String[] NATURE_OF_CONTROL = new String[]{"test1", "test2", "test3"};
 
     @InjectMocks
     private ApiToPscMapper apiToPscMapper = new ApiToPscMapperImpl();
@@ -114,10 +115,38 @@ public class ApiToPscMapperTest {
                 psc.getNaturesOfControl().get(2).getNaturesOfControlDescription());
     }
 
+    @Test
+    @DisplayName("beneficial owner fields are mapped correctly to model for ROE")
+    void testApiToPscMapsForBeneficialOwners() {
+
+        PscApi pscApi = createPscApi();
+
+        when(mockRetrieveApiEnumerations.getApiEnumerationDescription(anyString(), anyString(),
+                anyString(), any())).thenReturn(MAPPED_VALUE);
+
+        Psc psc = apiToPscMapper.apiToPsc(pscApi);
+
+        assertNotNull(psc);
+
+        assertEquals(IS_SANCTIONED, psc.isSanctioned());
+
+        assertEquals(ADDRESS_LINE_ONE, psc.getPrincipalOfficeAddress().getAddressLine1());
+        assertEquals(ADDRESS_LINE_TWO, psc.getPrincipalOfficeAddress().getAddressLine2());
+        assertEquals(CARE_OF, psc.getPrincipalOfficeAddress().getCareOf());
+        assertEquals(COUNTRY, psc.getPrincipalOfficeAddress().getCountry());
+        assertEquals(LOCALITY, psc.getPrincipalOfficeAddress().getLocality());
+        assertEquals(PO_BOX, psc.getPrincipalOfficeAddress().getPoBox());
+        assertEquals(POSTAL_CODE, psc.getPrincipalOfficeAddress().getPostalCode());
+        assertEquals(REGION, psc.getPrincipalOfficeAddress().getRegion());
+        assertEquals(PREMISE, psc.getPrincipalOfficeAddress().getPremises());
+    }
+
+
     private PscApi createPscApi() {
         PscApi pscApi = new PscApi();
 
-        pscApi.setAddress(createAddress());
+        final Address address = createAddress();
+        pscApi.setAddress(address);
         pscApi.setDateOfBirth(createDateOfBirth());
         pscApi.setCeasedOn(CEASED_ON);
         pscApi.setCountryOfResidence(COUNTRY_OF_RESIDENCE);
@@ -126,6 +155,9 @@ public class ApiToPscMapperTest {
         pscApi.setNotifiedOn(NOTIFIED_ON);
         pscApi.setNationality(NATIONALITY);
         pscApi.setName(NAME);
+
+        pscApi.setSanctioned(IS_SANCTIONED);
+        pscApi.setPrincipalOfficeAddress(address);
 
         return pscApi;
     }
