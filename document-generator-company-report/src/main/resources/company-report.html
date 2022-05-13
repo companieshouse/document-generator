@@ -814,8 +814,7 @@
             Beneficial owners:
         {{else}}
             Persons with significant control:
-        {{end}}
-    </h2>
+        {{end}}<br>
 
         {{if $exemptions}}
             {{if $exemptions.active_exemption}}
@@ -864,7 +863,6 @@
                     </ul>
         {{end}}
 
-    <h2 class="heading-medium">
         {{if eq $companyRegistrationInformation.company_type.type "Registered overseas entity"}}
             {{if $pscs.active_count}}
                 {{$pscs.active_count}} active {{if eq $pscs.active_count 1.0}} beneficial owner {{else}} beneficial owners {{end}}
