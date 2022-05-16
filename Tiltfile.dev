@@ -4,5 +4,8 @@ custom_build(
   deps = [
     './',
   ],
-  ignore = ['**/target']
+  ignore = [
+    '**/target',
+    '**/company-report.html',
+  ]
 )
