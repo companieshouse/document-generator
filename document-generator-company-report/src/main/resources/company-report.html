@@ -814,8 +814,7 @@
             Beneficial owners:
         {{else}}
             Persons with significant control:
-        {{end}}
-    </h2>
+        {{end}}<br>
 
         {{if $exemptions}}
             {{if $exemptions.active_exemption}}
@@ -864,12 +863,11 @@
                     </ul>
         {{end}}
 
-    <h2 class="heading-medium">
         {{if eq $companyRegistrationInformation.company_type.type "Registered overseas entity"}}
             {{if $pscs.active_count}}
                 {{$pscs.active_count}} active {{if eq $pscs.active_count 1.0}} beneficial owner {{else}} beneficial owners {{end}}
             {{else}}
-                beneficial owners
+                0 beneficial owners
             {{end}} /
         {{else}}
             {{if $pscs.active_count}}
@@ -889,7 +887,13 @@
             {{range $pscs.items}}
                 <ul class="list list-bullet">
 
-                    <li>{{.name}}
+                    <li>{{if eq .kind "super-secure-beneficial-owner"}}
+                            Beneficial owner
+                        {{else if eq .kind "super-secure-persons-with-significant-control"}}
+                            Protected person with significant control
+                        {{else}}
+                            {{.name}}
+                        {{end}}
 
                         {{ if .ceased_on }}
                         <span id="pscs-status-tag-resigned" class="status-tag ceased-tag">Ceased</span>
@@ -897,6 +901,10 @@
                         <span id="pscs-status-tag-active" class="status-tag">Active</span>
                         {{end}}
                     </li>
+
+                    {{if or (eq .kind "super-secure-beneficial-owner") (eq .kind "super-secure-persons-with-significant-control")}}
+                        <b>{{.super_secure_description}}</b>
+                    {{end}}
 
                     {{if .is_sanctioned}}
                     <li> Sanction declared </li>
@@ -1039,9 +1047,8 @@
                     {{end}}
                 </ul>
 
-                </li>
-                <hr>
                 {{end}}
+            <hr>
             {{end}}
         {{end}}
 
