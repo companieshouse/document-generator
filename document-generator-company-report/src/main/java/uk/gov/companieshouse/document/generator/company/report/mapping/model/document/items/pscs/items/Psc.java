@@ -41,6 +41,12 @@ public class Psc {
     @JsonProperty("principal_office_address")
     private Address principalOfficeAddress;
 
+    @JsonProperty("kind")
+    private String kind;
+
+    @JsonProperty("super_secure_beneficial_owner_description")
+    private String superSecureBeneficialOwnerDescription;
+
     public Address getAddress() {
         return address;
     }
@@ -127,6 +133,22 @@ public class Psc {
 
     public void setPrincipalOfficeAddress(Address principalOfficeAddress) {
         this.principalOfficeAddress = principalOfficeAddress;
+    }
+
+    public String getKind() {
+        return kind;
+    }
+
+    public void setKind(String kind) {
+        this.kind = kind;
+    }
+
+    public String getSuperSecureBeneficialOwnerDescription() {
+        return superSecureBeneficialOwnerDescription;
+    }
+
+    public void setSuperSecureBeneficialOwnerDescription(String superSecureBeneficialOwnerDescription) {
+        this.superSecureBeneficialOwnerDescription = superSecureBeneficialOwnerDescription;
     }
 }
 

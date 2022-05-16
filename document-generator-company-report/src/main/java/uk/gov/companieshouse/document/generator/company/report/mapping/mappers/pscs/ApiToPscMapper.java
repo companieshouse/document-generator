@@ -28,6 +28,8 @@ public abstract class ApiToPscMapper {
     private static final String ENUMERATION_MAPPING = "Enumeration mapping :";
     private static final String PSC_DESCRIPTIONS = "PSC_DESCRIPTIONS";
     private static final String IDENTIFIER = "short_description";
+    private static final String SUPER_SECURE_DESCRIPTION_IDENTIFIER = "super_secure_description";
+    private static final String SUPER_SECURE_BENEFICIAL_OWNER_KIND = "super-secure-beneficial-owner";
     private static final String D_MMMM_UUUU = "d MMMM uuuu";
 
     @Mappings({
@@ -84,6 +86,17 @@ public abstract class ApiToPscMapper {
         if (pscApi != null && pscApi.getNotifiedOn() != null) {
             LocalDate notifiedOn = pscApi.getNotifiedOn();
             psc.setNotifiedOn(notifiedOn.format(getFormatter()));
+        }
+    }
+
+    @AfterMapping
+    protected void setSuperSecureBeneficialOwnerDescription(PscApi pscApi, @MappingTarget Psc psc) {
+
+        if (pscApi != null && pscApi.getKind() != null && pscApi.getKind().equals(SUPER_SECURE_BENEFICIAL_OWNER_KIND) ) {
+            final String description = retrieveApiEnumerationDescription
+                    .getApiEnumerationDescription(PSC_DESCRIPTIONS, SUPER_SECURE_DESCRIPTION_IDENTIFIER,
+                            SUPER_SECURE_BENEFICIAL_OWNER_KIND, getDebugMap(SUPER_SECURE_BENEFICIAL_OWNER_KIND));
+            psc.setSuperSecureBeneficialOwnerDescription(description);
         }
     }
 
