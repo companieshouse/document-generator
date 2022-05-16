@@ -54,6 +54,10 @@ class ApiToPscMapperTest {
 
     private final String[] NATURE_OF_CONTROL = new String[]{"test1", "test2", "test3"};
 
+    private static final String SUPER_SECURE_PERSON_WITH_SIGNIFICANT_CONTROL_KIND = "super-secure-persons-with-significant-control";
+    private static final String SUPER_SECURE_BENEFICIAL_OWNER_KIND = "super-secure-beneficial-owner";
+
+
     @InjectMocks
     private ApiToPscMapper apiToPscMapper = new ApiToPscMapperImpl();
 
@@ -79,7 +83,7 @@ class ApiToPscMapperTest {
     @DisplayName("tests single PSC data maps to PSC model")
     void testApiToPSCMaps() {
 
-        PscApi pscApi = createPscApi();
+        PscApi pscApi = createPscApiWithKind(SUPER_SECURE_PERSON_WITH_SIGNIFICANT_CONTROL_KIND);
 
         when(mockRetrieveApiEnumerations.getApiEnumerationDescription(anyString(), anyString(),
                 anyString(), any())).thenReturn(MAPPED_VALUE);
@@ -113,18 +117,20 @@ class ApiToPscMapperTest {
                 psc.getNaturesOfControl().get(1).getNaturesOfControlDescription());
         assertEquals(MAPPED_VALUE,
                 psc.getNaturesOfControl().get(2).getNaturesOfControlDescription());
+
+        assertEquals(MAPPED_VALUE, psc.getSuperSecureDescription());
     }
 
     @Test
     @DisplayName("beneficial owner fields are mapped correctly to model for ROE")
     void testApiToPscMapsForBeneficialOwners() {
 
-        PscApi pscApi = createPscApi();
+        final PscApi pscApi = createPscApiWithKind(SUPER_SECURE_BENEFICIAL_OWNER_KIND);
 
         when(mockRetrieveApiEnumerations.getApiEnumerationDescription(anyString(), anyString(),
                 anyString(), any())).thenReturn(MAPPED_VALUE);
 
-        Psc psc = apiToPscMapper.apiToPsc(pscApi);
+        final Psc psc = apiToPscMapper.apiToPsc(pscApi);
 
         assertNotNull(psc);
 
@@ -139,11 +145,12 @@ class ApiToPscMapperTest {
         assertEquals(POSTAL_CODE, psc.getPrincipalOfficeAddress().getPostalCode());
         assertEquals(REGION, psc.getPrincipalOfficeAddress().getRegion());
         assertEquals(PREMISE, psc.getPrincipalOfficeAddress().getPremises());
+
+        assertEquals(MAPPED_VALUE, psc.getSuperSecureDescription());
     }
 
-
-    private PscApi createPscApi() {
-        PscApi pscApi = new PscApi();
+    private PscApi createPscApiWithKind(final String kind) {
+        final PscApi pscApi = new PscApi();
 
         final Address address = createAddress();
         pscApi.setAddress(address);
@@ -158,6 +165,7 @@ class ApiToPscMapperTest {
 
         pscApi.setSanctioned(IS_SANCTIONED);
         pscApi.setPrincipalOfficeAddress(address);
+        pscApi.setKind(kind);
 
         return pscApi;
     }
