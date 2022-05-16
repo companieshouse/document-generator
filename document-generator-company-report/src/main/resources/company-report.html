@@ -887,7 +887,13 @@
             {{range $pscs.items}}
                 <ul class="list list-bullet">
 
-                    <li>{{if eq .kind "super-secure-beneficial-owner"}}Beneficial owner{{else}}{{.name}}{{end}}
+                    <li>{{if eq .kind "super-secure-beneficial-owner"}}
+                            Beneficial owner
+                        {{else if eq .kind "super-secure-persons-with-significant-control"}}
+                            Protected person with significant control
+                        {{else}}
+                            {{.name}}
+                        {{end}}
 
                         {{ if .ceased_on }}
                         <span id="pscs-status-tag-resigned" class="status-tag ceased-tag">Ceased</span>
@@ -896,8 +902,8 @@
                         {{end}}
                     </li>
 
-                    {{if eq .kind "super-secure-beneficial-owner"}}
-                        <b>{{.super_secure_beneficial_owner_description}}</b>
+                    {{if or (eq .kind "super-secure-beneficial-owner") (eq .kind "super-secure-persons-with-significant-control")}}
+                        <b>{{.super_secure_description}}</b>
                     {{end}}
 
                     {{if .is_sanctioned}}

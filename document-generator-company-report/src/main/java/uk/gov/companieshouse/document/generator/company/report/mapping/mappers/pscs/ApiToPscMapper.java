@@ -29,6 +29,7 @@ public abstract class ApiToPscMapper {
     private static final String PSC_DESCRIPTIONS = "PSC_DESCRIPTIONS";
     private static final String IDENTIFIER = "short_description";
     private static final String SUPER_SECURE_DESCRIPTION_IDENTIFIER = "super_secure_description";
+    private static final String SUPER_SECURE_PERSON_WITH_SIGNIFICANT_CONTROL_KIND = "super-secure-persons-with-significant-control";
     private static final String SUPER_SECURE_BENEFICIAL_OWNER_KIND = "super-secure-beneficial-owner";
     private static final String D_MMMM_UUUU = "d MMMM uuuu";
 
@@ -90,13 +91,18 @@ public abstract class ApiToPscMapper {
     }
 
     @AfterMapping
-    protected void setSuperSecureBeneficialOwnerDescription(PscApi pscApi, @MappingTarget Psc psc) {
+    protected void setSuperSecureDescription(PscApi pscApi, @MappingTarget Psc psc) {
 
-        if (pscApi != null && pscApi.getKind() != null && pscApi.getKind().equals(SUPER_SECURE_BENEFICIAL_OWNER_KIND) ) {
+        if (pscApi == null || pscApi.getKind() == null) {
+            return;
+        }
+
+        if (pscApi.getKind().equals(SUPER_SECURE_BENEFICIAL_OWNER_KIND) ||
+                pscApi.getKind().equals(SUPER_SECURE_PERSON_WITH_SIGNIFICANT_CONTROL_KIND)) {
             final String description = retrieveApiEnumerationDescription
                     .getApiEnumerationDescription(PSC_DESCRIPTIONS, SUPER_SECURE_DESCRIPTION_IDENTIFIER,
-                            SUPER_SECURE_BENEFICIAL_OWNER_KIND, getDebugMap(SUPER_SECURE_BENEFICIAL_OWNER_KIND));
-            psc.setSuperSecureBeneficialOwnerDescription(description);
+                            pscApi.getKind(), getDebugMap(pscApi.getKind()));
+            psc.setSuperSecureDescription(description);
         }
     }
 

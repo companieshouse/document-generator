@@ -44,8 +44,8 @@ public class Psc {
     @JsonProperty("kind")
     private String kind;
 
-    @JsonProperty("super_secure_beneficial_owner_description")
-    private String superSecureBeneficialOwnerDescription;
+    @JsonProperty("super_secure_description")
+    private String superSecureDescription;
 
     public Address getAddress() {
         return address;
@@ -143,12 +143,12 @@ public class Psc {
         this.kind = kind;
     }
 
-    public String getSuperSecureBeneficialOwnerDescription() {
-        return superSecureBeneficialOwnerDescription;
+    public String getSuperSecureDescription() {
+        return superSecureDescription;
     }
 
-    public void setSuperSecureBeneficialOwnerDescription(String superSecureBeneficialOwnerDescription) {
-        this.superSecureBeneficialOwnerDescription = superSecureBeneficialOwnerDescription;
+    public void setSuperSecureDescription(String superSecureDescription) {
+        this.superSecureDescription = superSecureDescription;
     }
 }
 
