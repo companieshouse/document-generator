@@ -895,10 +895,12 @@
                             {{.name}}
                         {{end}}
 
-                        {{ if .ceased_on }}
-                        <span id="pscs-status-tag-resigned" class="status-tag ceased-tag">Ceased</span>
-                        {{else}}
-                        <span id="pscs-status-tag-active" class="status-tag">Active</span>
+                        {{if and (ne $companyRegistrationInformation.status.company_status "Dissolved") (ne $companyRegistrationInformation.status.company_status "Converted / Closed") (ne $companyRegistrationInformation.status.company_status "Removed")}}
+                            {{if .ceased_on}}
+                            <span id="pscs-status-tag-resigned" class="status-tag ceased-tag">Ceased</span>
+                            {{else}}
+                            <span id="pscs-status-tag-active" class="status-tag">Active</span>
+                            {{end}}
                         {{end}}
                     </li>
 
