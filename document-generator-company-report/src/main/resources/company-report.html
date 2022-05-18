@@ -867,7 +867,7 @@
 
         {{if eq $companyRegistrationInformation.company_type.type "Registered overseas entity"}}
             {{if $pscs.active_count}}
-                {{$pscs.active_count}}{{if $companyIsActive}} active {{end}}{{if eq $pscs.active_count 1.0}} beneficial owner {{else}} beneficial owners {{end}}
+                {{$pscs.active_count}} {{if $companyIsActive}}active {{end}}{{if eq $pscs.active_count 1.0}} beneficial owner {{else}} beneficial owners {{end}}
             {{else}}
                 0 beneficial owners
             {{end}} /
@@ -875,13 +875,13 @@
             {{if $pscs.active_count}}
                 {{$pscs.active_count}}{{if $companyIsActive}} active {{end}}{{if eq $pscs.active_count 1.0}} person {{else}} people {{end}} with significant control
             {{else}}
-                0 {{if $companyIsActive}} active {{end}}people with significant control
+                0 {{if $companyIsActive}}active {{end}}people with significant control
             {{end}} /
         {{end}}
         {{if $pscStatements.active_count}}
-            {{$pscStatements.active_count}} active statement{{if ne $pscStatements.active_count 1.0}}s{{end}}
+            {{$pscStatements.active_count}} {{if $companyIsActive}}active {{end}}statement{{if ne $pscStatements.active_count 1.0}}s{{end}}
         {{else}}
-            0 active statements
+            0 {{if $companyIsActive}}active {{end}}statements
         {{end}}
     </h2>
     {{if or $pscs $pscStatements}}
@@ -1063,7 +1063,7 @@
 
                     {{if .ceased_on}}
                     <span id="statements-status-tag-withdrawn" class="status-tag ceased-tag">Withdrawn</span>
-                    {{else}}
+                    {{else if $companyIsActive}}
                     <span id="statements-status-tag-active" class="status-tag">Active</span>
                     {{end}}
                 </h3>
