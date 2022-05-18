@@ -863,17 +863,19 @@
                     </ul>
         {{end}}
 
+        {{$companyIsActive := and (ne $companyRegistrationInformation.status.company_status "Dissolved") (ne $companyRegistrationInformation.status.company_status "Converted / Closed") (ne $companyRegistrationInformation.status.company_status "Removed")}}
+
         {{if eq $companyRegistrationInformation.company_type.type "Registered overseas entity"}}
             {{if $pscs.active_count}}
-                {{$pscs.active_count}} active {{if eq $pscs.active_count 1.0}} beneficial owner {{else}} beneficial owners {{end}}
+                {{$pscs.active_count}}{{if $companyIsActive}} active {{end}}{{if eq $pscs.active_count 1.0}} beneficial owner {{else}} beneficial owners {{end}}
             {{else}}
                 0 beneficial owners
             {{end}} /
         {{else}}
             {{if $pscs.active_count}}
-                {{$pscs.active_count}} active {{if eq $pscs.active_count 1.0}} person {{else}} people {{end}} with significant control
+                {{$pscs.active_count}}{{if $companyIsActive}} active {{end}}{{if eq $pscs.active_count 1.0}} person {{else}} people {{end}} with significant control
             {{else}}
-                0 active people with significant control
+                0 {{if $companyIsActive}} active {{end}}people with significant control
             {{end}} /
         {{end}}
         {{if $pscStatements.active_count}}
