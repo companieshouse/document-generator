@@ -59,9 +59,7 @@ class ApiToCurrentOfficerTest {
     private static final String REGISTRATION_NUMBER = "registration number";
 
     private static final String RESPONSIBILITIES = "Window cleaner and security guard";
-    private static final String FORENAME = "Craig";
-    private static final String MIDDLE_NAME = "Frankie";
-    private static final String SURNAME = "Baldwin";
+    private static final String CONTACT_NAME = "Craig Frankie Baldwin";
 
     @Test
     @DisplayName("tests company profile data maps to registration information model")
@@ -125,18 +123,7 @@ class ApiToCurrentOfficerTest {
         assertEquals(RESPONSIBILITIES, currentOfficer.getResponsibilities());
 
 
-        assertEquals(FORENAME, currentOfficer.getContactDetails().getForename());
-        assertEquals(MIDDLE_NAME, currentOfficer.getContactDetails().getOtherForenames());
-        assertEquals(SURNAME, currentOfficer.getContactDetails().getSurname());
-        assertEquals(ADDRESS_LINE_ONE, currentOfficer.getContactDetails().getAddressLine1());
-        assertEquals(ADDRESS_LINE_TWO, currentOfficer.getContactDetails().getAddressLine2());
-        assertEquals(CARE_OF, currentOfficer.getContactDetails().getCareOf());
-        assertEquals(COUNTRY, currentOfficer.getContactDetails().getCountry());
-        assertEquals(LOCALITY, currentOfficer.getContactDetails().getLocality());
-        assertEquals(PO_BOX, currentOfficer.getContactDetails().getPoBox());
-        assertEquals(POSTAL_CODE, currentOfficer.getContactDetails().getPostalCode());
-        assertEquals(REGION, currentOfficer.getContactDetails().getRegion());
-        assertEquals(PREMISE, currentOfficer.getContactDetails().getPremises());
+        assertEquals(CONTACT_NAME, currentOfficer.getContactDetails().getContactName());
 
     }
 
@@ -197,18 +184,7 @@ class ApiToCurrentOfficerTest {
     private ContactDetails createContactDetails() {
         final ContactDetails contactDetails = new ContactDetails();
 
-        contactDetails.setForename(FORENAME);
-        contactDetails.setOtherForenames(MIDDLE_NAME);
-        contactDetails.setSurname(SURNAME);
-        contactDetails.setAddressLine1(ADDRESS_LINE_ONE);
-        contactDetails.setAddressLine2(ADDRESS_LINE_TWO);
-        contactDetails.setCareOf(CARE_OF);
-        contactDetails.setCountry(COUNTRY);
-        contactDetails.setLocality(LOCALITY);
-        contactDetails.setPoBox(PO_BOX);
-        contactDetails.setPostalCode(POSTAL_CODE);
-        contactDetails.setRegion(REGION);
-        contactDetails.setPremises(PREMISE);
+        contactDetails.setContactName(CONTACT_NAME);
 
         return contactDetails;
     }

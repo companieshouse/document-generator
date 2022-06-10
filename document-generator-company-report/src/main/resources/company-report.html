@@ -624,6 +624,14 @@
                         <li>Resigned: {{.resigned_on}}</li>
                     {{end}}
 
+                    {{if .contact_details}}
+                        <li>Correspondence name:
+                            {{if .contact_details.contact_name}}
+                                {{index .contact_details "contact_name"}}
+                            {{end}}
+                        </li>
+                    {{end}}
+
                     {{if .address}}
                         <li>Correspondence address:
                             {{if .address.care_of}}
@@ -745,60 +753,6 @@
                         {{end}}
 
                     {{end}}
-
-                    {{if .contact_details}}
-                        <li>Contact details:
-                            {{if .contact_details.forename}}
-                                {{index .contact_details "forename"}},
-                            {{end}}
-
-                            {{if .contact_details.other_forenames}}
-                                {{index .contact_details "other_forenames"}},
-                            {{end}}
-
-                            {{if .contact_details.surname}}
-                                {{index .contact_details "surname"}},
-                            {{end}}
-
-                            {{if .contact_details.care_of}}
-                                {{index .contact_details "care_of"}},
-                            {{end}}
-
-                            {{if .contact_details.po_box}}
-                                {{index .contact_details "po_box"}},
-                            {{end}}
-
-                            {{if .contact_details.premises}}
-                                {{index .contact_details "premises"}},
-                            {{end}}
-
-                            {{if .contact_details.address_line_1}}
-                                {{index .contact_details "address_line_1"}},
-                            {{end}}
-
-                            {{if .contact_details.address_line_2}}
-                                {{index .contact_details "address_line_2"}},
-                            {{end}}
-
-                            {{if .contact_details.locality}}
-                                {{index .contact_details "locality"}},
-                            {{end}}
-
-                            {{if .contact_details.region}}
-                                {{index .contact_details "region"}},
-                            {{end}}
-
-                            {{if .contact_details.country}}
-                                {{index .contact_details "country"}}{{if .contact_details.postal_code}},{{end}}
-                            {{end}}
-
-                            {{if .contact_details.postal_code}}
-                                {{index .contact_details "postal_code"}}
-                            {{end}}
-
-                        </li>
-                    {{end}}
-
 
             </ul>
             <hr>
