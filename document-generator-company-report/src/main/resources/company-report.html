@@ -547,39 +547,26 @@
 
     {{if $foreignCompanyDetails}}
     <h3 class="heading-small">Company details in the country of incorporation</h3>
-    <table class="foreign-company-details-table">
-        <thead>
-        <tr>
-            <th scope="col">Incorporated in</th>
-            <th scope="col">Registration number</th>
-            <th scope="col">Legal form</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
+        <ul class="list list-bullet">
             {{if $foreignCompanyDetails.country}}
-            <td>{{$foreignCompanyDetails.country}}</td>
+            <li>Incorporated in: {{$foreignCompanyDetails.country}}</li>
             {{end}}
             {{if $foreignCompanyDetails.registration_number}}
-            <td>{{$foreignCompanyDetails.registration_number}}</td>
+            <li>Registration number: {{$foreignCompanyDetails.registration_number}}</li>
             {{end}}
             {{if $foreignCompanyDetails.legal_form}}
-            <td>{{$foreignCompanyDetails.legal_form}}</td>
+            <li>Legal form: {{$foreignCompanyDetails.legal_form}}</li>
             {{end}}
-        </tr>
-        </tbody>
-    </table>
-    <ul class="list list-bullet">
-        {{if $foreignCompanyDetails.name}}
-        <li>Parent registry: {{$foreignCompanyDetails.name}}</li>
-        {{end}}
-        {{if $foreignCompanyDetails.governed_by}}
-        <li>Governing Law: {{$foreignCompanyDetails.governed_by}}</li>
-        {{end}}
-        {{if $foreignCompanyDetails.business_activity}}
-        <li>Objects of the company: <span class="sentence-case">{{$foreignCompanyDetails.business_activity}}</span></li>
-        {{end}}
-    </ul>
+            {{if $foreignCompanyDetails.name}}
+            <li>Parent registry: {{$foreignCompanyDetails.name}}</li>
+            {{end}}
+            {{if $foreignCompanyDetails.governed_by}}
+            <li>Governing Law: {{$foreignCompanyDetails.governed_by}}</li>
+            {{end}}
+            {{if $foreignCompanyDetails.business_activity}}
+            <li>Objects of the company: <span class="sentence-case">{{$foreignCompanyDetails.business_activity}}</span></li>
+            {{end}}
+        </ul>
     {{end}}
 
     <h2 class="heading-large">People</h2>
