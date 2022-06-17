@@ -312,10 +312,7 @@
             {{else if eq $companyRegistrationInformation.company_type.type "Scottish qualifying partnership"}}
                 Service address:
 
-            {{else if eq $companyRegistrationInformation.company_type.type "Registered overseas entity"}}
-                Overseas entity address:
-
-            {{else}}
+            {{else if ne $companyRegistrationInformation.company_type.type "Registered overseas entity"}}
                 Registered office address:
             {{end}}
 
@@ -354,7 +351,12 @@
         {{if $sa := $companyRegistrationInformation.service_address}}
         <li>
 
-            Service address:
+            {{if eq $companyRegistrationInformation.company_type.type "Registered overseas entity"}}
+                Correspondence address:
+
+            {{else}}    
+                Service address:
+            {{end}}    
 
             {{if $sa.care_of}}
             {{index $sa "care_of"}},
@@ -548,6 +550,45 @@
     {{if $foreignCompanyDetails}}
     <h3 class="heading-small">Company details in the country of incorporation</h3>
         <ul class="list list-bullet">
+            {{if $roa := $companyRegistrationInformation.registered_office}}
+            <li>
+    
+                {{if eq $companyRegistrationInformation.company_type.type "Registered overseas entity"}}
+                    Overseas entity address:
+                {{end}}
+
+                {{if $roa.care_of}}
+                {{index $roa "care_of"}},
+                {{end}}
+                {{if $roa.po_box}}
+                {{index $roa "po_box"}},
+                {{end}}
+                {{if $roa.premises}}
+                {{index $roa "premises"}},
+                {{end}}
+                {{if $roa.address_line_1}}
+                {{index $roa "address_line_1"}},
+                {{end}}
+                {{if $roa.address_line_2}}
+                {{index $roa "address_line_2"}},
+                {{end}}
+                {{if $roa.locality}}
+                {{index $roa "locality"}},
+                {{end}}
+                {{if $roa.region}}
+                {{index $roa "region"}},
+                {{end}}
+                {{if $roa.country}}
+                {{index $roa "country"}}
+                    {{if .address.postal_code}},
+                    {{end}}
+                {{end}}
+                {{if $roa.postal_code}}
+                {{index $roa "postal_code"}}
+                {{end}}
+            </li>
+            {{end}}
+
             {{if $foreignCompanyDetails.country}}
             <li>Incorporated in: {{$foreignCompanyDetails.country}}</li>
             {{end}}
