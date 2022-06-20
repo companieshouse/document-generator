@@ -301,6 +301,8 @@
     <h2 class="heading-large">Overview</h2>
     <ul class="list list-bullet">
         {{if $roa := $companyRegistrationInformation.registered_office}}
+            {{if ne $companyRegistrationInformation.company_type.type "Registered overseas entity"}}
+
         <li>
 
             {{if eq $companyRegistrationInformation.company_type.type "UK establishment company"}}
@@ -312,8 +314,8 @@
             {{else if eq $companyRegistrationInformation.company_type.type "Scottish qualifying partnership"}}
                 Service address:
 
-            {{else if ne $companyRegistrationInformation.company_type.type "Registered overseas entity"}}
-                Registered office address:
+            {{else}}
+                Registered office address:    
             {{end}}
 
             {{if $roa.care_of}}
