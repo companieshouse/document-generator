@@ -302,7 +302,6 @@
     <ul class="list list-bullet">
         {{if $roa := $companyRegistrationInformation.registered_office}}
             {{if ne $companyRegistrationInformation.company_type.type "Registered overseas entity"}}
-
         <li>
 
             {{if eq $companyRegistrationInformation.company_type.type "UK establishment company"}}
@@ -348,6 +347,7 @@
             {{index $roa "postal_code"}}
             {{end}}
         </li>
+        {{end}}
         {{end}}
 
         {{if $sa := $companyRegistrationInformation.service_address}}
