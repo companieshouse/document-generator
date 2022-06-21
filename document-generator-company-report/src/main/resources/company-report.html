@@ -553,11 +553,10 @@
     <h3 class="heading-small">Company details in the country of incorporation</h3>
         <ul class="list list-bullet">
             {{if $roa := $companyRegistrationInformation.registered_office}}
+            {{if eq $companyRegistrationInformation.company_type.type "Registered overseas entity"}}
             <li>
     
-                {{if eq $companyRegistrationInformation.company_type.type "Registered overseas entity"}}
                     Overseas entity address:
-                {{end}}
 
                 {{if $roa.care_of}}
                 {{index $roa "care_of"}},
@@ -589,6 +588,7 @@
                 {{index $roa "postal_code"}}
                 {{end}}
             </li>
+            {{end}}
             {{end}}
 
             {{if $foreignCompanyDetails.country}}
