@@ -301,7 +301,7 @@
     <h2 class="heading-large">Overview</h2>
     <ul class="list list-bullet">
         {{if $roa := $companyRegistrationInformation.registered_office}}
-            {{if ne $companyRegistrationInformation.company_type.type "Registered overseas entity"}}
+            {{if ne $companyRegistrationInformation.company_type.type "Overseas entity"}}
         <li>
 
             {{if eq $companyRegistrationInformation.company_type.type "UK establishment company"}}
@@ -353,7 +353,7 @@
         {{if $sa := $companyRegistrationInformation.service_address}}
         <li>
 
-            {{if eq $companyRegistrationInformation.company_type.type "Registered overseas entity"}}
+            {{if eq $companyRegistrationInformation.company_type.type "Overseas entity"}}
                 Correspondence address:
 
             {{else}}    
@@ -553,11 +553,11 @@
     <h3 class="heading-small">Company details in the country of incorporation</h3>
         <ul class="list list-bullet">
             {{if $roa := $companyRegistrationInformation.registered_office}}
-            {{if eq $companyRegistrationInformation.company_type.type "Registered overseas entity"}}
+            {{if eq $companyRegistrationInformation.company_type.type "Overseas entity"}}
             <li>
     
                     Overseas entity address:
-
+                  
                 {{if $roa.care_of}}
                 {{index $roa "care_of"}},
                 {{end}}
@@ -589,7 +589,7 @@
                 {{end}}
             </li>
             {{end}}
-            {{end}}
+            {{end}}  
 
             {{if $foreignCompanyDetails.country}}
             <li>Incorporated in: {{$foreignCompanyDetails.country}}</li>
