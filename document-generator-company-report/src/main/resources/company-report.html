@@ -643,7 +643,7 @@
                     {{end}}
 
                     {{if .appointed_on}}
-                        {{if eq $companyRegistrationInformation.company_type.type "Registered overseas entity"}}
+                        {{if eq $companyRegistrationInformation.company_type.type "Overseas entity"}}
                             <li>Notified on: {{.appointed_on}}</li>
                         {{else}}
                             <li>Appointed: {{.appointed_on}}</li>
@@ -655,7 +655,7 @@
                     {{end}}
 
                     {{if .resigned_on}}
-                        {{if eq $companyRegistrationInformation.company_type.type "Registered overseas entity"}}
+                        {{if eq $companyRegistrationInformation.company_type.type "Overseas entity"}}
                             <li>Ceased on: {{.resigned_on}}</li>
                         {{else}}
                             <li>Resigned: {{.resigned_on}}</li>
