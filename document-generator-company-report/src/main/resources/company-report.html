@@ -626,11 +626,19 @@
 
                     {{if or (eq $companyRegistrationInformation.status.company_status "Dissolved") (eq $companyRegistrationInformation.status.company_status "Converted / Closed") (eq $companyRegistrationInformation.status.company_status "Removed")}}
                         {{if .resigned_on}}
-                            <span id="officer-status-tag-resigned" class="status-tag ceased-tag">Resigned</span>
+                            {{if eq $companyRegistrationInformation.company_type.type "Overseas entity"}}
+                                <span id="officer-status-tag-ceased" class="status-tag ceased-tag">Ceased</span>
+                            {{else}}
+                                <span id="officer-status-tag-resigned" class="status-tag ceased-tag">Resigned</span>
+                            {{end}}
                         {{end}}
                     {{else}}
                         {{if .resigned_on}}
-                            <span id="officer-status-tag-resigned" class="status-tag ceased-tag">Resigned</span>
+                            {{if eq $companyRegistrationInformation.company_type.type "Overseas entity"}}
+                                <span id="officer-status-tag-ceased" class="status-tag ceased-tag">Ceased</span>
+                            {{else}}
+                                <span id="officer-status-tag-resigned" class="status-tag ceased-tag">Resigned</span>
+                            {{end}}
                         {{else}}
                             <span id="officer-status-tag-active" class="status-tag">Active</span>
                         {{end}}
