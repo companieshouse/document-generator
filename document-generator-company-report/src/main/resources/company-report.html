@@ -397,7 +397,7 @@
                 {{if $companyRegistrationInformation.company_type.subtype}}/{{$companyRegistrationInformation.company_type.subtype}}{{end}}</li>
         {{end}}
 
-        {{if and (ne $companyRegistrationInformation.company_type.type "Overseas company") (ne $companyRegistrationInformation.company_type.type "Registered overseas entity")}}
+        {{if and (ne $companyRegistrationInformation.company_type.type "Overseas company") (ne $companyRegistrationInformation.company_type.type "Overseas entity")}}
             {{if $companyRegistrationInformation.external_registration_number}}
                 <li>Charity number: {{$companyRegistrationInformation.external_registration_number}}</li>
             {{end}}
@@ -408,7 +408,7 @@
         {{end}}
 
         {{if $companyRegistrationInformation.date_of_dissolution}}
-            <li>{{if eq $companyRegistrationInformation.company_type.type "Registered overseas entity"}}Removed{{else}}Dissolved{{end}} on: {{$companyRegistrationInformation.date_of_dissolution}}</li>
+            <li>{{if eq $companyRegistrationInformation.company_type.type "Overseas entity"}}Removed{{else}}Dissolved{{end}} on: {{$companyRegistrationInformation.date_of_dissolution}}</li>
         {{end}}
 
         {{if $companyRegistrationInformation.status.company_status}}
@@ -418,7 +418,7 @@
 
     </ul>
 
-    {{if eq $companyRegistrationInformation.company_type.type "Registered overseas entity"}}
+    {{if eq $companyRegistrationInformation.company_type.type "Overseas entity"}}
 
         {{if or $keyFilingDates.next_confirmation_statement $keyFilingDates.last_confirmation_statement}}
             <h3 class="heading-small">Key filing dates</h3>
@@ -802,7 +802,7 @@
     <!--PSC & STATMENTS & PSC EXEMPTIONS-->
 
     <h2 class="heading-medium">
-        {{if eq $companyRegistrationInformation.company_type.type "Registered overseas entity"}}
+        {{if eq $companyRegistrationInformation.company_type.type "Overseas entity"}}
             Beneficial owners:
         {{else}}
             Persons with significant control:
@@ -857,7 +857,7 @@
 
         {{$companyIsActive := and (ne $companyRegistrationInformation.status.company_status "Dissolved") (ne $companyRegistrationInformation.status.company_status "Converted / Closed") (ne $companyRegistrationInformation.status.company_status "Removed")}}
 
-        {{if eq $companyRegistrationInformation.company_type.type "Registered overseas entity"}}
+        {{if eq $companyRegistrationInformation.company_type.type "Overseas entity"}}
             {{if $pscs.active_count}}
                 {{$pscs.active_count}} {{if $companyIsActive}}active {{end}}{{if eq $pscs.active_count 1.0}} beneficial owner {{else}} beneficial owners {{end}}
             {{else}}
