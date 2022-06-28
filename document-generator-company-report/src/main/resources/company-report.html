@@ -616,7 +616,11 @@
 
     <h2 class="heading-medium">Officers:<br>
         {{if $officers.total_results}} {{$officers.total_results}} officers {{else}} 0 officers {{end}} /
-        {{if $officers.resigned_count}} {{$officers.resigned_count}} resignations {{else}} 0 resignations {{end}}
+        {{if eq $companyRegistrationInformation.company_type.type "Overseas entity"}}
+            {{if $officers.resigned_count}} {{$officers.resigned_count}} cessations {{else}} 0 cessations {{end}}
+        {{else}}
+            {{if $officers.resigned_count}} {{$officers.resigned_count}} resignations {{else}} 0 resignations {{end}}
+        {{end}}
     </h2>
     {{if $officers}}
         {{range $officers.current_officers}}
