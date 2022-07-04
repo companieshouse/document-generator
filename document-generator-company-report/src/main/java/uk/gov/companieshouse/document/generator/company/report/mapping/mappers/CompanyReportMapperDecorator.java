@@ -117,7 +117,7 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
                 companyReport.setCurrentAppointments(setCurrentAppointments(companyReportApiData.getOfficersApi()));
             }
 
-            if (companyReportApiData.getCompanyProfileApi().getAccounts() != null) {
+            if (companyReportApiData.getCompanyProfileApi().getAccounts() != null || companyReportApiData.getCompanyProfileApi().getConfirmationStatement() != null) {
                 LOG.infoContext(requestId, "Map data for Key Filing Dates", getDebugMap(companyNumber));
                 companyReport.setKeyFilingDates(setKeyFilingDates(companyReportApiData.getCompanyProfileApi()));
             }
