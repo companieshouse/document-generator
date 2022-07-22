@@ -812,7 +812,12 @@
     {{end}}
 
     {{if $companyRegistrationInformation.has_super_secure_managing_officers}}
-        <h2 class="heading-medium">Protected managing officer</h2>
+        <h2 class="heading-medium">Protected managing officer
+            {{if eq $companyRegistrationInformation.status.company_status "Removed"}}
+            {{else}}
+                <span id="protected-managing-officer-active" class="status-tag">Active</span>
+            {{end}}
+        </h2>
 
         {{if $companyRegistrationInformation.has_more_than_one_super_secure_managing_officers}}
             <p><strong>The details of {{$companyRegistrationInformation.super_secure_managing_officer_count}} managing officers are not shown because restrictions on using or disclosing any of the individual’s particulars are in force</strong></p>
