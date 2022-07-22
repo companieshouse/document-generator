@@ -50,6 +50,15 @@ public class RegistrationInformation {
     @JsonProperty("foreign_company_details")
     private ForeignCompanyDetails foreignCompanyDetails;
 
+    @JsonProperty("super_secure_managing_officer_count")
+    private int superSecureManagingOfficerCount;
+
+    @JsonProperty("has_super_secure_managing_officers")
+    private Boolean hasSuperSecureManagingOfficers;
+
+    @JsonProperty("has_more_than_one_super_secure_managing_officers")
+    private Boolean hasMoreThanOneSuperSecureManagingOfficers;
+
     public String getDateOfIncorporationLabel() {
         return dateOfIncorporationLabel;
     }
@@ -144,5 +153,29 @@ public class RegistrationInformation {
 
     public void setForeignCompanyDetails(ForeignCompanyDetails foreignCompanyDetails) {
         this.foreignCompanyDetails = foreignCompanyDetails;
+    }
+
+    public int getSuperSecureManagingOfficerCount() {
+        return superSecureManagingOfficerCount;
+    }
+
+    public void setSuperSecureManagingOfficerCount(int superSecureManagingOfficerCount) {
+        this.superSecureManagingOfficerCount = superSecureManagingOfficerCount;
+    }
+
+    public Boolean getHasSuperSecureManagingOfficers() {
+        return hasSuperSecureManagingOfficers;
+    }
+
+    public void setHasSuperSecureManagingOfficers(Boolean hasSuperSecureManagingOfficers) {
+        this.hasSuperSecureManagingOfficers = hasSuperSecureManagingOfficers;
+    }
+
+    public Boolean getHasMoreThanOneSuperSecureManagingOfficers() {
+        return hasMoreThanOneSuperSecureManagingOfficers;
+    }
+
+    public void setHasMoreThanOneSuperSecureManagingOfficers(Boolean hasMoreThanOneSuperSecureManagingOfficers) {
+        this.hasMoreThanOneSuperSecureManagingOfficers = hasMoreThanOneSuperSecureManagingOfficers;
     }
 }
