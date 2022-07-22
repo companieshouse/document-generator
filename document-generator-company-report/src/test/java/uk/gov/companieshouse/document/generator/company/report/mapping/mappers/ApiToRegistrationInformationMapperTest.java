@@ -59,6 +59,8 @@ class ApiToRegistrationInformationMapperTest {
     private static final String[] SIC_CODES = new String[]{"5231", "5232", "5233"};
     private static final RegisteredOfficeAddressApi ADDRESS = createAddress();
 
+    private static final int SUPER_SECURE_MANAGING_OFFICER_COUNT = 2;
+
     @Test
     @DisplayName("tests company profile data maps to registration information model")
     void testApiToRegistrationInformationMaps() {
@@ -81,6 +83,9 @@ class ApiToRegistrationInformationMapperTest {
         assertEquals(MAPPED_VALUE, registrationInformation.getStatus().getCompanyStatusDetail());
         assertEquals(MAPPED_VALUE, registrationInformation.getDateOfIncorporationLabel());
         assertEquals(CHARITY_NUMBER, registrationInformation.getExternalRegistrationNumber());
+        assertEquals(SUPER_SECURE_MANAGING_OFFICER_COUNT, registrationInformation.getSuperSecureManagingOfficerCount());
+        assertEquals(true, registrationInformation.getHasSuperSecureManagingOfficers());
+        assertEquals(true, registrationInformation.getHasMoreThanOneSuperSecureManagingOfficers());
         assertThat(registrationInformation.getRegisteredOffice()).isEqualToComparingFieldByField(ADDRESS);
         assertThat(registrationInformation.getServiceAddress()).isEqualToComparingFieldByField(ADDRESS);
     }
@@ -101,6 +106,7 @@ class ApiToRegistrationInformationMapperTest {
         companyProfileApi.setRegisteredOfficeAddress(ADDRESS);
         companyProfileApi.setServiceAddress(ADDRESS);
         companyProfileApi.setExternalRegistrationNumber(CHARITY_NUMBER);
+        companyProfileApi.setSuperSecureManagingOfficerCount(SUPER_SECURE_MANAGING_OFFICER_COUNT);
 
         return  companyProfileApi;
     }

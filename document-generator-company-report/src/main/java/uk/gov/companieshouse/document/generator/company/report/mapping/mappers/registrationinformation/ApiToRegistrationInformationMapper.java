@@ -37,6 +37,7 @@ public abstract class ApiToRegistrationInformationMapper {
     @Mappings({
             @Mapping(source = "companyName", target = "companyName"),
             @Mapping(source = "companyNumber", target = "companyNumber"),
+            @Mapping(source = "superSecureManagingOfficerCount", target = "superSecureManagingOfficerCount"),
             @Mapping(source = "registeredOfficeAddress.addressLine1", target = "registeredOffice.addressLine1"),
             @Mapping(source = "registeredOfficeAddress.addressLine2", target = "registeredOffice.addressLine2"),
             @Mapping(source = "registeredOfficeAddress.careOf", target = "registeredOffice.careOf"),
@@ -88,6 +89,21 @@ public abstract class ApiToRegistrationInformationMapper {
         if (companyProfileApi != null && companyProfileApi.getDateOfCreation() != null) {
             registrationInformation.setDateOfIncorporationLabel(retrieveApiEnumerationDescription
                     .getApiEnumerationDescription(CONSTANTS, COMPANY_BIRTH_TYPE, companyProfileApi.getType(), getDebugMap(companyProfileApi.getType())));
+        }
+    }
+
+    @AfterMapping
+    protected void setSuperSecureManagingOfficerCount(CompanyProfileApi companyProfileApi, @MappingTarget RegistrationInformation registrationInformation) {
+
+        registrationInformation.setHasSuperSecureManagingOfficers(false);
+        registrationInformation.setHasMoreThanOneSuperSecureManagingOfficers(false);
+
+        if (companyProfileApi != null && companyProfileApi.getSuperSecureManagingOfficerCount() >= 1) {
+            registrationInformation.setHasSuperSecureManagingOfficers(true);
+
+            if (companyProfileApi.getSuperSecureManagingOfficerCount() > 1) {
+                registrationInformation.setHasMoreThanOneSuperSecureManagingOfficers(true);
+            }
         }
     }
 
