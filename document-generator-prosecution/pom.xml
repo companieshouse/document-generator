@@ -25,7 +25,7 @@
         <jdk.version>1.8</jdk.version>
 
         <!--Dependencies-->
-        <spring-boot-start-web.version>2.0.4.RELEASE</spring-boot-start-web.version>
+        <spring-boot-start-web.version>2.5.12</spring-boot-start-web.version>
         <private-api-sdk-java.version>2.0.5</private-api-sdk-java.version>
         <api-sdk-manager-java-library.version>1.0.2</api-sdk-manager-java-library.version>
     </properties>
