@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {{$companyRegistrationInformation := .company_report.company_registration_information}}
+{{$corporateAnnotation := .company_report.corporate_annotation}}
 {{$previousNames := .company_report.previous_names}}
 {{$keyFilingDates := .company_report.key_filing_dates}}
 {{$foreignCompanyDetails := .company_report.foreign_company_details}}
@@ -293,6 +294,20 @@
 
     <h1 class="heading-xlarge">{{$companyRegistrationInformation.company_name}}<br/>
         {{$companyRegistrationInformation.company_number}}</h1>
+
+    {{if $corporateAnnotation}}
+        <h3 class="heading-small">Corporate Annotation</h3>
+        <ul class="list list-bullet">
+        {{range $corporateAnnotation}}
+            {{if eq .type "other"}}
+                <li>{{.description}}</li>
+            {{else}}
+                <li>{{.type}}</li>
+            {{end}}
+        {{end}}
+        </ul>
+    {{end}}
+
     <p class="heading-small">Created: {{.company_report.time_stamp_created}}</p>
     <p class="heading-small">Companies House does not verify the accuracy of the information filed</p>
 </header>
