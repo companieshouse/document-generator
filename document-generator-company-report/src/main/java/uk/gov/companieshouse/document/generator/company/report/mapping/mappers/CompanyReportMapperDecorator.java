@@ -116,7 +116,9 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
             if (companyReportApiData.getCompanyProfileApi().getPreviousCompanyNames() != null) {
                 LOG.infoContext(requestId, "Map Data for Previous Names", getDebugMap(companyNumber));
                 companyReport.setPreviousNames(setPreviousNames(companyReportApiData.getCompanyProfileApi().getPreviousCompanyNames()));
+            }
 
+            if (companyReportApiData.getCompanyProfileApi().getCorporateAnnotation() != null) {
                 LOG.infoContext(requestId, "Map Data for Corporate Annotation", getDebugMap(companyNumber));
                 companyReport.setCorporateAnnotation(setCorporateAnnotation(companyReportApiData.getCompanyProfileApi().getCorporateAnnotation()));
             }
