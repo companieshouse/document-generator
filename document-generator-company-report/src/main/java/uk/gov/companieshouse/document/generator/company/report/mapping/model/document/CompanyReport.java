@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.corporateannotation.CorporateAnnotation;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.CurrentAppointments;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.exemptions.Exemptions;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.ForeignCompanyDetails;
@@ -36,6 +37,9 @@ public class CompanyReport {
 
     @JsonProperty("previous_names")
     private List<PreviousNames> previousNames;
+
+    @JsonProperty("corporate_annotation")
+    private List<CorporateAnnotation> corporateAnnotation;
 
     @JsonProperty("current_appointments")
     private CurrentAppointments currentAppointments;
@@ -92,6 +96,14 @@ public class CompanyReport {
 
     public void setPreviousNames(List<PreviousNames> previousNames) {
         this.previousNames = previousNames;
+    }
+
+    public List<CorporateAnnotation> getCorporateAnnotation() {
+        return corporateAnnotation;
+    }
+
+    public void setCorporateAnnotation(List<CorporateAnnotation> corporateAnnotation) {
+        this.corporateAnnotation = corporateAnnotation;
     }
 
     public CurrentAppointments getCurrentAppointments() {
