@@ -39,6 +39,17 @@
           margin: 0 auto;
         }
       }
+      .header-list {
+        font-size: 19px;
+        line-height: 1.31579;
+        padding: 0;
+        margin-top: 5px;
+        list-style-type: disc;
+        padding-left: 20px;
+        font-family: "proxima_nova", Arial, sans-serif;
+        font-weight: 400;
+        text-transform: none;
+      }
 
      main {
         padding-bottom: 3em;
@@ -296,10 +307,9 @@
         {{$companyRegistrationInformation.company_number}}</h1>
 
     {{if $corporateAnnotation}}
-        <h3 class="heading-small">Corporate Annotation</h3>
-        <ul class="list list-bullet">
+        <ul class="header-list">
         {{range $corporateAnnotation}}
-            {{if eq .type "other"}}
+            {{if .description}}
                 <li>{{.description}}</li>
             {{else}}
                 <li>{{.type}}</li>
