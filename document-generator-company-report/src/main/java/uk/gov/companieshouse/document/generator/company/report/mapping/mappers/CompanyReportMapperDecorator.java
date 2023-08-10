@@ -3,6 +3,7 @@ package uk.gov.companieshouse.document.generator.company.report.mapping.mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
+import uk.gov.companieshouse.api.model.company.CorporateAnnotationApi;
 import uk.gov.companieshouse.api.model.company.PreviousCompanyNamesApi;
 import uk.gov.companieshouse.api.model.company.foreigncompany.ForeignCompanyDetailsApi;
 import uk.gov.companieshouse.api.model.exemptions.ExemptionsApi;
@@ -13,6 +14,7 @@ import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.api.model.registers.RegistersApi;
 import uk.gov.companieshouse.api.model.statements.StatementsApi;
 import uk.gov.companieshouse.api.model.ukestablishments.UkEstablishmentsItemsApi;
+import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.corporateannotation.ApiToCorporateAnnotationMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.currentappointments.ApiToCurrentAppointmentsMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.exemptions.ApiToExemptionsMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.foreigncompanydetails.ApiToForeignCompanyDetailsMapper;
@@ -28,6 +30,7 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.s
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.ukestablishment.ApiToUkEstablishmentMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.corporateannotation.CorporateAnnotation;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.CurrentAppointments;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.exemptions.Exemptions;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.ForeignCompanyDetails;
@@ -58,6 +61,9 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
 
     @Autowired
     private ApiToRegistrationInformationMapper apiToRegistrationInformationMapper;
+
+    @Autowired
+    private ApiToCorporateAnnotationMapper apiToCorporateAnnotationMapper;
 
     @Autowired
     private ApiToPreviousNamesMapper apiToPreviousNamesMapper;
@@ -110,6 +116,9 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
             if (companyReportApiData.getCompanyProfileApi().getPreviousCompanyNames() != null) {
                 LOG.infoContext(requestId, "Map Data for Previous Names", getDebugMap(companyNumber));
                 companyReport.setPreviousNames(setPreviousNames(companyReportApiData.getCompanyProfileApi().getPreviousCompanyNames()));
+
+                LOG.infoContext(requestId, "Map Data for Corporate Annotation", getDebugMap(companyNumber));
+                companyReport.setCorporateAnnotation(setCorporateAnnotation(companyReportApiData.getCompanyProfileApi().getCorporateAnnotation()));
             }
 
             if (companyReportApiData.getOfficersApi() != null && companyReportApiData.getOfficersApi().getItems().size() > 0) {
@@ -182,6 +191,10 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
 
     private List<PreviousNames> setPreviousNames(List<PreviousCompanyNamesApi> previousCompanyNames) {
         return apiToPreviousNamesMapper.apiToPreviousNamesMapper(previousCompanyNames);
+    }
+
+    private List<CorporateAnnotation> setCorporateAnnotation(List<CorporateAnnotationApi> corporateAnnotation) {
+        return apiToCorporateAnnotationMapper.apiToCorporateAnnotations(corporateAnnotation);
     }
 
     private CurrentAppointments setCurrentAppointments(OfficersApi officersApi) {
