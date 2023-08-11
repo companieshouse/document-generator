@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {{$companyRegistrationInformation := .company_report.company_registration_information}}
+{{$corporateAnnotation := .company_report.corporate_annotation}}
 {{$previousNames := .company_report.previous_names}}
 {{$keyFilingDates := .company_report.key_filing_dates}}
 {{$foreignCompanyDetails := .company_report.foreign_company_details}}
@@ -37,6 +38,17 @@
         #page-container {
           margin: 0 auto;
         }
+      }
+      .header-list {
+        font-size: 19px;
+        line-height: 1.31579;
+        padding: 0;
+        margin-top: 5px;
+        list-style-type: disc;
+        padding-left: 20px;
+        font-family: "proxima_nova", Arial, sans-serif;
+        font-weight: 400;
+        text-transform: none;
       }
 
      main {
@@ -293,6 +305,19 @@
 
     <h1 class="heading-xlarge">{{$companyRegistrationInformation.company_name}}<br/>
         {{$companyRegistrationInformation.company_number}}</h1>
+
+    {{if $corporateAnnotation}}
+        <ul class="header-list">
+        {{range $corporateAnnotation}}
+            {{if .description}}
+                <li>{{.description}}</li>
+            {{else}}
+                <li>{{.type}}</li>
+            {{end}}
+        {{end}}
+        </ul>
+    {{end}}
+
     <p class="heading-small">Created: {{.company_report.time_stamp_created}}</p>
     <p class="heading-small">Companies House does not verify the accuracy of the information filed</p>
 </header>

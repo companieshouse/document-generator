@@ -38,7 +38,7 @@ public abstract class ApiToCorporateAnnotationMapper {
         if (corporateAnnotationApi != null && corporateAnnotationApi.getType() != null) {
             corporateAnnotation.setType(retrieveApiEnumerationDescription
                 .getApiEnumerationDescription(CONSTANTS, CORPORATE_ANNOTATION_TYPE,
-                    corporateAnnotationApi.getType(), getDebugMap(corporateAnnotationApi.getDescription())));
+                    corporateAnnotationApi.getType(), getDebugMap(corporateAnnotationApi.getType())));
         }
 
     }
