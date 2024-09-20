@@ -3,7 +3,7 @@ package uk.gov.companieshouse.document.generator.api.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.Gson;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 public class DocumentRequest {
 

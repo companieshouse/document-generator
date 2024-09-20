@@ -21,11 +21,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         
         <!-- JDK Version -->
-        <jdk.version>1.8</jdk.version>
+        <jdk.version>21</jdk.version>
 
-        <apache-http-components.version>4.5.13</apache-http-components.version>
+        <apache-http-components.version>5.4-beta1</apache-http-components.version>
         
-        <commons-io.version>2.7</commons-io.version>
+        <commons-io.version>2.17.0</commons-io.version>
 
     </properties>
     
@@ -36,8 +36,8 @@
             <version>${commons-io.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
             <version>${apache-http-components.version}</version>
         </dependency>
         <dependency>
