@@ -6,7 +6,7 @@ The Companies house Document Generator for generating documents
 
 In order to build document-generator locally you will need the following:
 
-- [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+- [Java 21](https://www.oracle.com/java/technologies/downloads/?er=221886#java21)
 - [Maven](https://maven.apache.org/download.cgi)
 - [Git](https://git-scm.com/downloads)
 

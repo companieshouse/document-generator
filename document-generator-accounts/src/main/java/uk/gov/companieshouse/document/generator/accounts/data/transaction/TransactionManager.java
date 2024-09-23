@@ -76,8 +76,7 @@ public class TransactionManager {
      * @return a statically created rest template
      */
     private static RestTemplate createRestTemplate() {
-        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-        return new RestTemplate(requestFactory);
+        return new RestTemplate();
     }
 
     /**

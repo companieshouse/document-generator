@@ -19,11 +19,8 @@
     <url>http://maven.apache.org</url>
   
     <properties>
-        <!-- Encoding -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <!-- JDK Version -->
-        <jdk.version>1.8</jdk.version>
+        <jdk.version>21</jdk.version>
     </properties>
 
     <build>

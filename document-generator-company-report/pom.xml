@@ -10,6 +10,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>document-generator-company-report</artifactId>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jdk.version>21</jdk.version>
+        <system-rules-version>1.17.2</system-rules-version>
+        <org.jacoco.version>0.8.12</org.jacoco.version>
+        <assertj.version>3.26.3</assertj.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>uk.gov.companieshouse</groupId>
@@ -25,13 +33,13 @@
         <dependency>
             <groupId>com.github.stefanbirkner</groupId>
             <artifactId>system-rules</artifactId>
-            <version>1.19.0</version>
+            <version>${system-rules-version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jacoco</groupId>
             <artifactId>org.jacoco.report</artifactId>
-            <version>0.8.6</version>
+            <version>${org.jacoco.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
