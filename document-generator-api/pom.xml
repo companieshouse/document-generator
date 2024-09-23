@@ -17,16 +17,10 @@
     <url>http://maven.apache.org</url>
     
     <properties>
-        <!-- Encoding -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        
-        <!-- JDK Version -->
         <jdk.version>21</jdk.version>
-
-        <apache-http-components.version>5.4-beta1</apache-http-components.version>
-        
+        <apache-http-components.version>5.4</apache-http-components.version>
         <commons-io.version>2.17.0</commons-io.version>
-
     </properties>
     
     <dependencies>

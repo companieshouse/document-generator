@@ -19,15 +19,10 @@
     </parent>
 
     <properties>
-        <!-- Encoding -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+       <jdk.version>21</jdk.version>
 
-
-        <!-- JDK Version -->
-        <jdk.version>21</jdk.version>
-
-        <!-- Maven and Surefire plugins -->
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.3.1</maven-surefire-plugin.version>
         <maven-jar-plugin.version>3.4.1</maven-jar-plugin.version>
@@ -43,11 +38,9 @@
         <sonar.login>${CODE_ANALYSIS_LOGIN}</sonar.login>
         <sonar.password>${CODE_ANALYSIS_PASSWORD}</sonar.password>
 
-        <!-- JUnit Testing -->
         <junit-jupiter-engine.version>5.10.2</junit-jupiter-engine.version>
         <mockito-junit-jupiter.version>5.12.0</mockito-junit-jupiter.version>
 
-        <!--  JaCoCo -->
         <jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
 
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
@@ -59,7 +52,6 @@
 
         <environment-reader-library.version>3.0.1</environment-reader-library.version>
 
-        <!-- Third party libs used in child poms -->
         <snakeyaml.version>2.2</snakeyaml.version>
         <gson.version>2.11.0</gson.version>
         <spring-boot-dependencies.version>3.3.3</spring-boot-dependencies.version>
@@ -208,7 +200,7 @@
                                     <image>416670754337.dkr.ecr.eu-west-2.amazonaws.com/ci-corretto-build-21:latest</image>
                                 </from>
                                 <to>
-                                    <image>416670754337.dkr.ecr.eu-west-2.amazonaws.com/local/document-generator:latest</image>
+                                    <image>169942020521.dkr.ecr.eu-west-2.amazonaws.com/local/document-generator:latest</image>
                                 </to>
                                 <container>
                                     <expandClasspathDependencies>true</expandClasspathDependencies>

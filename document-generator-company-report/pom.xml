@@ -11,9 +11,7 @@
 
     <artifactId>document-generator-company-report</artifactId>
     <properties>
-        <!-- Encoding -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!-- JDK Version -->
         <jdk.version>21</jdk.version>
         <system-rules-version>1.17.2</system-rules-version>
         <org.jacoco.version>0.8.12</org.jacoco.version>

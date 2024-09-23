@@ -18,14 +18,9 @@
     <description>Module for retrieving prosecution data for document generation</description>
 
     <properties>
-        <!-- Encoding -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <!-- JDK Version -->
-        <jdk.version>21</jdk.version>
-
-        <!--Dependencies-->
-        <spring-boot-start-web.version>3.3.3</spring-boot-start-web.version>
+       <jdk.version>21</jdk.version>
+      <spring-boot-start-web.version>3.3.3</spring-boot-start-web.version>
         <private-api-sdk-java.version>4.0.9</private-api-sdk-java.version>
         <api-sdk-manager-java-library.version>3.0.5</api-sdk-manager-java-library.version>
     </properties>
