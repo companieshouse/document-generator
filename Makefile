@@ -1,6 +1,6 @@
 artifact_name       := document-generator
 artifact_core_name  := document-generator-api
-version             := "unversioned"
+version             := unversioned
 
 dependency_check_base_suppressions:=common_suppressions_spring_6.xml
 
@@ -76,7 +76,8 @@ sonar-pr-analysis:
 	mvn sonar:sonar -P sonar-pr-analysis
 
 .PHONY: dependency-check
-dependency-check:
+dependency-check: build package
+	mvn install -DskipTests
 	@ if [ -d "$(DEPENDENCY_CHECK_SUPPRESSIONS_HOME)" ]; then \
 		suppressions_home="$${DEPENDENCY_CHECK_SUPPRESSIONS_HOME}"; \
 	fi; \

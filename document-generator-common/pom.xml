@@ -17,11 +17,25 @@
     <name>document-generator-common</name>
     <description>Module for holding common classes/methods used in document generation</description>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jdk.version>21</jdk.version>
+        <maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
+        <sonar-maven-plugin.version>3.4.0.905</sonar-maven-plugin.version>
+    </properties>
+
+
     <dependencies>
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
             <version>${snakeyaml.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.sonarsource.scanner.maven</groupId>
+            <artifactId>sonar-maven-plugin</artifactId>
+            <version>${sonar-maven-plugin.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -34,6 +48,11 @@
                     <skip>true</skip>
                 </configuration>
             </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>${maven-surefire-plugin.version}</version>
+          </plugin>
         </plugins>
     </build>
 </project>

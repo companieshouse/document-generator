@@ -23,6 +23,8 @@
       <spring-boot-start-web.version>3.3.3</spring-boot-start-web.version>
         <private-api-sdk-java.version>4.0.9</private-api-sdk-java.version>
         <api-sdk-manager-java-library.version>3.0.5</api-sdk-manager-java-library.version>
+        <maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
+        <sonar-maven-plugin.version>3.4.0.905</sonar-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -45,6 +47,12 @@
             <groupId>uk.gov.companieshouse</groupId>
             <artifactId>api-sdk-manager-java-library</artifactId>
             <version>${api-sdk-manager-java-library.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.sonarsource.scanner.maven</groupId>
+            <artifactId>sonar-maven-plugin</artifactId>
+            <version>${sonar-maven-plugin.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -81,6 +89,11 @@
                     <skip>true</skip>
                 </configuration>
             </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>${maven-surefire-plugin.version}</version>
+          </plugin>
         </plugins>
     </build>
 </project>
