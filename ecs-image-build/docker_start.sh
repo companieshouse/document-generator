@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 # Start script for document-generator
 
 PORT=8080
