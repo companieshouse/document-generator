@@ -20,7 +20,7 @@ import uk.gov.companieshouse.document.generator.api.service.response.ResponseObj
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseStatus;
 import uk.gov.companieshouse.document.generator.api.mapper.ApiResponseMapper;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 

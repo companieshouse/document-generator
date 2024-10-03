@@ -1,11 +1,11 @@
 package uk.gov.companieshouse.document.generator.accounts.data.transaction;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.companieshouse.environment.EnvironmentReader;
@@ -35,7 +35,8 @@ public class TransactionManager {
     private final String chsApiKey = READER.getMandatoryString("CHS_API_KEY");
 
     /** represents the Spring rest template that is created for cross microservice contact */
-    private static final RestTemplate restTemplate = createRestTemplate();
+    @Autowired
+    private  RestTemplate restTemplate ;
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
@@ -68,16 +69,6 @@ public class TransactionManager {
             throw new Exception("Failed to retrieve data from API");
         }
         return transactionResponseEntity.getBody();
-    }
-
-    /**
-     * Creates the rest template when class is initialised
-     *
-     * @return a statically created rest template
-     */
-    private static RestTemplate createRestTemplate() {
-        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-        return new RestTemplate(requestFactory);
     }
 
     /**

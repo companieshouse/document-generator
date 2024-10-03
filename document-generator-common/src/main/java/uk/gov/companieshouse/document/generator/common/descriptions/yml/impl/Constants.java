@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.document.generator.common.descriptions.yml.Descriptions;
 import uk.gov.companieshouse.document.generator.common.descriptions.yml.LoadYamlFile;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.util.Map;
 
 @Component
