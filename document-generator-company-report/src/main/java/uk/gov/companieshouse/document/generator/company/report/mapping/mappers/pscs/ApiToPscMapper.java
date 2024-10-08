@@ -12,8 +12,6 @@ import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiE
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.DateDayMonthYear;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.pscs.items.NaturesOfControl;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.pscs.items.Psc;
-import uk.gov.companieshouse.logging.Logger;
-import uk.gov.companieshouse.logging.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -22,8 +20,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static uk.gov.companieshouse.document.generator.company.report.CompanyReportDocumentInfoServiceImpl.MODULE_NAME_SPACE;
 
 
 @RequestScope
@@ -125,7 +121,6 @@ public abstract class ApiToPscMapper {
                         .getApiEnumerationDescription(PSC_DESCRIPTIONS, IDENTIFIER,
                                 natureOfControl, getDebugMap(natureOfControl));
                 natures.setNaturesOfControlDescription(natureOfControlDescription);
-                System.out.println("NOC? " + natureOfControlDescription);
                 naturesOfControlList.add(natures);
             }
         }
