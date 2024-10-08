@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 @RequestScope
 @Mapper(componentModel = "spring")
 public abstract class ApiToPscMapper {
