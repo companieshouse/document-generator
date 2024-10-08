@@ -92,7 +92,7 @@ public abstract class ApiToPscMapper {
 
     @AfterMapping
     protected void setSuperSecureDescription(PscApi pscApi, @MappingTarget Psc psc) {
-        String description = "";
+        var description = "";
         if (pscApi == null || pscApi.getKind() == null) {
             return;
         }
