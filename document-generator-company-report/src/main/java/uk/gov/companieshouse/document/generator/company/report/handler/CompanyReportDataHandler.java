@@ -200,9 +200,11 @@ public class CompanyReportDataHandler {
 
     private void setPscsData(String companyNumber, String requestId,
         CompanyReportApiData companyReportApiData, CompanyProfileApi companyProfileApi) {
+        LOG.info("set PSC data before key");
         if (companyProfileApi.getLinks().containsKey(PSCS_KEY)) {
             try {
                 PscsApi pscsApi = getPscs(companyNumber, requestId);
+                LOG.info("Company report data handler" + pscsApi.getItems());
                 companyReportApiData.setPscsApi(pscsApi);
 
             } catch (HandlerException he) {
@@ -214,8 +216,10 @@ public class CompanyReportDataHandler {
 
     private void setOfficersData(String companyNumber, String requestId,
         CompanyReportApiData companyReportApiData, CompanyProfileApi companyProfileApi) {
+        LOG.info("set officers data before key");
         if (companyProfileApi.getLinks().containsKey(OFFICERS_KEY)) {
             try {
+                LOG.info("set officers data after key");
                 OfficersApi officersApi = getOfficers(companyNumber, requestId);
                 companyReportApiData.setOfficersApi(officersApi);
             } catch (HandlerException he) {

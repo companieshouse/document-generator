@@ -54,7 +54,7 @@ class ApiToPscMapperTest {
 
     private final String[] NATURE_OF_CONTROL = new String[]{"test1", "test2", "test3"};
 
-    private static final String SUPER_SECURE_PERSON_WITH_SIGNIFICANT_CONTROL_KIND = "super-secure-persons-with-significant-control";
+    private static final String SUPER_SECURE_PERSON_WITH_SIGNIFICANT_CONTROL_KIND = "super-secure-person-with-significant-control";
     private static final String SUPER_SECURE_BENEFICIAL_OWNER_KIND = "super-secure-beneficial-owner";
 
 

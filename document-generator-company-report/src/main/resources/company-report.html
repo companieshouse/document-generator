@@ -932,10 +932,9 @@
         {{if $pscs}}
             {{range $pscs.items}}
                 <ul class="list list-bullet">
-
                     <li>{{if eq .kind "super-secure-beneficial-owner"}}
                             Beneficial owner
-                        {{else if eq .kind "super-secure-persons-with-significant-control"}}
+                        {{else if eq .kind "super-secure-person-with-significant-control"}}
                             Protected person with significant control
                         {{else}}
                             {{.name}}
@@ -950,7 +949,7 @@
                         {{end}}
                     </li>
 
-                    {{if or (eq .kind "super-secure-beneficial-owner") (eq .kind "super-secure-persons-with-significant-control")}}
+                    {{if or (eq .kind "super-secure-beneficial-owner") (eq .kind "super-secure-person-with-significant-control")}}
                         <b>{{.super_secure_description}}</b>
                     {{end}}
 
