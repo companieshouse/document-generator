@@ -148,7 +148,7 @@ public class CompanyReportDataHandler {
         CompanyReportApiData companyReportApiData = new CompanyReportApiData();
 
         CompanyProfileApi companyProfileApi = getCompanyProfile(companyNumber, requestId);
-           LOG.info("company report data  companyReportApiData +"+companyNumber +" : "+companyReportApiData);
+           LOG.info("company report data  companyReportApiData +"+companyNumber +" : "+companyReportApiData.toString());
         setCompanyReportData(companyNumber, requestId, companyReportApiData, companyProfileApi);
 
         return toJson(companyReportMapper
@@ -309,9 +309,12 @@ public class CompanyReportDataHandler {
 
         try {
             LOG.infoContext(requestId, "Attempting to convert company report to JSON", getDebugMap(companyNumber));
-            LOG.info(" Attempting to convert company report to JSON companyReport " + companyReport);
-            reportToJson = mapper.writeValueAsString(companyReport);
+            LOG.infoContext(requestId, "Attempting to convert company report to JSON", getCompanyReportDebugMap(companyReport));
+            LOG.info(" Attempting to convert company report to JSON companyReport " + companyReport.toString());
+             reportToJson = mapper.writeValueAsString(companyReport);
         } catch (JsonProcessingException e) {
+            LOG.error(" error when Attempting to convert company report to JSON companyReport " + e.getMessage());
+            LOG.error("failed to convert json ",e);
             throw new HandlerException(
                 new StringBuilder("Could not serialise Document data for the generation of the company report for company: ")
                     .append(companyReport.getRegistrationInformation().getCompanyName())
@@ -567,6 +570,12 @@ public class CompanyReportDataHandler {
     private Map<String, Object> getDebugMap(String companyNumber) {
         Map<String, Object> logMap = new HashMap<>();
         logMap.put("COMPANY_NUMBER", companyNumber);
+
+        return logMap;
+    }
+    private Map<String, Object> getCompanyReportDebugMap(CompanyReport companyReport) {
+        Map<String, Object> logMap = new HashMap<>();
+        logMap.put("companyReport", companyReport);
 
         return logMap;
     }
