@@ -23,7 +23,6 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.ukestablishment.UkEstablishment;
 
 import java.util.List;
-import java.util.Objects;
 
 @JsonInclude(Include.NON_NULL)
 @JsonTypeName("company_report")
@@ -194,39 +193,5 @@ public class CompanyReport {
     public void setMortgageChargeDetails(
         MortgageChargeDetails mortgageChargeDetails) {
         this.mortgageChargeDetails = mortgageChargeDetails;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CompanyReport that = (CompanyReport) o;
-        return Objects.equals(TimeStampCreated, that.TimeStampCreated) && Objects.equals(registrationInformation, that.registrationInformation) && Objects.equals(previousNames, that.previousNames) && Objects.equals(corporateAnnotation, that.corporateAnnotation) && Objects.equals(currentAppointments, that.currentAppointments) && Objects.equals(keyFilingDates, that.keyFilingDates) && Objects.equals(recentFilingHistory, that.recentFilingHistory) && Objects.equals(pscs, that.pscs) && Objects.equals(foreignCompanyDetails, that.foreignCompanyDetails) && Objects.equals(ukEstablishment, that.ukEstablishment) && Objects.equals(statements, that.statements) && Objects.equals(companyRegisters, that.companyRegisters) && Objects.equals(insolvency, that.insolvency) && Objects.equals(exemptions, that.exemptions) && Objects.equals(mortgageChargeDetails, that.mortgageChargeDetails);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(TimeStampCreated, registrationInformation, previousNames, corporateAnnotation, currentAppointments, keyFilingDates, recentFilingHistory, pscs, foreignCompanyDetails, ukEstablishment, statements, companyRegisters, insolvency, exemptions, mortgageChargeDetails);
-    }
-
-    @Override
-    public String toString() {
-        return "CompanyReport{" +
-                "TimeStampCreated='" + TimeStampCreated + '\'' +
-                ", registrationInformation=" + registrationInformation +
-                ", previousNames=" + previousNames +
-                ", corporateAnnotation=" + corporateAnnotation +
-                ", currentAppointments=" + currentAppointments +
-                ", keyFilingDates=" + keyFilingDates +
-                ", recentFilingHistory=" + recentFilingHistory +
-                ", pscs=" + pscs +
-                ", foreignCompanyDetails=" + foreignCompanyDetails +
-                ", ukEstablishment=" + ukEstablishment +
-                ", statements=" + statements +
-                ", companyRegisters=" + companyRegisters +
-                ", insolvency=" + insolvency +
-                ", exemptions=" + exemptions +
-                ", mortgageChargeDetails=" + mortgageChargeDetails +
-                '}';
     }
 }
