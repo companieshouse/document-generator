@@ -112,20 +112,4 @@ public class CompanyReportApiData {
     public void setChargesApi(ChargesApi chargesApi) {
         this.chargesApi = chargesApi;
     }
-
-    @Override
-    public String toString() {
-        return "CompanyReportApiData{" +
-                "companyProfileApi=" + companyProfileApi +
-                ", pscsApi=" + pscsApi +
-                ", officersApi=" + officersApi +
-                ", ukEstablishmentsApi=" + ukEstablishmentsApi +
-                ", filingHistoryApi=" + filingHistoryApi +
-                ", statementsApi=" + statementsApi +
-                ", companyRegistersApi=" + companyRegistersApi +
-                ", insolvencyApi=" + insolvencyApi +
-                ", companyExemptionsApi=" + companyExemptionsApi +
-                ", chargesApi=" + chargesApi +
-                '}';
-    }
 }

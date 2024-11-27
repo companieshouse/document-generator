@@ -149,7 +149,6 @@ public class CompanyReportDataHandler {
         CompanyReportApiData companyReportApiData = new CompanyReportApiData();
 
         CompanyProfileApi companyProfileApi = getCompanyProfile(companyNumber, requestId);
-           LOG.info("company report data  companyReportApiData +"+companyNumber +" : "+companyReportApiData.toString());
         setCompanyReportData(companyNumber, requestId, companyReportApiData, companyProfileApi);
 
         return toJson(companyReportMapper
@@ -311,12 +310,8 @@ public class CompanyReportDataHandler {
 
         try {
             LOG.infoContext(requestId, "Attempting to convert company report to JSON", getDebugMap(companyNumber));
-            LOG.infoContext(requestId, "Attempting to convert company report to JSON", getCompanyReportDebugMap(companyReport));
-            LOG.info(" Attempting to convert company report to JSON companyReport " + companyReport.toString());
-             reportToJson = mapper.writeValueAsString(companyReport);
+            reportToJson = mapper.writeValueAsString(companyReport);
         } catch (JsonProcessingException e) {
-            LOG.error(" error when Attempting to convert company report to JSON companyReport " + e.getMessage());
-            LOG.error("failed to convert json ",e);
             throw new HandlerException(
                 new StringBuilder("Could not serialise Document data for the generation of the company report for company: ")
                     .append(companyReport.getRegistrationInformation().getCompanyName())
@@ -331,9 +326,7 @@ public class CompanyReportDataHandler {
 
         try {
             LOG.infoContext(requestId, "Attempting to retrieve company profile", getDebugMap(companyNumber));
-            var companyProfileApi = companyService.getCompanyProfile(companyNumber);
-            LOG.info( "company profile details retrieved "+ companyNumber+ ": "+ companyProfileApi.toString());
-            return companyProfileApi;
+            return companyService.getCompanyProfile(companyNumber);
         } catch (ServiceException se) {
             throw new HandlerException("error occurred obtaining the company profile", se);
         }
@@ -343,9 +336,7 @@ public class CompanyReportDataHandler {
         String requestId) throws HandlerException {
         try {
             LOG.infoContext(requestId, "Attempting to retrieve company officers", getDebugMap(companyNumber));
-            var officersApi =  officerService.getOfficers(companyNumber);
-            LOG.info( " company officers details retrieved "+ companyNumber+ ": "+ officersApi.toString());
-            return officersApi;
+            return officerService.getOfficers(companyNumber);
         } catch (ServiceException se) {
             throw new HandlerException("error occurred obtaining the company officers", se);
         }
@@ -355,9 +346,7 @@ public class CompanyReportDataHandler {
         String requestId) throws HandlerException {
         try {
             LOG.infoContext(requestId, "Attempting to retrieve uk establishment", getDebugMap(companyNumber));
-            var ukEstablishmentsApi=  ukEstablishmentService.getUkEstablishments(companyNumber);
-            LOG.info( "uk establishment details retrieved "+ companyNumber+ ": "+ ukEstablishmentsApi.toString());
-            return ukEstablishmentsApi;
+            return ukEstablishmentService.getUkEstablishments(companyNumber);
         } catch (ServiceException se) {
             throw new HandlerException("error occurred obtaining uk establishments", se);
         }
@@ -367,9 +356,7 @@ public class CompanyReportDataHandler {
         String requestId) throws HandlerException {
         try {
             LOG.infoContext(requestId, "Attempting to retrieve company filing history", getDebugMap(companyNumber));
-            var filingHistoryApi =sortFilingHistory(filingHistoryService.getFilingHistory(companyNumber));
-            LOG.info( "company filing history details retrieved "+ companyNumber+ ": "+ filingHistoryApi);
-            return filingHistoryApi;
+            return sortFilingHistory(filingHistoryService.getFilingHistory(companyNumber));
         } catch (ServiceException se) {
             throw new HandlerException("error occurred obtaining the company filing history", se);
         }
@@ -392,9 +379,7 @@ public class CompanyReportDataHandler {
         String requestId) throws HandlerException {
         try {
             LOG.infoContext(requestId, "Attempting to retrieve company psc statements", getDebugMap(companyNumber));
-            var sortedStatementsApi =  sortStatements(statementsService.getStatements(companyNumber));
-            LOG.info( "company psc statements details retrieved "+ companyNumber+ ": "+ sortedStatementsApi);
-            return sortedStatementsApi;
+            return sortStatements(statementsService.getStatements(companyNumber));
         } catch (ServiceException se) {
             throw new HandlerException("error occurred obtaining the company psc statements", se);
         }
@@ -417,9 +402,7 @@ public class CompanyReportDataHandler {
     private PscsApi getPscs(String companyNumber, String requestId) throws HandlerException {
         try {
             LOG.infoContext(requestId, "Attempting to retrieve company PSCSs", getDebugMap(companyNumber));
-            var  pscsApi=  pscsService.getPscs(companyNumber);
-            LOG.info( "company PSCSs details retrieved "+ companyNumber+ ": "+ pscsApi.toString());
-            return pscsApi;
+            return pscsService.getPscs(companyNumber);
         } catch (ServiceException se) {
             throw new HandlerException("error occurred obtaining the company PSCSs", se);
         }
@@ -430,9 +413,7 @@ public class CompanyReportDataHandler {
 
         try {
             LOG.infoContext(requestId, "Attempting to retrieve company charges", getDebugMap(companyNumber));
-            var  chargesApi= chargesService.getCharges(companyNumber);
-            LOG.info( "company charges details retrieved "+ companyNumber+ ": "+ chargesApi.toString());
-            return chargesApi;
+            return chargesService.getCharges(companyNumber);
         } catch (ServiceException se) {
             throw new HandlerException("error occurred obtaining the company charges", se);
         }
@@ -442,9 +423,7 @@ public class CompanyReportDataHandler {
         String requestId) throws HandlerException {
         try {
             LOG.infoContext(requestId, "Attempting to retrieve company registers", getDebugMap(companyNumber));
-            var sortedCompanyRegistersApi = sortEachRegistersDates(registersService.getCompanyRegisters(companyNumber));
-            LOG.info( "company registers details retrieved "+ companyNumber+ ": "+ sortedCompanyRegistersApi.toString());
-            return sortedCompanyRegistersApi;
+            return sortEachRegistersDates(registersService.getCompanyRegisters(companyNumber));
         } catch (ServiceException se) {
             throw new HandlerException("error occurred obtaining the company registers", se);
         }
@@ -512,9 +491,7 @@ public class CompanyReportDataHandler {
         String requestId) throws HandlerException {
         try {
             LOG.infoContext(requestId, "Attempting to retrieve company insolvency", getDebugMap(companyNumber));
-            var sortedInsolvencyApi = sortInsolvency(insolvencyService.getInsolvency(companyNumber));
-            LOG.info( "company insolvency details retrieved "+ companyNumber+ ": "+ sortedInsolvencyApi);
-            return sortedInsolvencyApi;
+            return sortInsolvency(insolvencyService.getInsolvency(companyNumber));
         } catch (ServiceException se) {
             throw new HandlerException("error occurred obtaining the company insolvency", se);
         }
@@ -548,9 +525,7 @@ public class CompanyReportDataHandler {
     private CompanyExemptionsApi getCompanyExemptions(String companyNumber, String requestId) throws HandlerException {
         try {
             LOG.infoContext(requestId, "Attempting to retrieve company exemptions", getDebugMap(companyNumber));
-            var companyExemptionsApi=exemptionsService.getCompanyExemptions(companyNumber);
-            LOG.info( "company exemptions details retrieved "+ companyNumber+ ": "+ companyExemptionsApi);
-            return companyExemptionsApi;
+            return exemptionsService.getCompanyExemptions(companyNumber);
         } catch (ServiceException se) {
             throw new HandlerException("error occurred obtaining the company exemptions", se);
         }
@@ -572,12 +547,6 @@ public class CompanyReportDataHandler {
     private Map<String, Object> getDebugMap(String companyNumber) {
         Map<String, Object> logMap = new HashMap<>();
         logMap.put("COMPANY_NUMBER", companyNumber);
-
-        return logMap;
-    }
-    private Map<String, Object> getCompanyReportDebugMap(CompanyReport companyReport) {
-        Map<String, Object> logMap = new HashMap<>();
-        logMap.put("companyReport", companyReport);
 
         return logMap;
     }
