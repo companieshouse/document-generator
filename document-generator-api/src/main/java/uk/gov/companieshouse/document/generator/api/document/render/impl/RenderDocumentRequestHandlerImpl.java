@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.document.generator.api.document.render.impl;
 
 import org.apache.commons.io.IOUtils;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -45,7 +46,7 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
     @Override
     public RenderDocumentResponse sendDataToDocumentRenderService(String url, RenderDocumentRequest request,
                                                                   Map<String, String> requestParameters)
-            throws RenderServiceException, IOException {
+            throws RenderServiceException, IOException, JSONException {
 
         RenderDocumentResponse response = new RenderDocumentResponse();
         HttpURLConnection connection;
@@ -92,7 +93,7 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
      * @throws IOException
      */
     private RenderDocumentResponse handleResponse(HttpURLConnection connection, Map<String, String> requestParameters)
-            throws RenderServiceException {
+            throws RenderServiceException, JSONException {
 
         String generatedDocumentJson;
         RenderDocumentResponse renderDocumentResponse = new RenderDocumentResponse();

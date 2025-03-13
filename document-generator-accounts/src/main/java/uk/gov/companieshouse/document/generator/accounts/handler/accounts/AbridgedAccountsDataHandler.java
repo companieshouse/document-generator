@@ -3,6 +3,7 @@ package uk.gov.companieshouse.document.generator.accounts.handler.accounts;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -70,7 +71,7 @@ public class AbridgedAccountsDataHandler {
         try {
             AbridgedAccountsApi abridgedAccountData = accountsService.getAbridgedAccounts(abridgedAccountLink, requestId);
             return createResponse(transaction, accountType, abridgedAccountData);
-        } catch (ServiceException | IOException e) {
+        } catch (ServiceException | IOException | JSONException e) {
             Map<String, Object> logMap = new HashMap<>();
             logMap.put(RESOURCE, abridgedAccountLink);
             logMap.put(ACCOUNT_TYPE, accountType);
@@ -134,7 +135,7 @@ public class AbridgedAccountsDataHandler {
 
     private DocumentInfoResponse createResponse(Transaction transaction, AccountType accountType,
                                                 AbridgedAccountsApi accountData)
-            throws ServiceException, IOException {
+            throws ServiceException, IOException, JSONException {
 
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
         documentInfoResponse.setData(createDocumentInfoResponseData(transaction, accountData));
@@ -177,9 +178,9 @@ public class AbridgedAccountsDataHandler {
         return accounts.toString();
     }
 
-    private String getCurrentPeriodEndOn(AbridgedAccountsApi accountData) {
+    private String getCurrentPeriodEndOn(AbridgedAccountsApi accountData) throws JSONException {
 
-        JSONObject account = new JSONObject(accountData);
+        JSONObject account = new JSONObject(String.valueOf(accountData));
         JSONObject currentPeriod = account.getJSONObject("currentPeriodApi");
         return currentPeriod.get("periodEndDate").toString();
     }

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.http.HttpStatus;
+import org.json.JSONException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -129,7 +130,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
                     response = setDocumentResponse(renderResponse, documentInfoResponse, requestParameters);
                     return new ResponseObject(ResponseStatus.FAILED_TO_RENDER, response);
                 }
-            } catch (IOException | RenderServiceException se) {
+            } catch (IOException | RenderServiceException | JSONException se) {
                 createAndLogErrorMessage("Error occurred when trying to render the document for resource: " +
                         requestParameters.get(RESOURCE_URI), se, requestParameters);
                 response = setDocumentResponse(renderResponse, documentInfoResponse, requestParameters);
@@ -175,7 +176,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
     private RenderDocumentResponse renderSubmittedDocumentData(DocumentRequest documentRequest,
                                                                DocumentInfoResponse documentInfoResponse,
                                                                Map<String, String> requestParameters)
-            throws IOException, RenderServiceException {
+            throws IOException, RenderServiceException, JSONException {
 
         String host = environmentReader.getMandatoryString(DOCUMENT_RENDER_SERVICE_HOST_ENV_VAR);
         String url = host + getContextPath(documentRequest.isPublicLocationRequired());

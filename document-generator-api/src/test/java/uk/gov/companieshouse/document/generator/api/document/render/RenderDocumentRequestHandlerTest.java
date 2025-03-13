@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.document.generator.api.document.render;
 
 import org.apache.http.HttpStatus;
+import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -86,7 +87,8 @@ public class RenderDocumentRequestHandlerTest {
 
     @Test
     @DisplayName("Send the data to the render service successfully")
-    public void testSendDataToRenderServiceSuccess() throws IOException, RenderServiceException {
+    public void testSendDataToRenderServiceSuccess()
+            throws IOException, RenderServiceException, JSONException {
 
         setValidOpenConnection();
         when(convertJsonHandler.convert(any(String.class))).thenReturn("long data");
@@ -103,7 +105,8 @@ public class RenderDocumentRequestHandlerTest {
 
     @Test
     @DisplayName("Send the data to the render service and obtain a response error")
-    public void testSendDataToRenderServiceServerResponseError() throws IOException, RenderServiceException {
+    public void testSendDataToRenderServiceServerResponseError()
+            throws IOException, RenderServiceException, JSONException {
 
         setValidOpenConnection();
 
