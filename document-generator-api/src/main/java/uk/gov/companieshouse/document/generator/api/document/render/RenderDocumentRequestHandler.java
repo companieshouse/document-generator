@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.document.generator.api.document.render;
 
+import org.json.JSONException;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentRequest;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentResponse;
 import uk.gov.companieshouse.document.generator.api.exception.RenderServiceException;
@@ -19,5 +20,6 @@ public interface RenderDocumentRequestHandler {
      * @throws IOException
      */
     RenderDocumentResponse sendDataToDocumentRenderService(String url, RenderDocumentRequest request,
-                                                           Map<String, String> requestParameters) throws IOException, RenderServiceException;
+                                                           Map<String, String> requestParameters)
+            throws IOException, RenderServiceException, JSONException;
 }

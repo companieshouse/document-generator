@@ -1,5 +1,7 @@
 package uk.gov.companieshouse.document.generator.api.document.render;
 
+import org.json.JSONException;
+
 public interface ConvertJsonHandler {
 
     /**
@@ -8,5 +10,5 @@ public interface ConvertJsonHandler {
      * @param jsonString a string of Json
      * @return converted String for documentSize
      */
-    String convert(String jsonString);
+    String convert(String jsonString) throws JSONException;
 }

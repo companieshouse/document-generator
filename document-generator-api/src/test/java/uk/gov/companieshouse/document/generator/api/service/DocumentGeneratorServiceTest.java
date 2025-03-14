@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.document.generator.api.service;
 
+import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -85,8 +86,9 @@ public class DocumentGeneratorServiceTest {
 
     @Test
     @DisplayName("Test a successful generate completed")
-    public void testsSuccessfulGenerateCompleted() throws IOException, ServiceException, DocumentInfoException,
-            RenderServiceException {
+    public void testsSuccessfulGenerateCompleted()
+            throws IOException, ServiceException, DocumentInfoException,
+            RenderServiceException, JSONException {
 
         when(mockDocumentTypeService.getDocumentType(any(Map.class))).thenReturn(DocumentType.ACCOUNTS);
         when(mockDocumentInfoServiceFactory.get(any(String.class))).thenReturn(mockDocumentInfoService);
@@ -153,7 +155,7 @@ public class DocumentGeneratorServiceTest {
     @Test
     @DisplayName("Tests when an error thrown from requestHandler")
     public void testsWhenErrorThrownFromRequestHandler() throws IOException, ServiceException,
-            DocumentInfoException, RenderServiceException {
+            DocumentInfoException, RenderServiceException, JSONException {
 
         when(mockDocumentTypeService.getDocumentType(any(Map.class))).thenReturn(DocumentType.ACCOUNTS);
         when(mockDocumentInfoServiceFactory.get(any(String.class))).thenReturn(mockDocumentInfoService);

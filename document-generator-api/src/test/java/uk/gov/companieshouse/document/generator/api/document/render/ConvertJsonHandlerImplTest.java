@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.document.generator.api.document.render;
 
+import org.json.JSONException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -23,7 +24,7 @@ public class ConvertJsonHandlerImplTest {
 
     @Test
     @DisplayName("test valid convert Json")
-    public void testConvert() {
+    public void testConvert() throws JSONException {
 
         String covertedData = convertJsonHandler.convert(JSON);
         assertNotNull(covertedData);
@@ -32,14 +33,14 @@ public class ConvertJsonHandlerImplTest {
 
     @Test
     @DisplayName("test convert null Json")
-    public void testConvertNullJson() {
+    public void testConvertNullJson() throws JSONException {
         String covertedData = convertJsonHandler.convert(null);
         assertNull(covertedData);
     }
 
     @Test
     @DisplayName("test covert empty Json")
-    public void testConvertEmptyJson() {
+    public void testConvertEmptyJson() throws JSONException {
         String covertedData = convertJsonHandler.convert("");
         assertNull(covertedData);
     }
