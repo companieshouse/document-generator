@@ -11,8 +11,6 @@ import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 import uk.gov.companieshouse.logging.util.DataMap;
 
-import java.io.IOException;
-import java.util.HashMap;
 
 import static uk.gov.companieshouse.document.generator.company.report.CompanyReportDocumentInfoServiceImpl.MODULE_NAME_SPACE;
 
@@ -35,7 +33,7 @@ public class CompanyServiceOracle {
         DataMap requestDataMap = new DataMap.Builder().
                 companyNumber(companyNumber).
                 build();
-        LOG.info(String.format("Retrieving Company Profile for Company Number %s", companyNumber), requestDataMap.getLogMap());
+        LOG.info("Retrieving Company Profile", requestDataMap.getLogMap());
 
         try {
             return apiClientService
