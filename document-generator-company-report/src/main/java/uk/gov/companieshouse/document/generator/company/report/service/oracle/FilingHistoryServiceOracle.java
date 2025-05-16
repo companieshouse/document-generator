@@ -30,7 +30,7 @@ public class FilingHistoryServiceOracle {
         this.apiClientService = apiClientService;
     }
     
-    public FilingHistoryApi getFilingHistory(String companyNumber) {
+    public FilingHistoryApi getFilingHistory(String companyNumber) throws OracleQueryApiException{
 
         String url = FILING_HISTORY_URI.expand(companyNumber).toString();
 
