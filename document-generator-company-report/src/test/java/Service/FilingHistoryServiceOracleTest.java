@@ -1,64 +1,101 @@
 package Service;
 
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatchers;
-import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.client.RestTemplate;
+import uk.gov.companieshouse.api.InternalApiClient;
+import uk.gov.companieshouse.api.error.ApiErrorResponseException;
+import uk.gov.companieshouse.api.handler.exception.URIValidationException;
+import uk.gov.companieshouse.api.handler.filinghistory.FilingHistoryResourceHandler;
+import uk.gov.companieshouse.api.handler.filinghistory.request.FilingHistoryList;
+import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
+import uk.gov.companieshouse.document.generator.company.report.exception.OracleQueryApiException;
+import uk.gov.companieshouse.document.generator.company.report.service.ApiClientService;
 import uk.gov.companieshouse.document.generator.company.report.service.oracle.FilingHistoryServiceOracle;
-import uk.gov.companieshouse.environment.EnvironmentReader;
+
+import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class FilingHistoryServiceOracleTest {
+class FilingHistoryServiceOracleTest {
 
     @Mock
-    private RestTemplate restTemplateMock;
-
-    @Mock
-    private EnvironmentReader mockEnvironmentReader;
+    private ApiClientService apiClientService;
 
     @InjectMocks
     private FilingHistoryServiceOracle filingHistoryServiceOracle;
 
-    @Captor
-    ArgumentCaptor<String> captor;
+    @Mock
+    private InternalApiClient internalApiClient;
+
+    @Mock
+    private FilingHistoryResourceHandler filingHistory;
+
+    @Mock
+    private FilingHistoryList filingHistoryList;
+
+    @Mock
+    private ApiResponse<FilingHistoryApi> apiResponseFilingHistory;
+
 
     private static final String COMPANY_NUMBER = "00000000";
-    private static final String ORACLE_QUERY_API_URL_ENV_VARIABLE = "ORACLE_QUERY_API_URL";
 
+    @BeforeEach
+    void setUp() {
+        when(apiClientService.getInternalApiClient()).thenReturn(internalApiClient);
+        when(internalApiClient.filingHistory()).thenReturn(filingHistory);
+        when(filingHistory.list(Mockito.anyString())).thenReturn(filingHistoryList);
+    }
 
     @Test
     @DisplayName("Test filing history api response is not null")
-    void testFilingHistoryServiceOracle(){
+    void testFilingHistoryServiceOracle() throws ApiErrorResponseException, URIValidationException {
         FilingHistoryApi filingHistoryApi = new FilingHistoryApi();
 
-        doReturn("oracle/query/api/url").when(mockEnvironmentReader).getMandatoryString(anyString());
+        when(filingHistoryList.execute()).thenReturn(apiResponseFilingHistory);
+        when(apiResponseFilingHistory.getData()).thenReturn(filingHistoryApi);
 
-        when(restTemplateMock.getForObject(captor.capture(), ArgumentMatchers.eq(FilingHistoryApi.class))).thenReturn(filingHistoryApi);
-
+         // Call the method under test
         FilingHistoryApi response = filingHistoryServiceOracle.getFilingHistory(COMPANY_NUMBER);
 
-        verify(restTemplateMock).getForObject(System.getenv("ORACLE_QUERY_API_URL") + captor.capture(), ArgumentMatchers.eq(FilingHistoryApi.class));
-        assertEquals("oracle/query/api/url/company/00000000/filing-history", captor.getValue());
         assertNotNull(response);
-
     }
 
+    @Test
+    @DisplayName("Test filing history service throws OracleQueryApiException for URIValidationException")
+    void testFilingHistoryServiceOracleUriValidationException() throws ApiErrorResponseException, URIValidationException {
+        when(filingHistoryList.execute()).thenThrow(new URIValidationException("Invalid URI"));
+
+        OracleQueryApiException exception = assertThrows(
+                OracleQueryApiException.class,
+                () -> filingHistoryServiceOracle.getFilingHistory(COMPANY_NUMBER)
+        );
+
+        assertEquals("Error Retrieving Filing history data for 00000000 at /company/00000000/filing-history", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test filing history service throws OracleQueryApiException for ApiErrorResponseException")
+    void testFilingHistoryServiceOracleApiErrorResponseException() throws ApiErrorResponseException, URIValidationException {
+        when(filingHistoryList.execute()).thenThrow(ApiErrorResponseException.fromIOException(new IOException("IO error")));
+
+        OracleQueryApiException exception = assertThrows(
+                OracleQueryApiException.class,
+                () -> filingHistoryServiceOracle.getFilingHistory(COMPANY_NUMBER)
+        );
+
+        assertEquals("Error Retrieving Filing history data for 00000000 at /company/00000000/filing-history", exception.getMessage());
+    }
 
 }
