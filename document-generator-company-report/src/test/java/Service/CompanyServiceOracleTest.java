@@ -1,101 +1,64 @@
 package Service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.companieshouse.api.InternalApiClient;
-import uk.gov.companieshouse.api.error.ApiErrorResponseException;
-import uk.gov.companieshouse.api.handler.company.CompanyResourceHandler;
-import uk.gov.companieshouse.api.handler.company.request.CompanyGet;
-import uk.gov.companieshouse.api.handler.exception.URIValidationException;
-import uk.gov.companieshouse.api.model.ApiResponse;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriTemplate;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
-import uk.gov.companieshouse.document.generator.company.report.exception.OracleQueryApiException;
-import uk.gov.companieshouse.document.generator.company.report.service.ApiClientService;
+import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
 import uk.gov.companieshouse.document.generator.company.report.service.oracle.CompanyServiceOracle;
+import uk.gov.companieshouse.document.generator.company.report.service.oracle.FilingHistoryServiceOracle;
+import uk.gov.companieshouse.environment.EnvironmentReader;
 
-import java.io.IOException;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class CompanyServiceOracleTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class CompanyServiceOracleTest {
 
     @Mock
-    private ApiClientService apiClientService;
+    private RestTemplate restTemplateMock;
+
+    @Mock
+    private EnvironmentReader mockEnvironmentReader;
 
     @InjectMocks
     private CompanyServiceOracle companyServiceOracle;
 
-    @Mock
-    private ApiResponse<CompanyProfileApi> apiGetResponseCompanyProfile;
-
-    @Mock
-    private CompanyResourceHandler company;
-
-    @Mock
-    private CompanyGet companyGet;
-
-    @Mock
-    private InternalApiClient internalApiClient;
+    @Captor
+    ArgumentCaptor<String> captor;
 
     private static final String COMPANY_NUMBER = "00000000";
+    private static final String ORACLE_QUERY_API_URL_ENV_VARIABLE = "ORACLE_QUERY_API_URL";
 
-    @BeforeEach
-    void setUp() {
-        when(apiClientService.getInternalApiClient()).thenReturn(internalApiClient);
-        when(internalApiClient.company()).thenReturn(company);
-        when(company.get(Mockito.anyString())).thenReturn(companyGet);
-    }
 
     @Test
-    @DisplayName("Test company service oracle success")
-    void testCompanyServiceOracleSuccess() throws ApiErrorResponseException, URIValidationException {
+    @DisplayName("Test company service oracle response is not null")
+    void testCompanyServiceOracle() {
         CompanyProfileApi companyProfileApi = new CompanyProfileApi();
 
-        when(companyGet.execute()).thenReturn(apiGetResponseCompanyProfile);
-        when(apiGetResponseCompanyProfile.getData()).thenReturn(companyProfileApi);
+        doReturn("oracle/query/api/url").when(mockEnvironmentReader).getMandatoryString(anyString());
+
+        when(restTemplateMock.getForObject(captor.capture(), ArgumentMatchers.eq(CompanyProfileApi.class))).thenReturn(companyProfileApi);
 
         CompanyProfileApi response = companyServiceOracle.getCompanyProfile(COMPANY_NUMBER);
 
+        verify(restTemplateMock).getForObject(System.getenv("ORACLE_QUERY_API_URL") + captor.capture(), ArgumentMatchers.eq(CompanyProfileApi.class));
+        assertEquals("oracle/query/api/url/company/00000000", captor.getValue());
         assertNotNull(response);
 
     }
-
-    @Test
-    @DisplayName("Test company service oracle failure due to URIValidationException")
-    void testCompanyServiceOracleUriValidationException() throws ApiErrorResponseException, URIValidationException {
-
-        when(companyGet.execute()).thenThrow(new URIValidationException("Invalid URI"));
-
-        OracleQueryApiException exception = assertThrows(
-                OracleQueryApiException.class,
-                () -> companyServiceOracle.getCompanyProfile(COMPANY_NUMBER)
-        );
-
-        assertEquals("Error Retrieving Company Profile data for 00000000", exception.getMessage());
-    }
-
-    @Test
-    @DisplayName("Test company service oracle failure due to ApiErrorResponseException")
-    void testCompanyServiceOracleApiErrorResponseException() throws ApiErrorResponseException, URIValidationException {
-
-        when(companyGet.execute()).thenThrow( ApiErrorResponseException.fromIOException(new IOException("IO error")));
-
-        OracleQueryApiException exception = assertThrows(
-                OracleQueryApiException.class,
-                () -> companyServiceOracle.getCompanyProfile(COMPANY_NUMBER)
-        );
-
-        assertEquals("Error Retrieving Company Profile data for 00000000", exception.getMessage());
-    }
-
 }
