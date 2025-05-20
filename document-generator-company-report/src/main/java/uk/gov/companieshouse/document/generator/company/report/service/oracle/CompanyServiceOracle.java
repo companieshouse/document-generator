@@ -1,37 +1,50 @@
 package uk.gov.companieshouse.document.generator.company.report.service.oracle;
 
+import static uk.gov.companieshouse.document.generator.company.report.CompanyReportDocumentInfoServiceImpl.MODULE_NAME_SPACE;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriTemplate;
+import uk.gov.companieshouse.api.error.ApiErrorResponseException;
+import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
-import uk.gov.companieshouse.environment.EnvironmentReader;
+import uk.gov.companieshouse.document.generator.company.report.exception.OracleQueryApiException;
+import uk.gov.companieshouse.document.generator.company.report.service.ApiClientService;
+import uk.gov.companieshouse.logging.Logger;
+import uk.gov.companieshouse.logging.LoggerFactory;
+import uk.gov.companieshouse.logging.util.DataMap;
 
 @Service
 public class CompanyServiceOracle {
 
-    private static String COMPANY_PROFILE_URL = "/company/{companyNumber}";
-    private static final String ORACLE_QUERY_API_URL_ENV_VARIABLE = "ORACLE_QUERY_API_URL";
-    private static final UriTemplate COMPANY_PROFILE_URI = new UriTemplate(COMPANY_PROFILE_URL);
+    public static final String COMPANY = "/company/";
 
-    @Value("${ORACLE_QUERY_API_URL}")
-    private String oracleQueryApiUrl;
+    private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
-    private RestTemplate restTemplate;
-    private EnvironmentReader environmentReader;
+    private final ApiClientService apiClientService;
 
     @Autowired
-    public CompanyServiceOracle(final RestTemplate restTemplate,
-                                final EnvironmentReader environmentReader) {
-        this.restTemplate = restTemplate;
-        this.environmentReader = environmentReader;
+    public CompanyServiceOracle(ApiClientService apiClientService) {
+        this.apiClientService = apiClientService;
     }
 
-    public CompanyProfileApi getCompanyProfile(String companyNumber) {
-        String baseUrl = environmentReader.getMandatoryString((ORACLE_QUERY_API_URL_ENV_VARIABLE));
-        String url = COMPANY_PROFILE_URI.expand(companyNumber).toString();
-        return restTemplate.getForObject(baseUrl + url, CompanyProfileApi.class);
+    public CompanyProfileApi getCompanyProfile(String companyNumber) throws OracleQueryApiException {
+        DataMap requestDataMap = new DataMap.Builder().
+                companyNumber(companyNumber).
+                build();
+        LOG.info("Retrieving Company Profile", requestDataMap.getLogMap());
+
+        try {
+            return apiClientService
+                    .getInternalApiClient()
+                    .company()
+                    .get(COMPANY + companyNumber)
+                    .execute()
+                    .getData();
+        } catch (URIValidationException | ApiErrorResponseException e) {
+            var message = String.format("Error Retrieving Company Profile data for %s", companyNumber);
+            LOG.error(message, e, requestDataMap.getLogMap());
+            throw new OracleQueryApiException(message, e);
+        }
     }
 
 }
