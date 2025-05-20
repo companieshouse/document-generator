@@ -1,56 +1,33 @@
 package uk.gov.companieshouse.document.generator.company.report.service.oracle;
 
-import static uk.gov.companieshouse.document.generator.company.report.CompanyReportDocumentInfoServiceImpl.MODULE_NAME_SPACE;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriTemplate;
-import uk.gov.companieshouse.api.error.ApiErrorResponseException;
-import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
-import uk.gov.companieshouse.document.generator.company.report.exception.OracleQueryApiException;
-import uk.gov.companieshouse.document.generator.company.report.service.ApiClientService;
-import uk.gov.companieshouse.logging.Logger;
-import uk.gov.companieshouse.logging.LoggerFactory;
-import uk.gov.companieshouse.logging.util.DataMap;
+import uk.gov.companieshouse.environment.EnvironmentReader;
 
 @Service
 public class FilingHistoryServiceOracle {
 
     private static final String FILING_HISTORY_URL = "/company/{companyNumber}/filing-history";
+    private static final String ORACLE_QUERY_API_URL_ENV_VARIABLE = "ORACLE_QUERY_API_URL";
     private static final UriTemplate FILING_HISTORY_URI = new UriTemplate(FILING_HISTORY_URL);
-
-    private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
-
-    private final ApiClientService apiClientService;
+    
+    private RestTemplate restTemplate;
+    private EnvironmentReader environmentReader;
 
     @Autowired
-    public FilingHistoryServiceOracle(ApiClientService apiClientService) {
-
-        this.apiClientService = apiClientService;
+    public FilingHistoryServiceOracle(final RestTemplate restTemplate,
+                                      final EnvironmentReader environmentReader) {
+        this.restTemplate = restTemplate;
+        this.environmentReader = environmentReader;
     }
     
-    public FilingHistoryApi getFilingHistory(String companyNumber) throws OracleQueryApiException{
-
+    public FilingHistoryApi getFilingHistory(String companyNumber) {
+        String baseUrl = environmentReader.getMandatoryString(ORACLE_QUERY_API_URL_ENV_VARIABLE);
         String url = FILING_HISTORY_URI.expand(companyNumber).toString();
 
-        DataMap requestDataMap = new DataMap.Builder().
-                companyNumber(companyNumber).
-                uri(url).
-                build();
-        LOG.info("Retrieving Filing History", requestDataMap.getLogMap());
-
-        try {
-            return apiClientService
-                    .getInternalApiClient()
-                    .filingHistory()
-                    .list(url)
-                    .execute()
-                    .getData();
-        } catch (URIValidationException | ApiErrorResponseException e) {
-            var message = String.format("Error Retrieving Filing history data for %s at %s", companyNumber, url);
-            LOG.error(message, e, requestDataMap.getLogMap());
-            throw new OracleQueryApiException(message, e);
-        }
+        return restTemplate.getForObject(baseUrl + url, FilingHistoryApi.class);
     }
 }
