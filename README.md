@@ -76,8 +76,7 @@ make clean && make submodules && mvn package -DskipTests=true jib:dockerBuild -D
 
 ### Temporary change in the `docker-chs-development` project
 
-In file `services/modules/docgen/document-generator.docker-compose.yaml`, comment out the AWS ECR image and uncomment the 
-local image and add a new line for the local docker image.
+In file `services/modules/docgen/document-generator.docker-compose.yaml`, comment out the AWS ECR image and add a new line for the local docker image.
 
 ``` yaml
 document-generator:
