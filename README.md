@@ -39,7 +39,9 @@ Note that the calling services generally have a long route that involve messagin
 
 ## Modules
 
-The following are the modules that exist within document generator.
+See [Confluence design documents](https://companieshouse.atlassian.net/wiki/spaces/DEV/pages/128745690/Document+Generator)
+
+The following are the modules that exist within document generator. 
 
 ### document-generator-api
 
@@ -83,6 +85,11 @@ document-generator:
     # image: 416670754337.dkr.ecr.eu-west-2.amazonaws.com/document-generator:latest
     image: document-generator-local
 ```
+
+### Notes on testing in Docker
+
+See [Confluence project developer testing](https://companieshouse.atlassian.
+net/wiki/spaces/DEV/pages/5399314596/Testing+Document+Generator+using+docker-chs-development) page
 
 ## Terraform ECS
 
