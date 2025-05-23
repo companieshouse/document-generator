@@ -39,7 +39,9 @@ Note that the calling services generally have a long route that involve messagin
 
 ## Modules
 
-The following are the modules that exist within document generator.
+See [Confluence design documents](https://companieshouse.atlassian.net/wiki/spaces/DEV/pages/128745690/Document+Generator)
+
+The following are the modules that exist within document generator. 
 
 ### document-generator-api
 
@@ -64,11 +66,31 @@ Which returns the DocumentInfo model which will contain  String data, String tem
 
 ## Docker
 
-This project uses `jib` for Docker image builds - in order to build the container please run `make submodules` first and then run `mvn package -DskipTests=true jib:dockerBuild` which will output a Docker image named:
+This project does not currently support the `docker-chs-development` development mode since there is no builder for multi-module maven projects. 
+
+However, you can run the project within `docker-chs-development` by using the below instructions:
+
+### Create the docker image
 
 ``` bash
-169942020521.dkr.ecr.eu-west-1.amazonaws.com/local/document-generator
+make clean && make submodules && mvn package -DskipTests=true jib:dockerBuild -Dimage=document-generator-local
 ```
+
+### Temporary change in the `docker-chs-development` project
+
+In file `services/modules/docgen/document-generator.docker-compose.yaml`, comment out the AWS ECR image and add a new line for the local docker image.
+
+``` yaml
+document-generator:
+    # image: 416670754337.dkr.ecr.eu-west-2.amazonaws.com/document-generator:latest
+    image: document-generator-local
+```
+
+### Notes on testing in Docker
+
+See [Confluence project developer testing](https://companieshouse.atlassian.
+net/wiki/spaces/DEV/pages/5399314596/Testing+Document+Generator+using+docker-chs-development) page
+
 ## Terraform ECS
 
 ### What does this code do?
