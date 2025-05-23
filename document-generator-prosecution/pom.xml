@@ -21,8 +21,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
        <jdk.version>21</jdk.version>
       <spring-boot-start-web.version>3.3.4</spring-boot-start-web.version>
-        <private-api-sdk-java.version>4.0.9</private-api-sdk-java.version>
-        <api-sdk-manager-java-library.version>3.0.5</api-sdk-manager-java-library.version>
         <maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
         <sonar-maven-plugin.version>3.4.0.905</sonar-maven-plugin.version>
     </properties>
