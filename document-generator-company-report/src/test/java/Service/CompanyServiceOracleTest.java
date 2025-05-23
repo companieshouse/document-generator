@@ -21,7 +21,7 @@ import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.OracleQueryApiException;
-import uk.gov.companieshouse.document.generator.company.report.service.ReportApiClientService;
+import uk.gov.companieshouse.document.generator.company.report.service.OracleQueryApiClientService;
 import uk.gov.companieshouse.document.generator.company.report.service.oracle.CompanyServiceOracle;
 
 import java.io.IOException;
@@ -30,7 +30,7 @@ import java.io.IOException;
 class CompanyServiceOracleTest {
 
     @Mock
-    private ReportApiClientService apiClientService;
+    private OracleQueryApiClientService oracleQueryApiClientService;
 
     @InjectMocks
     private CompanyServiceOracle companyServiceOracle;
@@ -51,7 +51,7 @@ class CompanyServiceOracleTest {
 
     @BeforeEach
     void setUp() {
-        when(apiClientService.getInternalApiClient()).thenReturn(internalApiClient);
+        when(oracleQueryApiClientService.getInternalApiClient()).thenReturn(internalApiClient);
         when(internalApiClient.company()).thenReturn(company);
         when(company.get(Mockito.anyString())).thenReturn(companyGet);
     }

@@ -9,7 +9,7 @@ import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.OracleQueryApiException;
-import uk.gov.companieshouse.document.generator.company.report.service.ReportApiClientService;
+import uk.gov.companieshouse.document.generator.company.report.service.OracleQueryApiClientService;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 import uk.gov.companieshouse.logging.util.DataMap;
@@ -22,12 +22,11 @@ public class FilingHistoryServiceOracle {
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
-    private final ReportApiClientService apiClientService;
+    private final OracleQueryApiClientService oracleQueryApiClientService;
 
     @Autowired
-    public FilingHistoryServiceOracle(ReportApiClientService apiClientService) {
-
-        this.apiClientService = apiClientService;
+    public FilingHistoryServiceOracle(OracleQueryApiClientService oracleQueryApiClientService) {
+        this.oracleQueryApiClientService = oracleQueryApiClientService;
     }
 
     public FilingHistoryApi getFilingHistory(String companyNumber) throws OracleQueryApiException{
@@ -40,8 +39,10 @@ public class FilingHistoryServiceOracle {
                 build();
         LOG.info("Retrieving Filing History", requestDataMap.getLogMap());
 
+        LOG.debug("Base URL used [" + oracleQueryApiClientService.getInternalApiClient().getBasePath() + "]");
+
         try {
-            return apiClientService
+            return oracleQueryApiClientService
                     .getInternalApiClient()
                     .filingHistory()
                     .list(url)

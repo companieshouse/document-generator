@@ -19,7 +19,7 @@ import uk.gov.companieshouse.api.handler.officers.OfficersResourceHandler;
 import uk.gov.companieshouse.api.handler.officers.request.OfficersList;
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
-import uk.gov.companieshouse.document.generator.company.report.service.ReportApiClientService;
+import uk.gov.companieshouse.document.generator.company.report.service.OracleQueryApiClientService;
 import uk.gov.companieshouse.document.generator.company.report.service.oracle.OfficerDetailsServiceOracle;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,7 +28,7 @@ class OfficerDetailsOracleTest {
     private static final String COMPANY_NUMBER = "00000000";
 
     @Mock
-    private ReportApiClientService apiClientService;
+    private OracleQueryApiClientService oracleQueryApiClientService;
 
     @InjectMocks
     private OfficerDetailsServiceOracle officerDetailsServiceOracle;
@@ -47,7 +47,7 @@ class OfficerDetailsOracleTest {
 
     @BeforeEach
     void setUp() {
-        when(apiClientService.getInternalApiClient()).thenReturn(internalApiClient);
+        when(oracleQueryApiClientService.getInternalApiClient()).thenReturn(internalApiClient);
         when(internalApiClient.officers()).thenReturn(officersResourceHandler);
         when(officersResourceHandler.list(Mockito.anyString())).thenReturn(officersList);
     }

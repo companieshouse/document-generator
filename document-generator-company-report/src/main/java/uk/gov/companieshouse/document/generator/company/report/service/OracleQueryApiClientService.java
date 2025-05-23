@@ -6,16 +6,15 @@ import uk.gov.companieshouse.api.InternalApiClient;
 import uk.gov.companieshouse.sdk.manager.ApiSdkManager;
 
 /**
- * Service to get the internal API client.
- * Need to set the Base Path to use the oracleQueryApiUrl.
- * Use "Report" as a prefix since this module is imported into other projects that already have an ApiClientService.
+ * Service to get the internal API client and configure it to use the oracleQueryApiUrl for paths
+ * that have a different base url than that of the Oracle Query API
  */
 @Component
-public class ReportApiClientService {
+public class OracleQueryApiClientService {
 
     private final String oracleQueryApiUrl;
 
-    public ReportApiClientService(@Value("${ORACLE_QUERY_API_URL}") String oracleQueryApiUrl) {
+    public OracleQueryApiClientService(@Value("${ORACLE_QUERY_API_URL}") String oracleQueryApiUrl) {
         this.oracleQueryApiUrl = oracleQueryApiUrl;
     }
 

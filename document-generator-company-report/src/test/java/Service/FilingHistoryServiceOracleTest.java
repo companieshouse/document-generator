@@ -21,7 +21,7 @@ import uk.gov.companieshouse.api.handler.filinghistory.request.FilingHistoryList
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.model.filinghistory.FilingHistoryApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.OracleQueryApiException;
-import uk.gov.companieshouse.document.generator.company.report.service.ReportApiClientService;
+import uk.gov.companieshouse.document.generator.company.report.service.OracleQueryApiClientService;
 import uk.gov.companieshouse.document.generator.company.report.service.oracle.FilingHistoryServiceOracle;
 
 import java.io.IOException;
@@ -30,7 +30,7 @@ import java.io.IOException;
 class FilingHistoryServiceOracleTest {
 
     @Mock
-    private ReportApiClientService apiClientService;
+    private OracleQueryApiClientService oracleQueryApiClientService;
 
     @InjectMocks
     private FilingHistoryServiceOracle filingHistoryServiceOracle;
@@ -52,7 +52,7 @@ class FilingHistoryServiceOracleTest {
 
     @BeforeEach
     void setUp() {
-        when(apiClientService.getInternalApiClient()).thenReturn(internalApiClient);
+        when(oracleQueryApiClientService.getInternalApiClient()).thenReturn(internalApiClient);
         when(internalApiClient.filingHistory()).thenReturn(filingHistory);
         when(filingHistory.list(Mockito.anyString())).thenReturn(filingHistoryList);
     }

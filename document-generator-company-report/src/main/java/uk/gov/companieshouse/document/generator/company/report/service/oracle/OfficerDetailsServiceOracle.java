@@ -8,7 +8,7 @@ import org.springframework.web.util.UriTemplate;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.officers.OfficersApi;
-import uk.gov.companieshouse.document.generator.company.report.service.ReportApiClientService;
+import uk.gov.companieshouse.document.generator.company.report.service.OracleQueryApiClientService;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 import uk.gov.companieshouse.logging.util.DataMap;
@@ -21,11 +21,11 @@ public class OfficerDetailsServiceOracle {
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
-    private final ReportApiClientService apiClientService;
+    private final OracleQueryApiClientService oracleQueryApiClientService;
 
     @Autowired
-    public OfficerDetailsServiceOracle(ReportApiClientService apiClientService) {
-        this.apiClientService = apiClientService;
+    public OfficerDetailsServiceOracle(OracleQueryApiClientService oracleQueryApiClientService) {
+        this.oracleQueryApiClientService = oracleQueryApiClientService;
     }
 
     public OfficersApi getOfficerDetails(String companyNumber) {
@@ -34,11 +34,11 @@ public class OfficerDetailsServiceOracle {
                 companyNumber(companyNumber).
                 build();
         LOG.info("Retrieving Officer Details", requestDataMap.getLogMap());
+        LOG.debug("Base URL used [" + oracleQueryApiClientService.getInternalApiClient().getBasePath() + "]");
 
         String url = OFFICER_DETAILS_URI.expand(companyNumber).toString();
-
         try {
-            return apiClientService
+            return oracleQueryApiClientService
                     .getInternalApiClient()
                     .officers()
                     .list(url)
@@ -51,5 +51,4 @@ public class OfficerDetailsServiceOracle {
             return null;
         }
     }
-
 }
