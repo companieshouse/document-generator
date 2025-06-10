@@ -2,21 +2,6 @@ artifact_name       := document-generator
 artifact_core_name  := document-generator-api
 version             := unversioned
 
-dependency_check_base_suppressions:=common_suppressions_spring_6.xml
-
-# dependency_check_suppressions_repo_branch
-# The branch of the dependency-check-suppressions repository to use
-# as the source of the suppressions file.
-# This should point to "main" branch when being used for release,
-# but can point to a different branch for experimentation/development.
-dependency_check_suppressions_repo_branch:=main
-
-dependency_check_minimum_cvss := 4
-dependency_check_assembly_analyzer_enabled := false
-dependency_check_suppressions_repo_url:=git@github.com:companieshouse/dependency-check-suppressions.git
-suppressions_file := target/suppressions.xml
-
-
 .PHONY: all
 all: build
 
@@ -76,34 +61,27 @@ sonar-pr-analysis:
 	mvn sonar:sonar -P sonar-pr-analysis
 
 .PHONY: dependency-check
-dependency-check: build package
-	mvn install -DskipTests
-	@ if [ -d "$(DEPENDENCY_CHECK_SUPPRESSIONS_HOME)" ]; then \
-		suppressions_home="$${DEPENDENCY_CHECK_SUPPRESSIONS_HOME}"; \
+dependency-check:
+	@ if [ -n "$(DEPENDENCY_CHECK_SUPPRESSIONS_HOME)" ]; then \
+		if [ -d "$(DEPENDENCY_CHECK_SUPPRESSIONS_HOME)" ]; then \
+			suppressions_home="$${DEPENDENCY_CHECK_SUPPRESSIONS_HOME}"; \
+		else \
+			printf -- 'DEPENDENCY_CHECK_SUPPRESSIONS_HOME is set, but its value "%s" does not point to a directory\n' "$(DEPENDENCY_CHECK_SUPPRESSIONS_HOME)"; \
+			exit 1; \
+		fi; \
 	fi; \
 	if [ ! -d "$${suppressions_home}" ]; then \
-	    suppressions_home_target_dir="./target/dependency-check-suppressions"; \
+		suppressions_home_target_dir="./target/dependency-check-suppressions"; \
 		if [ -d "$${suppressions_home_target_dir}" ]; then \
 			suppressions_home="$${suppressions_home_target_dir}"; \
 		else \
 			mkdir -p "./target"; \
-			git clone $(dependency_check_suppressions_repo_url) "$${suppressions_home_target_dir}" && \
+			git clone git@github.com:companieshouse/dependency-check-suppressions.git "$${suppressions_home_target_dir}" && \
 				suppressions_home="$${suppressions_home_target_dir}"; \
-			if [ -d "$${suppressions_home_target_dir}" ] && [ -n "$(dependency_check_suppressions_repo_branch)" ]; then \
-				cd "$${suppressions_home}"; \
-				git checkout $(dependency_check_suppressions_repo_branch); \
-				cd -; \
-			fi; \
 		fi; \
 	fi; \
-	suppressions_path="$${suppressions_home}/suppressions/$(dependency_check_base_suppressions)"; \
-	if [  -f "$${suppressions_path}" ]; then \
-		cp -av "$${suppressions_path}" $(suppressions_file); \
-		mvn org.owasp:dependency-check-maven:check -DfailBuildOnCVSS=$(dependency_check_minimum_cvss) -DassemblyAnalyzerEnabled=$(dependency_check_assembly_analyzer_enabled) -DsuppressionFiles=$(suppressions_file); \
-	else \
-		printf -- "\n ERROR Cannot find suppressions file at '%s'\n" "$${suppressions_path}" >&2; \
-		exit 1; \
-	fi
+	printf -- 'suppressions_home="%s"\n' "$${suppressions_home}"; \
+	DEPENDENCY_CHECK_SUPPRESSIONS_HOME="$${suppressions_home}" "$${suppressions_home}/scripts/depcheck" --repo-name=document-generator
 
 .PHONY: security-check
 security-check: dependency-check
