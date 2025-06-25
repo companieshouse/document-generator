@@ -50,6 +50,7 @@
     <maven-install-plugin.version>3.1.4</maven-install-plugin.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <commons-beanutils.version>1.11.0</commons-beanutils.version>
     <!-- Sonar -->
     <sonar-maven-plugin.version>4.0.0.4121</sonar-maven-plugin.version>
     <sonar.host.url>${CODE_ANALYSIS_HOST_URL}</sonar.host.url>
@@ -127,6 +128,11 @@
       <groupId>uk.gov.companieshouse</groupId>
       <artifactId>environment-reader-library</artifactId>
       <version>${environment-reader-library.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-beanutils</groupId>
+      <artifactId>commons-beanutils</artifactId>
+      <version>${commons-beanutils.version}</version>
     </dependency>
     <!-- Testing -->
     <dependency>
