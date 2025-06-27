@@ -51,6 +51,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <commons-beanutils.version>1.11.0</commons-beanutils.version>
+    <opentelemetry-instrumentation.version>2.14.0</opentelemetry-instrumentation.version>
     <!-- Sonar -->
     <sonar-maven-plugin.version>4.0.0.4121</sonar-maven-plugin.version>
     <sonar.host.url>${CODE_ANALYSIS_HOST_URL}</sonar.host.url>
@@ -73,9 +74,20 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <dependency>
+        <groupId>io.opentelemetry.instrumentation</groupId>
+        <artifactId>opentelemetry-instrumentation-bom</artifactId>
+        <version>${opentelemetry-instrumentation.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
   <dependencies>
+    <dependency>
+      <groupId>io.opentelemetry.instrumentation</groupId>
+      <artifactId>opentelemetry-spring-boot-starter</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-hateoas</artifactId>
