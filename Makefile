@@ -61,9 +61,9 @@ sonar-pr-analysis:
 	mvn sonar:sonar -P sonar-pr-analysis
 
 .PHONY: dependency-check
-dependency-check-local: build package
+dependency-check: build package
 	mvn install -DskipTests
-    /opt/scripts/depcheck --repo-name=document-generator
+	/opt/scripts/depcheck --repo-name=document-generator
 
 .PHONY: dependency-check-local
 dependency-check-local: build package
