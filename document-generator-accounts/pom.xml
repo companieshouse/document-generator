@@ -25,11 +25,11 @@
         <jdk.version>21</jdk.version>
 
         <!--Dependencies-->
-        <spring-boot-start-web.version>3.3.4</spring-boot-start-web.version>
-        <structured-logging.version>3.0.9</structured-logging.version>
+        <spring-boot-start-web.version>3.5.3</spring-boot-start-web.version>
+        <structured-logging.version>3.0.32</structured-logging.version>
         <company-accounts-library.version>3.0.1</company-accounts-library.version>
-        <maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
-        <sonar-maven-plugin.version>3.4.0.905</sonar-maven-plugin.version>
+        <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
+        <sonar-maven-plugin.version>5.1.0.4751</sonar-maven-plugin.version>
     </properties>
 
     <dependencies>

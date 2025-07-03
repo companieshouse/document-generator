@@ -20,9 +20,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
        <jdk.version>21</jdk.version>
-      <spring-boot-start-web.version>3.3.4</spring-boot-start-web.version>
+      <spring-boot-start-web.version>3.5.3</spring-boot-start-web.version>
         <maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
-        <sonar-maven-plugin.version>3.4.0.905</sonar-maven-plugin.version>
+        <sonar-maven-plugin.version>5.1.0.4751</sonar-maven-plugin.version>
     </properties>
 
     <dependencies>
