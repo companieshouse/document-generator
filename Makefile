@@ -41,7 +41,6 @@ endif
 	mvn versions:set -DnewVersion=$(version) -DgenerateBackupPoms=false
 	mvn package -DskipTests=true
 	$(eval tmpdir:= $(shell mktemp -d build-XXXXXXXXXX))
-	cp ./start.sh $(tmpdir)
 	cp ./routes.yaml $(tmpdir)
 	mkdir $(tmpdir)/document-generator-common
 	cp -r ./document-generator-common/api-enumerations $(tmpdir)/document-generator-common

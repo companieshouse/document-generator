@@ -22,7 +22,7 @@
         <apache-http-components.version>5.5</apache-http-components.version>
         <commons-io.version>2.19.0</commons-io.version>
         <maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
-        <sonar-maven-plugin.version>3.4.0.905</sonar-maven-plugin.version>
+        <sonar-maven-plugin.version>5.1.0.4751</sonar-maven-plugin.version>
     </properties>
     
     <dependencies>

@@ -53,13 +53,20 @@
     <commons-beanutils.version>1.11.0</commons-beanutils.version>
     <opentelemetry-instrumentation.version>2.14.0</opentelemetry-instrumentation.version>
     <!-- Sonar -->
-    <sonar-maven-plugin.version>4.0.0.4121</sonar-maven-plugin.version>
+    <sonar-maven-plugin.version>5.1.0.4751</sonar-maven-plugin.version>
     <sonar.host.url>${CODE_ANALYSIS_HOST_URL}</sonar.host.url>
     <sonar.login>${CODE_ANALYSIS_LOGIN}</sonar.login>
     <sonar.password>${CODE_ANALYSIS_PASSWORD}</sonar.password>
   </properties>
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>io.opentelemetry.instrumentation</groupId>
+        <artifactId>opentelemetry-instrumentation-bom</artifactId>
+        <version>${opentelemetry-instrumentation.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-framework-bom</artifactId>
@@ -71,13 +78,6 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
         <version>${spring-boot-dependencies.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>io.opentelemetry.instrumentation</groupId>
-        <artifactId>opentelemetry-instrumentation-bom</artifactId>
-        <version>${opentelemetry-instrumentation.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
