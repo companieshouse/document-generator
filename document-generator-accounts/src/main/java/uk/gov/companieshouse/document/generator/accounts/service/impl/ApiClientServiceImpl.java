@@ -1,11 +1,10 @@
 package uk.gov.companieshouse.document.generator.accounts.service.impl;
 
-import org.springframework.context.annotation.Bean;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import uk.gov.companieshouse.api.ApiClient;
-import uk.gov.companieshouse.api.InternalApiClient;
 import uk.gov.companieshouse.api.http.HttpClient;
 import uk.gov.companieshouse.document.generator.accounts.service.ApiClientService;
 

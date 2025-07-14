@@ -26,18 +26,11 @@
 
         <!--Dependencies-->
         <spring-boot-start-web.version>3.5.3</spring-boot-start-web.version>
-        <structured-logging.version>3.0.32</structured-logging.version>
         <company-accounts-library.version>3.0.1</company-accounts-library.version>
         <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
-        <sonar-maven-plugin.version>5.1.0.4751</sonar-maven-plugin.version>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>uk.gov.companieshouse</groupId>
-            <artifactId>structured-logging</artifactId>
-            <version>${structured-logging.version}</version>
-        </dependency>
         <dependency>
             <groupId>uk.gov.companieshouse</groupId>
             <artifactId>document-generator-interfaces</artifactId>
@@ -52,12 +45,6 @@
             <groupId>uk.gov.companieshouse</groupId>
             <artifactId>company-accounts-library</artifactId>
             <version>${company-accounts-library.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.sonarsource.scanner.maven</groupId>
-            <artifactId>sonar-maven-plugin</artifactId>
-            <version>${sonar-maven-plugin.version}</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 

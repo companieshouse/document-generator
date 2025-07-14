@@ -22,7 +22,6 @@
        <jdk.version>21</jdk.version>
       <spring-boot-start-web.version>3.5.3</spring-boot-start-web.version>
         <maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
-        <sonar-maven-plugin.version>5.1.0.4751</sonar-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -40,17 +39,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <version>${spring-boot-start-web.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>uk.gov.companieshouse</groupId>
-            <artifactId>api-sdk-manager-java-library</artifactId>
-            <version>${api-sdk-manager-java-library.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.sonarsource.scanner.maven</groupId>
-            <artifactId>sonar-maven-plugin</artifactId>
-            <version>${sonar-maven-plugin.version}</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
