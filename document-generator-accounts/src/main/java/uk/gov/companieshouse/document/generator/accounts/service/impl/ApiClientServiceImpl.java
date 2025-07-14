@@ -53,9 +53,4 @@ public class ApiClientServiceImpl implements ApiClientService {
     private static String generateRequestId() {
         return UUID.randomUUID().toString().substring(0,20);
     }
-
-    @Bean
-    public InternalApiClient internalApiClient() {
-        return ApiSdkManager.getPrivateSDK();
-    }
 }
