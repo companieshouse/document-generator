@@ -1,38 +1,27 @@
 package uk.gov.companieshouse.document.generator.accounts.service.impl;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import uk.gov.companieshouse.api.ApiClient;
-import uk.gov.companieshouse.api.http.ApiKeyHttpClient;
+import uk.gov.companieshouse.api.InternalApiClient;
 import uk.gov.companieshouse.api.http.HttpClient;
 import uk.gov.companieshouse.document.generator.accounts.service.ApiClientService;
-import uk.gov.companieshouse.environment.EnvironmentReader;
-import uk.gov.companieshouse.environment.impl.EnvironmentReaderImpl;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.UUID;
+import uk.gov.companieshouse.sdk.manager.ApiSdkManager;
 
 @Service
 public class ApiClientServiceImpl implements ApiClientService {
 
-    private static final EnvironmentReader READER = new EnvironmentReaderImpl();
-
-    private static final String chsApiKey = READER.getMandatoryString("CHS_API_KEY");
-    private static final String apiUrl = READER.getMandatoryString("API_URL");
     private static final String X_REQUEST_ID_HEADER = "x-request-id";
 
     @Override
     public ApiClient getApiClient() {
-        HttpClient httpClient = new ApiKeyHttpClient(chsApiKey);
 
-        setRequestId(httpClient);
-
-        ApiClient apiClient = new ApiClient(httpClient);
-
-        apiClient.setBasePath(apiUrl);
-
-        return apiClient;
+        return ApiSdkManager.getSDK();
     }
 
     /**
@@ -63,5 +52,10 @@ public class ApiClientServiceImpl implements ApiClientService {
      */
     private static String generateRequestId() {
         return UUID.randomUUID().toString().substring(0,20);
+    }
+
+    @Bean
+    public InternalApiClient internalApiClient() {
+        return ApiSdkManager.getPrivateSDK();
     }
 }

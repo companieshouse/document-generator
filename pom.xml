@@ -145,6 +145,11 @@
       <version>${mockito-junit-jupiter.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>uk.gov.companieshouse</groupId>
+      <artifactId>api-sdk-manager-java-library</artifactId>
+      <version>${api-sdk-manager-java-library.version}</version>
+    </dependency>
   </dependencies>
 
   <profiles>
