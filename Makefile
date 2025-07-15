@@ -58,6 +58,11 @@ sonar:
 sonar-pr-analysis:
 	mvn sonar:sonar -P sonar-pr-analysis
 
+.PHONY: dependency-check
+dependency-check: build package
+	mvn install -DskipTests
+	dependency-check-runner --repo-name=document-generator
+
 .PHONY: dependency-check-local
 dependency-check-local: build package
 	mvn install -DskipTests
