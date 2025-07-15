@@ -25,7 +25,6 @@
     <spring-boot-dependencies.version>3.5.3</spring-boot-dependencies.version>
     <spring-boot-maven-plugin.version>3.5.3</spring-boot-maven-plugin.version>
     <mockito-junit-jupiter.version>5.18.0</mockito-junit-jupiter.version>
-
     <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
     <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
     <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
@@ -34,7 +33,7 @@
     <artifactoryResolveReleaseRepo>libs-release-local</artifactoryResolveReleaseRepo>
 
     <!-- CH -->
-    <structured-logging.version>3.0.32</structured-logging.version>
+    <structured-logging.version>3.0.35</structured-logging.version>
     <environment-reader-library.version>3.0.1</environment-reader-library.version>
     <api-sdk-java.version>6.3.1</api-sdk-java.version>
     <private-api-sdk-java.version>4.0.312</private-api-sdk-java.version>
@@ -44,15 +43,16 @@
     <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
     <org.mapstruct.version>1.6.3</org.mapstruct.version>
     <snakeyaml.version>2.2</snakeyaml.version>
-    <gson.version>2.11.0</gson.version>
+    <gson.version>2.13.1</gson.version>
     <json.version>20240303</json.version>
     <maven-install-plugin.version>3.1.4</maven-install-plugin.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <commons-beanutils.version>1.11.0</commons-beanutils.version>
-    <opentelemetry-instrumentation.version>2.14.0</opentelemetry-instrumentation.version>
+    <opentelemetry-instrumentation.version>2.17.0</opentelemetry-instrumentation.version>
     <!-- Sonar -->
     <sonar-maven-plugin.version>5.1.0.4751</sonar-maven-plugin.version>
+    <common-lang3.version>3.18.0</common-lang3.version>
     <sonar.host.url>${CODE_ANALYSIS_HOST_URL}</sonar.host.url>
     <sonar.login>${CODE_ANALYSIS_LOGIN}</sonar.login>
     <sonar.password>${CODE_ANALYSIS_PASSWORD}</sonar.password>
@@ -144,6 +144,16 @@
       <artifactId>mockito-junit-jupiter</artifactId>
       <version>${mockito-junit-jupiter.version}</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>uk.gov.companieshouse</groupId>
+      <artifactId>api-sdk-manager-java-library</artifactId>
+      <version>${api-sdk-manager-java-library.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>${common-lang3.version}</version>
     </dependency>
   </dependencies>
 
