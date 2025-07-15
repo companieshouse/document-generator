@@ -29,12 +29,13 @@
     <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
     <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
     <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
+    <apache-commons-lang3.version>3.18.0</apache-commons-lang3.version>
     <!-- Repositories -->
     <artifactoryResolveSnapshotRepo>libs-snapshot-local</artifactoryResolveSnapshotRepo>
     <artifactoryResolveReleaseRepo>libs-release-local</artifactoryResolveReleaseRepo>
 
     <!-- CH -->
-    <structured-logging.version>3.0.34</structured-logging.version>
+    <structured-logging.version>3.0.35</structured-logging.version>
     <environment-reader-library.version>3.0.1</environment-reader-library.version>
     <api-sdk-java.version>6.3.1</api-sdk-java.version>
     <private-api-sdk-java.version>4.0.312</private-api-sdk-java.version>
@@ -102,12 +103,11 @@
       <artifactId>sonar-maven-plugin</artifactId>
       <version>${sonar-maven-plugin.version}</version>
       <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.commons</groupId>
-          <artifactId>commons-lang3</artifactId>
-        </exclusion>
-      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>${apache-commons-lang3.version}</version>
     </dependency>
     <dependency>
       <groupId>org.mapstruct</groupId>

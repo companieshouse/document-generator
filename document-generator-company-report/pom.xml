@@ -19,6 +19,7 @@
         <maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
         <sonar-maven-plugin.version>5.1.0.4751</sonar-maven-plugin.version>
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+        <apache-commons-lang3.version>3.18.0</apache-commons-lang3.version>
     </properties>
 
     <dependencies>
@@ -26,12 +27,6 @@
             <groupId>uk.gov.companieshouse</groupId>
             <artifactId>private-api-sdk-java</artifactId>
             <version>${private-api-sdk-java.version}</version>
-          <exclusions>
-            <exclusion>
-              <groupId>org.apache.commons</groupId>
-              <artifactId>commons-lang3</artifactId>
-            </exclusion>
-          </exclusions>
         </dependency>
         <dependency>
             <groupId>uk.gov.companieshouse</groupId>
@@ -50,11 +45,6 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct</artifactId>
-            <version>${org.mapstruct.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.jacoco</groupId>
             <artifactId>org.jacoco.report</artifactId>
             <version>${org.jacoco.version}</version>
@@ -67,16 +57,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.sonarsource.scanner.maven</groupId>
-            <artifactId>sonar-maven-plugin</artifactId>
-            <version>${sonar-maven-plugin.version}</version>
-            <scope>test</scope>
-          <exclusions>
-            <exclusion>
-              <groupId>org.apache.commons</groupId>
-              <artifactId>commons-lang3</artifactId>
-            </exclusion>
-          </exclusions>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-lang3</artifactId>
+          <version>${apache-commons-lang3.version}</version>
         </dependency>
     </dependencies>
 
