@@ -41,7 +41,6 @@ endif
 	mvn versions:set -DnewVersion=$(version) -DgenerateBackupPoms=false
 	mvn package -DskipTests=true
 	$(eval tmpdir:= $(shell mktemp -d build-XXXXXXXXXX))
-	cp ./routes.yaml $(tmpdir)
 	mkdir $(tmpdir)/document-generator-common
 	cp -r ./document-generator-common/api-enumerations $(tmpdir)/document-generator-common
 	cp ./target/$(artifact_name)-$(version).jar $(tmpdir)/$(artifact_name).jar
@@ -62,7 +61,7 @@ sonar-pr-analysis:
 .PHONY: dependency-check
 dependency-check: build package
 	mvn install -DskipTests
-	/opt/scripts/depcheck --repo-name=document-generator
+	/opt/scripts/dependency-check-runner --repo-name=document-generator
 
 .PHONY: dependency-check-local
 dependency-check-local: build package

@@ -34,7 +34,7 @@
     <artifactoryResolveReleaseRepo>libs-release-local</artifactoryResolveReleaseRepo>
 
     <!-- CH -->
-    <structured-logging.version>3.0.32</structured-logging.version>
+    <structured-logging.version>3.0.34</structured-logging.version>
     <environment-reader-library.version>3.0.1</environment-reader-library.version>
     <api-sdk-java.version>6.3.1</api-sdk-java.version>
     <private-api-sdk-java.version>4.0.312</private-api-sdk-java.version>
@@ -102,6 +102,12 @@
       <artifactId>sonar-maven-plugin</artifactId>
       <version>${sonar-maven-plugin.version}</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-lang3</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.mapstruct</groupId>
@@ -127,6 +133,12 @@
       <groupId>uk.gov.companieshouse</groupId>
       <artifactId>structured-logging</artifactId>
       <version>${structured-logging.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-lang</groupId>
+          <artifactId>commons-lang</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>uk.gov.companieshouse</groupId>
