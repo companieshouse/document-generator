@@ -25,7 +25,6 @@
     <spring-boot-dependencies.version>3.5.3</spring-boot-dependencies.version>
     <spring-boot-maven-plugin.version>3.5.3</spring-boot-maven-plugin.version>
     <mockito-junit-jupiter.version>5.18.0</mockito-junit-jupiter.version>
-
     <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
     <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
     <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
