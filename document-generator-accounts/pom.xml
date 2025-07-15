@@ -30,6 +30,7 @@
         <company-accounts-library.version>3.0.1</company-accounts-library.version>
         <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
         <sonar-maven-plugin.version>5.1.0.4751</sonar-maven-plugin.version>
+        <apache-commons-lang3.version>3.18.0</apache-commons-lang3.version>
     </properties>
 
     <dependencies>
@@ -71,6 +72,11 @@
             </exclusion>
           </exclusions>
         </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>${apache-commons-lang3.version}</version>
+      </dependency>
     </dependencies>
 
     <build>
