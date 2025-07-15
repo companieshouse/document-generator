@@ -41,6 +41,13 @@
     <private-api-sdk-java.version>4.0.312</private-api-sdk-java.version>
     <api-sdk-manager-java-library.version>3.0.7</api-sdk-manager-java-library.version>
 
+    <!-- sonar config -->
+    <sonar.projectName>document-generator</sonar.projectName>
+    <sonar.projectKey>uk.gov.companieshouse:document-generator</sonar.projectKey>
+    <sonar.token>${CODE_ANALYSIS_TOKEN}</sonar.token>
+    <sonar.login></sonar.login>
+    <sonar.password></sonar.password>
+
     <!-- External -->
     <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
     <org.mapstruct.version>1.6.3</org.mapstruct.version>
