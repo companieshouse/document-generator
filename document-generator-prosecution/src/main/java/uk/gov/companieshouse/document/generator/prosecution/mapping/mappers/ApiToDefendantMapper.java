@@ -1,6 +1,6 @@
 package uk.gov.companieshouse.document.generator.prosecution.mapping.mappers;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.mapstruct.BeforeMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

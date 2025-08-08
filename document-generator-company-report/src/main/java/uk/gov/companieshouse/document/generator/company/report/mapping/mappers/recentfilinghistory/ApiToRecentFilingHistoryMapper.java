@@ -1,6 +1,6 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.recentfilinghistory;
 
-import org.apache.commons.lang3.text.StrSubstitutor;
+import org.apache.commons.lang.text.StrSubstitutor;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

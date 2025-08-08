@@ -10,6 +10,7 @@
         <version>unversioned</version>
     </parent>
 
+    <groupId>uk.gov.companieshouse</groupId>
     <artifactId>document-generator-api</artifactId>
     <version>unversioned</version>
     <name>document-generator-api</name>
@@ -18,9 +19,10 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.version>21</jdk.version>
-        <apache-http-components.version>5.5</apache-http-components.version>
-        <commons-io.version>2.19.0</commons-io.version>
+        <apache-http-components.version>5.4</apache-http-components.version>
+        <commons-io.version>2.17.0</commons-io.version>
         <maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
+        <sonar-maven-plugin.version>3.4.0.905</sonar-maven-plugin.version>
     </properties>
     
     <dependencies>
@@ -59,6 +61,12 @@
             <artifactId>document-generator-company-report</artifactId>
             <version>unversioned</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.sonarsource.scanner.maven</groupId>
+            <artifactId>sonar-maven-plugin</artifactId>
+            <version>${sonar-maven-plugin.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
