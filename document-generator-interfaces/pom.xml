@@ -9,7 +9,8 @@
         <artifactId>document-generator</artifactId>
         <version>unversioned</version>
     </parent>
-
+  
+    <groupId>uk.gov.companieshouse</groupId>
     <artifactId>document-generator-interfaces</artifactId>
     <version>unversioned</version>
     <name>document-generator-interfaces</name>
@@ -21,7 +22,16 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.version>21</jdk.version>
         <maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
+        <sonar-maven-plugin.version>3.4.0.905</sonar-maven-plugin.version>
     </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.sonarsource.scanner.maven</groupId>
+            <artifactId>sonar-maven-plugin</artifactId>
+            <version>${sonar-maven-plugin.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
