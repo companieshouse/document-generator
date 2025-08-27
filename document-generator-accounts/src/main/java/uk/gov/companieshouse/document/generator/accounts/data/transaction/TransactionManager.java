@@ -33,6 +33,7 @@ public class TransactionManager {
 
     private final String apiUrl = READER.getMandatoryString("API_URL");
     private final String chsApiKey = READER.getMandatoryString("CHS_API_KEY");
+    private final String chsInternalApiKey = READER.getMandatoryString("CHS_INTERNAL_API_KEY");
 
     /** represents the Spring rest template that is created for cross microservice contact */
     @Autowired
@@ -87,5 +88,9 @@ public class TransactionManager {
 
     private String getApiKey() {
         return chsApiKey;
+    }
+
+    private String getInternalApiKey() {
+        return chsInternalApiKey;
     }
 }
