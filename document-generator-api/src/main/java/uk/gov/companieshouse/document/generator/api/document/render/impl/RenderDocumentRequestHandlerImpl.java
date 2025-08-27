@@ -4,7 +4,6 @@ import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import uk.gov.companieshouse.document.generator.api.document.render.ConvertJsonHandler;
 import uk.gov.companieshouse.document.generator.api.document.render.HttpConnectionHandler;
 import uk.gov.companieshouse.document.generator.api.document.render.RenderDocumentRequestHandler;
@@ -161,9 +160,9 @@ public class RenderDocumentRequestHandlerImpl implements RenderDocumentRequestHa
      */
     private void setConnectionRequestProperties(HttpURLConnection connection, RenderDocumentRequest request) {
 
-        String apiKey = System.getenv("CHS_API_KEY");
-        if (!StringUtils.isEmpty(apiKey)) {
-            connection.setRequestProperty("Authorization", apiKey);
+        String internalApiKey = System.getenv("CHS_INTERNAL_API_KEY");
+        if (internalApiKey != null && !internalApiKey.isEmpty()) {
+            connection.setRequestProperty("Authorization", internalApiKey);
         }
 
         connection.setRequestProperty("templateName", request.getTemplateName());
