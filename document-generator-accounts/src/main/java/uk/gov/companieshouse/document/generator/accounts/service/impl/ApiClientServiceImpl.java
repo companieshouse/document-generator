@@ -18,14 +18,13 @@ public class ApiClientServiceImpl implements ApiClientService {
 
     private static final EnvironmentReader READER = new EnvironmentReaderImpl();
 
-    private static final String chsInternalApiKey = READER.getMandatoryString("CHS_INTERNAL_API_KEY");
-    private static final String chsApiKey = READER.getMandatoryString("CHS_API_KEY");
+    private static final String CHS_INTERNAL_API_KEY = READER.getMandatoryString("CHS_INTERNAL_API_KEY");
     private static final String apiUrl = READER.getMandatoryString("API_URL");
     private static final String X_REQUEST_ID_HEADER = "x-request-id";
 
     @Override
     public ApiClient getApiClient() {
-        HttpClient httpClient = new ApiKeyHttpClient(chsInternalApiKey);
+        HttpClient httpClient = new ApiKeyHttpClient(CHS_INTERNAL_API_KEY);
 
         setRequestId(httpClient);
 

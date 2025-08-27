@@ -11,7 +11,6 @@ import uk.gov.companieshouse.api.http.HttpClient;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.UUID;
 import uk.gov.companieshouse.environment.EnvironmentReader;
-import uk.gov.companieshouse.environment.impl.EnvironmentReaderImpl;
 
 @Service
 public class CompanyReportApiClientService {
@@ -20,7 +19,6 @@ public class CompanyReportApiClientService {
     private EnvironmentReader environmentReader;
 
     private static final String CHS_INTERNAL_API_KEY = "CHS_INTERNAL_API_KEY";
-    private static final String CHS_API_KEY = "CHS_API_KEY";
     private static final String API_URL = "API_URL";
     private static final String X_REQUEST_ID_HEADER = "x-request-id";
 

@@ -32,7 +32,6 @@ public class TransactionManager {
     private static final EnvironmentReader READER = new EnvironmentReaderImpl();
 
     private final String apiUrl = READER.getMandatoryString("API_URL");
-    private final String chsApiKey = READER.getMandatoryString("CHS_API_KEY");
     private final String chsInternalApiKey = READER.getMandatoryString("CHS_INTERNAL_API_KEY");
 
     /** represents the Spring rest template that is created for cross microservice contact */
@@ -54,7 +53,7 @@ public class TransactionManager {
      */
     public Transaction getTransaction(String transactionLink, String requestId) throws Exception {
         HttpHeaders requestHeaders = new HttpHeaders();
-        requestHeaders.set(AUTHORIZATION_HEADER, getApiKey());
+        requestHeaders.set(AUTHORIZATION_HEADER, getInternalApiKey());
 
         HttpEntity requestEntity = new HttpEntity(requestHeaders);
         String url = getBaseUrl(transactionLink);
@@ -84,10 +83,6 @@ public class TransactionManager {
 
     private String getRootUri() {
         return apiUrl;
-    }
-
-    private String getApiKey() {
-        return chsApiKey;
     }
 
     private String getInternalApiKey() {
