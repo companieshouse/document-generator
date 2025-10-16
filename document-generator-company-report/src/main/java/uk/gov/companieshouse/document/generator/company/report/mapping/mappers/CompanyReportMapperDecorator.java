@@ -178,7 +178,7 @@ public class CompanyReportMapperDecorator implements CompanyReportMapper {
                 companyReport.setCompanyRegisters(setRegister(companyReportApiData.getCompanyRegistersApi().getRegisters()));
             }
 
-            if (companyReportApiData.getCompanyExemptionsApi() !=null) {
+            if (companyReportApiData.getCompanyExemptionsApi() != null) {
                 LOG.infoContext(requestId, "Map Data for Company Exemptions", getDebugMap(companyNumber));
                 companyReport.setExemptions(setExemptions(companyReportApiData.getCompanyExemptionsApi().getExemptions()));
             }
