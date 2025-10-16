@@ -23,7 +23,7 @@
     <!-- Java/Spring -->
     <jdk.version>21</jdk.version>
     <spring-webmvc.version>6.2.3</spring-webmvc.version>
-    <spring-boot-dependencies.version>3.4.3</spring-boot-dependencies.version>
+    <spring-boot-dependencies.version>3.5.6</spring-boot-dependencies.version>
     <spring-boot-maven-plugin.version>3.4.3</spring-boot-maven-plugin.version>
     <mockito-junit-jupiter.version>5.16.0</mockito-junit-jupiter.version>
 
@@ -36,7 +36,7 @@
 
     <!-- CH -->
     <structured-logging.version>3.0.26</structured-logging.version>
-    <environment-reader-library.version>3.0.1</environment-reader-library.version>
+    <environment-reader-library.version>3.0.5</environment-reader-library.version>
     <api-sdk-java.version>6.4.10</api-sdk-java.version>
     <private-api-sdk-java.version>4.0.389</private-api-sdk-java.version>
     <api-sdk-manager-java-library.version>3.0.13</api-sdk-manager-java-library.version>
@@ -55,6 +55,9 @@
     <sonar.host.url>${CODE_ANALYSIS_HOST_URL}</sonar.host.url>
     <sonar.login>${CODE_ANALYSIS_LOGIN}</sonar.login>
     <sonar.password>${CODE_ANALYSIS_PASSWORD}</sonar.password>
+
+    <!-- Overrides -->
+    <commons-lang3.version>3.19.0</commons-lang3.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -75,6 +78,14 @@
     </dependencies>
   </dependencyManagement>
   <dependencies>
+    <!-- Overrides -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>${commons-lang3.version}</version>
+    </dependency>
+
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-hateoas</artifactId>

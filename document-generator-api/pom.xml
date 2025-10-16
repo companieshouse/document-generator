@@ -19,22 +19,28 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.version>21</jdk.version>
-        <apache-http-components.version>5.4</apache-http-components.version>
-        <commons-io.version>2.17.0</commons-io.version>
+        <commons-io.version>2.20.0</commons-io.version>
         <maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
         <sonar-maven-plugin.version>3.4.0.905</sonar-maven-plugin.version>
+
+      <!-- Overrides -->
+      <httpclient5.version>5.4.4</httpclient5.version>
+
     </properties>
     
     <dependencies>
+      <!-- Overrides -->
+      <dependency>
+        <groupId>org.apache.httpcomponents.client5</groupId>
+        <artifactId>httpclient5</artifactId>
+        <version>${httpclient5.version}</version>
+      </dependency>
+
+
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>${commons-io.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents.client5</groupId>
-            <artifactId>httpclient5</artifactId>
-            <version>${apache-http-components.version}</version>
         </dependency>
         <dependency>
             <groupId>uk.gov.companieshouse</groupId>
