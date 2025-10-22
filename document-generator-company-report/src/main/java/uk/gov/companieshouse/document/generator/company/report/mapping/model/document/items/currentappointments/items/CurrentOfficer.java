@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 import uk.gov.companieshouse.api.model.common.Address;
 import uk.gov.companieshouse.api.model.common.ContactDetails;
+import uk.gov.companieshouse.api.model.officers.IdentityVerificationDetails;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.DateDayMonthYear;
 
 
@@ -68,6 +69,17 @@ public class CurrentOfficer {
 
     @JsonProperty("contact_details")
     private ContactDetails contactDetails;
+
+    @JsonProperty("identity_verification_details")
+    private IdentityVerificationDetails identityVerificationDetails;
+
+    public IdentityVerificationDetails getIdentityVerificationDetails() {
+        return identityVerificationDetails;
+    }
+
+    public void setIdentityVerificationDetails(IdentityVerificationDetails identityVerificationDetails) {
+        this.identityVerificationDetails = identityVerificationDetails;
+    }
 
     public String getOccupation() {
         return occupation;
