@@ -51,6 +51,13 @@ public abstract class ApiToPscMapper {
     private RetrieveApiEnumerationDescription retrieveApiEnumerationDescription;
 
     @AfterMapping
+    protected void setIdentityVerificationDetails(PscApi pscApi, @MappingTarget Psc psc) {
+        if (pscApi != null && pscApi.getIdentityVerificationDetails() != null) {
+            psc.setIdentityVerificationDetails(pscApi.getIdentityVerificationDetails());
+        }
+    }
+
+    @AfterMapping
     protected void setNaturesOfControl(PscApi pscApi, @MappingTarget Psc psc) {
 
         if (pscApi != null && pscApi.getNaturesOfControl() != null) {
