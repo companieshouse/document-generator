@@ -9,7 +9,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.common.Address;
 import uk.gov.companieshouse.api.model.common.DateOfBirth;
+import uk.gov.companieshouse.api.model.officers.IdentityVerificationDetails;
 import uk.gov.companieshouse.api.model.psc.PscApi;
+import uk.gov.companieshouse.api.model.psc.PscIdentityVerificationDetails;
 import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.pscs.items.Psc;
 
@@ -33,6 +35,10 @@ class ApiToPscMapperTest {
             2019, 06, 06);
     private static final LocalDate NOTIFIED_ON = LocalDate.of(
             2019, 05, 05);
+    private static final LocalDate idvHistoricDate = LocalDate.of(1992, 4, 7);
+    private static final LocalDate idvFutureDate = idvHistoricDate.withYear(LocalDate.now().plusYears(1).getYear());
+    private static final String idvPreferredName = "Preferred Name";
+    private static final List<String> idvAMLBodies = List.of("AML1", "AML2");
     private static final String COUNTRY_OF_RESIDENCE = "country of residence";
     private static final String ADDRESS_LINE_ONE = "address line 1";
     private static final String ADDRESS_LINE_TWO = "address line 2";
@@ -77,6 +83,28 @@ class ApiToPscMapperTest {
         assertEquals("6 June 2019", psc.get(1).getCeasedOn());
         assertEquals("5 May 2019", psc.get(2).getNotifiedOn());
 
+    }
+
+    @Test
+    void testApiToPscMapsIDV() {
+        PscApi pscApi = createPscApiWithIDV();
+
+        when(mockRetrieveApiEnumerations.getApiEnumerationDescription(anyString(), anyString(),
+                anyString(), any())).thenReturn(MAPPED_VALUE);
+
+        Psc psc = apiToPscMapper.apiToPsc(pscApi);
+
+        assertNotNull(psc);
+
+        assertNotNull(psc.getIdentityVerificationDetails());
+        PscIdentityVerificationDetails idv = psc.getIdentityVerificationDetails();
+
+        assertEquals(idvHistoricDate, idv.getAppointmentVerificationStatementDate());
+        assertEquals(idvHistoricDate, idv.getAppointmentVerificationStartOn());
+        assertEquals(idvHistoricDate, idv.getIdentityVerifiedOn());
+        assertEquals(idvFutureDate, idv.getAppointmentVerificationEndOn());
+        assertEquals(idvAMLBodies, idv.getAntiMoneyLaunderingSupervisoryBodies());
+        assertEquals(idvPreferredName, idv.getPreferredName());
     }
 
     @Test
@@ -147,6 +175,35 @@ class ApiToPscMapperTest {
         assertEquals(PREMISE, psc.getPrincipalOfficeAddress().getPremises());
 
         assertEquals(MAPPED_VALUE, psc.getSuperSecureDescription());
+    }
+
+    private PscApi createPscApiWithIDV() {
+        final PscApi pscApi = new PscApi();
+
+        final Address address = createAddress();
+        pscApi.setAddress(address);
+        pscApi.setDateOfBirth(createDateOfBirth());
+        pscApi.setCeasedOn(CEASED_ON);
+        pscApi.setCountryOfResidence(COUNTRY_OF_RESIDENCE);
+        pscApi.setIdentification(createIdentification());
+        pscApi.setNaturesOfControl(NATURE_OF_CONTROL);
+        pscApi.setNotifiedOn(NOTIFIED_ON);
+        pscApi.setNationality(NATIONALITY);
+        pscApi.setName(NAME);
+
+        pscApi.setSanctioned(IS_SANCTIONED);
+        pscApi.setPrincipalOfficeAddress(address);
+
+        PscIdentityVerificationDetails idv = new PscIdentityVerificationDetails();
+        idv.setAppointmentVerificationStatementDate(idvHistoricDate);
+        idv.setAppointmentVerificationEndOn(idvFutureDate);
+        idv.setAntiMoneyLaunderingSupervisoryBodies(idvAMLBodies);
+        idv.setPreferredName(idvPreferredName);
+        idv.setAppointmentVerificationStartOn(idvHistoricDate);
+        idv.setIdentityVerifiedOn(idvHistoricDate);
+        pscApi.setIdentityVerificationDetails(idv);
+
+        return pscApi;
     }
 
     private PscApi createPscApiWithKind(final String kind) {
