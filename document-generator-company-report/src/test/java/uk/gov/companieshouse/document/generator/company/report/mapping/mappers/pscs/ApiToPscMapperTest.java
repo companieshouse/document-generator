@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static uk.gov.companieshouse.document.generator.company.report.utils.TestUtils.getFormatter;
 
 @ExtendWith({MockitoExtension.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -62,8 +63,6 @@ class ApiToPscMapperTest {
 
     private static final String SUPER_SECURE_PERSON_WITH_SIGNIFICANT_CONTROL_KIND = "super-secure-person-with-significant-control";
     private static final String SUPER_SECURE_BENEFICIAL_OWNER_KIND = "super-secure-beneficial-owner";
-
-    private static final String D_MMMM_UUUU = "d MMMM uuuu";
 
 
     @InjectMocks
@@ -284,9 +283,5 @@ class ApiToPscMapperTest {
         pscList.add(psc2);
         pscList.add(psc3);
         return pscList;
-    }
-
-    private DateTimeFormatter getFormatter() {
-        return DateTimeFormatter.ofPattern(D_MMMM_UUUU);
     }
 }
