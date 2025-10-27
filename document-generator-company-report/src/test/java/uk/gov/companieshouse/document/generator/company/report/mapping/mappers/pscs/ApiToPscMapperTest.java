@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.pscs;
 
+import java.time.format.DateTimeFormatter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -62,6 +63,8 @@ class ApiToPscMapperTest {
     private static final String SUPER_SECURE_PERSON_WITH_SIGNIFICANT_CONTROL_KIND = "super-secure-person-with-significant-control";
     private static final String SUPER_SECURE_BENEFICIAL_OWNER_KIND = "super-secure-beneficial-owner";
 
+    private static final String D_MMMM_UUUU = "d MMMM uuuu";
+
 
     @InjectMocks
     private ApiToPscMapper apiToPscMapper = new ApiToPscMapperImpl();
@@ -96,12 +99,16 @@ class ApiToPscMapperTest {
         assertNotNull(psc);
 
         assertNotNull(psc.getIdentityVerificationDetails());
-        PscIdentityVerificationDetails idv = psc.getIdentityVerificationDetails();
+        uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.pscs.items.PscIdentityVerificationDetails
+                idv = psc.getIdentityVerificationDetails();
 
-        assertEquals(IDV_HISTORIC_DATE, idv.getAppointmentVerificationStatementDate());
-        assertEquals(IDV_HISTORIC_DATE, idv.getAppointmentVerificationStartOn());
-        assertEquals(IDV_HISTORIC_DATE, idv.getIdentityVerifiedOn());
-        assertEquals(IDV_FUTURE_DATE, idv.getAppointmentVerificationEndOn());
+        String idvHistoricDateExpectedFormat = IDV_HISTORIC_DATE.format(getFormatter());
+        String idvFutureDateExpectedFormat = IDV_FUTURE_DATE.format(getFormatter());
+
+        assertEquals(idvHistoricDateExpectedFormat, idv.getAppointmentVerificationStatementDate());
+        assertEquals(idvHistoricDateExpectedFormat, idv.getAppointmentVerificationStartOn());
+        assertEquals(idvHistoricDateExpectedFormat, idv.getIdentityVerifiedOn());
+        assertEquals(idvFutureDateExpectedFormat, idv.getAppointmentVerificationEndOn());
         assertEquals(IDV_AML_BODIES, idv.getAntiMoneyLaunderingSupervisoryBodies());
         assertEquals(IDV_PREFERRED_NAME, idv.getPreferredName());
     }
@@ -277,5 +284,9 @@ class ApiToPscMapperTest {
         pscList.add(psc2);
         pscList.add(psc3);
         return pscList;
+    }
+
+    private DateTimeFormatter getFormatter() {
+        return DateTimeFormatter.ofPattern(D_MMMM_UUUU);
     }
 }

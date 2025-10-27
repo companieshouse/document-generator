@@ -51,13 +51,6 @@ public abstract class ApiToPscMapper {
     private RetrieveApiEnumerationDescription retrieveApiEnumerationDescription;
 
     @AfterMapping
-    protected void setIdentityVerificationDetails(PscApi pscApi, @MappingTarget Psc psc) {
-        if (pscApi != null && pscApi.getIdentityVerificationDetails() != null) {
-            psc.setIdentityVerificationDetails(pscApi.getIdentityVerificationDetails());
-        }
-    }
-
-    @AfterMapping
     protected void setNaturesOfControl(PscApi pscApi, @MappingTarget Psc psc) {
 
         if (pscApi != null && pscApi.getNaturesOfControl() != null) {
@@ -114,6 +107,66 @@ public abstract class ApiToPscMapper {
         }
             psc.setSuperSecureDescription(description);
         }
+
+    @AfterMapping
+    protected void formatAppointmentVerificationEndOn(PscApi pscApi, @MappingTarget Psc psc) {
+        if (pscApi == null ||
+                pscApi.getIdentityVerificationDetails() == null ||
+                pscApi.getIdentityVerificationDetails().getAppointmentVerificationEndOn() == null) {
+            return;
+        }
+
+        LocalDate idvAppointmentVerificationEndOn = pscApi.getIdentityVerificationDetails().getAppointmentVerificationEndOn();
+        psc.getIdentityVerificationDetails().setAppointmentVerificationEndOn(idvAppointmentVerificationEndOn.format(getFormatter()));
+    }
+
+    @AfterMapping
+    protected void formatAppointmentVerificationStatementDueOn(PscApi pscApi, @MappingTarget Psc psc) {
+        if (pscApi == null ||
+                pscApi.getIdentityVerificationDetails() == null ||
+                pscApi.getIdentityVerificationDetails().getAppointmentVerificationStatementDueOn() == null) {
+            return;
+        }
+
+        LocalDate idvAppointmentVerificationStatementDueOn = pscApi.getIdentityVerificationDetails().getAppointmentVerificationStatementDueOn();
+        psc.getIdentityVerificationDetails().setAppointmentVerificationStatementDueOn(idvAppointmentVerificationStatementDueOn.format(getFormatter()));
+    }
+
+    @AfterMapping
+    protected void formatAppointmentVerificationStatementDate(PscApi pscApi, @MappingTarget Psc psc) {
+        if (pscApi == null ||
+                pscApi.getIdentityVerificationDetails() == null ||
+                pscApi.getIdentityVerificationDetails().getAppointmentVerificationStatementDate() == null) {
+            return;
+        }
+
+        LocalDate idvAppointmentVerificationStatementDate = pscApi.getIdentityVerificationDetails().getAppointmentVerificationStatementDate();
+        psc.getIdentityVerificationDetails().setAppointmentVerificationStatementDate(idvAppointmentVerificationStatementDate.format(getFormatter()));
+    }
+
+    @AfterMapping
+    protected void formatAppointmentVerificationStartOn(PscApi pscApi, @MappingTarget Psc psc) {
+        if (pscApi == null ||
+                pscApi.getIdentityVerificationDetails() == null ||
+                pscApi.getIdentityVerificationDetails().getAppointmentVerificationStartOn() == null) {
+            return;
+        }
+
+        LocalDate idvAppointmentVerificationStartOn = pscApi.getIdentityVerificationDetails().getAppointmentVerificationStartOn();
+        psc.getIdentityVerificationDetails().setAppointmentVerificationStartOn(idvAppointmentVerificationStartOn.format(getFormatter()));
+    }
+
+    @AfterMapping
+    protected void formatIdentityVerifiedOn(PscApi pscApi, @MappingTarget Psc psc) {
+        if (pscApi == null ||
+                pscApi.getIdentityVerificationDetails() == null ||
+                pscApi.getIdentityVerificationDetails().getIdentityVerifiedOn() == null) {
+            return;
+        }
+
+        LocalDate idvIdentityVerifiedOn = pscApi.getIdentityVerificationDetails().getIdentityVerifiedOn();
+        psc.getIdentityVerificationDetails().setIdentityVerifiedOn(idvIdentityVerifiedOn.format(getFormatter()));
+    }
 
     private List<NaturesOfControl> setNaturesOfControl(String[] naturesOfControl) {
 

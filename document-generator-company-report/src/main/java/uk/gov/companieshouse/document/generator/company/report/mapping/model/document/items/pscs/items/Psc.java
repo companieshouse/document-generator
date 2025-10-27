@@ -2,7 +2,6 @@ package uk.gov.companieshouse.document.generator.company.report.mapping.model.do
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
-import uk.gov.companieshouse.api.model.psc.PscIdentityVerificationDetails;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.Address;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.DateDayMonthYear;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.Identification;

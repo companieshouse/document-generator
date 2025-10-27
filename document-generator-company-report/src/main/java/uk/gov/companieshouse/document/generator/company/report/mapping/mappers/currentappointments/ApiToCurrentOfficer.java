@@ -101,6 +101,71 @@ public abstract class ApiToCurrentOfficer {
         }
     }
 
+    @AfterMapping
+    protected void formatAppointmentVerificationEndOn(CompanyOfficerApi companyOfficerApi,
+            @MappingTarget CurrentOfficer currentOfficer) {
+        if (companyOfficerApi == null ||
+                companyOfficerApi.getIdentityVerificationDetails() == null ||
+                companyOfficerApi.getIdentityVerificationDetails().getAppointmentVerificationEndOn() == null) {
+            return;
+        }
+
+        LocalDate idvAppointmentVerificationEndOn = companyOfficerApi.getIdentityVerificationDetails().getAppointmentVerificationEndOn();
+        currentOfficer.getIdentityVerificationDetails().setAppointmentVerificationEndOn(idvAppointmentVerificationEndOn.format(getFormatter()));
+    }
+
+    @AfterMapping
+    protected void formatAppointmentVerificationStatementDueOn(CompanyOfficerApi companyOfficerApi,
+            @MappingTarget CurrentOfficer currentOfficer) {
+        if (companyOfficerApi == null ||
+                companyOfficerApi.getIdentityVerificationDetails() == null ||
+                companyOfficerApi.getIdentityVerificationDetails().getAppointmentVerificationStatementDueOn() == null) {
+            return;
+        }
+
+        LocalDate idvAppointmentVerificationStatementDueOn = companyOfficerApi.getIdentityVerificationDetails().getAppointmentVerificationStatementDueOn();
+        currentOfficer.getIdentityVerificationDetails().setAppointmentVerificationStatementDueOn(idvAppointmentVerificationStatementDueOn.format(getFormatter()));
+    }
+
+    @AfterMapping
+    protected void formatAppointmentVerificationStatementDate(CompanyOfficerApi companyOfficerApi,
+            @MappingTarget CurrentOfficer currentOfficer) {
+        if (companyOfficerApi == null ||
+                companyOfficerApi.getIdentityVerificationDetails() == null ||
+                companyOfficerApi.getIdentityVerificationDetails().getAppointmentVerificationStatementDate() == null) {
+            return;
+        }
+
+        LocalDate idvAppointmentVerificationStatementDate = companyOfficerApi.getIdentityVerificationDetails().getAppointmentVerificationStatementDate();
+        currentOfficer.getIdentityVerificationDetails().setAppointmentVerificationStatementDate(idvAppointmentVerificationStatementDate.format(getFormatter()));
+    }
+
+    @AfterMapping
+    protected void formatAppointmentVerificationStartOn(CompanyOfficerApi companyOfficerApi,
+            @MappingTarget CurrentOfficer currentOfficer) {
+        if (companyOfficerApi == null ||
+            companyOfficerApi.getIdentityVerificationDetails() == null ||
+            companyOfficerApi.getIdentityVerificationDetails().getAppointmentVerificationStartOn() == null) {
+            return;
+        }
+
+        LocalDate idvAppointmentVerificationStartOn = companyOfficerApi.getIdentityVerificationDetails().getAppointmentVerificationStartOn();
+        currentOfficer.getIdentityVerificationDetails().setAppointmentVerificationStartOn(idvAppointmentVerificationStartOn.format(getFormatter()));
+    }
+
+    @AfterMapping
+    protected void formatIdentityVerifiedOn(CompanyOfficerApi companyOfficerApi,
+            @MappingTarget CurrentOfficer currentOfficer) {
+        if (companyOfficerApi == null ||
+                companyOfficerApi.getIdentityVerificationDetails() == null ||
+                companyOfficerApi.getIdentityVerificationDetails().getIdentityVerifiedOn() == null) {
+            return;
+        }
+
+        LocalDate idvIdentityVerifiedOn = companyOfficerApi.getIdentityVerificationDetails().getIdentityVerifiedOn();
+        currentOfficer.getIdentityVerificationDetails().setIdentityVerifiedOn(idvIdentityVerifiedOn.format(getFormatter()));
+    }
+
     private boolean hasOfficerRole(CompanyOfficerApi companyOfficerApi) {
         return companyOfficerApi.getOfficerRole() != null &&
                 companyOfficerApi.getOfficerRole().getOfficerRole() != null;
