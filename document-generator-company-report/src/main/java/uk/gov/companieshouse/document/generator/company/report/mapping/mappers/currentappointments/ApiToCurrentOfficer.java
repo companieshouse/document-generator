@@ -1,5 +1,11 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.currentappointments;
 
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -12,13 +18,6 @@ import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiE
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.DateDayMonthYear;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.items.CurrentOfficer;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyReportApiClientService;
-
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @RequestScope
 @Mapper(componentModel = "spring")

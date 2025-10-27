@@ -1,9 +1,8 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.mortgagechargedetails;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.mortgagechargedetails.items.Charge;
-
 import java.util.List;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.mortgagechargedetails.items.Charge;
 
 public class MortgageChargeDetails {
 

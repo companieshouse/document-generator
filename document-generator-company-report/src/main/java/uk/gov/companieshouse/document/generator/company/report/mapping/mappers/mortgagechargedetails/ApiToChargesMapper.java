@@ -1,5 +1,9 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.mortgagechargedetails;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -11,11 +15,6 @@ import uk.gov.companieshouse.api.model.charges.ChargeApi;
 import uk.gov.companieshouse.api.model.charges.ClassificationApi;
 import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.mortgagechargedetails.items.Charge;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @RequestScope
 @Mapper(componentModel = "spring", uses = {ApiToParticularsMapper.class, ApiToPersonsEntitledMapper.class, ApiToSecuredDetailsMapper.class})

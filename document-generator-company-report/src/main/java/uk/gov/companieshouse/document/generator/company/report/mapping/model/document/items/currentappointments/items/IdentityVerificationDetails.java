@@ -1,10 +1,7 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.items;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
-import java.time.LocalDate;
 import java.util.List;
 
 public class IdentityVerificationDetails {

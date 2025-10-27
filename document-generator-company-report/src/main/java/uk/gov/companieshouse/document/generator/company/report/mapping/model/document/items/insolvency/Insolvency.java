@@ -1,9 +1,8 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.insolvency;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.insolvency.items.InsolvencyCase;
-
 import java.util.List;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.insolvency.items.InsolvencyCase;
 
 public class Insolvency {
 

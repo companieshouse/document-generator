@@ -3,9 +3,6 @@ package uk.gov.companieshouse.document.generator.company.report.mapping.model.do
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import java.time.LocalDate;
 
 @JsonInclude(Include.NON_NULL)
 public class PreviousNames {

@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,8 +24,6 @@ import uk.gov.companieshouse.api.model.company.CompanyProfileApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.OracleQueryApiException;
 import uk.gov.companieshouse.document.generator.company.report.service.OracleQueryApiClientService;
 import uk.gov.companieshouse.document.generator.company.report.service.oracle.CompanyServiceOracle;
-
-import java.io.IOException;
 
 @ExtendWith(MockitoExtension.class)
 class CompanyServiceOracleTest {

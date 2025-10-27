@@ -4,10 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import uk.gov.companieshouse.document.generator.company.report.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.company.report.handler.CompanyReportDataHandler;
 import uk.gov.companieshouse.document.generator.company.report.handler.DissolvedCompanyReportDataHandler;

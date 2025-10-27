@@ -1,5 +1,7 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.registers;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
@@ -9,9 +11,6 @@ import uk.gov.companieshouse.api.model.registers.RegisterApi;
 import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registers.items.Register;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registers.items.RegisterItems;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RequestScope
 @Mapper(componentModel = "spring", uses = {ApiToRegisterItems.class})

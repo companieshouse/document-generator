@@ -1,5 +1,7 @@
 package uk.gov.companieshouse.document.generator.company.report.service;
 
+import jakarta.servlet.http.HttpServletRequest;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -7,9 +9,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import uk.gov.companieshouse.api.ApiClient;
 import uk.gov.companieshouse.api.http.ApiKeyHttpClient;
 import uk.gov.companieshouse.api.http.HttpClient;
-
-import jakarta.servlet.http.HttpServletRequest;
-import java.util.UUID;
 import uk.gov.companieshouse.environment.EnvironmentReader;
 
 @Service

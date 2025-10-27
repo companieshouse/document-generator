@@ -1,5 +1,10 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.companyregisters;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -14,11 +19,6 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.r
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.registers.ApiToRegistersMapperImpl;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registers.CompanyRegisters;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registers.items.Register;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
