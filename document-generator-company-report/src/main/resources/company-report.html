@@ -831,7 +831,7 @@
                         {{if (gt (timeParse "2 January 2006" (or .identity_verification_details.appointment_verification_end_on "7 April 1992")).Unix (timeNow.Unix))}}
                             <li>Identity verification status: Verification requirements complete</li>
                         {{else if .identity_verification_details.appointment_verification_statement_due_on}}
-                            <li>Identity verification due on: {{.identity_verification_details.appointment_verification_statement_due_on}}</li>
+                            <li>Identity verification due by: {{.identity_verification_details.appointment_verification_statement_due_on}}</li>
                         {{end}}
 
 
