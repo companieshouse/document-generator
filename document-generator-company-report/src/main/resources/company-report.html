@@ -828,7 +828,7 @@
                     {{end}}
 
                     {{if .identity_verification_details}}
-                        {{if (gt (timeParse "2006-01-02" (or .identity_verification_details.appointment_verification_end_on "1992-04-07")).Unix (timeNow.Unix))}}
+                        {{if (gt (timeParse "2 January 2006" (or .identity_verification_details.appointment_verification_end_on "7 April 1992")).Unix (timeNow.Unix))}}
                             <li>Identity verification status: Verification requirements complete</li>
                         {{else if .identity_verification_details.appointment_verification_statement_due_on}}
                             <li>Identity verification due on: {{.identity_verification_details.appointment_verification_statement_due_on}}</li>
@@ -1112,7 +1112,7 @@
 
                     {{end}}
                     {{if .identity_verification_details}}
-                        {{if (gt (timeParse "2006-01-02" (or .identity_verification_details.appointment_verification_end_on "1992-04-07")).Unix (timeNow.Unix))}}
+                        {{if (gt (timeParse "2 January 2006" (or .identity_verification_details.appointment_verification_end_on "7 April 1992")).Unix (timeNow.Unix))}}
                             <li>Identity verification status: Verification requirements complete</li>
                         {{else if .identity_verification_details.appointment_verification_statement_date}}
                             {{if .identity_verification_details.appointment_verification_statement_due_on}}
