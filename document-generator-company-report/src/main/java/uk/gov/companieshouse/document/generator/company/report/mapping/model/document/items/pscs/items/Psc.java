@@ -47,6 +47,17 @@ public class Psc {
     @JsonProperty("super_secure_description")
     private String superSecureDescription;
 
+    @JsonProperty("identity_verification_details")
+    private PscIdentityVerificationDetails identityVerificationDetails;
+
+    public PscIdentityVerificationDetails getIdentityVerificationDetails() {
+        return identityVerificationDetails;
+    }
+
+    public void setIdentityVerificationDetails(PscIdentityVerificationDetails identityVerificationDetails) {
+        this.identityVerificationDetails = identityVerificationDetails;
+    }
+
     public Address getAddress() {
         return address;
     }

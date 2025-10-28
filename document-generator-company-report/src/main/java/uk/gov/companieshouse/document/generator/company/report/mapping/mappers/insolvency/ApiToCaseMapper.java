@@ -1,5 +1,8 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.insolvency;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -10,10 +13,6 @@ import org.springframework.web.context.annotation.RequestScope;
 import uk.gov.companieshouse.api.model.insolvency.CaseApi;
 import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.insolvency.items.InsolvencyCase;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @RequestScope
 @Mapper(componentModel = "spring", uses = {ApiToPractitionerMapper.class, ApiToInsolvencyDateMapper.class})

@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.foreigncompanydetails;
 
 
+import java.time.Month;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -12,8 +13,6 @@ import uk.gov.companieshouse.api.model.company.foreigncompany.account.ForeignAcc
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.ForeignCompanyDetails;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.items.Accounts;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.foreigncompanydetails.items.accountsItems.AccountPeriodDayMonth;
-
-import java.time.Month;
 
 @RequestScope
 @Mapper(componentModel = "spring")

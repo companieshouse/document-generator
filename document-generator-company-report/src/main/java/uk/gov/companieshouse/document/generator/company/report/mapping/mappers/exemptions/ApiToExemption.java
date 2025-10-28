@@ -1,5 +1,7 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.exemptions;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
@@ -9,9 +11,6 @@ import uk.gov.companieshouse.api.model.exemptions.ExemptionApi;
 import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.exemptions.items.Exemption;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.exemptions.items.ExemptionItems;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RequestScope
 @Mapper(componentModel = "spring", uses = {ApiToExemptionItems.class})

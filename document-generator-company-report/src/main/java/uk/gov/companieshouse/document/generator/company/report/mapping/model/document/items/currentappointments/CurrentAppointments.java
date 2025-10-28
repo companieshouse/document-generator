@@ -1,9 +1,8 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.items.CurrentOfficer;
-
 import java.util.List;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.items.CurrentOfficer;
 
 public class CurrentAppointments {
 

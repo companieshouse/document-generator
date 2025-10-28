@@ -1,5 +1,11 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.currentappointments;
 
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -12,13 +18,6 @@ import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiE
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.DateDayMonthYear;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.items.CurrentOfficer;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyReportApiClientService;
-
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @RequestScope
 @Mapper(componentModel = "spring")
@@ -99,6 +98,71 @@ public abstract class ApiToCurrentOfficer {
             LocalDate resignedOn = companyOfficerApi.getResignedOn();
             currentOfficer.setResigned(resignedOn.format(getFormatter()));
         }
+    }
+
+    @AfterMapping
+    protected void formatAppointmentVerificationEndOn(CompanyOfficerApi companyOfficerApi,
+            @MappingTarget CurrentOfficer currentOfficer) {
+        if (companyOfficerApi == null ||
+                companyOfficerApi.getIdentityVerificationDetails() == null ||
+                companyOfficerApi.getIdentityVerificationDetails().getAppointmentVerificationEndOn() == null) {
+            return;
+        }
+
+        LocalDate idvAppointmentVerificationEndOn = companyOfficerApi.getIdentityVerificationDetails().getAppointmentVerificationEndOn();
+        currentOfficer.getIdentityVerificationDetails().setAppointmentVerificationEndOn(idvAppointmentVerificationEndOn.format(getFormatter()));
+    }
+
+    @AfterMapping
+    protected void formatAppointmentVerificationStatementDueOn(CompanyOfficerApi companyOfficerApi,
+            @MappingTarget CurrentOfficer currentOfficer) {
+        if (companyOfficerApi == null ||
+                companyOfficerApi.getIdentityVerificationDetails() == null ||
+                companyOfficerApi.getIdentityVerificationDetails().getAppointmentVerificationStatementDueOn() == null) {
+            return;
+        }
+
+        LocalDate idvAppointmentVerificationStatementDueOn = companyOfficerApi.getIdentityVerificationDetails().getAppointmentVerificationStatementDueOn();
+        currentOfficer.getIdentityVerificationDetails().setAppointmentVerificationStatementDueOn(idvAppointmentVerificationStatementDueOn.format(getFormatter()));
+    }
+
+    @AfterMapping
+    protected void formatAppointmentVerificationStatementDate(CompanyOfficerApi companyOfficerApi,
+            @MappingTarget CurrentOfficer currentOfficer) {
+        if (companyOfficerApi == null ||
+                companyOfficerApi.getIdentityVerificationDetails() == null ||
+                companyOfficerApi.getIdentityVerificationDetails().getAppointmentVerificationStatementDate() == null) {
+            return;
+        }
+
+        LocalDate idvAppointmentVerificationStatementDate = companyOfficerApi.getIdentityVerificationDetails().getAppointmentVerificationStatementDate();
+        currentOfficer.getIdentityVerificationDetails().setAppointmentVerificationStatementDate(idvAppointmentVerificationStatementDate.format(getFormatter()));
+    }
+
+    @AfterMapping
+    protected void formatAppointmentVerificationStartOn(CompanyOfficerApi companyOfficerApi,
+            @MappingTarget CurrentOfficer currentOfficer) {
+        if (companyOfficerApi == null ||
+            companyOfficerApi.getIdentityVerificationDetails() == null ||
+            companyOfficerApi.getIdentityVerificationDetails().getAppointmentVerificationStartOn() == null) {
+            return;
+        }
+
+        LocalDate idvAppointmentVerificationStartOn = companyOfficerApi.getIdentityVerificationDetails().getAppointmentVerificationStartOn();
+        currentOfficer.getIdentityVerificationDetails().setAppointmentVerificationStartOn(idvAppointmentVerificationStartOn.format(getFormatter()));
+    }
+
+    @AfterMapping
+    protected void formatIdentityVerifiedOn(CompanyOfficerApi companyOfficerApi,
+            @MappingTarget CurrentOfficer currentOfficer) {
+        if (companyOfficerApi == null ||
+                companyOfficerApi.getIdentityVerificationDetails() == null ||
+                companyOfficerApi.getIdentityVerificationDetails().getIdentityVerifiedOn() == null) {
+            return;
+        }
+
+        LocalDate idvIdentityVerifiedOn = companyOfficerApi.getIdentityVerificationDetails().getIdentityVerifiedOn();
+        currentOfficer.getIdentityVerificationDetails().setIdentityVerifiedOn(idvIdentityVerifiedOn.format(getFormatter()));
     }
 
     private boolean hasOfficerRole(CompanyOfficerApi companyOfficerApi) {

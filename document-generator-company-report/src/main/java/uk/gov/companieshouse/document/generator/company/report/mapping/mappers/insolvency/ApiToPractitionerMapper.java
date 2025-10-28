@@ -1,6 +1,8 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.insolvency;
 
 
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -9,9 +11,6 @@ import org.mapstruct.Mappings;
 import org.springframework.web.context.annotation.RequestScope;
 import uk.gov.companieshouse.api.model.insolvency.PractitionerApi;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.insolvency.items.Practitioner;
-
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 @RequestScope
 @Mapper(componentModel = "spring")

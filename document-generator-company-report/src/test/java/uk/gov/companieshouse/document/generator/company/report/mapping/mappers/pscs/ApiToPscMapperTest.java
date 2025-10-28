@@ -1,5 +1,15 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.pscs;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+import static uk.gov.companieshouse.document.generator.company.report.utils.TestUtils.getFormatter;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -10,18 +20,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.model.common.Address;
 import uk.gov.companieshouse.api.model.common.DateOfBirth;
 import uk.gov.companieshouse.api.model.psc.PscApi;
+import uk.gov.companieshouse.api.model.psc.PscIdentityVerificationDetails;
 import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.pscs.items.Psc;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -33,6 +34,10 @@ class ApiToPscMapperTest {
             2019, 06, 06);
     private static final LocalDate NOTIFIED_ON = LocalDate.of(
             2019, 05, 05);
+    private static final LocalDate IDV_HISTORIC_DATE = LocalDate.of(1992, 4, 7);
+    private static final LocalDate IDV_FUTURE_DATE = IDV_HISTORIC_DATE.withYear(LocalDate.now().plusYears(1).getYear());
+    private static final String IDV_PREFERRED_NAME = "Preferred Name";
+    private static final List<String> IDV_AML_BODIES = List.of("AML1", "AML2");
     private static final String COUNTRY_OF_RESIDENCE = "country of residence";
     private static final String ADDRESS_LINE_ONE = "address line 1";
     private static final String ADDRESS_LINE_TWO = "address line 2";
@@ -77,6 +82,32 @@ class ApiToPscMapperTest {
         assertEquals("6 June 2019", psc.get(1).getCeasedOn());
         assertEquals("5 May 2019", psc.get(2).getNotifiedOn());
 
+    }
+
+    @Test
+    void testApiToPscMapsIDV() {
+        PscApi pscApi = createPscApiWithIDV();
+
+        when(mockRetrieveApiEnumerations.getApiEnumerationDescription(anyString(), anyString(),
+                anyString(), any())).thenReturn(MAPPED_VALUE);
+
+        Psc psc = apiToPscMapper.apiToPsc(pscApi);
+
+        assertNotNull(psc);
+
+        assertNotNull(psc.getIdentityVerificationDetails());
+        uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.pscs.items.PscIdentityVerificationDetails
+                idv = psc.getIdentityVerificationDetails();
+
+        String idvHistoricDateExpectedFormat = IDV_HISTORIC_DATE.format(getFormatter());
+        String idvFutureDateExpectedFormat = IDV_FUTURE_DATE.format(getFormatter());
+
+        assertEquals(idvHistoricDateExpectedFormat, idv.getAppointmentVerificationStatementDate());
+        assertEquals(idvHistoricDateExpectedFormat, idv.getAppointmentVerificationStartOn());
+        assertEquals(idvHistoricDateExpectedFormat, idv.getIdentityVerifiedOn());
+        assertEquals(idvFutureDateExpectedFormat, idv.getAppointmentVerificationEndOn());
+        assertEquals(IDV_AML_BODIES, idv.getAntiMoneyLaunderingSupervisoryBodies());
+        assertEquals(IDV_PREFERRED_NAME, idv.getPreferredName());
     }
 
     @Test
@@ -147,6 +178,35 @@ class ApiToPscMapperTest {
         assertEquals(PREMISE, psc.getPrincipalOfficeAddress().getPremises());
 
         assertEquals(MAPPED_VALUE, psc.getSuperSecureDescription());
+    }
+
+    private PscApi createPscApiWithIDV() {
+        final PscApi pscApi = new PscApi();
+
+        final Address address = createAddress();
+        pscApi.setAddress(address);
+        pscApi.setDateOfBirth(createDateOfBirth());
+        pscApi.setCeasedOn(CEASED_ON);
+        pscApi.setCountryOfResidence(COUNTRY_OF_RESIDENCE);
+        pscApi.setIdentification(createIdentification());
+        pscApi.setNaturesOfControl(NATURE_OF_CONTROL);
+        pscApi.setNotifiedOn(NOTIFIED_ON);
+        pscApi.setNationality(NATIONALITY);
+        pscApi.setName(NAME);
+
+        pscApi.setSanctioned(IS_SANCTIONED);
+        pscApi.setPrincipalOfficeAddress(address);
+
+        PscIdentityVerificationDetails idv = new PscIdentityVerificationDetails();
+        idv.setAppointmentVerificationStatementDate(IDV_HISTORIC_DATE);
+        idv.setAppointmentVerificationEndOn(IDV_FUTURE_DATE);
+        idv.setAntiMoneyLaunderingSupervisoryBodies(IDV_AML_BODIES);
+        idv.setPreferredName(IDV_PREFERRED_NAME);
+        idv.setAppointmentVerificationStartOn(IDV_HISTORIC_DATE);
+        idv.setIdentityVerifiedOn(IDV_HISTORIC_DATE);
+        pscApi.setIdentityVerificationDetails(idv);
+
+        return pscApi;
     }
 
     private PscApi createPscApiWithKind(final String kind) {

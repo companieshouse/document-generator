@@ -316,8 +316,8 @@
         </ul>
     {{end}}
 
-    <p class="heading-small">Created: {{.company_report.time_stamp_created}}</p>
-    <p class="heading-small">Companies House does not verify the accuracy of the information filed</p>
+    <p class="heading-small">Created: {{.company_report.time_stamp_created}} (UTC)</p>
+    <p class="heading-small">Companies House does not check the accuracy of the information filed</p>
 </header>
 <main role="main">
 
@@ -337,7 +337,7 @@
                 Service address:
 
             {{else}}
-                Registered office address:    
+                Registered office address:
             {{end}}
 
             {{if $roa.care_of}}
@@ -379,9 +379,9 @@
             {{if eq $companyRegistrationInformation.company_type.type "Overseas entity"}}
                 Correspondence address:
 
-            {{else}}    
+            {{else}}
                 Service address:
-            {{end}}    
+            {{end}}
 
             {{if $sa.care_of}}
             {{index $sa "care_of"}},
@@ -578,9 +578,9 @@
             {{if $roa := $companyRegistrationInformation.registered_office}}
             {{if eq $companyRegistrationInformation.company_type.type "Overseas entity"}}
             <li>
-    
+
                     Overseas entity address:
-                  
+
                 {{if $roa.care_of}}
                 {{index $roa "care_of"}},
                 {{end}}
@@ -612,7 +612,7 @@
                 {{end}}
             </li>
             {{end}}
-            {{end}}  
+            {{end}}
 
             {{if $foreignCompanyDetails.country}}
             <li>Incorporated in: {{$foreignCompanyDetails.country}}</li>
@@ -827,6 +827,36 @@
 
                     {{end}}
 
+                    {{if .identity_verification_details}}
+                        {{if (gt (timeParse "2 January 2006" (or .identity_verification_details.appointment_verification_end_on "7 April 1992")).Unix (timeNow.Unix))}}
+                            <li>Identity verification status: Verification requirements complete</li>
+                        {{else if .identity_verification_details.appointment_verification_statement_due_on}}
+                            <li>Identity verification due by: {{.identity_verification_details.appointment_verification_statement_due_on}}</li>
+                        {{end}}
+
+
+                        {{if (or .identity_verification_details.anti_money_laundering_supervisory_bodies .identity_verification_details.authorised_corporate_service_provider_name .identity_verification_details.identity_verified_on .identity_verification_details.preferred_name)}}
+                            <li>Identity authorised by an Authorised Corporate Service Provider (ACSP):<br>
+                            {{(or .identity_verification_details.authorised_corporate_service_provider_name "")}} has confirmed that they have verified the identity of {{(or .identity_verification_details.preferred_name "")}} to the standard set by Companies House and is satisfied that the required personal information is true. The verification checks were completed on {{(or .identity_verification_details.identity_verified_on "")}}. {{(or .identity_verification_details.authorised_corporate_service_provider_name "")}} is supervised by:
+                            {{if .identity_verification_details.anti_money_laundering_supervisory_bodies}}
+                                {{if (eq (len .identity_verification_details.anti_money_laundering_supervisory_bodies) 1)}}
+                                    {{index .identity_verification_details.anti_money_laundering_supervisory_bodies 0}}
+                                {{else if (gt (len .identity_verification_details.anti_money_laundering_supervisory_bodies) 1)}}
+                                    {{$length := (len (slice .identity_verification_details.anti_money_laundering_supervisory_bodies 1))}}
+                                    {{range $index, $element := .identity_verification_details.anti_money_laundering_supervisory_bodies}}
+                                    {{if (lt $index $length)}}
+                                        {{$element}},
+                                    {{else}}
+                                        {{$element}}.
+                                    {{end}}
+                                {{end}}
+                            {{else}}
+                                .
+                            {{end}}
+                            </li>
+                        {{end}}
+                    {{end}}
+                {{end}}
             </ul>
             <hr>
         {{end}}
@@ -1080,6 +1110,36 @@
                         <li>Incorporated in: {{.identification.country_registered}}</li>
                         {{end}}
 
+                    {{end}}
+                    {{if .identity_verification_details}}
+                        {{if (gt (timeParse "2 January 2006" (or .identity_verification_details.appointment_verification_end_on "7 April 1992")).Unix (timeNow.Unix))}}
+                            <li>Identity verification status: Verification requirements complete</li>
+                        {{else if .identity_verification_details.appointment_verification_statement_date}}
+                            {{if .identity_verification_details.appointment_verification_statement_due_on}}
+                                <li>Identity verification due from: {{.identity_verification_details.appointment_verification_statement_date}}</li>
+                                <li>Identity verification due by: {{.identity_verification_details.appointment_verification_statement_due_on}}</li>
+                            {{end}}
+                        {{end}}
+                        {{if (or .identity_verification_details.anti_money_laundering_supervisory_bodies .identity_verification_details.authorised_corporate_service_provider_name .identity_verification_details.identity_verified_on .identity_verification_details.preferred_name)}}
+                            <li>Identity authorised by an Authorised Corporate Service Provider (ACSP):<br>
+                            {{(or .identity_verification_details.authorised_corporate_service_provider_name "")}} has confirmed that they have verified the identity of {{(or .identity_verification_details.preferred_name "")}} to the standard set by Companies House and is satisfied that the required personal information is true. The verification checks were completed on {{(or .identity_verification_details.identity_verified_on "")}}. {{(or .identity_verification_details.authorised_corporate_service_provider_name "")}} is supervised by:
+                            {{if .identity_verification_details.anti_money_laundering_supervisory_bodies}}
+                                {{if (eq (len .identity_verification_details.anti_money_laundering_supervisory_bodies) 1)}}
+                                    {{index .identity_verification_details.anti_money_laundering_supervisory_bodies 0}}
+                                {{else if (gt (len .identity_verification_details.anti_money_laundering_supervisory_bodies) 1)}}
+                                    {{$length := (len (slice .identity_verification_details.anti_money_laundering_supervisory_bodies 1))}}
+                                    {{range $index, $element := .identity_verification_details.anti_money_laundering_supervisory_bodies}}
+                                        {{if (lt $index $length)}}
+                                            {{$element}},
+                                        {{else}}
+                                            {{$element}}.
+                                        {{end}}
+                                    {{end}}
+                                {{end}}
+                            {{else}}
+                                .
+                            {{end}}
+                        {{end}}
                     {{end}}
                 </ul>
 
