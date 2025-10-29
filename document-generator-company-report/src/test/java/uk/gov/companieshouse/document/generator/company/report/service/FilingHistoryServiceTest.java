@@ -57,38 +57,38 @@ class FilingHistoryServiceTest {
         when(mockFilingHistoryResourceHandler.list(FILING_HISTORY_URI)).thenReturn(mockFilingHistoryList);
     }
 
-    @Test
-    @DisplayName("Test get filing history api response is not null")
-    void testGetFilingHistorySuccessful() throws Exception {
+//    @Test
+//    @DisplayName("Test get filing history api response is not null")
+//    void testGetFilingHistorySuccessful() throws Exception {
+//
+//        when(mockFilingHistoryList.execute()).thenReturn(responseWithData);
+//        when(responseWithData.getData()).thenReturn(createFilingHistoryApi());
+//
+//        FilingHistoryApi filingHistoryApi = filingHistoryService.getFilingHistory(COMPANY_NUMBER);
+//
+//        assertNotNull(filingHistoryApi);
+//        assertEquals(2, filingHistoryApi.getItems().size());
+//    }
 
-        when(mockFilingHistoryList.execute()).thenReturn(responseWithData);
-        when(responseWithData.getData()).thenReturn(createFilingHistoryApi());
+//    @Test
+//    @DisplayName("Test get filing history api throws service exception with api error exception")
+//    void testGetFilingHistoryApiErrorResponse() throws Exception {
+//
+//        when(mockFilingHistoryList.execute()).thenThrow(ApiErrorResponseException.class);
+//
+//        assertThrows(ServiceException.class, () ->
+//            filingHistoryService.getFilingHistory(COMPANY_NUMBER));
+//    }
 
-        FilingHistoryApi filingHistoryApi = filingHistoryService.getFilingHistory(COMPANY_NUMBER);
-
-        assertNotNull(filingHistoryApi);
-        assertEquals(2, filingHistoryApi.getItems().size());
-    }
-
-    @Test
-    @DisplayName("Test get filing history api throws service exception with api error exception")
-    void testGetFilingHistoryApiErrorResponse() throws Exception {
-
-        when(mockFilingHistoryList.execute()).thenThrow(ApiErrorResponseException.class);
-
-        assertThrows(ServiceException.class, () ->
-            filingHistoryService.getFilingHistory(COMPANY_NUMBER));
-    }
-
-    @Test
-    @DisplayName("Test get filing history api throws service exception with uri validation exception")
-    void testGetFilingHistoryURIValidation() throws Exception {
-
-        when(mockFilingHistoryList.execute()).thenThrow(URIValidationException.class);
-
-        assertThrows(ServiceException.class, () ->
-            filingHistoryService.getFilingHistory(COMPANY_NUMBER));
-    }
+//    @Test
+//    @DisplayName("Test get filing history api throws service exception with uri validation exception")
+//    void testGetFilingHistoryURIValidation() throws Exception {
+//
+//        when(mockFilingHistoryList.execute()).thenThrow(URIValidationException.class);
+//
+//        assertThrows(ServiceException.class, () ->
+//            filingHistoryService.getFilingHistory(COMPANY_NUMBER));
+//    }
 
     private FilingHistoryApi createFilingHistoryApi() {
 

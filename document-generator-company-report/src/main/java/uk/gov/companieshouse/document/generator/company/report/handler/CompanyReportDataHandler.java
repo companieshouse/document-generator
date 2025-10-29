@@ -186,6 +186,8 @@ public class CompanyReportDataHandler {
 
             try {
                 FilingHistoryApi filingHistoryApi = getFilingHistory(companyNumber, requestId);
+                LOG.infoContext(requestId, "Got response from filing history for company: "
+                        + companyNumber, getDebugMap(companyNumber));
                 companyReportApiData.setFilingHistoryApi(filingHistoryApi);
 
             } catch (HandlerException he) {
