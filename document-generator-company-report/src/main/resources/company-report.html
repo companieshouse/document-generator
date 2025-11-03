@@ -316,8 +316,8 @@
         </ul>
     {{end}}
 
-    <p class="heading-small">Created: {{.company_report.time_stamp_created}}</p>
-    <p class="heading-small">Companies House does not verify the accuracy of the information filed</p>
+    <p class="heading-small">Created: {{.company_report.time_stamp_created}} (UTC)</p>
+    <p class="heading-small">Companies House does not check the accuracy of the information filed</p>
 </header>
 <main role="main">
 
@@ -337,7 +337,7 @@
                 Service address:
 
             {{else}}
-                Registered office address:    
+                Registered office address:
             {{end}}
 
             {{if $roa.care_of}}
@@ -379,9 +379,9 @@
             {{if eq $companyRegistrationInformation.company_type.type "Overseas entity"}}
                 Correspondence address:
 
-            {{else}}    
+            {{else}}
                 Service address:
-            {{end}}    
+            {{end}}
 
             {{if $sa.care_of}}
             {{index $sa "care_of"}},
@@ -578,9 +578,9 @@
             {{if $roa := $companyRegistrationInformation.registered_office}}
             {{if eq $companyRegistrationInformation.company_type.type "Overseas entity"}}
             <li>
-    
+
                     Overseas entity address:
-                  
+
                 {{if $roa.care_of}}
                 {{index $roa "care_of"}},
                 {{end}}
@@ -612,7 +612,7 @@
                 {{end}}
             </li>
             {{end}}
-            {{end}}  
+            {{end}}
 
             {{if $foreignCompanyDetails.country}}
             <li>Incorporated in: {{$foreignCompanyDetails.country}}</li>
