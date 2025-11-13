@@ -25,6 +25,8 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 public class ApiToPscStatementMapperTest {
 
     public static final String MAPPED_VALUE = "mapped value";
+    public static final String PSC_STATEMENT_NAME_PLACEHOLDER = "{linked_psc_name}";
+    public static final String EXPECTED_PSC_STATEMENT_VALUE = "A Valid Linked PSC Name";
     @InjectMocks
     private ApiToPscStatementMapper apiToPscStatementMapper = new ApiToPscStatementMapperImpl();
 
@@ -55,6 +57,23 @@ public class ApiToPscStatementMapperTest {
 
     }
 
+    @Test
+    @DisplayName("tests PSC statement with placeholder statement value maps to PSC statement model")
+    void testApiWithPlaceholderToPSCStatementMaps() {
+
+        StatementApi statementApi = createStatementApiWithPlaceholder();
+
+        when(mockRetrieveApiEnumerations.getApiEnumerationDescription(anyString(), anyString(),
+                anyString(), any())).thenReturn(EXPECTED_PSC_STATEMENT_VALUE);
+
+        Statement statement = apiToPscStatementMapper.ApiToStatementMapper(statementApi);
+
+        assertNotNull(statement);
+
+        assertEquals(EXPECTED_PSC_STATEMENT_VALUE, statement.getStatement());
+
+    }
+
     private StatementApi createStatementApi() {
 
         StatementApi statementApi = new StatementApi();
@@ -65,6 +84,15 @@ public class ApiToPscStatementMapperTest {
 
         return statementApi;
 
+    }
+
+    private StatementApi createStatementApiWithPlaceholder() {
+        StatementApi statementApi = new StatementApi();
+
+        statementApi.setLinkedPscName(EXPECTED_PSC_STATEMENT_VALUE);
+        statementApi.setStatement(PSC_STATEMENT_NAME_PLACEHOLDER);
+
+        return statementApi;
     }
 
     @Test
