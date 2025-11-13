@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -30,6 +31,7 @@ public abstract class ApiToPscStatementMapper {
     private static final String PSC_DESCRIPTIONS = "PSC_DESCRIPTIONS";
     private static final String IDENTIFIER = "statement_description";
     private static final String D_MMMM_UUUU = "d MMMM uuuu";
+    private static final String PSC_STATEMENT_NAME_PLACEHOLDER = "\\{linked_psc_name}";
 
     @Mappings({
             @Mapping(target = "statement", ignore = true),
@@ -46,6 +48,10 @@ public abstract class ApiToPscStatementMapper {
         String statementDescription = retrieveApiEnumerationDescription
             .getApiEnumerationDescription(PSC_DESCRIPTIONS, IDENTIFIER, statementApi.getStatement(),
                 getDebugMap(statementApi.getStatement()));
+
+        if (statementDescription.contains(PSC_STATEMENT_NAME_PLACEHOLDER) && StringUtils.isNotBlank(statementApi.getLinkedPscName())) {
+            statementDescription = statementDescription.replaceAll(PSC_STATEMENT_NAME_PLACEHOLDER, statementApi.getLinkedPscName());
+        }
 
         statement.setStatement(statementDescription);
     }
