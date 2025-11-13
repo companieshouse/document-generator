@@ -31,7 +31,7 @@ public abstract class ApiToPscStatementMapper {
     private static final String PSC_DESCRIPTIONS = "PSC_DESCRIPTIONS";
     private static final String IDENTIFIER = "statement_description";
     private static final String D_MMMM_UUUU = "d MMMM uuuu";
-    private static final String PSC_STATEMENT_NAME_PLACEHOLDER = "\\{linked_psc_name}";
+    private static final String PSC_STATEMENT_NAME_PLACEHOLDER = "{linked_psc_name}";
 
     @Mappings({
             @Mapping(target = "statement", ignore = true),
@@ -50,7 +50,7 @@ public abstract class ApiToPscStatementMapper {
                 getDebugMap(statementApi.getStatement()));
 
         if (statementDescription.contains(PSC_STATEMENT_NAME_PLACEHOLDER) && StringUtils.isNotBlank(statementApi.getLinkedPscName())) {
-            statementDescription = statementDescription.replaceAll(PSC_STATEMENT_NAME_PLACEHOLDER, statementApi.getLinkedPscName());
+            statementDescription = statementDescription.replace(PSC_STATEMENT_NAME_PLACEHOLDER, statementApi.getLinkedPscName());
         }
 
         statement.setStatement(statementDescription);
