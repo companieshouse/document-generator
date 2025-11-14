@@ -25,9 +25,9 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 public class ApiToPscStatementMapperTest {
 
     public static final String MAPPED_VALUE = "mapped value";
-    public static final String PSC_STATEMENT_NAME_PLACEHOLDER = "{linked_psc_name} has failed to comply with a notice given by the company under section 790E or EA of the Act";
+    public static final String PSC_STATEMENT_NAME_PLACEHOLDER = "{linked_psc_name} should match the psc_linked_name value";
     public static final String PSC_STATEMENT_LINKED_NAME = "A Valid Linked PSC Name";
-    public static final String PSC_STATEMENT_EXPECTED_VALUE = PSC_STATEMENT_LINKED_NAME + " has failed to comply with a notice given by the company under section 790E or EA of the Act";
+    public static final String PSC_STATEMENT_EXPECTED_VALUE = PSC_STATEMENT_LINKED_NAME + " should match the psc_linked_name value";
     @InjectMocks
     private ApiToPscStatementMapper apiToPscStatementMapper = new ApiToPscStatementMapperImpl();
 
