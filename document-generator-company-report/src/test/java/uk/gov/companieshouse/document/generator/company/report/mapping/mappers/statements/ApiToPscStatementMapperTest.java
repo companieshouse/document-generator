@@ -25,8 +25,9 @@ import uk.gov.companieshouse.document.generator.company.report.mapping.model.doc
 public class ApiToPscStatementMapperTest {
 
     public static final String MAPPED_VALUE = "mapped value";
-    public static final String PSC_STATEMENT_NAME_PLACEHOLDER = "{linked_psc_name}";
-    public static final String EXPECTED_PSC_STATEMENT_VALUE = "A Valid Linked PSC Name";
+    public static final String PSC_STATEMENT_NAME_PLACEHOLDER = "{linked_psc_name} has failed to comply with a notice given by the company under section 790E or EA of the Act";
+    public static final String PSC_STATEMENT_LINKED_NAME = "A Valid Linked PSC Name";
+    public static final String PSC_STATEMENT_EXPECTED_VALUE = PSC_STATEMENT_LINKED_NAME + " has failed to comply with a notice given by the company under section 790E or EA of the Act";
     @InjectMocks
     private ApiToPscStatementMapper apiToPscStatementMapper = new ApiToPscStatementMapperImpl();
 
@@ -64,13 +65,13 @@ public class ApiToPscStatementMapperTest {
         StatementApi statementApi = createStatementApiWithPlaceholder();
 
         when(mockRetrieveApiEnumerations.getApiEnumerationDescription(anyString(), anyString(),
-                anyString(), any())).thenReturn(EXPECTED_PSC_STATEMENT_VALUE);
+                anyString(), any())).thenReturn(PSC_STATEMENT_NAME_PLACEHOLDER);
 
         Statement statement = apiToPscStatementMapper.ApiToStatementMapper(statementApi);
 
         assertNotNull(statement);
 
-        assertEquals(EXPECTED_PSC_STATEMENT_VALUE, statement.getStatement());
+        assertEquals(PSC_STATEMENT_EXPECTED_VALUE, statement.getStatement());
 
     }
 
@@ -89,7 +90,7 @@ public class ApiToPscStatementMapperTest {
     private StatementApi createStatementApiWithPlaceholder() {
         StatementApi statementApi = new StatementApi();
 
-        statementApi.setLinkedPscName(EXPECTED_PSC_STATEMENT_VALUE);
+        statementApi.setLinkedPscName(PSC_STATEMENT_LINKED_NAME);
         statementApi.setStatement(PSC_STATEMENT_NAME_PLACEHOLDER);
 
         return statementApi;
