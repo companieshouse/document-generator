@@ -85,6 +85,19 @@
       <version>${commons-lang3.version}</version>
     </dependency>
 
+    <!-- Pinning version to address CVE-2025-61795 tomcat-embed-websocket pulled transitively-->
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-websocket</artifactId>
+      <version>11.0.14</version>
+    </dependency>
+
+    <!-- Pinning version to address CVE-2025-61795 tomcat-embed-core pulled transitively-->
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-core</artifactId>
+      <version>11.0.14</version>
+    </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
