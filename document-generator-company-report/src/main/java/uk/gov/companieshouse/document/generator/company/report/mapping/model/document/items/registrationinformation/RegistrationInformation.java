@@ -58,6 +58,9 @@ public class RegistrationInformation {
     @JsonProperty("has_more_than_one_super_secure_managing_officers")
     private Boolean hasMoreThanOneSuperSecureManagingOfficers;
 
+    @JsonProperty("term")
+    private String term;
+
     public String getDateOfIncorporationLabel() {
         return dateOfIncorporationLabel;
     }
@@ -176,5 +179,13 @@ public class RegistrationInformation {
 
     public void setHasMoreThanOneSuperSecureManagingOfficers(Boolean hasMoreThanOneSuperSecureManagingOfficers) {
         this.hasMoreThanOneSuperSecureManagingOfficers = hasMoreThanOneSuperSecureManagingOfficers;
+    }
+
+    public String getTerm() {
+        return term;
+    }
+
+    public void setTerm(String term) {
+        this.term = term;
     }
 }

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -32,6 +34,7 @@ public abstract class ApiToRegistrationInformationMapper {
     private static final String REPORT_DATE_FORMAT = "d MMMM uuuu";
     private static final String ENUMERATION_MAPPING = "Enumeration mapping :";
     private static final String COMPANY_BIRTH_TYPE = "company_birth_type";
+    private static final String COMPANY_TERM = "term";
 
     @Mappings({
             @Mapping(source = "companyName", target = "companyName"),
@@ -64,7 +67,8 @@ public abstract class ApiToRegistrationInformationMapper {
                     .setNatureOfBusiness(setNatureOfBusiness(companyProfileApi.getSicCodes()));
             registrationInformation
                     .setStatus(setCompanyStatus(companyProfileApi.getCompanyStatus(), companyProfileApi.getCompanyStatusDetail()));
-
+            registrationInformation
+                    .setTerm(getTermDescription(companyProfileApi.getTerm()));
         }
     }
 
@@ -164,5 +168,16 @@ public abstract class ApiToRegistrationInformationMapper {
         }
 
         return companyType;
+    }
+
+    private String getTermDescription(String term) {
+        String termDescription = null;
+
+        if (StringUtils.isNotBlank(term)) {
+            termDescription = retrieveApiEnumerationDescription
+                    .getApiEnumerationDescription(CONSTANTS, COMPANY_TERM, term, getDebugMap(term));
+        }
+
+        return termDescription;
     }
 }

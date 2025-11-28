@@ -439,6 +439,9 @@
                 {{if $companyRegistrationInformation.status.company_status_detail}}/{{$companyRegistrationInformation.status.company_status_detail}}{{end}}</li>
         {{end}}
 
+        {{if $companyRegistrationInformation.term}}
+            <li>Term: {{$companyRegistrationInformation.term}}</li>
+        {{end}}
     </ul>
 
     {{if eq $companyRegistrationInformation.company_type.type "Overseas entity"}}
