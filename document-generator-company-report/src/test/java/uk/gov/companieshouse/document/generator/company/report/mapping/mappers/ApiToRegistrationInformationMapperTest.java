@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -73,11 +74,30 @@ class ApiToRegistrationInformationMapperTest {
         RegistrationInformation registrationInformation =
                 apiToRegistrationInformationMapper.apiToRegistrationInformation(companyProfileApi);
 
+        checkMappedFields(registrationInformation, MAPPED_VALUE);
+    }
+
+    @Test
+    @DisplayName("tests company profile data maps to registration information model when company sub-type look-up fails")
+    void testApiToRegistrationInformationMapsForNullCompanySubtype() {
+
+        CompanyProfileApi companyProfileApi = createCompanyReportApiData();
+
+        when(mockRetrieveApiEnumerations.getApiEnumerationDescription(anyString(), anyString(), anyString(), any())).thenReturn(MAPPED_VALUE);
+        when(mockRetrieveApiEnumerations.getApiEnumerationDescription(anyString(), eq("company_subtype"), anyString(), any())).thenReturn("null");
+
+        RegistrationInformation registrationInformation =
+                apiToRegistrationInformationMapper.apiToRegistrationInformation(companyProfileApi);
+
+        checkMappedFields(registrationInformation, "");
+    }
+
+    private void checkMappedFields(RegistrationInformation registrationInformation, String expectedCompanySubtype) {
         assertNotNull(registrationInformation);
         assertEquals(COMPANY_NAME, registrationInformation.getCompanyName());
         assertEquals(COMPANY_NUMBER, registrationInformation.getCompanyNumber());
         assertEquals(MAPPED_VALUE, registrationInformation.getCompanyType().getType());
-        assertEquals(MAPPED_VALUE, registrationInformation.getCompanyType().getSubtype());
+        assertEquals(expectedCompanySubtype, registrationInformation.getCompanyType().getSubtype());
         assertEquals(DATE_OF_CREATION_FORMATTED, registrationInformation.getDateOfIncorporation());
         assertEquals(DATE_OF_CESSATION_FORMATTED, registrationInformation.getDateOfDissolution());
         assertEquals(MAPPED_VALUE, registrationInformation.getStatus().getCompanyStatus());

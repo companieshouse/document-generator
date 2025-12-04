@@ -162,9 +162,11 @@ public abstract class ApiToRegistrationInformationMapper {
                     .getApiEnumerationDescription(CONSTANTS, COMPANY_TYPE, type, getDebugMap(type)));
         }
 
-        if (subtype != null && ! subtype.isEmpty()) {
-            companyType.setSubtype(retrieveApiEnumerationDescription
-                    .getApiEnumerationDescription(CONSTANTS, COMPANY_SUBTYPE, subtype, getDebugMap(subtype)));
+        if (StringUtils.isNotBlank(subtype)) {
+            String description = retrieveApiEnumerationDescription
+                    .getApiEnumerationDescription(CONSTANTS, COMPANY_SUBTYPE, subtype, getDebugMap(subtype));
+
+            companyType.setSubtype(description.equals("null") ? "" : description);
         }
 
         return companyType;
