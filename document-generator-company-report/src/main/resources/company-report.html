@@ -378,7 +378,8 @@
 
             {{if eq $companyRegistrationInformation.company_type.type "Overseas entity"}}
                 Correspondence address:
-
+            {{else if eq $companyRegistrationInformation.company_type.type "Limited partnership"}}
+                Principal place of business:
             {{else}}
                 Service address:
             {{end}}
@@ -417,7 +418,7 @@
 
         {{if $companyRegistrationInformation.company_type.type}}
             <li>Company type: {{$companyRegistrationInformation.company_type.type}}
-                {{if $companyRegistrationInformation.company_type.subtype}}/{{$companyRegistrationInformation.company_type.subtype}}{{end}}</li>
+                {{if $companyRegistrationInformation.company_type.subtype}}/ {{$companyRegistrationInformation.company_type.subtype}}{{end}}</li>
         {{end}}
 
         {{if and (ne $companyRegistrationInformation.company_type.type "Overseas company") (ne $companyRegistrationInformation.company_type.type "Overseas entity")}}
