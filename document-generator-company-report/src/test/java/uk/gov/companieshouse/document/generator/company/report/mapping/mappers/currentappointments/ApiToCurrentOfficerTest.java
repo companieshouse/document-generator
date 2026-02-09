@@ -66,6 +66,7 @@ class ApiToCurrentOfficerTest {
     private static final String LEGAL_FORM = "legal form";
     private static final String PLACE_REGISTRATION = "place registration";
     private static final String REGISTRATION_NUMBER = "registration number";
+    private static final String REGISTER_LOCATION = "register location";
 
     private static final String RESPONSIBILITIES = "Window cleaner and security guard";
     private static final String CONTACT_NAME = "Craig Frankie Baldwin";
@@ -103,6 +104,7 @@ class ApiToCurrentOfficerTest {
         assertEquals(LEGAL_FORM, currentOfficer.getIdentification().getLegalForm());
         assertEquals(PLACE_REGISTRATION, currentOfficer.getIdentification().getPlaceRegistration());
         assertEquals(REGISTRATION_NUMBER, currentOfficer.getIdentification().getRegistrationNumber());
+        assertEquals(REGISTER_LOCATION, currentOfficer.getIdentification().getRegisterLocation());
 
         String idvHistoricDateExpectedFormat = IDV_HISTORIC_DATE.format(getFormatter());
         String idvFutureDateExpectedFormat = IDV_FUTURE_DATE.format(getFormatter());
@@ -151,7 +153,7 @@ class ApiToCurrentOfficerTest {
         assertEquals(LEGAL_FORM, currentOfficer.getIdentification().getLegalForm());
         assertEquals(PLACE_REGISTRATION, currentOfficer.getIdentification().getPlaceRegistration());
         assertEquals(REGISTRATION_NUMBER, currentOfficer.getIdentification().getRegistrationNumber());
-
+        assertEquals(REGISTER_LOCATION, currentOfficer.getIdentification().getRegisterLocation());
     }
 
     @Test
@@ -251,6 +253,7 @@ class ApiToCurrentOfficerTest {
         identificationApi.setLegalForm(LEGAL_FORM);
         identificationApi.setPlaceRegistration(PLACE_REGISTRATION);
         identificationApi.setRegistrationNumber(REGISTRATION_NUMBER);
+        identificationApi.setRegisterLocation(REGISTER_LOCATION);
 
         return identificationApi;
     }
