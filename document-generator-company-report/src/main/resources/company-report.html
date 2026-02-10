@@ -805,30 +805,33 @@
 
                     {{if .identification}}
 
-                        {{if and .identification.identification_type (ne .identification.identification_type "Corporate managing officer")}}
-                        <li>{{.identification.identification_type}}</li>
+                        {{if and .identification.identification_type (ne .identification.identification_type "Corporate managing officer") (ne .identification.identification_type "Limited Partnership Corporate Partner")}}
+                            <li>{{.identification.identification_type}}</li>
                         {{end}}
 
                         {{if .identification.place_registration}}
-                        <li>Place of registration: {{.identification.place_registration}}</li>
+                            <li>Place of registration: {{.identification.place_registration}}</li>
                         {{end}}
 
                         {{if .identification.place_registered}}
-                        <li>Place registered: {{.identification.place_registered}}</li>
+                            <li>Place registered: {{.identification.place_registered}}</li>
                         {{end}}
 
                         {{if .identification.registration_number}}
-                        <li>Registration number: {{.identification.registration_number}}</li>
+                            <li>Registration number: {{.identification.registration_number}}</li>
                         {{end}}
 
                         {{if .identification.legal_authority}}
-                        <li>Law governed: {{.identification.legal_authority}}</li>
+                            <li>Law governed: {{.identification.legal_authority}}</li>
                         {{end}}
 
                         {{if .identification.legal_form}}
-                        <li>Legal form: {{.identification.legal_form}}</li>
+                            <li>Legal form: {{.identification.legal_form}}</li>
                         {{end}}
 
+                        {{if .identification.register_location}}
+                            <li>Country registered in: {{.identification.register_location}}</li>
+                        {{end}}
                     {{end}}
 
                     {{if .identity_verification_details}}

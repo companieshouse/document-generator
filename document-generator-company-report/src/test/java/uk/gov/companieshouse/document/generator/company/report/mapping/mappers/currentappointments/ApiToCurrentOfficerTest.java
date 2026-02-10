@@ -26,6 +26,7 @@ import uk.gov.companieshouse.api.model.officers.IdentificationApi;
 import uk.gov.companieshouse.api.model.officers.IdentityVerificationDetails;
 import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.items.CurrentOfficer;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.items.Identification;
 
 @ExtendWith({MockitoExtension.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -66,6 +67,7 @@ class ApiToCurrentOfficerTest {
     private static final String LEGAL_FORM = "legal form";
     private static final String PLACE_REGISTRATION = "place registration";
     private static final String REGISTRATION_NUMBER = "registration number";
+    private static final String REGISTER_LOCATION = "register location";
 
     private static final String RESPONSIBILITIES = "Window cleaner and security guard";
     private static final String CONTACT_NAME = "Craig Frankie Baldwin";
@@ -98,11 +100,8 @@ class ApiToCurrentOfficerTest {
         assertEquals(COUNTRY_OF_RESIDENCE, currentOfficer.getCountryOfResidence());
         assertEquals("6 June 2019", currentOfficer.getAppointed());
         assertEquals("5 May 2019", currentOfficer.getResigned());
-        assertEquals(IDENTIFICATION_TYPE, currentOfficer.getIdentification().getIdentificationType());
-        assertEquals(LEGAL_AUTHORITY, currentOfficer.getIdentification().getLegalAuthority());
-        assertEquals(LEGAL_FORM, currentOfficer.getIdentification().getLegalForm());
-        assertEquals(PLACE_REGISTRATION, currentOfficer.getIdentification().getPlaceRegistration());
-        assertEquals(REGISTRATION_NUMBER, currentOfficer.getIdentification().getRegistrationNumber());
+
+        checkIdentificationData(currentOfficer.getIdentification());
 
         String idvHistoricDateExpectedFormat = IDV_HISTORIC_DATE.format(getFormatter());
         String idvFutureDateExpectedFormat = IDV_FUTURE_DATE.format(getFormatter());
@@ -146,12 +145,8 @@ class ApiToCurrentOfficerTest {
         assertEquals(COUNTRY_OF_RESIDENCE, currentOfficer.getCountryOfResidence());
         assertEquals("6 June 2019", currentOfficer.getAppointed());
         assertEquals("5 May 2019", currentOfficer.getResigned());
-        assertEquals(IDENTIFICATION_TYPE, currentOfficer.getIdentification().getIdentificationType());
-        assertEquals(LEGAL_AUTHORITY, currentOfficer.getIdentification().getLegalAuthority());
-        assertEquals(LEGAL_FORM, currentOfficer.getIdentification().getLegalForm());
-        assertEquals(PLACE_REGISTRATION, currentOfficer.getIdentification().getPlaceRegistration());
-        assertEquals(REGISTRATION_NUMBER, currentOfficer.getIdentification().getRegistrationNumber());
 
+        checkIdentificationData(currentOfficer.getIdentification());
     }
 
     @Test
@@ -251,6 +246,7 @@ class ApiToCurrentOfficerTest {
         identificationApi.setLegalForm(LEGAL_FORM);
         identificationApi.setPlaceRegistration(PLACE_REGISTRATION);
         identificationApi.setRegistrationNumber(REGISTRATION_NUMBER);
+        identificationApi.setRegisterLocation(REGISTER_LOCATION);
 
         return identificationApi;
     }
@@ -261,5 +257,14 @@ class ApiToCurrentOfficerTest {
         contactDetails.setContactName(CONTACT_NAME);
 
         return contactDetails;
+    }
+
+    private void checkIdentificationData(Identification identification) {
+        assertEquals(IDENTIFICATION_TYPE, identification.getIdentificationType());
+        assertEquals(LEGAL_AUTHORITY, identification.getLegalAuthority());
+        assertEquals(LEGAL_FORM, identification.getLegalForm());
+        assertEquals(PLACE_REGISTRATION, identification.getPlaceRegistration());
+        assertEquals(REGISTRATION_NUMBER, identification.getRegistrationNumber());
+        assertEquals(REGISTER_LOCATION, identification.getRegisterLocation());
     }
 }
