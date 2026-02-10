@@ -52,9 +52,12 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <!-- Sonar -->
     <sonar-maven-plugin.version>4.0.0.4121</sonar-maven-plugin.version>
-    <sonar.host.url>${CODE_ANALYSIS_HOST_URL}</sonar.host.url>
-    <sonar.login>${CODE_ANALYSIS_LOGIN}</sonar.login>
-    <sonar.password>${CODE_ANALYSIS_PASSWORD}</sonar.password>
+    <sonar.token>${CODE_ANALYSIS_TOKEN}</sonar.token>
+    <sonar.login></sonar.login>
+    <sonar.password></sonar.password>
+    <sonar.coverage.jacoco.xmlReportPaths>
+      ${project.basedir}/target/site/jacoco/jacoco.xml
+    </sonar.coverage.jacoco.xmlReportPaths>
 
     <!-- Overrides -->
     <commons-lang3.version>3.19.0</commons-lang3.version>
