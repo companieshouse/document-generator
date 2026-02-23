@@ -682,7 +682,7 @@
                     {{end}}
 
                     {{if .appointed_on}}
-                        {{if eq $companyRegistrationInformation.company_type.type "Overseas entity"}}
+                        {{if or (eq $companyRegistrationInformation.company_type.type "Overseas entity") (eq $companyRegistrationInformation.company_type.type "Limited partnership")}}
                             <li>Notified on: {{.appointed_on}}</li>
                         {{else}}
                             <li>Appointed: {{.appointed_on}}</li>
