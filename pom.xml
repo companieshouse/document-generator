@@ -42,6 +42,7 @@
     <api-sdk-manager-java-library.version>3.0.13</api-sdk-manager-java-library.version>
 
     <!-- External -->
+    <log4j2.version>2.25.3</log4j2.version>
     <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
     <org.mapstruct.version>1.6.3</org.mapstruct.version>
     <snakeyaml.version>2.2</snakeyaml.version>
@@ -64,6 +65,13 @@
   </properties>
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-bom</artifactId>
+        <version>${log4j2.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-framework-bom</artifactId>
