@@ -54,12 +54,7 @@
     <!-- Sonar -->
     <sonar-maven-plugin.version>4.0.0.4121</sonar-maven-plugin.version>
     <sonar.coverage.jacoco.xmlReportPaths>
-      ${project.basedir}/document-generator-accounts/target/site/jacoco/jacoco.xml,
-      ${project.basedir}/document-generator-api/target/site/jacoco/jacoco.xml,
-      ${project.basedir}/document-generator-common/target/site/jacoco/jacoco.xml,
-      ${project.basedir}/document-generator-company-report/target/site/jacoco/jacoco.xml,
-      ${project.basedir}/document-generator-interfaces/target/site/jacoco/jacoco.xml,
-      ${project.basedir}/document-generator-prosecution/target/site/jacoco/jacoco.xml
+      ${project.basedir}/target/site/jacoco/jacoco.xml
     </sonar.coverage.jacoco.xmlReportPaths>
 
     <!-- Overrides -->
