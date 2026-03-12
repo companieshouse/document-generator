@@ -10,6 +10,10 @@ import org.json.JSONException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import uk.gov.companieshouse.document.generator.api.document.DocumentType;
 import uk.gov.companieshouse.document.generator.api.document.render.RenderDocumentRequestHandler;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentRequest;
@@ -67,7 +71,8 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
 
     private static final String REQUEST_ID = "request_id";
 
-    @Autowired
+    private ObjectMapper mapper = new ObjectMapper();
+
     public DocumentGeneratorServiceImpl(DocumentInfoServiceFactory documentInfoServiceFactory,
                                         EnvironmentReader environmentReader,
                                         RenderDocumentRequestHandler requestHandler,
@@ -104,6 +109,13 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
             return new ResponseObject(ResponseStatus.NO_TYPE_FOUND, null);
         }
 
+        try {
+            createAndLogInfoMessage("Document resource generated: documentType -> "
+                            + mapper.writeValueAsString(documentType), requestParameters);
+        } catch(JsonProcessingException ex){
+            LOG.debug(ex.getMessage());
+        }
+
         DocumentInfoRequest documentInfoRequest = setDocumentInfoRequest(documentRequest, requestId);
 
         DocumentInfoResponse documentInfoResponse;
@@ -117,12 +129,27 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
             return new ResponseObject(ResponseStatus.FAILED_TO_RETRIEVE_DATA, null);
         }
 
+        try {
+            if (documentInfoResponse != null) {
+                createAndLogInfoMessage("Document info resonse generated: documentInfoResponse -> "
+                                + mapper.writeValueAsString(documentInfoResponse), requestParameters);
+            } else {
+                createAndLogInfoMessage("Document info resonse null", requestParameters);            
+            }
+        } catch(JsonProcessingException ex){
+            LOG.debug(ex.getMessage());
+        }
+
         if (documentInfoResponse != null) {
             RenderDocumentResponse renderResponse = null;
 
             try {
                 renderResponse = renderSubmittedDocumentData(documentRequest, documentInfoResponse,
                         requestParameters);
+                
+                createAndLogInfoMessage("Document Render Service reponse received: renderResponse.getStatus() -> "
+                            + renderResponse.getStatus(), requestParameters);
+
                 if (renderResponse.getStatus() >= HttpStatus.SC_BAD_REQUEST) {
                     createAndLogErrorMessage("An error occurred in the render service, returning a status of: " +
                                     renderResponse.getStatus() + " for resource: " + requestParameters.get(RESOURCE_URI),
@@ -178,6 +205,8 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
                                                                Map<String, String> requestParameters)
             throws IOException, RenderServiceException, JSONException {
 
+        createAndLogInfoMessage("Sending request to Document Render Service", requestParameters);
+
         String host = environmentReader.getMandatoryString(DOCUMENT_RENDER_SERVICE_HOST_ENV_VAR);
         String url = host + getContextPath(documentRequest.isPublicLocationRequired());
 
@@ -190,7 +219,16 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
         setContentAndDocumentType(documentRequest.getMimeType(), documentRequest.getDocumentType(),
                 requestData, requestParameters);
 
-        return requestHandler.sendDataToDocumentRenderService(url, requestData, requestParameters);
+        RenderDocumentResponse renderResponse = requestHandler.sendDataToDocumentRenderService(url, requestData, requestParameters);
+
+        try {
+            createAndLogInfoMessage("Document Render Service response received: documentType -> "
+                            + mapper.writeValueAsString(renderResponse), requestParameters);
+        } catch(JsonProcessingException ex){
+            LOG.debug(ex.getMessage());
+        }
+
+        return renderResponse;
     }
 
     /**
