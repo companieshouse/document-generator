@@ -123,7 +123,14 @@ public class CompanyReportDataHandler {
         ZonedDateTime timeStamp = ZonedDateTime.now();
 
         LOG.infoContext(requestId, "Getting data for report for company number: ", getDebugMap(companyNumber));
-        return createDocumentInfoResponse(companyNumber, requestId, timeStamp);
+        DocumentInfoResponse docInfoResponse = createDocumentInfoResponse(companyNumber, requestId, timeStamp);
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            LOG.infoContext(requestId, "Returning DocumentInfoResponse to caller: docInfoResponse -> "+mapper.writeValueAsString(docInfoResponse), getDebugMap(companyNumber));
+        } catch(JsonProcessingException ex){
+            LOG.debug("getCompanyReport: docInfoResponse error -> "+ex.getMessage());
+        }
+        return docInfoResponse;
     }
 
     private DocumentInfoResponse createDocumentInfoResponse(String companyNumber,
@@ -185,9 +192,11 @@ public class CompanyReportDataHandler {
         if (companyProfileApi.getLinks().containsKey(FILING_HISTORY_KEY)) {
 
             try {
+                LOG.debug("setFilingHistoryData: getting filing history...");
                 FilingHistoryApi filingHistoryApi = getFilingHistory(companyNumber, requestId);
+                LOG.debug("setFilingHistoryData: building filing history object...");
                 companyReportApiData.setFilingHistoryApi(filingHistoryApi);
-
+                LOG.debug("setFilingHistoryData: done...");
             } catch (HandlerException he) {
                 LOG.infoContext(requestId, "Failed to get filing history data for company: "
                     + companyNumber, getDebugMap(companyNumber));
@@ -362,12 +371,25 @@ public class CompanyReportDataHandler {
     private FilingHistoryApi sortFilingHistory(FilingHistoryApi filingHistory) {
 
         FilingHistoryApi filingHistoryApi = filingHistory;
+        LOG.debug("sortFilingHistory: sorting filing history...");
 
         List<FilingApi> filings = filingHistory.getItems().stream()
             .sorted(Comparator.comparing(FilingApi::getDate, Comparator.nullsLast(Comparator.reverseOrder())))
             .collect(Collectors.toList());
 
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            LOG.debug("sortFilingHistory: filings -> "+mapper.writeValueAsString(filings));
+        } catch(JsonProcessingException ex){
+            LOG.debug("sortFilingHistory: filings error -> "+ex.getMessage());
+        }
+
         filingHistoryApi.setItems(filings);
+        try {
+            LOG.debug("sortFilingHistory: filingHistoryApi -> "+mapper.writeValueAsString(filingHistoryApi));
+        } catch(JsonProcessingException ex){
+            LOG.debug("sortFilingHistory: filingHistoryApi error -> "+ex.getMessage());
+        }
 
         return filingHistoryApi;
     }
