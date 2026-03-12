@@ -45,9 +45,11 @@ public class CompanyReportDocumentInfoServiceImpl implements DocumentInfoService
             if(resourceUri.startsWith("/dissolved-company-number")) {
                 return dissolvedCompanyReportDataHandler.getCompanyReport(companyNumber, requestId);
             } else {                
+                LOG.infoContext(requestId, "Document information for company profile received - returning to caller", debugMap);
                 return companyReportDataHandler.getCompanyReport(resourceUri, requestId);
             }
         } catch (HandlerException he) {
+            LOG.infoContext(requestId, "An error occurred when retrieving the data for the company report", debugMap);
             LOG.errorContext(requestId, "An error occurred when retrieving the data for the company report", he, debugMap);
             throw new DocumentInfoException("Failed to get company report data for resourceUri: "
                 + resourceUri);

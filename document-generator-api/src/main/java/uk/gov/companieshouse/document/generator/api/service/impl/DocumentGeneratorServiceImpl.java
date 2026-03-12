@@ -123,7 +123,10 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
             documentInfoResponse = documentInfoServiceFactory
                         .get(documentType.toString())
                         .getDocumentInfo(documentInfoRequest);
+            createAndLogInfoMessage("Document info response received", requestParameters);
         } catch (DocumentInfoException die) {
+             createAndLogInfoMessage("Error occurred whilst obtaining the data to generate document " +
+                     "for resource: " + requestParameters.get(RESOURCE_URI), requestParameters);
              createAndLogErrorMessage("Error occurred whilst obtaining the data to generate document " +
                      "for resource: " + requestParameters.get(RESOURCE_URI), die, requestParameters);
             return new ResponseObject(ResponseStatus.FAILED_TO_RETRIEVE_DATA, null);
@@ -131,10 +134,10 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
 
         try {
             if (documentInfoResponse != null) {
-                createAndLogInfoMessage("Document info resonse generated: documentInfoResponse -> "
+                createAndLogInfoMessage("Document info response generated: documentInfoResponse -> "
                                 + mapper.writeValueAsString(documentInfoResponse), requestParameters);
             } else {
-                createAndLogInfoMessage("Document info resonse null", requestParameters);            
+                createAndLogInfoMessage("Document info response null", requestParameters);            
             }
         } catch(JsonProcessingException ex){
             LOG.debug(ex.getMessage());
