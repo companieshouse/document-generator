@@ -217,7 +217,6 @@ public class CompanyReportDataHandler {
         LOG.infoContext(requestId, "setCompanyReportData(): Calling setExemptions - end...", getDebugMap(companyNumber));
 
         LOG.infoContext(requestId, "setCompanyReportData(): returning to caller", getDebugMap(companyNumber));
-        return;
     }
 
     private void setFilingHistoryData(String companyNumber, String requestId,
@@ -240,9 +239,12 @@ public class CompanyReportDataHandler {
 
     private void setPscsData(String companyNumber, String requestId,
         CompanyReportApiData companyReportApiData, CompanyProfileApi companyProfileApi) {
+        LOG.infoContext(requestId, "setPscsData(): start...", getDebugMap(companyNumber));
         if (companyProfileApi.getLinks().containsKey(PSCS_KEY)) {
             try {
+                LOG.infoContext(requestId, "setPscsData(): PSCS_KEY found - calling getPscs() ", getDebugMap(companyNumber));
                 PscsApi pscsApi = getPscs(companyNumber, requestId);
+                LOG.infoContext(requestId, "setPscsData(): PSCS_KEY found - back from getPscs() - setting PSC data ", getDebugMap(companyNumber));
                 companyReportApiData.setPscsApi(pscsApi);
 
             } catch (HandlerException he) {
@@ -250,10 +252,12 @@ public class CompanyReportDataHandler {
                     + companyNumber, getDebugMap(companyNumber));
             }
         }
+        LOG.infoContext(requestId, "setPscsData(): end...", getDebugMap(companyNumber));
     }
 
     private void setOfficersData(String companyNumber, String requestId,
         CompanyReportApiData companyReportApiData, CompanyProfileApi companyProfileApi) {
+        LOG.infoContext(requestId, "setOfficersData(): start...", getDebugMap(companyNumber));
         if (companyProfileApi.getLinks().containsKey(OFFICERS_KEY)) {
             try {
                 OfficersApi officersApi = getOfficers(companyNumber, requestId);
@@ -262,10 +266,12 @@ public class CompanyReportDataHandler {
                 LOG.infoContext(requestId, "Failed to get company officers: ", getDebugMap(companyNumber));
             }
         }
+        LOG.infoContext(requestId, "setOfficersData(): start...", getDebugMap(companyNumber));
     }
 
     private void setUkEstablishmentsData(String companyNumber, String requestId,
         CompanyReportApiData companyReportApiData, CompanyProfileApi companyProfileApi) {
+        LOG.infoContext(requestId, "setUkEstablishmentsData(): start...", getDebugMap(companyNumber));
         if (companyProfileApi.getLinks().containsKey(UK_ESTABLISHMENTS)) {
             try {
                 UkEstablishmentsApi ukEstablishmentsApi = getUkEstablishments(companyNumber, requestId);
@@ -274,10 +280,12 @@ public class CompanyReportDataHandler {
                 LOG.infoContext(requestId, "Failed to get uk establishments: ", getDebugMap(companyNumber));
             }
         }
+        LOG.infoContext(requestId, "setUkEstablishmentsData(): start...", getDebugMap(companyNumber));
     }
 
     private void setStatementsData(String companyNumber, String requestId,
         CompanyReportApiData companyReportApiData, CompanyProfileApi companyProfileApi) {
+        LOG.infoContext(requestId, "setStatementsData(): start...", getDebugMap(companyNumber));
         if (companyProfileApi.getLinks().containsKey(STATEMENTS_KEY)) {
             try {
                 StatementsApi statementsApi = getStatements(companyNumber, requestId);
@@ -287,10 +295,12 @@ public class CompanyReportDataHandler {
                     + companyNumber, getDebugMap(companyNumber));
             }
         }
+        LOG.infoContext(requestId, "setStatementsData(): start...", getDebugMap(companyNumber));
     }
 
     private void setChargesData(String companyNumber, String requestId,
         CompanyReportApiData companyReportApiData, CompanyProfileApi companyProfileApi) {
+        LOG.infoContext(requestId, "setChargesData(): start...", getDebugMap(companyNumber));
         if (companyProfileApi.getLinks().containsKey(CHARGES_KEY)) {
             try {
                 ChargesApi chargesApi = getCharges(companyNumber, requestId);
@@ -299,10 +309,12 @@ public class CompanyReportDataHandler {
                 LOG.infoContext(requestId, "Failed to get charges: ", getDebugMap(companyNumber));
             }
         }
+        LOG.infoContext(requestId, "setChargesData(): start...", getDebugMap(companyNumber));
     }
 
     private void setInsolvency(String companyNumber, String requestId,
         CompanyReportApiData companyReportApiData, CompanyProfileApi companyProfileApi) {
+        LOG.infoContext(requestId, "setInsolvency(): start...", getDebugMap(companyNumber));
         if (companyProfileApi.getLinks().containsKey(INSOLVENCY_KEY)) {
             try {
                 InsolvencyApi insolvencyApi = getInsolvency(companyNumber, requestId);
@@ -312,10 +324,12 @@ public class CompanyReportDataHandler {
                     + companyNumber, getDebugMap(companyNumber));
             }
         }
+        LOG.infoContext(requestId, "setInsolvency(): start...", getDebugMap(companyNumber));
     }
 
     private void setRegisters(String companyNumber, String requestId,
         CompanyReportApiData companyReportApiData, CompanyProfileApi companyProfileApi) {
+        LOG.infoContext(requestId, "setRegisters(): start...", getDebugMap(companyNumber));
         if (companyProfileApi.getLinks().containsKey(REGISTERS_KEY)) {
             try {
                 CompanyRegistersApi companyRegistersApi = getCompanyRegisters(companyNumber, requestId);
@@ -324,10 +338,12 @@ public class CompanyReportDataHandler {
                 LOG.infoContext(requestId, "Failed to get company registers: ", getDebugMap(companyNumber));
             }
         }
+        LOG.infoContext(requestId, "setRegisters(): start...", getDebugMap(companyNumber));
     }
 
     private void setExemptions(String companyNumber, String requestId,
         CompanyReportApiData companyReportApiData, CompanyProfileApi companyProfileApi) {
+        LOG.infoContext(requestId, "setExemptions(): start...", getDebugMap(companyNumber));
         if (companyProfileApi.getLinks().containsKey(EXEMPTION_KEY)) {
             try {
                 CompanyExemptionsApi companyExemptionsApi = getCompanyExemptions(companyNumber, requestId);
@@ -336,6 +352,7 @@ public class CompanyReportDataHandler {
                 LOG.infoContext(requestId, "Failed to get company exemptions: ", getDebugMap(companyNumber));
             }
         }
+        LOG.infoContext(requestId, "setExemptions(): start...", getDebugMap(companyNumber));
     }
 
     private String toJson(CompanyReport companyReport, String companyNumber,
