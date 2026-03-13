@@ -1,11 +1,21 @@
 package uk.gov.companieshouse.document.generator.company.report.service;
 
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import uk.gov.companieshouse.api.ApiClient;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.handler.psc.request.PscsList;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
+import uk.gov.companieshouse.logging.Logger;
+import uk.gov.companieshouse.logging.LoggerFactory;
+
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import static uk.gov.companieshouse.document.generator.company.report.CompanyReportDocumentInfoServiceImpl.MODULE_NAME_SPACE;
 
 /**
  * Handles the logic to be able to accumulate all the instances of the resource available, by paging through the
@@ -16,6 +26,8 @@ public class PscsPageRetrieverService {
 
     private static final String ITEMS_PER_PAGE_KEY = "items_per_page";
     private static final String START_INDEX_KEY = "start_index";
+    private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
+    private ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     /**
      * Retrieves all the API items available by paging through them.
@@ -29,6 +41,7 @@ public class PscsPageRetrieverService {
     public PscsApi retrieve(final String uri,
                             final ApiClient apiClient,
                             final int itemsPerPage) throws ApiErrorResponseException, URIValidationException {
+        LOG.debug("retrieve(): Retrieving API items - start...");
         int startIndex = 0;
         final PscsApi api = retrievePage(uri, apiClient, startIndex, itemsPerPage);
 
@@ -38,6 +51,13 @@ public class PscsPageRetrieverService {
             api.getItems().addAll(moreResults.getItems());
         }
 
+        try {
+            LOG.debug("retrieve(): api -> "+mapper.writeValueAsString(api));
+        } catch(JsonProcessingException ex){
+            LOG.debug("retrieve(): error -> "+ex.getMessage());
+        }
+
+        LOG.debug("retrieve(): Retrieving API items - start...");
         return api;
     }
 
@@ -55,11 +75,24 @@ public class PscsPageRetrieverService {
                                  final ApiClient apiClient,
                                  final int startIndex,
                                  final int itemsPerPage) throws ApiErrorResponseException, URIValidationException {
-
+        LOG.debug("retrievePage(): Retrieving API items - start...");
         final PscsList pscsList = apiClient.pscs().list(uri);
+        try {
+            LOG.debug("retrievePage(): pscList -> "+mapper.writeValueAsString(pscsList));
+        } catch(JsonProcessingException ex){
+            LOG.debug("retrievePage(): error -> "+ex.getMessage());
+        }
         pscsList.addQueryParams(ITEMS_PER_PAGE_KEY, Integer.toString(itemsPerPage));
         pscsList.addQueryParams(START_INDEX_KEY, Integer.toString(startIndex));
 
-        return pscsList.execute().getData();
+        PscsApi pscResponse = pscsList.execute().getData();
+        try {
+            LOG.debug("retrievePage(): pscResponse -> "+mapper.writeValueAsString(pscResponse));
+        } catch(JsonProcessingException ex){
+            LOG.debug("retrievePage(): error -> "+ex.getMessage());
+        }
+
+        LOG.debug("retrievePage(): Retrieving API items - end...");
+        return pscResponse;
     }
 }
