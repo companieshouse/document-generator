@@ -240,6 +240,8 @@ public class CompanyReportDataHandler {
     private void setPscsData(String companyNumber, String requestId,
         CompanyReportApiData companyReportApiData, CompanyProfileApi companyProfileApi) {
         LOG.infoContext(requestId, "setPscsData(): start...", getDebugMap(companyNumber));
+        LOG.infoContext(requestId, "setPscsData(): companyReportApiData -> ", getCompanyReportApiDataDebugMap(companyReportApiData));
+        LOG.infoContext(requestId, "setPscsData(): companyProfileApi -> ", getCompanyProfileApiDebugMap(companyProfileApi));
         if (companyProfileApi.getLinks().containsKey(PSCS_KEY)) {
             try {
                 LOG.infoContext(requestId, "setPscsData(): PSCS_KEY found - calling getPscs() ", getDebugMap(companyNumber));
@@ -471,10 +473,14 @@ public class CompanyReportDataHandler {
     }
 
     private PscsApi getPscs(String companyNumber, String requestId) throws HandlerException {
+        LOG.infoContext(requestId, "getPscs(): getting PSCs - start...", getDebugMap(companyNumber));
         try {
             LOG.infoContext(requestId, "Attempting to retrieve company PSCSs", getDebugMap(companyNumber));
-            return pscsService.getPscs(companyNumber);
+            PscsApi pscResponse = pscsService.getPscs(companyNumber);
+            LOG.infoContext(requestId, "getPscs(): PSC data retrived -> ", getPSCDataApiDebugMap(pscResponse));
+            return pscResponse;
         } catch (ServiceException se) {
+
             throw new HandlerException("error occurred obtaining the company PSCSs", se);
         }
     }
@@ -618,6 +624,27 @@ public class CompanyReportDataHandler {
     private Map<String, Object> getDebugMap(String companyNumber) {
         Map<String, Object> logMap = new HashMap<>();
         logMap.put("COMPANY_NUMBER", companyNumber);
+
+        return logMap;
+    }
+
+    private Map<String, Object> getCompanyReportApiDataDebugMap(CompanyReportApiData companyReportApiData) {
+        Map<String, Object> logMap = new HashMap<>();
+        logMap.put("COMPANY_REPORT_API_DATA", companyReportApiData);
+
+        return logMap;
+    }
+
+    private Map<String, Object> getCompanyProfileApiDebugMap(CompanyProfileApi companyProfileApi) {
+        Map<String, Object> logMap = new HashMap<>();
+        logMap.put("COMPANY_PROFILE_API", companyProfileApi);
+
+        return logMap;
+    }
+
+    private Map<String, Object> getPSCDataApiDebugMap(PscsApi pscResponse) {
+        Map<String, Object> logMap = new HashMap<>();
+        logMap.put("PSC_API_DATA", pscResponse);
 
         return logMap;
     }
