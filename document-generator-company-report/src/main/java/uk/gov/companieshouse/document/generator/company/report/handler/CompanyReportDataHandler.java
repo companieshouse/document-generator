@@ -180,23 +180,44 @@ public class CompanyReportDataHandler {
 
         companyReportApiData.setCompanyProfileApi(companyProfileApi);
 
+        LOG.infoContext(requestId, "setCompanyReportData(): Calling setFilingHistoryData - start...", getDebugMap(companyNumber));
         setFilingHistoryData(companyNumber, requestId, companyReportApiData, companyProfileApi);
+        LOG.infoContext(requestId, "setCompanyReportData(): Calling setFilingHistoryData - end...", getDebugMap(companyNumber));
 
+        LOG.infoContext(requestId, "setCompanyReportData(): Calling setPscsData - start...", getDebugMap(companyNumber));
         setPscsData(companyNumber, requestId, companyReportApiData, companyProfileApi);
+        LOG.infoContext(requestId, "setCompanyReportData(): Calling setPscsData - end...", getDebugMap(companyNumber));
 
+        LOG.infoContext(requestId, "setCompanyReportData(): Calling setOfficersData - start...", getDebugMap(companyNumber));
         setOfficersData(companyNumber, requestId, companyReportApiData, companyProfileApi);
+        LOG.infoContext(requestId, "setCompanyReportData(): Calling setOfficersData - end...", getDebugMap(companyNumber));
 
+        LOG.infoContext(requestId, "setCompanyReportData(): Calling setUkEstablishmentsData - start...", getDebugMap(companyNumber));
         setUkEstablishmentsData(companyNumber, requestId, companyReportApiData, companyProfileApi);
+        LOG.infoContext(requestId, "setCompanyReportData(): Calling setUkEstablishmentsData - end...", getDebugMap(companyNumber));
 
+        LOG.infoContext(requestId, "setCompanyReportData(): Calling setStatementsData - start...", getDebugMap(companyNumber));
         setStatementsData(companyNumber, requestId, companyReportApiData, companyProfileApi);
+        LOG.infoContext(requestId, "setCompanyReportData(): Calling setStatementsData - end...", getDebugMap(companyNumber));
 
+        LOG.infoContext(requestId, "setCompanyReportData(): Calling setChargesData - start...", getDebugMap(companyNumber));
         setChargesData(companyNumber, requestId, companyReportApiData, companyProfileApi);
+        LOG.infoContext(requestId, "setCompanyReportData(): Calling setChargesData - end...", getDebugMap(companyNumber));
 
+        LOG.infoContext(requestId, "setCompanyReportData(): Calling setInsolvency - start...", getDebugMap(companyNumber));
         setInsolvency(companyNumber, requestId, companyReportApiData, companyProfileApi);
+        LOG.infoContext(requestId, "setCompanyReportData(): Calling setInsolvency - end...", getDebugMap(companyNumber));
 
+        LOG.infoContext(requestId, "setCompanyReportData(): Calling setRegisters - start...", getDebugMap(companyNumber));
         setRegisters(companyNumber, requestId, companyReportApiData, companyProfileApi);
+        LOG.infoContext(requestId, "setCompanyReportData(): Calling setRegisters - end...", getDebugMap(companyNumber));
 
+        LOG.infoContext(requestId, "setCompanyReportData(): Calling setExemptions - start...", getDebugMap(companyNumber));
         setExemptions(companyNumber, requestId, companyReportApiData, companyProfileApi);
+        LOG.infoContext(requestId, "setCompanyReportData(): Calling setExemptions - end...", getDebugMap(companyNumber));
+
+        LOG.infoContext(requestId, "setCompanyReportData(): returning to caller", getDebugMap(companyNumber));
+        return;
     }
 
     private void setFilingHistoryData(String companyNumber, String requestId,
