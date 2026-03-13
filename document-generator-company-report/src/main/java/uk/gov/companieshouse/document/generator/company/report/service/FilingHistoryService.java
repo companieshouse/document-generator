@@ -41,7 +41,7 @@ public class FilingHistoryService {
         int startIndex = 0;
         int itemsPerPage = 100;
 
-        LOG.debug("getFilingHistory - calling retrieveFilingHistory("+companyNumber+")");
+        LOG.debug("getFilingHistory(): calling retrieveFilingHistory("+companyNumber+")");
 
         filingHistoryApi = retrieveFilingHistory(companyNumber, apiClient, startIndex, itemsPerPage);
 
@@ -51,7 +51,7 @@ public class FilingHistoryService {
             filingHistoryApi.getItems().addAll(moreResults.getItems());
         }
 
-        LOG.debug("getFilingHistory - returning to caller");
+        LOG.debug("getFilingHistory(): returning to caller");
 
         return filingHistoryApi;
     }
@@ -59,11 +59,11 @@ public class FilingHistoryService {
     private FilingHistoryApi retrieveFilingHistory(String companyNumber, ApiClient apiClient, Integer startIndex, Integer itemsPerPage)
         throws ServiceException {
 
-        LOG.debug("retrieveFilingHistory - retrieving filing history");
+        LOG.debug("retrieveFilingHistory(): )retrieving filing history");
 
         String uri = GET_FILING_HISTORY_URI.expand(companyNumber).toString();
 
-        LOG.debug("retrieveFilingHistory - uri -> "+uri);
+        LOG.debug("retrieveFilingHistory(): )uri -> "+uri);
 
         FilingHistoryApi filingHistoryApi;
 
@@ -74,13 +74,13 @@ public class FilingHistoryService {
 
             filingHistoryApi = filingHistoryList.execute().getData();
         } catch (ApiErrorResponseException e) {
-            LOG.debug("retrieveFilingHistory - ApiErrorResponseException - error -> "+e.getMessage());
+            LOG.debug("retrieveFilingHistory(): ApiErrorResponseException - error -> "+e.getMessage());
             throw new ServiceException("Error retrieving filing history items", e);
         } catch (URIValidationException e) {
-            LOG.debug("retrieveFilingHistory - URIValidationException - error -> "+e.getMessage());
+            LOG.debug("retrieveFilingHistory(): URIValidationException - error -> "+e.getMessage());
             throw new ServiceException("Invalid URI for filing history resource", e);
         }
-        LOG.debug("retrieveFilingHistory - returning to caller");
+        LOG.debug("retrieveFilingHistory(): returning to caller");
         return filingHistoryApi;
     }
 }
