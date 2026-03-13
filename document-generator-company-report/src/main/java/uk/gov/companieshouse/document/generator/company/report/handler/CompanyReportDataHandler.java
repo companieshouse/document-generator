@@ -421,7 +421,7 @@ public class CompanyReportDataHandler {
 
         filingHistoryApi.setItems(filings);
         try {
-            LOG.debug("sortFilingHistory(): filingHistoryApi -> "+mapper.writeValueAsString(filingHistoryApi));
+            LOG.debug("sortFilingHistory(): filingHistoryApi -> "+mapper.writeValueAsString(filingHistoryApi.getItems()));
         } catch(JsonProcessingException ex){
             LOG.debug("sortFilingHistory(): filingHistoryApi error -> "+ex.getMessage());
         }
