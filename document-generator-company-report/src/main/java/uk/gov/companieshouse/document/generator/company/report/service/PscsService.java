@@ -48,15 +48,17 @@ public class PscsService {
 
             return response;
 
-        } catch(Exception ex) {
-            LOG.error("*** ERROR: retrieving PSCs for company number: %s".formatted(companyNumber), ex);
-            throw new ServiceException("Error retrieving pscs", ex);
+        } catch (ApiErrorResponseException e) {
+            LOG.error("*** ERROR: ApiErrorResponseException was raised: %s".formatted(e), e);
+            throw new ServiceException("Error retrieving pscs", e);
+
+        } catch (URIValidationException e) {
+            LOG.error("*** ERROR: URIValidationException was raised: %s".formatted(e), e);
+            throw new ServiceException("Invalid URI for pscs resource", e);
+
+        } catch (Exception e) {
+            LOG.error("*** ERROR: Exception was raised: %s".formatted(e), e);
+            throw new ServiceException("General exception for pscs resource", e);
         }
-//        } catch (ApiErrorResponseException e) {
-//            throw new ServiceException("Error retrieving pscs", e);
-//        } catch (URIValidationException e) {
-//
-//            throw new ServiceException("Invalid URI for pscs resource", e);
-//        }
     }
 }
