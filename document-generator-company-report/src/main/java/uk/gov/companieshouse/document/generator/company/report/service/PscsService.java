@@ -1,5 +1,8 @@
 package uk.gov.companieshouse.document.generator.company.report.service;
 
+import static uk.gov.companieshouse.document.generator.company.report.CompanyReportDocumentInfoServiceImpl.MODULE_NAME_SPACE;
+
+import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriTemplate;
 import uk.gov.companieshouse.api.ApiClient;
@@ -7,9 +10,16 @@ import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
 import uk.gov.companieshouse.document.generator.company.report.exception.ServiceException;
+import uk.gov.companieshouse.logging.Logger;
+import uk.gov.companieshouse.logging.LoggerFactory;
 
 @Service
 public class PscsService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
+
+    private static final AtomicInteger COUNTER = new AtomicInteger(1);
+
 
     private static final UriTemplate GET_PSCS_URI =
             new UriTemplate("/company/{companyNumber}/persons-with-significant-control");
@@ -25,18 +35,28 @@ public class PscsService {
     }
 
     public PscsApi getPscs(String companyNumber) throws ServiceException {
-
+        LOG.info("Retrieving PSC for company number (Attempt=%d): %s".formatted(COUNTER.getAndIncrement(), companyNumber));
         ApiClient apiClient = companyReportApiClientService.getApiClient();
 
         String uri = GET_PSCS_URI.expand(companyNumber).toString();
+        LOG.info("Company PSC URI: %s".formatted(uri));
 
         try {
-            return pageRetrieverService.retrieve(uri, apiClient, ITEMS_PER_PAGE_VALUE);
-        } catch (ApiErrorResponseException e) {
-            throw new ServiceException("Error retrieving pscs", e);
-        } catch (URIValidationException e) {
+            PscsApi response = pageRetrieverService.retrieve(uri, apiClient, ITEMS_PER_PAGE_VALUE);
 
-            throw new ServiceException("Invalid URI for pscs resource", e);
+            LOG.info("** Response: %s".formatted(response));
+
+            return response;
+
+        } catch(Exception ex) {
+            LOG.error("*** ERROR: retrieving PSCs for company number: %s".formatted(companyNumber), ex);
+            throw new ServiceException("Error retrieving PSCs for company number: " + companyNumber, ex);
         }
+//        } catch (ApiErrorResponseException e) {
+//            throw new ServiceException("Error retrieving pscs", e);
+//        } catch (URIValidationException e) {
+//
+//            throw new ServiceException("Invalid URI for pscs resource", e);
+//        }
     }
 }
