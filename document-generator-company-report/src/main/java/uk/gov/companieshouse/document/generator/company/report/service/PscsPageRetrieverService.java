@@ -1,11 +1,16 @@
 package uk.gov.companieshouse.document.generator.company.report.service;
 
+import static uk.gov.companieshouse.document.generator.company.report.CompanyReportDocumentInfoServiceImpl.MODULE_NAME_SPACE;
+
 import org.springframework.stereotype.Service;
 import uk.gov.companieshouse.api.ApiClient;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.handler.psc.request.PscsList;
+import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
+import uk.gov.companieshouse.logging.Logger;
+import uk.gov.companieshouse.logging.LoggerFactory;
 
 /**
  * Handles the logic to be able to accumulate all the instances of the resource available, by paging through the
@@ -13,6 +18,8 @@ import uk.gov.companieshouse.api.model.psc.PscsApi;
  */
 @Service
 public class PscsPageRetrieverService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
     private static final String ITEMS_PER_PAGE_KEY = "items_per_page";
     private static final String START_INDEX_KEY = "start_index";
@@ -60,6 +67,11 @@ public class PscsPageRetrieverService {
         pscsList.addQueryParams(ITEMS_PER_PAGE_KEY, Integer.toString(itemsPerPage));
         pscsList.addQueryParams(START_INDEX_KEY, Integer.toString(startIndex));
 
-        return pscsList.execute().getData();
+        ApiResponse<PscsApi> response = pscsList.execute();
+        PscsApi data = response.getData();
+        
+        LOG.info("** PSC-API Response [Status=%d]: %s".formatted(response.getStatusCode(), data));
+
+        return data;
     }
 }
