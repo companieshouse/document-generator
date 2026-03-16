@@ -50,7 +50,7 @@ public class PscsService {
 
         } catch(Exception ex) {
             LOG.error("*** ERROR: retrieving PSCs for company number: %s".formatted(companyNumber), ex);
-            throw new ServiceException("Error retrieving PSCs for company number: " + companyNumber, ex);
+            throw new ServiceException("Error retrieving pscs", ex);
         }
 //        } catch (ApiErrorResponseException e) {
 //            throw new ServiceException("Error retrieving pscs", e);
