@@ -68,9 +68,10 @@ public class PscsPageRetrieverService {
         pscsList.addQueryParams(START_INDEX_KEY, Integer.toString(startIndex));
 
         ApiResponse<PscsApi> response = pscsList.execute();
+        PscsApi data = response.getData();
+        
+        LOG.info("** PSC-API Response [Status=%d]: %s".formatted(response.getStatusCode(), data));
 
-        LOG.info("** PSC-API Response [Status=%d]: %s".formatted(response.getStatusCode(), response.getData()));
-
-        return response.getData();
+        return data;
     }
 }
