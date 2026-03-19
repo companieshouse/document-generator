@@ -40,9 +40,6 @@ public class PscsPageRetrieverService {
 
         final PscsApi api = retrievePage(uri, apiClient, startIndex, itemsPerPage);
 
-        long itemsRemaining = api.getTotalResults() - api.getItems().size();
-        LOG.info("Starting processing... %d item(s) remaining.".formatted(itemsRemaining));
-
         while (api.getItems().size() < api.getTotalResults()) {
             LOG.info("Items retrieved: %d -> (Start Index: %d, Total Results: %d)".formatted(
                     api.getItems().size(), startIndex, api.getTotalResults()));
@@ -50,7 +47,12 @@ public class PscsPageRetrieverService {
             startIndex += itemsPerPage;
 
             PscsApi moreResults = retrievePage(uri, apiClient, startIndex, itemsPerPage);
-            api.getItems().addAll(moreResults.getItems());
+            // break from loop if results list empty
+            if (moreResults.getItems().isEmpty()) {
+               break;
+            } else {
+                api.getItems().addAll(moreResults.getItems());
+            }
         }
 
         LOG.info("Finishing processing: %d item(s) retrieved.".formatted(api.getItems().size()));
