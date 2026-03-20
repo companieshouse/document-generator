@@ -39,13 +39,9 @@ public class PscsService {
         ApiClient apiClient = companyReportApiClientService.getApiClient();
 
         String uri = GET_PSCS_URI.expand(companyNumber).toString();
-        LOG.info("Company PSC URI: %s".formatted(uri));
 
         try {
             PscsApi response = pageRetrieverService.retrieve(uri, apiClient, ITEMS_PER_PAGE_VALUE);
-
-            LOG.info("** Response: %s".formatted(response));
-
             return response;
 
         } catch (ApiErrorResponseException e) {
