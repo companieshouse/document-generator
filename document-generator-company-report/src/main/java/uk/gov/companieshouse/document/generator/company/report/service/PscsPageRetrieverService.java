@@ -1,15 +1,12 @@
 package uk.gov.companieshouse.document.generator.company.report.service;
 
-import static uk.gov.companieshouse.document.generator.company.report.CompanyReportDocumentInfoServiceImpl.MODULE_NAME_SPACE;
-
 import org.springframework.stereotype.Service;
+
 import uk.gov.companieshouse.api.ApiClient;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.handler.psc.request.PscsList;
 import uk.gov.companieshouse.api.model.psc.PscsApi;
-import uk.gov.companieshouse.logging.Logger;
-import uk.gov.companieshouse.logging.LoggerFactory;
 
 /**
  * Handles the logic to be able to accumulate all the instances of the resource available, by paging through the
@@ -17,8 +14,6 @@ import uk.gov.companieshouse.logging.LoggerFactory;
  */
 @Service
 public class PscsPageRetrieverService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
 
     private static final String ITEMS_PER_PAGE_KEY = "items_per_page";
     private static final String START_INDEX_KEY = "start_index";
@@ -34,15 +29,12 @@ public class PscsPageRetrieverService {
      */
     public PscsApi retrieve(final String uri, final ApiClient apiClient, final int itemsPerPage)
             throws ApiErrorResponseException, URIValidationException {
-        LOG.info("retrieve(uri=%s, items_per_page=%d) method called.".formatted(uri, itemsPerPage));
 
         int startIndex = 0;
 
         final PscsApi api = retrievePage(uri, apiClient, startIndex, itemsPerPage);
 
         while (api.getItems().size() < api.getTotalResults()) {
-            LOG.info("Items retrieved: %d -> (Start Index: %d, Total Results: %d)".formatted(
-                    api.getItems().size(), startIndex, api.getTotalResults()));
 
             startIndex += itemsPerPage;
 
@@ -54,8 +46,6 @@ public class PscsPageRetrieverService {
                 api.getItems().addAll(moreResults.getItems());
             }
         }
-
-        LOG.info("Finishing processing: %d item(s) retrieved.".formatted(api.getItems().size()));
 
         return api;
     }

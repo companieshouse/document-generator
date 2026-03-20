@@ -122,23 +122,15 @@ public class CompanyReportDataHandler {
 
         ZonedDateTime timeStamp = ZonedDateTime.now();
 
-        LOG.infoContext(requestId, "getCompanyReport(): Getting data for report for company number: ", getDebugMap(companyNumber));
         DocumentInfoResponse docInfoResponse = createDocumentInfoResponse(companyNumber, requestId, timeStamp);
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
-        try {
-            LOG.infoContext(requestId, "getCompanyReport(): Returning DocumentInfoResponse to caller: docInfoResponse -> "+mapper.writeValueAsString(docInfoResponse), getDebugMap(companyNumber));
-        } catch(JsonProcessingException ex){
-            LOG.debug("getCompanyReport: getCompanyReport(): docInfoResponse error -> "+ex.getMessage());
-        }
-        LOG.infoContext(requestId, "getCompanyReport(): Received data for report for company number and returning to caller", getDebugMap(companyNumber));
+
         return docInfoResponse;
     }
 
     private DocumentInfoResponse createDocumentInfoResponse(String companyNumber,
         String requestId, ZonedDateTime timeStamp) throws HandlerException {
-
-        LOG.infoContext(requestId, "createDocumentInfoResponse(): Calling getCompanyReportData to retrieve data", getDebugMap(companyNumber));
 
         DocumentInfoResponse documentInfoResponse = new DocumentInfoResponse();
         
@@ -148,25 +140,17 @@ public class CompanyReportDataHandler {
         documentInfoResponse.setTemplateName("company-report.html");
         documentInfoResponse.setDescriptionIdentifier(COMPANY_REPORT);
 
-        LOG.infoContext(requestId, "createDocumentInfoResponse(): Returning getCompanyReportData to caller", getDebugMap(companyNumber));
-
         return documentInfoResponse;
     }
 
     private String getCompanyReportData(String companyNumber, String requestId,
         ZonedDateTime timeStamp) throws HandlerException {
 
-        LOG.infoContext(requestId, "getCompanyReportData(): Calling CompanyReportApiData to retrieve data", getDebugMap(companyNumber));
-
         CompanyReportApiData companyReportApiData = new CompanyReportApiData();
 
         CompanyProfileApi companyProfileApi = getCompanyProfile(companyNumber, requestId);
 
-        LOG.infoContext(requestId, "getCompanyReportData(): Recieved companyProfileApi data and setting CompanyReportData", getDebugMap(companyNumber));
-
         setCompanyReportData(companyNumber, requestId, companyReportApiData, companyProfileApi);
-
-        LOG.infoContext(requestId, "getCompanyReportData(): Returning to caller", getDebugMap(companyNumber));
 
         return toJson(companyReportMapper
                 .mapCompanyReport(companyReportApiData, requestId, companyNumber),
@@ -180,43 +164,23 @@ public class CompanyReportDataHandler {
 
         companyReportApiData.setCompanyProfileApi(companyProfileApi);
 
-        LOG.infoContext(requestId, "setCompanyReportData(): Calling setFilingHistoryData - start...", getDebugMap(companyNumber));
         setFilingHistoryData(companyNumber, requestId, companyReportApiData, companyProfileApi);
-        LOG.infoContext(requestId, "setCompanyReportData(): Calling setFilingHistoryData - end...", getDebugMap(companyNumber));
 
-        LOG.infoContext(requestId, "setCompanyReportData(): Calling setPscsData - start...", getDebugMap(companyNumber));
         setPscsData(companyNumber, requestId, companyReportApiData, companyProfileApi);
-        LOG.infoContext(requestId, "setCompanyReportData(): Calling setPscsData - end...", getDebugMap(companyNumber));
 
-        LOG.infoContext(requestId, "setCompanyReportData(): Calling setOfficersData - start...", getDebugMap(companyNumber));
         setOfficersData(companyNumber, requestId, companyReportApiData, companyProfileApi);
-        LOG.infoContext(requestId, "setCompanyReportData(): Calling setOfficersData - end...", getDebugMap(companyNumber));
 
-        LOG.infoContext(requestId, "setCompanyReportData(): Calling setUkEstablishmentsData - start...", getDebugMap(companyNumber));
         setUkEstablishmentsData(companyNumber, requestId, companyReportApiData, companyProfileApi);
-        LOG.infoContext(requestId, "setCompanyReportData(): Calling setUkEstablishmentsData - end...", getDebugMap(companyNumber));
 
-        LOG.infoContext(requestId, "setCompanyReportData(): Calling setStatementsData - start...", getDebugMap(companyNumber));
         setStatementsData(companyNumber, requestId, companyReportApiData, companyProfileApi);
-        LOG.infoContext(requestId, "setCompanyReportData(): Calling setStatementsData - end...", getDebugMap(companyNumber));
 
-        LOG.infoContext(requestId, "setCompanyReportData(): Calling setChargesData - start...", getDebugMap(companyNumber));
         setChargesData(companyNumber, requestId, companyReportApiData, companyProfileApi);
-        LOG.infoContext(requestId, "setCompanyReportData(): Calling setChargesData - end...", getDebugMap(companyNumber));
 
-        LOG.infoContext(requestId, "setCompanyReportData(): Calling setInsolvency - start...", getDebugMap(companyNumber));
         setInsolvency(companyNumber, requestId, companyReportApiData, companyProfileApi);
-        LOG.infoContext(requestId, "setCompanyReportData(): Calling setInsolvency - end...", getDebugMap(companyNumber));
 
-        LOG.infoContext(requestId, "setCompanyReportData(): Calling setRegisters - start...", getDebugMap(companyNumber));
         setRegisters(companyNumber, requestId, companyReportApiData, companyProfileApi);
-        LOG.infoContext(requestId, "setCompanyReportData(): Calling setRegisters - end...", getDebugMap(companyNumber));
 
-        LOG.infoContext(requestId, "setCompanyReportData(): Calling setExemptions - start...", getDebugMap(companyNumber));
         setExemptions(companyNumber, requestId, companyReportApiData, companyProfileApi);
-        LOG.infoContext(requestId, "setCompanyReportData(): Calling setExemptions - end...", getDebugMap(companyNumber));
-
-        LOG.infoContext(requestId, "setCompanyReportData(): returning to caller", getDebugMap(companyNumber));
     }
 
     private void setFilingHistoryData(String companyNumber, String requestId,
@@ -239,14 +203,9 @@ public class CompanyReportDataHandler {
 
     private void setPscsData(String companyNumber, String requestId,
         CompanyReportApiData companyReportApiData, CompanyProfileApi companyProfileApi) {
-        LOG.infoContext(requestId, "setPscsData(): start...", getDebugMap(companyNumber));
-        LOG.infoContext(requestId, "setPscsData(): companyReportApiData -> ", getCompanyReportApiDataDebugMap(companyReportApiData));
-        LOG.infoContext(requestId, "setPscsData(): companyProfileApi -> ", getCompanyProfileApiDebugMap(companyProfileApi));
         if (companyProfileApi.getLinks().containsKey(PSCS_KEY)) {
             try {
-                LOG.infoContext(requestId, "setPscsData(): PSCS_KEY found - calling getPscs() ", getDebugMap(companyNumber));
                 PscsApi pscsApi = getPscs(companyNumber, requestId);
-                LOG.infoContext(requestId, "setPscsData(): PSCS_KEY found - back from getPscs() - setting PSC data ", getDebugMap(companyNumber));
                 companyReportApiData.setPscsApi(pscsApi);
 
             } catch (HandlerException he) {
@@ -254,12 +213,10 @@ public class CompanyReportDataHandler {
                     + companyNumber, getDebugMap(companyNumber));
             }
         }
-        LOG.infoContext(requestId, "setPscsData(): end...", getDebugMap(companyNumber));
     }
 
     private void setOfficersData(String companyNumber, String requestId,
         CompanyReportApiData companyReportApiData, CompanyProfileApi companyProfileApi) {
-        LOG.infoContext(requestId, "setOfficersData(): start...", getDebugMap(companyNumber));
         if (companyProfileApi.getLinks().containsKey(OFFICERS_KEY)) {
             try {
                 OfficersApi officersApi = getOfficers(companyNumber, requestId);
@@ -268,12 +225,10 @@ public class CompanyReportDataHandler {
                 LOG.infoContext(requestId, "Failed to get company officers: ", getDebugMap(companyNumber));
             }
         }
-        LOG.infoContext(requestId, "setOfficersData(): start...", getDebugMap(companyNumber));
     }
 
     private void setUkEstablishmentsData(String companyNumber, String requestId,
         CompanyReportApiData companyReportApiData, CompanyProfileApi companyProfileApi) {
-        LOG.infoContext(requestId, "setUkEstablishmentsData(): start...", getDebugMap(companyNumber));
         if (companyProfileApi.getLinks().containsKey(UK_ESTABLISHMENTS)) {
             try {
                 UkEstablishmentsApi ukEstablishmentsApi = getUkEstablishments(companyNumber, requestId);
@@ -282,12 +237,10 @@ public class CompanyReportDataHandler {
                 LOG.infoContext(requestId, "Failed to get uk establishments: ", getDebugMap(companyNumber));
             }
         }
-        LOG.infoContext(requestId, "setUkEstablishmentsData(): start...", getDebugMap(companyNumber));
     }
 
     private void setStatementsData(String companyNumber, String requestId,
         CompanyReportApiData companyReportApiData, CompanyProfileApi companyProfileApi) {
-        LOG.infoContext(requestId, "setStatementsData(): start...", getDebugMap(companyNumber));
         if (companyProfileApi.getLinks().containsKey(STATEMENTS_KEY)) {
             try {
                 StatementsApi statementsApi = getStatements(companyNumber, requestId);
@@ -297,12 +250,10 @@ public class CompanyReportDataHandler {
                     + companyNumber, getDebugMap(companyNumber));
             }
         }
-        LOG.infoContext(requestId, "setStatementsData(): start...", getDebugMap(companyNumber));
     }
 
     private void setChargesData(String companyNumber, String requestId,
         CompanyReportApiData companyReportApiData, CompanyProfileApi companyProfileApi) {
-        LOG.infoContext(requestId, "setChargesData(): start...", getDebugMap(companyNumber));
         if (companyProfileApi.getLinks().containsKey(CHARGES_KEY)) {
             try {
                 ChargesApi chargesApi = getCharges(companyNumber, requestId);
@@ -311,12 +262,10 @@ public class CompanyReportDataHandler {
                 LOG.infoContext(requestId, "Failed to get charges: ", getDebugMap(companyNumber));
             }
         }
-        LOG.infoContext(requestId, "setChargesData(): start...", getDebugMap(companyNumber));
     }
 
     private void setInsolvency(String companyNumber, String requestId,
         CompanyReportApiData companyReportApiData, CompanyProfileApi companyProfileApi) {
-        LOG.infoContext(requestId, "setInsolvency(): start...", getDebugMap(companyNumber));
         if (companyProfileApi.getLinks().containsKey(INSOLVENCY_KEY)) {
             try {
                 InsolvencyApi insolvencyApi = getInsolvency(companyNumber, requestId);
@@ -326,12 +275,10 @@ public class CompanyReportDataHandler {
                     + companyNumber, getDebugMap(companyNumber));
             }
         }
-        LOG.infoContext(requestId, "setInsolvency(): start...", getDebugMap(companyNumber));
     }
 
     private void setRegisters(String companyNumber, String requestId,
         CompanyReportApiData companyReportApiData, CompanyProfileApi companyProfileApi) {
-        LOG.infoContext(requestId, "setRegisters(): start...", getDebugMap(companyNumber));
         if (companyProfileApi.getLinks().containsKey(REGISTERS_KEY)) {
             try {
                 CompanyRegistersApi companyRegistersApi = getCompanyRegisters(companyNumber, requestId);
@@ -340,12 +287,10 @@ public class CompanyReportDataHandler {
                 LOG.infoContext(requestId, "Failed to get company registers: ", getDebugMap(companyNumber));
             }
         }
-        LOG.infoContext(requestId, "setRegisters(): start...", getDebugMap(companyNumber));
     }
 
     private void setExemptions(String companyNumber, String requestId,
         CompanyReportApiData companyReportApiData, CompanyProfileApi companyProfileApi) {
-        LOG.infoContext(requestId, "setExemptions(): start...", getDebugMap(companyNumber));
         if (companyProfileApi.getLinks().containsKey(EXEMPTION_KEY)) {
             try {
                 CompanyExemptionsApi companyExemptionsApi = getCompanyExemptions(companyNumber, requestId);
@@ -354,7 +299,6 @@ public class CompanyReportDataHandler {
                 LOG.infoContext(requestId, "Failed to get company exemptions: ", getDebugMap(companyNumber));
             }
         }
-        LOG.infoContext(requestId, "setExemptions(): start...", getDebugMap(companyNumber));
     }
 
     private String toJson(CompanyReport companyReport, String companyNumber,
@@ -473,11 +417,9 @@ public class CompanyReportDataHandler {
     }
 
     private PscsApi getPscs(String companyNumber, String requestId) throws HandlerException {
-        LOG.infoContext(requestId, "getPscs(): getting PSCs - start...", getDebugMap(companyNumber));
         try {
             LOG.infoContext(requestId, "Attempting to retrieve company PSCSs", getDebugMap(companyNumber));
             PscsApi pscResponse = pscsService.getPscs(companyNumber);
-            LOG.infoContext(requestId, "getPscs(): PSC data retrived -> ", getPSCDataApiDebugMap(pscResponse));
             return pscResponse;
         } catch (ServiceException se) {
 
