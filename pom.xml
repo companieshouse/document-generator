@@ -22,8 +22,8 @@
   <properties>
     <!-- Java/Spring -->
     <jdk.version>21</jdk.version>
-    <spring-webmvc.version>6.2.3</spring-webmvc.version>
-    <spring-boot-dependencies.version>3.5.11</spring-boot-dependencies.version>
+    <spring-webmvc.version>6.2.18</spring-webmvc.version>
+    <spring-boot-dependencies.version>3.5.14</spring-boot-dependencies.version>
     <spring-boot-maven-plugin.version>3.4.3</spring-boot-maven-plugin.version>
     <mockito-junit-jupiter.version>5.16.0</mockito-junit-jupiter.version>
 
@@ -37,9 +37,9 @@
     <!-- CH -->
     <structured-logging.version>3.0.26</structured-logging.version>
     <environment-reader-library.version>3.0.5</environment-reader-library.version>
-    <api-sdk-java.version>6.6.4</api-sdk-java.version>
+    <api-sdk-java.version>6.6.16</api-sdk-java.version>
     <private-api-sdk-java.version>4.0.417</private-api-sdk-java.version>
-    <api-sdk-manager-java-library.version>3.0.13</api-sdk-manager-java-library.version>
+    <api-sdk-manager-java-library.version>3.0.20</api-sdk-manager-java-library.version>
 
     <!-- External -->
     <log4j2.version>2.25.3</log4j2.version>
@@ -93,18 +93,11 @@
       <version>${commons-lang3.version}</version>
     </dependency>
 
-    <!-- Pinning version to address CVE-2025-61795 tomcat-embed-websocket pulled transitively-->
+    <!-- Pinning version to address CVE-2026-34478(6.9), CVE-2026-34480(6.9), CVE-2026-34481(6.3) log4j-api pulled transitively-->
     <dependency>
-      <groupId>org.apache.tomcat.embed</groupId>
-      <artifactId>tomcat-embed-websocket</artifactId>
-      <version>11.0.18</version>
-    </dependency>
-
-    <!-- Pinning version to address CVE-2025-61795 tomcat-embed-core pulled transitively-->
-    <dependency>
-      <groupId>org.apache.tomcat.embed</groupId>
-      <artifactId>tomcat-embed-core</artifactId>
-      <version>11.0.18</version>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
+      <version>2.25.4</version>
     </dependency>
 
     <dependency>
