@@ -518,7 +518,7 @@
 
         {{if not $foreignCompanyDetails }}
 
-            {{if or ($keyFilingDates.last_accounts_made_up_to) ($keyFilingDates.next_accounts_due) ($keyFilingDates.accounting_reference_date.day) }}
+            {{if or ($keyFilingDates.last_accounts_made_up_to) ($keyFilingDates.next_accounts_due) ($keyFilingDates.accounting_reference_date.day) ($keyFilingDates.last_confirmation_statement) ($keyFilingDates.next_confirmation_statement) ($keyFilingDates.last_members_list) }}
                 <h3 class="heading-small">Key filing dates</h3>
                 <ul class="list list-bullet">
                     {{if $keyFilingDates.accounting_reference_date.day}}
