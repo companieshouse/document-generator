@@ -1,6 +1,6 @@
 package uk.gov.companieshouse.document.generator.accounts.data.accounts;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -259,7 +259,7 @@ public class AccountsManager {
 
                 smallFullApiData.setCurrentAssetsInvestments(currentAssetsInvestmentsApi);
             }
-            
+
             if (!StringUtils.isEmpty(smallFull.getLinks().getCreditorsWithinOneYearNote())) {
 
                 errorString = "creditors within one year";
@@ -269,7 +269,7 @@ public class AccountsManager {
 
                 smallFullApiData.setCreditorsWithinOneYear(creditorsWithinOneYearApi);
             }
-            
+
             if (!StringUtils.isEmpty(smallFull.getLinks().getCreditorsAfterMoreThanOneYearNote())) {
 
                 errorString = "creditors after one year";
@@ -279,11 +279,11 @@ public class AccountsManager {
 
                 smallFullApiData.setCreditorsAfterOneYear(creditorsAfterOneYearApi);
             }
-            
+
             if (!StringUtils.isEmpty(smallFull.getLinks().getFixedAssetsInvestmentsNote())) {
 
                 errorString = "fixed assets investments";
-                
+
                 FixedAssetsInvestmentsApi fixedAssetsInvestmentsApi = apiClient.smallFull().fixedAssetsInvestments()
                         .get(smallFull.getLinks().getFixedAssetsInvestmentsNote()).execute().getData();
 
@@ -356,7 +356,7 @@ public class AccountsManager {
         } catch (ApiErrorResponseException e) {
             handleException(e, errorString, link);
         }
-        
+
         smallFullApiData.setCompanyProfile(companyService.getCompanyProfile(transaction.getCompanyNumber()));
 
 
