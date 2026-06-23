@@ -1,10 +1,14 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.currentappointments;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -14,6 +18,7 @@ import org.mapstruct.Mappings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.annotation.RequestScope;
 import uk.gov.companieshouse.api.model.officers.CompanyOfficerApi;
+import uk.gov.companieshouse.api.model.officers.ContributionSubTypeApi;
 import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.DateDayMonthYear;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.currentappointments.items.CurrentOfficer;
@@ -163,6 +168,61 @@ public abstract class ApiToCurrentOfficer {
 
         LocalDate idvIdentityVerifiedOn = companyOfficerApi.getIdentityVerificationDetails().getIdentityVerifiedOn();
         currentOfficer.getIdentityVerificationDetails().setIdentityVerifiedOn(idvIdentityVerifiedOn.format(getFormatter()));
+    }
+
+    @AfterMapping
+    protected void formatContributionCurrencyValue(CompanyOfficerApi companyOfficerApi,
+                                                   @MappingTarget CurrentOfficer currentOfficer) {
+        if (companyOfficerApi == null || companyOfficerApi.getContributionCurrencyValue() == null) {
+            return;
+        }
+
+        String unFormattedAmount = companyOfficerApi.getContributionCurrencyValue();
+
+        try {
+            BigDecimal amount = new BigDecimal(unFormattedAmount);
+
+            // Format the amount to always have two decimal places and insert thousand separators to improve readability of large values
+            DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance(Locale.UK);
+            DecimalFormat formatter = new DecimalFormat("#,##0.00", symbols);
+
+            String formattedAmount = formatter.format(amount);
+
+            currentOfficer.setContributionCurrencyValue(formattedAmount);
+        } catch (NumberFormatException ex) {
+            // If unable to format, leave amount unchanged
+            currentOfficer.setContributionCurrencyValue(unFormattedAmount);
+        }
+    }
+
+    @AfterMapping
+    protected void convertContributionSubTypes(CompanyOfficerApi companyOfficerApi,
+                                               @MappingTarget CurrentOfficer currentOfficer) {
+        if (companyOfficerApi == null
+                || companyOfficerApi.getContributionSubTypes() == null
+                || companyOfficerApi.getContributionSubTypes().isEmpty()) {
+            return;
+        }
+
+        StringBuilder descriptions = new StringBuilder();
+
+        // Build a comma-separated list of capital contribution sub-types, from values looked up in API enumerations
+        for (ContributionSubTypeApi subType : companyOfficerApi.getContributionSubTypes()) {
+            if (subType.getSubType() != null) {
+                String description = retrieveApiEnumerationDescription
+                        .getApiEnumerationDescription(CONSTANTS, "capital_contribution_sub_type",
+                                subType.getSubType(),
+                                getDebugMap(subType.getSubType()));
+
+                if (descriptions.length() > 0) {
+                    descriptions.append(", ");
+                }
+
+                descriptions.append(description);
+            }
+        }
+
+        currentOfficer.setContributionSubTypeDescriptions(descriptions.toString());
     }
 
     private boolean hasOfficerRole(CompanyOfficerApi companyOfficerApi) {

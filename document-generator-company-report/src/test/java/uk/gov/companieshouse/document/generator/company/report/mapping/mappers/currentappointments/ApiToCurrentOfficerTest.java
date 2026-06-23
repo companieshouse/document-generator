@@ -3,6 +3,7 @@ package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static uk.gov.companieshouse.document.generator.company.report.utils.TestUtils.getFormatter;
@@ -22,6 +23,7 @@ import uk.gov.companieshouse.api.model.common.Address;
 import uk.gov.companieshouse.api.model.common.ContactDetails;
 import uk.gov.companieshouse.api.model.common.DateOfBirth;
 import uk.gov.companieshouse.api.model.officers.CompanyOfficerApi;
+import uk.gov.companieshouse.api.model.officers.ContributionSubTypeApi;
 import uk.gov.companieshouse.api.model.officers.IdentificationApi;
 import uk.gov.companieshouse.api.model.officers.IdentityVerificationDetails;
 import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
@@ -71,6 +73,17 @@ class ApiToCurrentOfficerTest {
 
     private static final String RESPONSIBILITIES = "Window cleaner and security guard";
     private static final String CONTACT_NAME = "Craig Frankie Baldwin";
+
+    private static final String CONTRIBUTION_CURRENCY_TYPE = "USD";
+    private static final String CONTRIBUTION_CURRENCY_AMOUNT = "123.89";
+    private static final String SHARES_TYPE = "shares";
+    private static final String SHARES_TYPE_DESCRIPTION = "Shares";
+    private static final String MONEY_TYPE = "money";
+    private static final String MONEY_TYPE_DESCRIPTION = "Money";
+    private static final String LAND_OR_PROPERTY_TYPE = "land-or-property";
+    private static final String LAND_OR_PROPERTY_TYPE_DESCRIPTION = "Land or property";
+    private static final String CONSTANTS_ENUMERATION_DESCRIPTION = "CONSTANTS";
+    private static final String CAPITAL_CONTRIBUTION_ENUMERATION_ID = "capital_contribution_sub_type";
 
     @Test
     @DisplayName("tests api officer IDV data maps to internal officer model")
@@ -174,9 +187,95 @@ class ApiToCurrentOfficerTest {
 
         assertEquals(RESPONSIBILITIES, currentOfficer.getResponsibilities());
 
-
         assertEquals(CONTACT_NAME, currentOfficer.getContactDetails().getContactName());
 
+    }
+
+    @Test
+    @DisplayName("capital contribution fields are mapped correctly to model for Limited Partnerships")
+    void testApiToModelMapsForCapitalContribution() {
+
+        final CompanyOfficerApi companyOfficerApi = createCompanyOfficerApi();
+
+        when(mockRetrieveApiEnumerations.getApiEnumerationDescription(anyString(), anyString(), anyString(), any())).thenReturn(IDENTIFICATION_TYPE);
+        when(mockRetrieveApiEnumerations.getApiEnumerationDescription(
+                eq(CONSTANTS_ENUMERATION_DESCRIPTION), eq(CAPITAL_CONTRIBUTION_ENUMERATION_ID), eq(SHARES_TYPE), any())).thenReturn(SHARES_TYPE_DESCRIPTION);
+        when(mockRetrieveApiEnumerations.getApiEnumerationDescription(
+                eq(CONSTANTS_ENUMERATION_DESCRIPTION), eq(CAPITAL_CONTRIBUTION_ENUMERATION_ID), eq(LAND_OR_PROPERTY_TYPE), any())).thenReturn(LAND_OR_PROPERTY_TYPE_DESCRIPTION);
+        when(mockRetrieveApiEnumerations.getApiEnumerationDescription(
+                eq(CONSTANTS_ENUMERATION_DESCRIPTION), eq(CAPITAL_CONTRIBUTION_ENUMERATION_ID), eq(MONEY_TYPE), any())).thenReturn(MONEY_TYPE_DESCRIPTION);
+
+        final CurrentOfficer currentOfficer = apiToCurrentOfficer.apiToCurrentOfficer(companyOfficerApi);
+
+        assertNotNull(currentOfficer);
+        assertEquals(CONTRIBUTION_CURRENCY_TYPE, currentOfficer.getContributionCurrencyType());
+        assertEquals(CONTRIBUTION_CURRENCY_AMOUNT, currentOfficer.getContributionCurrencyValue());
+        assertEquals(SHARES_TYPE_DESCRIPTION + ", " + LAND_OR_PROPERTY_TYPE_DESCRIPTION + ", " + MONEY_TYPE_DESCRIPTION,
+                currentOfficer.getContributionSubTypeDescriptions());
+    }
+
+    @Test
+    @DisplayName("capital contribution amount field is correctly formatted when mapped to model for Limited Partnerships")
+    void testApiToModelMapsForFormattedCapitalContributionAmount() {
+
+        // Ensure thousands separator is output
+        final CompanyOfficerApi companyOfficerApi = createCompanyOfficerApi();
+        companyOfficerApi.setContributionCurrencyValue("1123.89");
+
+        when(mockRetrieveApiEnumerations.getApiEnumerationDescription(anyString(), anyString(), anyString(), any())).thenReturn(IDENTIFICATION_TYPE);
+
+        CurrentOfficer currentOfficer = apiToCurrentOfficer.apiToCurrentOfficer(companyOfficerApi);
+
+        assertNotNull(currentOfficer);
+        assertEquals("1,123.89", currentOfficer.getContributionCurrencyValue());
+
+        // Ensure two decimal places are output when only one present
+        companyOfficerApi.setContributionCurrencyValue("1123.8");
+
+        currentOfficer = apiToCurrentOfficer.apiToCurrentOfficer(companyOfficerApi);
+
+        assertNotNull(currentOfficer);
+        assertEquals("1,123.80", currentOfficer.getContributionCurrencyValue());
+
+        // Ensure two decimal places are output when none present
+        companyOfficerApi.setContributionCurrencyValue("1123");
+
+        currentOfficer = apiToCurrentOfficer.apiToCurrentOfficer(companyOfficerApi);
+
+        assertNotNull(currentOfficer);
+        assertEquals("1,123.00", currentOfficer.getContributionCurrencyValue());
+
+        // Ensure two decimal places are output when none present
+        companyOfficerApi.setContributionCurrencyValue("1123");
+
+        currentOfficer = apiToCurrentOfficer.apiToCurrentOfficer(companyOfficerApi);
+
+        assertNotNull(currentOfficer);
+        assertEquals("1,123.00", currentOfficer.getContributionCurrencyValue());
+
+        // Ensure multiple thousands separators are output
+        companyOfficerApi.setContributionCurrencyValue("1123123123.45");
+
+        currentOfficer = apiToCurrentOfficer.apiToCurrentOfficer(companyOfficerApi);
+
+        assertNotNull(currentOfficer);
+        assertEquals("1,123,123,123.45", currentOfficer.getContributionCurrencyValue());
+
+        // Ensure already formatted amount is left unchanged
+        companyOfficerApi.setContributionCurrencyValue("1,123,123,123.45");
+
+        currentOfficer = apiToCurrentOfficer.apiToCurrentOfficer(companyOfficerApi);
+
+        assertNotNull(currentOfficer);
+        assertEquals("1,123,123,123.45", currentOfficer.getContributionCurrencyValue());
+
+        // Ensure a non-numeric value is left unchanged
+        companyOfficerApi.setContributionCurrencyValue("A LOT OF WONGA");
+
+        currentOfficer = apiToCurrentOfficer.apiToCurrentOfficer(companyOfficerApi);
+
+        assertNotNull(currentOfficer);
+        assertEquals("A LOT OF WONGA", currentOfficer.getContributionCurrencyValue());
     }
 
     private CompanyOfficerApi createCompanyOfficerApi() {
@@ -193,6 +292,16 @@ class ApiToCurrentOfficerTest {
         companyOfficerApi.setPrincipalOfficeAddress(address);
         companyOfficerApi.setResponsibilities(RESPONSIBILITIES);
         companyOfficerApi.setContactDetails(createContactDetails());
+        companyOfficerApi.setContributionCurrencyType(CONTRIBUTION_CURRENCY_TYPE);
+        companyOfficerApi.setContributionCurrencyValue(CONTRIBUTION_CURRENCY_AMOUNT);
+
+        ContributionSubTypeApi shares = new ContributionSubTypeApi();
+        shares.setSubType(SHARES_TYPE);
+        ContributionSubTypeApi landOrProperty = new ContributionSubTypeApi();
+        landOrProperty.setSubType(LAND_OR_PROPERTY_TYPE);
+        ContributionSubTypeApi money = new ContributionSubTypeApi();
+        money.setSubType(MONEY_TYPE);
+        companyOfficerApi.setContributionSubTypes(List.of(shares, landOrProperty, money));
 
         return companyOfficerApi;
     }
