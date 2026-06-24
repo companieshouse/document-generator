@@ -25,7 +25,6 @@
     <spring-webmvc.version>6.2.19</spring-webmvc.version>
     <spring-boot-dependencies.version>3.5.15</spring-boot-dependencies.version>
     <spring-boot-maven-plugin.version>3.4.3</spring-boot-maven-plugin.version>
-    <mockito-junit-jupiter.version>5.16.0</mockito-junit-jupiter.version>
 
     <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
     <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
@@ -35,32 +34,35 @@
     <artifactoryResolveReleaseRepo>libs-release-local</artifactoryResolveReleaseRepo>
 
     <!-- CH -->
-    <structured-logging.version>3.0.57</structured-logging.version>
-    <environment-reader-library.version>3.0.5</environment-reader-library.version>
     <api-sdk-java.version>6.6.16</api-sdk-java.version>
     <private-api-sdk-java.version>4.0.417</private-api-sdk-java.version>
-    <api-sdk-manager-java-library.version>3.0.20</api-sdk-manager-java-library.version>
 
     <!-- External -->
-    <log4j2.version>2.26.0</log4j2.version>
     <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
     <org.mapstruct.version>1.6.3</org.mapstruct.version>
-    <snakeyaml.version>2.2</snakeyaml.version>
     <gson.version>2.11.0</gson.version>
     <json.version>20240303</json.version>
     <maven-install-plugin.version>3.1.4</maven-install-plugin.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    <!-- Overrides -->
-    <commons-lang3.version>3.20.0</commons-lang3.version>
+    <ch-boms.version>0.1.9</ch-boms.version>
   </properties>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-bom</artifactId>
-        <version>${log4j2.version}</version>
+        <groupId>uk.gov.companieshouse</groupId>
+        <artifactId>ch-dependency-bom</artifactId>
+        <version>${ch-boms.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>uk.gov.companieshouse</groupId>
+        <artifactId>ch-test-bom</artifactId>
+        <version>${ch-boms.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -72,6 +74,7 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
@@ -81,14 +84,9 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
+
   <dependencies>
     <!-- Overrides -->
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>${commons-lang3.version}</version>
-    </dependency>
-
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-hateoas</artifactId>
@@ -115,7 +113,6 @@
     <dependency>
       <groupId>org.mapstruct</groupId>
       <artifactId>mapstruct</artifactId>
-      <version>${org.mapstruct.version}</version>
     </dependency>
     <dependency>
       <groupId>uk.gov.companieshouse</groupId>
@@ -135,20 +132,20 @@
     <dependency>
       <groupId>uk.gov.companieshouse</groupId>
       <artifactId>structured-logging</artifactId>
-      <version>${structured-logging.version}</version>
     </dependency>
-    <dependency>
-      <groupId>uk.gov.companieshouse</groupId>
-      <artifactId>environment-reader-library</artifactId>
-      <version>${environment-reader-library.version}</version>
-    </dependency>
+
     <!-- Testing -->
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-junit-jupiter</artifactId>
-      <version>${mockito-junit-jupiter.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <profiles>
