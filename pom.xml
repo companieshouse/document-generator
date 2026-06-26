@@ -23,8 +23,7 @@
     <!-- Java/Spring -->
     <jdk.version>21</jdk.version>
     <spring-webmvc.version>6.2.19</spring-webmvc.version>
-    <spring-boot-dependencies.version>3.5.15</spring-boot-dependencies.version>
-    <spring-boot-maven-plugin.version>3.4.3</spring-boot-maven-plugin.version>
+    <spring-boot-dependencies.version>4.1.0</spring-boot-dependencies.version>
 
     <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
     <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
@@ -63,14 +62,6 @@
         <groupId>uk.gov.companieshouse</groupId>
         <artifactId>ch-test-bom</artifactId>
         <version>${ch-boms.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-framework-bom</artifactId>
-        <version>${spring-webmvc.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -133,19 +124,6 @@
       <groupId>uk.gov.companieshouse</groupId>
       <artifactId>structured-logging</artifactId>
     </dependency>
-
-    <!-- Testing -->
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-junit-jupiter</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.assertj</groupId>
-      <artifactId>assertj-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-
   </dependencies>
 
   <profiles>

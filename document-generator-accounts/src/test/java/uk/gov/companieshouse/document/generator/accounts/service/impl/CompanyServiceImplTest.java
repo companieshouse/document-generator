@@ -49,7 +49,7 @@ public class CompanyServiceImplTest {
     private static final String COMPANY_URI = "/company/" + COMPANY_NUMBER;
 
     @BeforeEach
-    private void init() {
+    public void init() {
         when(mockApiClientService.getApiClient()).thenReturn(mockApiClient);
         when(mockApiClient.company()).thenReturn(mockCompanyResourceHandler);
         when(mockCompanyResourceHandler.get(COMPANY_URI)).thenReturn(mockCompanyGet);

@@ -1,8 +1,8 @@
 package uk.gov.companieshouse.document.generator.company.report.service;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.api.InternalApiClient;
+import uk.gov.companieshouse.document.generator.common.OracleQueryApiProperties;
 import uk.gov.companieshouse.sdk.manager.ApiSdkManager;
 
 /**
@@ -14,8 +14,8 @@ public class OracleQueryApiClientService {
 
     private final String oracleQueryApiUrl;
 
-    public OracleQueryApiClientService(@Value("${ORACLE_QUERY_API_URL}") String oracleQueryApiUrl) {
-        this.oracleQueryApiUrl = oracleQueryApiUrl;
+    public OracleQueryApiClientService(OracleQueryApiProperties oracleQueryApiProperties) {
+        this.oracleQueryApiUrl = oracleQueryApiProperties.getUrl();
     }
 
     public InternalApiClient getInternalApiClient() {

@@ -8,7 +8,6 @@ import java.util.Map;
 import org.apache.http.HttpStatus;
 import org.json.JSONException;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -28,18 +27,18 @@ import uk.gov.companieshouse.document.generator.api.service.DocumentGeneratorSer
 import uk.gov.companieshouse.document.generator.api.service.DocumentTypeService;
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseObject;
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseStatus;
+import uk.gov.companieshouse.document.generator.common.DocumentGeneratorProperties;
 import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
 import uk.gov.companieshouse.document.generator.interfaces.exception.DocumentInfoException;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
-import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
 @Service
 public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
 
-    private EnvironmentReader environmentReader;
+    private final DocumentGeneratorProperties documentGeneratorProperties;
 
     private RenderDocumentRequestHandler requestHandler;
 
@@ -48,10 +47,6 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
     private DocumentInfoServiceFactory documentInfoServiceFactory;
 
     private RetrieveApiEnumerationDescription retrieveApiEnumerationDescription;
-
-    private static final String DOCUMENT_RENDER_SERVICE_HOST_ENV_VAR = "DOCUMENT_RENDER_SERVICE_HOST";
-
-    private static final String DOCUMENT_BUCKET_NAME_ENV_VAR = "DOCUMENT_BUCKET_NAME";
 
     private static final String S3 = "s3://";
 
@@ -74,13 +69,13 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
     private ObjectMapper mapper = new ObjectMapper();
 
     public DocumentGeneratorServiceImpl(DocumentInfoServiceFactory documentInfoServiceFactory,
-                                        EnvironmentReader environmentReader,
+                                        DocumentGeneratorProperties documentGeneratorProperties,
                                         RenderDocumentRequestHandler requestHandler,
                                         DocumentTypeService documentTypeService,
                                         RetrieveApiEnumerationDescription retrieveApiEnumerationDescription) {
 
         this.documentInfoServiceFactory = documentInfoServiceFactory;
-        this.environmentReader = environmentReader;
+        this.documentGeneratorProperties = documentGeneratorProperties;
         this.requestHandler = requestHandler;
         this.documentTypeService = documentTypeService;
         this.retrieveApiEnumerationDescription = retrieveApiEnumerationDescription;
@@ -210,7 +205,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
 
         createAndLogInfoMessage("Sending request to Document Render Service", requestParameters);
 
-        String host = environmentReader.getMandatoryString(DOCUMENT_RENDER_SERVICE_HOST_ENV_VAR);
+        String host = documentGeneratorProperties.getRender().getService().getHost();
         String url = host + getContextPath(documentRequest.isPublicLocationRequired());
 
         RenderDocumentRequest requestData = new RenderDocumentRequest();
@@ -285,7 +280,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
      */
     private String buildLocation(String path) {
 
-        String bucketName = environmentReader.getMandatoryString(DOCUMENT_BUCKET_NAME_ENV_VAR);
+        String bucketName = documentGeneratorProperties.getBucket().getName();
 
         return new StringBuilder(S3).append(bucketName).append(path).toString();
     }

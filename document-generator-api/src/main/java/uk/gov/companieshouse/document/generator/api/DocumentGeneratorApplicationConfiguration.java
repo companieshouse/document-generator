@@ -3,6 +3,8 @@ package uk.gov.companieshouse.document.generator.api;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.config.ServiceLocatorFactoryBean;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -15,11 +17,12 @@ import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.environment.impl.EnvironmentReaderImpl;
 
 @Configuration
+@EnableConfigurationProperties
+@ConfigurationPropertiesScan(basePackages = {"uk.gov.companieshouse.document.generator.common"})
 @ComponentScan(basePackages = {"uk.gov.companieshouse.document.generator.accounts",
                                "uk.gov.companieshouse.document.generator.prosecution",
                                "uk.gov.companieshouse.document.generator.company.report",
                                "uk.gov.companieshouse.document.generator.common" })
-
 public class DocumentGeneratorApplicationConfiguration {
 
     @Bean

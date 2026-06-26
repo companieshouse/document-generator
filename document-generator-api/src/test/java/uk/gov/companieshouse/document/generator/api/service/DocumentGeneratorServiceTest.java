@@ -19,12 +19,12 @@ import uk.gov.companieshouse.document.generator.api.service.impl.DocumentGenerat
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseObject;
 import uk.gov.companieshouse.document.generator.api.service.response.ResponseStatus;
 import uk.gov.companieshouse.document.generator.api.document.DocumentType;
+import uk.gov.companieshouse.document.generator.common.DocumentGeneratorProperties;
 import uk.gov.companieshouse.document.generator.common.descriptions.RetrieveApiEnumerationDescription;
 import uk.gov.companieshouse.document.generator.interfaces.DocumentInfoService;
 import uk.gov.companieshouse.document.generator.interfaces.exception.DocumentInfoException;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoRequest;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
-import uk.gov.companieshouse.environment.EnvironmentReader;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -52,8 +52,7 @@ public class DocumentGeneratorServiceTest {
     @Mock
     private DocumentTypeService mockDocumentTypeService;
 
-    @Mock
-    private EnvironmentReader mockEnvironmentReader;
+    private DocumentGeneratorProperties documentGeneratorProperties;
 
     @Mock
     private RetrieveApiEnumerationDescription mockRetrieveApiEnumerationDescription;
@@ -80,7 +79,9 @@ public class DocumentGeneratorServiceTest {
 
     @BeforeEach
     public void setUp() {
-        documentGeneratorService = new DocumentGeneratorServiceImpl(mockDocumentInfoServiceFactory, mockEnvironmentReader,
+        documentGeneratorProperties = new DocumentGeneratorProperties();
+        documentGeneratorProperties.getBucket().setName(BUCKET_LOCATION);
+        documentGeneratorService = new DocumentGeneratorServiceImpl(mockDocumentInfoServiceFactory, documentGeneratorProperties,
                 mockRequestHandler, mockDocumentTypeService, mockRetrieveApiEnumerationDescription);
     }
 
@@ -95,7 +96,6 @@ public class DocumentGeneratorServiceTest {
         when(mockDocumentInfoService.getDocumentInfo(any(DocumentInfoRequest.class))).thenReturn(setSuccessfulDocumentInfo());
         when(mockRequestHandler.sendDataToDocumentRenderService(any(String.class), any(RenderDocumentRequest.class),
                 any(Map.class))).thenReturn(setSuccessfulRenderResponse());
-        when(mockEnvironmentReader.getMandatoryString(any(String.class))).thenReturn(BUCKET_LOCATION);
         when(mockRetrieveApiEnumerationDescription.getApiEnumerationDescription(any(String.class), any(String.class),
                 any(String.class), any(Map.class))).thenReturn(DESCRIPTION);
 
@@ -162,7 +162,6 @@ public class DocumentGeneratorServiceTest {
         when(mockDocumentInfoService.getDocumentInfo(any(DocumentInfoRequest.class))).thenReturn(setSuccessfulDocumentInfo());
         when(mockRequestHandler.sendDataToDocumentRenderService(any(String.class), any(RenderDocumentRequest.class),
                 any(Map.class))).thenThrow(IOException.class);
-        when(mockEnvironmentReader.getMandatoryString(any(String.class))).thenReturn(BUCKET_LOCATION);
         when(mockRetrieveApiEnumerationDescription.getApiEnumerationDescription(any(String.class), any(String.class),
                 any(String.class), any(Map.class))).thenReturn(DESCRIPTION);
 
