@@ -2,6 +2,8 @@ package uk.gov.companieshouse.document.generator.company.report.mapping.model.do
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
+import java.util.List;
+
 import uk.gov.companieshouse.api.model.common.Address;
 import uk.gov.companieshouse.api.model.common.ContactDetails;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.DateDayMonthYear;
@@ -71,6 +73,19 @@ public class CurrentOfficer {
 
     @JsonProperty("identity_verification_details")
     private IdentityVerificationDetails identityVerificationDetails;
+
+    @JsonProperty("contribution_currency_type")
+    private String contributionCurrencyType;
+
+    @JsonProperty("contribution_currency_value")
+    private String contributionCurrencyValue;
+
+    @JsonProperty("contribution_sub_types")
+    private List<ContributionSubType> contributionSubTypes;
+
+    @JsonProperty("contribution_sub_type_descriptions")
+    private String contributionSubTypeDescriptions;
+
 
     public IdentityVerificationDetails getIdentityVerificationDetails() {
         return identityVerificationDetails;
@@ -238,5 +253,29 @@ public class CurrentOfficer {
 
     public void setContactDetails(ContactDetails contactDetails) {
         this.contactDetails = contactDetails;
+    }
+
+    public String getContributionCurrencyType() {
+        return contributionCurrencyType;
+    }
+
+    public void setContributionCurrencyType(String contributionCurrencyType) {
+        this.contributionCurrencyType = contributionCurrencyType;
+    }
+
+    public String getContributionCurrencyValue() {
+        return contributionCurrencyValue;
+    }
+
+    public void setContributionCurrencyValue(String contributionCurrencyValue) {
+        this.contributionCurrencyValue = contributionCurrencyValue;
+    }
+
+    public String getContributionSubTypeDescriptions() {
+        return contributionSubTypeDescriptions;
+    }
+
+    public void setContributionSubTypeDescriptions(String contributionSubTypeDescriptions) {
+        this.contributionSubTypeDescriptions = contributionSubTypeDescriptions;
     }
 }

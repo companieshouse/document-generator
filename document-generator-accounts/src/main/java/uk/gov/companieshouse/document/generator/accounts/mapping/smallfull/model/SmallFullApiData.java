@@ -12,7 +12,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.ApprovalApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
-import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.debtors.DebtorsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.CreditorsAfterOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorswithinoneyear.CreditorsWithinOneYearApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.currentassetsinvestments.CurrentAssetsInvestmentsApi;
@@ -57,11 +57,11 @@ public class SmallFullApiData {
     private EmployeesApi employees;
 
     private CurrentAssetsInvestmentsApi currentAssetsInvestments;
-    
+
     private CreditorsWithinOneYearApi creditorsWithinOneYear;
-    
+
     private CreditorsAfterOneYearApi creditorsAfterOneYear;
-    
+
     private FixedAssetsInvestmentsApi fixedAssetsInvestments;
 
     private ProfitAndLossApi currentPeriodProfitAndLoss;
@@ -227,7 +227,7 @@ public class SmallFullApiData {
     public void setIntangibleAssets(IntangibleApi intangibleAssets) {
         this.intangibleAssets = intangibleAssets;
     }
-    
+
     public StocksApi getStocks() {
         return stocks;
     }
@@ -235,7 +235,7 @@ public class SmallFullApiData {
     public void setStocks(StocksApi stocks) {
         this.stocks = stocks;
     }
-    
+
     public DebtorsApi getDebtors () {
         return debtors;
     }
@@ -243,7 +243,7 @@ public class SmallFullApiData {
     public void setDebtors (DebtorsApi debtors) {
         this.debtors = debtors;
     }
-    
+
     public CreditorsWithinOneYearApi getCreditorsWithinOneYear() {
       return creditorsWithinOneYear;
     }

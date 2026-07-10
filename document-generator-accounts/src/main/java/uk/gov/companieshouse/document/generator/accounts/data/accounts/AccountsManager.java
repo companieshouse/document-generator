@@ -19,7 +19,7 @@ import uk.gov.companieshouse.api.model.accounts.smallfull.AccountingPoliciesApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.ApprovalApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.BalanceSheetStatementsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.CurrentPeriodApi;
-import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.DebtorsApi;
+import uk.gov.companieshouse.api.model.accounts.smallfull.debtors.DebtorsApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.PreviousPeriodApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.SmallFullApi;
 import uk.gov.companieshouse.api.model.accounts.smallfull.creditorsafteroneyear.CreditorsAfterOneYearApi;
