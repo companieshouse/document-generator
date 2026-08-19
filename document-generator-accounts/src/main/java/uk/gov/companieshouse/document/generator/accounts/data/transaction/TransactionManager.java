@@ -1,6 +1,6 @@
 package uk.gov.companieshouse.document.generator.accounts.data.transaction;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -8,8 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import uk.gov.companieshouse.environment.EnvironmentReader;
-import uk.gov.companieshouse.environment.impl.EnvironmentReaderImpl;
+import uk.gov.companieshouse.document.generator.common.ApiProperties;
+import uk.gov.companieshouse.document.generator.common.ChsInternalApiProperties;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
@@ -29,16 +29,20 @@ public class TransactionManager {
     /** represents the Authorization header name in the request */
     private static final String AUTHORIZATION_HEADER = "Authorization";
 
-    private static final EnvironmentReader READER = new EnvironmentReaderImpl();
+    private final String apiUrl;
+    private final String chsInternalApiKey;
 
-    private final String apiUrl = READER.getMandatoryString("API_URL");
-    private final String chsInternalApiKey = READER.getMandatoryString("CHS_INTERNAL_API_KEY");
-
-    /** represents the Spring rest template that is created for cross microservice contact */
-    @Autowired
-    private  RestTemplate restTemplate ;
+    private final RestTemplate restTemplate ;
 
     private static final Logger LOG = LoggerFactory.getLogger(MODULE_NAME_SPACE);
+
+    public TransactionManager(RestTemplateBuilder restTemplateBuilder,
+                              ApiProperties apiProperties,
+                              ChsInternalApiProperties chsInternalApiProperties) {
+        this.restTemplate = restTemplateBuilder.build();
+        this.apiUrl = apiProperties.getUrl();
+        this.chsInternalApiKey = chsInternalApiProperties.getKey();
+    }
 
     /**
      * Get transaction if exists

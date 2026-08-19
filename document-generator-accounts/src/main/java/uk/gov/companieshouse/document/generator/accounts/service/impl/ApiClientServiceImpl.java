@@ -7,24 +7,31 @@ import uk.gov.companieshouse.api.ApiClient;
 import uk.gov.companieshouse.api.http.ApiKeyHttpClient;
 import uk.gov.companieshouse.api.http.HttpClient;
 import uk.gov.companieshouse.document.generator.accounts.service.ApiClientService;
-import uk.gov.companieshouse.environment.EnvironmentReader;
-import uk.gov.companieshouse.environment.impl.EnvironmentReaderImpl;
 
 import jakarta.servlet.http.HttpServletRequest;
+import uk.gov.companieshouse.document.generator.common.ApiProperties;
+import uk.gov.companieshouse.document.generator.common.ChsInternalApiProperties;
+
 import java.util.UUID;
 
 @Service
 public class ApiClientServiceImpl implements ApiClientService {
 
-    private static final EnvironmentReader READER = new EnvironmentReaderImpl();
-
-    private static final String CHS_INTERNAL_API_KEY = READER.getMandatoryString("CHS_INTERNAL_API_KEY");
-    private static final String apiUrl = READER.getMandatoryString("API_URL");
     private static final String X_REQUEST_ID_HEADER = "x-request-id";
+
+    private final String chsInternalApiKey;
+    private final String apiUrl;
+
+    public ApiClientServiceImpl(
+            ApiProperties apiProperties,
+            ChsInternalApiProperties chsInternalApiProperties) {
+        this.apiUrl = apiProperties.getUrl();
+        this.chsInternalApiKey = chsInternalApiProperties.getKey();
+    }
 
     @Override
     public ApiClient getApiClient() {
-        HttpClient httpClient = new ApiKeyHttpClient(CHS_INTERNAL_API_KEY);
+        HttpClient httpClient = new ApiKeyHttpClient(chsInternalApiKey);
 
         setRequestId(httpClient);
 
