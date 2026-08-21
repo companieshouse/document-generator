@@ -19,28 +19,16 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.version>21</jdk.version>
-        <commons-io.version>2.20.0</commons-io.version>
-        <maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
-        <sonar-maven-plugin.version>3.4.0.905</sonar-maven-plugin.version>
-
-      <!-- Overrides -->
-      <httpclient5.version>5.4.4</httpclient5.version>
-
     </properties>
     
     <dependencies>
-      <!-- Overrides -->
-      <dependency>
-        <groupId>org.apache.httpcomponents.client5</groupId>
-        <artifactId>httpclient5</artifactId>
-        <version>${httpclient5.version}</version>
-      </dependency>
-
-
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+        </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>${commons-io.version}</version>
         </dependency>
         <dependency>
             <groupId>uk.gov.companieshouse</groupId>
@@ -68,12 +56,6 @@
             <version>unversioned</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>org.sonarsource.scanner.maven</groupId>
-            <artifactId>sonar-maven-plugin</artifactId>
-            <version>${sonar-maven-plugin.version}</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
@@ -82,7 +64,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-              <version>${spring-boot-maven-plugin.version}</version>
+                <version>${spring-boot-maven-plugin.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -102,6 +84,24 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
             <version>${maven-surefire-plugin.version}</version>
+            <configuration>
+              <!--
+                Required by SpringContextSmokeTest. These are read outside Spring's
+                property resolution, so they have to be real environment variables:
+                  API_URL / CHS_INTERNAL_API_KEY - read in static and field initialisers
+                    via EnvironmentReader (ApiClientServiceImpl, TransactionManager) and
+                    System.getenv (RenderDocumentRequestHandlerImpl).
+                  ORACLE_QUERY_API_URL - @Value with no default, so context load fails
+                    without it (OracleQueryApiClientService).
+                The values only need to be resolvable, never reachable - no test makes a
+                call against them.
+              -->
+              <environmentVariables>
+                <API_URL>http://localhost:0</API_URL>
+                <CHS_INTERNAL_API_KEY>test-key</CHS_INTERNAL_API_KEY>
+                <ORACLE_QUERY_API_URL>http://localhost:0</ORACLE_QUERY_API_URL>
+              </environmentVariables>
+            </configuration>
           </plugin>
         </plugins>
     </build>

@@ -1,6 +1,6 @@
 package uk.gov.companieshouse.document.generator.accounts.handler.accounts;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.api.model.accounts.CompanyAccountsApi;
@@ -146,7 +146,7 @@ public class CompanyAccountsDataHandler {
 
     private String createDocumentInfoResponseData(IxbrlDataWrapper ixbrlDataWrapper) throws IOException {
 
-        ObjectMapper mapper = new ObjectMapper();
+        JsonMapper mapper = JsonMapper.builder().build();
 
         return mapper.writeValueAsString(ixbrlDataWrapper);
     }
