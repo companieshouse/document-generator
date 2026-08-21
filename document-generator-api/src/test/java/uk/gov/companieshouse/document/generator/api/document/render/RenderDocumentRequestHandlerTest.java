@@ -1,6 +1,5 @@
 package uk.gov.companieshouse.document.generator.api.document.render;
 
-import org.apache.http.HttpStatus;
 import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -10,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import uk.gov.companieshouse.document.generator.api.document.render.impl.RenderDocumentRequestHandlerImpl;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentRequest;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentResponse;
@@ -93,14 +93,14 @@ public class RenderDocumentRequestHandlerTest {
         setValidOpenConnection();
         when(convertJsonHandler.convert(any(String.class))).thenReturn("long data");
 
-        setMockHttpConnectionForSuccess(HttpStatus.SC_CREATED);
+        setMockHttpConnectionForSuccess(HttpStatus.CREATED.value());
         RenderDocumentResponse response = renderDocumentRequestHandler.sendDataToDocumentRenderService(
                 TEST_URL, renderDocumentRequest, requestParameters);
 
         assertEquals(PDF_LOCATION, response.getLocation());
 
         verifyHttpConnectionMock(true);
-        assertEquals(HttpStatus.SC_CREATED, response.getStatus());
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
     }
 
     @Test
@@ -110,7 +110,7 @@ public class RenderDocumentRequestHandlerTest {
 
         setValidOpenConnection();
 
-        setMockHttpConnectionForError(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+        setMockHttpConnectionForError(HttpStatus.INTERNAL_SERVER_ERROR.value());
         RenderDocumentResponse response = renderDocumentRequestHandler.sendDataToDocumentRenderService(
                 TEST_URL, renderDocumentRequest, requestParameters);
 
@@ -118,7 +118,7 @@ public class RenderDocumentRequestHandlerTest {
         assertNull(response.getLocation());
 
         verifyHttpConnectionMock(false);
-        assertEquals(HttpStatus.SC_INTERNAL_SERVER_ERROR, response.getStatus());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getStatus());
     }
 
     @Test
@@ -159,7 +159,7 @@ public class RenderDocumentRequestHandlerTest {
 
         setValidOpenConnection();
         when(mockHttpURLConnection.getOutputStream()).thenReturn(mockOutputSteam);
-        when(mockHttpURLConnection.getResponseCode()).thenReturn(HttpStatus.SC_CREATED);
+        when(mockHttpURLConnection.getResponseCode()).thenReturn(HttpStatus.CREATED.value());
         when(mockHttpURLConnection.getInputStream()).thenThrow(IOException.class);
 
         assertThrows(RenderServiceException.class, () -> renderDocumentRequestHandler.sendDataToDocumentRenderService(
