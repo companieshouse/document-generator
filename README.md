@@ -88,8 +88,7 @@ document-generator:
 
 ### Notes on testing in Docker
 
-See [Confluence project developer testing](https://companieshouse.atlassian.
-net/wiki/spaces/DEV/pages/5399314596/Testing+Document+Generator+using+docker-chs-development) page
+See [Confluence project developer testing](https://companieshouse.atlassian.net/wiki/spaces/DEV/pages/5399314596/Testing+Document+Generator+using+docker-chs-development) page
 
 ## Terraform ECS
 
