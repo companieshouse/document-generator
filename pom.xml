@@ -23,8 +23,8 @@
     <!-- Java/Spring -->
     <jdk.version>21</jdk.version>
     <spring-webmvc.version>6.2.19</spring-webmvc.version>
-    <spring-boot-dependencies.version>3.5.15</spring-boot-dependencies.version>
-    <spring-boot-maven-plugin.version>3.4.3</spring-boot-maven-plugin.version>
+    <spring-boot-dependencies.version>4.1.1</spring-boot-dependencies.version>
+    <spring-boot-maven-plugin.version>4.1.1</spring-boot-maven-plugin.version>
 
     <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
     <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
@@ -102,7 +102,13 @@
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
+      <artifactId>spring-boot-starter-webmvc</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-webmvc-test</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.sonarsource.scanner.maven</groupId>
