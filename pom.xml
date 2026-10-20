@@ -15,26 +15,26 @@
   <parent>
     <groupId>uk.gov.companieshouse</groupId>
     <artifactId>companies-house-parent</artifactId>
-    <version>2.1.14</version>
+    <version>3.0.0</version>
     <relativePath/>
   </parent>
 
   <properties>
     <!-- Java and Spring -->
     <jdk.version>21</jdk.version>
-    <spring-boot-dependencies.version>4.1.0</spring-boot-dependencies.version>
+    <spring-boot-dependencies.version>4.1.1</spring-boot-dependencies.version>
 
     <!-- CH dependencies -->
-    <ch-boms.version>0.1.16</ch-boms.version>
-    <api-sdk-java.version>7.2.3</api-sdk-java.version>
-    <private-api-sdk-java.version>7.2.19</private-api-sdk-java.version>
-    <company-accounts-library.version>3.0.1</company-accounts-library.version>
+    <ch-boms.version>0.1.31</ch-boms.version>
+    <api-sdk-java.version>7.2.9</api-sdk-java.version>
+    <private-api-sdk-java.version>7.2.38</private-api-sdk-java.version>
+    <company-accounts-library.version>3.0.6</company-accounts-library.version>
 
     <!-- external libraries not managed by the CH BOMs or Spring dependencies -->
-    <json.version>20240303</json.version>
+    <json.version>20260814</json.version>
     <commons-io.version>2.20.0</commons-io.version>
-    <httpclient5.version>5.6.4</httpclient5.version>
-    <httpcore5.version>5.4.3</httpcore5.version>
+    <httpclient5.version>5.6.5</httpclient5.version>
+    <httpcore5.version>5.4.4</httpcore5.version>
 
     <!--
       mapstruct itself is managed by ch-core-bom. This is only for the
@@ -45,18 +45,14 @@
 
     <!-- Maven dependencies -->
     <spring-boot-maven-plugin.version>4.1.0</spring-boot-maven-plugin.version>
-    <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
-    <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
     <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
+    <jib-maven-plugin.version>3.16.0</jib-maven-plugin.version>
+
     <maven-install-plugin.version>3.1.4</maven-install-plugin.version>
-    <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
 
     <!-- Repositories -->
     <artifactoryResolveSnapshotRepo>libs-snapshot-local</artifactoryResolveSnapshotRepo>
     <artifactoryResolveReleaseRepo>libs-release-local</artifactoryResolveReleaseRepo>
-
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
 
   <dependencyManagement>
@@ -99,7 +95,6 @@
         <artifactId>org.jacoco.report</artifactId>
         <version>${jacoco-maven-plugin.version}</version>
       </dependency>
-
       <!--
        Deliberate overrides of a BOM-managed version.
        Remove once the BOM catches up, so that we track the BOM again.
@@ -285,7 +280,6 @@
               <artifactId>maven-jar-plugin</artifactId>
               <version>${maven-jar-plugin.version}</version>
             </plugin>
-
             <plugin>
               <groupId>org.jacoco</groupId>
               <artifactId>jacoco-maven-plugin</artifactId>
