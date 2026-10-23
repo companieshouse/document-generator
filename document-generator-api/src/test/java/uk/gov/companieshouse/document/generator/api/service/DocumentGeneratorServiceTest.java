@@ -188,7 +188,7 @@ public class DocumentGeneratorServiceTest {
 
     @Test
     @DisplayName("Tests when the render service returns an error status")
-    public void testsWhenRenderServiceReturnsErrorStatus() throws IOException, ServiceException,
+    void testsWhenRenderServiceReturnsErrorStatus() throws IOException, ServiceException,
             DocumentInfoException, RenderServiceException, JSONException {
 
         RenderDocumentResponse errorRenderResponse = setSuccessfulRenderResponse();
@@ -215,7 +215,7 @@ public class DocumentGeneratorServiceTest {
 
     @Test
     @DisplayName("Tests generate still completes when debug logging fails to serialise to JSON")
-    public void testsSuccessfulGenerateWhenJsonSerialisationForLoggingFails()
+    void testsSuccessfulGenerateWhenJsonSerialisationForLoggingFails()
             throws IOException, ServiceException, DocumentInfoException,
             RenderServiceException, JSONException {
 
