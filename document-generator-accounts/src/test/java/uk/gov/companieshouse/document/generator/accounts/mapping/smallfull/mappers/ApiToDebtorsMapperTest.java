@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.CurrentPeriod;
-import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.PreviousPeriod;
+import uk.gov.companieshouse.api.model.accounts.smallfull.debtors.CurrentPeriod;
+import uk.gov.companieshouse.api.model.accounts.smallfull.debtors.PreviousPeriod;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.Debtors;
 
 @ExtendWith(MockitoExtension.class)

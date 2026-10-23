@@ -2,8 +2,11 @@ package uk.gov.companieshouse.document.generator.company.report.handler;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -39,6 +42,8 @@ import uk.gov.companieshouse.api.model.ukestablishments.UkEstablishmentsItemsApi
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.CompanyReportMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
+import uk.gov.companieshouse.document.generator.company.report.exception.HandlerException;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.RegistrationInformation;
 import uk.gov.companieshouse.document.generator.company.report.service.ChargesService;
 import uk.gov.companieshouse.document.generator.company.report.service.CompanyService;
 import uk.gov.companieshouse.document.generator.company.report.service.FilingHistoryService;
@@ -132,6 +137,63 @@ public class CompanyReportDataHandlerTest {
         assertNotNull(documentInfoResponse);
 
         //TODO - This test needs to be revisited when we have access to the mappers/companyreport
+    }
+
+    @Test
+    @DisplayName("Test get company report throws when the report cannot be serialised to JSON")
+    void testGetDocumentInfoJsonSerialisationFailure() throws Exception {
+        RegistrationInformation registrationInformation = new RegistrationInformation();
+        registrationInformation.setCompanyName(COMPANY_NAME);
+        registrationInformation.setCompanyNumber(COMPANY_NUMBER);
+        CompanyReport companyReport = spy(new CompanyReport());
+        companyReport.setRegistrationInformation(registrationInformation);
+        // Jackson wraps exceptions thrown by getters in a DatabindException (a JacksonException)
+        doThrow(new IllegalStateException("Cannot read previous names")).when(companyReport).getPreviousNames();
+
+        when(mockCompanyService.getCompanyProfile(any(String.class))).thenReturn(createCompanyProfile());
+        when(mockPscService.getPscs(any(String.class))).thenReturn(createPscsApi());
+        when(mockOfficerService.getOfficers(any(String.class))).thenReturn(createOfficers());
+        when(mockUkEstablishmentService.getUkEstablishments(any(String.class))).thenReturn(createUkEstablishment());
+        when(mockFilingHistoryService.getFilingHistory(any(String.class))).thenReturn(createFilingHistory());
+        when(mockCompanyReportMapper.mapCompanyReport(any(CompanyReportApiData.class), anyString(), anyString()))
+                .thenReturn(companyReport);
+        when(mockStatementsService.getStatements(any(String.class))).thenReturn(createStatementsApi());
+        when(mockRegistersService.getCompanyRegisters(any(String.class))).thenReturn(createCompanyRegisters());
+        when(mockInsolvencyService.getInsolvency(anyString())).thenReturn(createInsolvencyApi());
+        when(mockChargesService.getCharges(any(String.class))).thenReturn(createChargesApi());
+
+        HandlerException exception = assertThrows(HandlerException.class,
+            () -> companyReportDataHandler.getCompanyReport(RESOURCE_URI, REQUEST_ID));
+
+        assertEquals("Could not serialise Document data for the generation of the company report for company: "
+            + COMPANY_NAME + "-" + COMPANY_NUMBER, exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test get company report succeeds when filing history cannot be serialised for debug logging")
+    void testGetDocumentInfoSuccessfulWhenFilingHistorySerialisationFails() throws Exception {
+        FilingHistoryApi filingHistoryApi = createFilingHistory();
+        FilingApi unserialisableFiling = spy(filingHistoryApi.getItems().get(0));
+        // Jackson wraps exceptions thrown by getters in a DatabindException (a JacksonException)
+        doThrow(new IllegalStateException("Cannot read description")).when(unserialisableFiling).getDescription();
+        filingHistoryApi.setItems(new ArrayList<>(List.of(unserialisableFiling)));
+
+        when(mockCompanyService.getCompanyProfile(any(String.class))).thenReturn(createCompanyProfile());
+        when(mockPscService.getPscs(any(String.class))).thenReturn(createPscsApi());
+        when(mockOfficerService.getOfficers(any(String.class))).thenReturn(createOfficers());
+        when(mockUkEstablishmentService.getUkEstablishments(any(String.class))).thenReturn(createUkEstablishment());
+        when(mockFilingHistoryService.getFilingHistory(any(String.class))).thenReturn(filingHistoryApi);
+        when(mockCompanyReportMapper.mapCompanyReport(any(CompanyReportApiData.class), anyString(), anyString()))
+                .thenReturn(new CompanyReport());
+        when(mockStatementsService.getStatements(any(String.class))).thenReturn(createStatementsApi());
+        when(mockRegistersService.getCompanyRegisters(any(String.class))).thenReturn(createCompanyRegisters());
+        when(mockInsolvencyService.getInsolvency(anyString())).thenReturn(createInsolvencyApi());
+        when(mockChargesService.getCharges(any(String.class))).thenReturn(createChargesApi());
+
+        DocumentInfoResponse documentInfoResponse = companyReportDataHandler.getCompanyReport(RESOURCE_URI, REQUEST_ID);
+
+        assertNotNull(documentInfoResponse);
+        assertNotNull(documentInfoResponse.getData());
     }
 
     @Test
