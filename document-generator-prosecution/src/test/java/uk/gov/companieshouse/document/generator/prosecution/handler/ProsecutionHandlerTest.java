@@ -8,8 +8,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 import uk.gov.companieshouse.api.model.prosecution.defendant.DefendantApi;
 import uk.gov.companieshouse.api.model.prosecution.offence.OffenceApi;
 import uk.gov.companieshouse.api.model.prosecution.prosecutioncase.ProsecutionCaseApi;
@@ -22,7 +20,6 @@ import uk.gov.companieshouse.document.generator.prosecution.exception.Prosecutio
 import uk.gov.companieshouse.document.generator.prosecution.mapping.mappers.ApiToDefendantMapper;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.mappers.ApiToOffenceMapper;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.mappers.ApiToProsecutionCaseMapper;
-import uk.gov.companieshouse.document.generator.prosecution.mapping.model.ProsecutionDocument;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.model.defendant.Defendant;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.model.offence.Offence;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.model.prosecutioncase.ProsecutionCase;
