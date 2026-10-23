@@ -1,8 +1,12 @@
 package uk.gov.companieshouse.document.generator.company.report.handler;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -22,6 +26,8 @@ import uk.gov.companieshouse.api.model.officers.OfficersApi;
 import uk.gov.companieshouse.document.generator.company.report.mapping.mappers.CompanyReportMapper;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.CompanyReportApiData;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.CompanyReport;
+import uk.gov.companieshouse.document.generator.company.report.exception.HandlerException;
+import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.registrationinformation.RegistrationInformation;
 import uk.gov.companieshouse.document.generator.company.report.service.oracle.CompanyServiceOracle;
 import uk.gov.companieshouse.document.generator.company.report.service.oracle.FilingHistoryServiceOracle;
 import uk.gov.companieshouse.document.generator.company.report.service.oracle.OfficerDetailsServiceOracle;
@@ -87,6 +93,34 @@ public class DissolvedCompanyReportDataHandlerTest {
                 REQUEST_ID);
 
         assertNotNull(documentInfoResponse);
+    }
+
+    @Test
+    @DisplayName("Test get dissolved company report throws when the report cannot be serialised to JSON")
+    void testGetDocumentInfoJsonSerialisationFailure() throws Exception {
+        CompanyProfileApi companyProfileApi = createCompanyProfile();
+        FilingHistoryApi filingHistoryApi = createFilingHistory();
+        OfficersApi officersApi = createOfficers();
+
+        RegistrationInformation registrationInformation = new RegistrationInformation();
+        registrationInformation.setCompanyName(COMPANY_NAME);
+        registrationInformation.setCompanyNumber(COMPANY_NUMBER);
+        CompanyReport companyReport = spy(new CompanyReport());
+        companyReport.setRegistrationInformation(registrationInformation);
+        // Jackson wraps exceptions thrown by getters in a DatabindException (a JacksonException)
+        doThrow(new IllegalStateException("Cannot read previous names")).when(companyReport).getPreviousNames();
+
+        when(mockCompanyServiceOracle.getCompanyProfile(any(String.class))).thenReturn(companyProfileApi);
+        when(mockFilingHistoryServiceOracle.getFilingHistory(any(String.class))).thenReturn(filingHistoryApi);
+        when(mockOfficerDetailsServiceOracle.getOfficerDetails(any(String.class))).thenReturn(officersApi);
+        when(mockCompanyReportMapper.mapCompanyReport(any(CompanyReportApiData.class), anyString(), anyString()))
+                .thenReturn(companyReport);
+
+        HandlerException exception = assertThrows(HandlerException.class,
+                () -> dissolvedCompanyReportDataHandler.getCompanyReport(COMPANY_NUMBER, REQUEST_ID));
+
+        assertEquals("Could not serialise Document data for the generation of the company report for company: "
+                + COMPANY_NAME + "-" + COMPANY_NUMBER, exception.getMessage());
     }
 
     private CompanyProfileApi createCompanyProfile() {

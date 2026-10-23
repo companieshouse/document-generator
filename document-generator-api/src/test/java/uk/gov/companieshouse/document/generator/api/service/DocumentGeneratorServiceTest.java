@@ -8,6 +8,10 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.test.util.ReflectionTestUtils;
+import tools.jackson.core.exc.StreamWriteException;
+import tools.jackson.databind.json.JsonMapper;
 import uk.gov.companieshouse.document.generator.api.document.render.RenderDocumentRequestHandler;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentRequest;
 import uk.gov.companieshouse.document.generator.api.document.render.models.RenderDocumentResponse;
@@ -34,6 +38,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -177,6 +184,61 @@ public class DocumentGeneratorServiceTest {
         assertEquals(DESCRIPTION_IDENTIFIER, response.getData().getDescriptionIdentifier());
 
         assertEquals(ResponseStatus.FAILED_TO_RENDER, response.getStatus());
+    }
+
+    @Test
+    @DisplayName("Tests when the render service returns an error status")
+    public void testsWhenRenderServiceReturnsErrorStatus() throws IOException, ServiceException,
+            DocumentInfoException, RenderServiceException, JSONException {
+
+        RenderDocumentResponse errorRenderResponse = setSuccessfulRenderResponse();
+        errorRenderResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+
+        when(mockDocumentTypeService.getDocumentType(any(Map.class))).thenReturn(DocumentType.ACCOUNTS);
+        when(mockDocumentInfoServiceFactory.get(any(String.class))).thenReturn(mockDocumentInfoService);
+        when(mockDocumentInfoService.getDocumentInfo(any(DocumentInfoRequest.class))).thenReturn(setSuccessfulDocumentInfo());
+        when(mockRequestHandler.sendDataToDocumentRenderService(any(String.class), any(RenderDocumentRequest.class),
+                any(Map.class))).thenReturn(errorRenderResponse);
+        when(mockEnvironmentReader.getMandatoryString(any(String.class))).thenReturn(BUCKET_LOCATION);
+        when(mockRetrieveApiEnumerationDescription.getApiEnumerationDescription(any(String.class), any(String.class),
+                any(String.class), any(Map.class))).thenReturn(DESCRIPTION);
+
+        ResponseObject response = documentGeneratorService.generate(setValidRequest(), REQUEST_ID);
+
+        assertEquals(ResponseStatus.FAILED_TO_RENDER, response.getStatus());
+        assertNotNull(response.getData());
+        assertEquals(SIZE, response.getData().getSize());
+        assertEquals(buildLocation(), response.getData().getLinks().getLocation());
+        assertEquals(DESCRIPTION, response.getData().getDescription());
+        assertEquals(DESCRIPTION_IDENTIFIER, response.getData().getDescriptionIdentifier());
+    }
+
+    @Test
+    @DisplayName("Tests generate still completes when debug logging fails to serialise to JSON")
+    public void testsSuccessfulGenerateWhenJsonSerialisationForLoggingFails()
+            throws IOException, ServiceException, DocumentInfoException,
+            RenderServiceException, JSONException {
+
+        JsonMapper failingMapper = mock(JsonMapper.class);
+        when(failingMapper.writeValueAsString(any())).thenThrow(new StreamWriteException(null, "Serialisation failed"));
+        ReflectionTestUtils.setField(documentGeneratorService, "mapper", failingMapper);
+
+        when(mockDocumentTypeService.getDocumentType(any(Map.class))).thenReturn(DocumentType.ACCOUNTS);
+        when(mockDocumentInfoServiceFactory.get(any(String.class))).thenReturn(mockDocumentInfoService);
+        when(mockDocumentInfoService.getDocumentInfo(any(DocumentInfoRequest.class))).thenReturn(setSuccessfulDocumentInfo());
+        when(mockRequestHandler.sendDataToDocumentRenderService(any(String.class), any(RenderDocumentRequest.class),
+                any(Map.class))).thenReturn(setSuccessfulRenderResponse());
+        when(mockEnvironmentReader.getMandatoryString(any(String.class))).thenReturn(BUCKET_LOCATION);
+        when(mockRetrieveApiEnumerationDescription.getApiEnumerationDescription(any(String.class), any(String.class),
+                any(String.class), any(Map.class))).thenReturn(DESCRIPTION);
+
+        ResponseObject response = documentGeneratorService.generate(setValidRequest(), REQUEST_ID);
+
+        assertEquals(ResponseStatus.CREATED, response.getStatus());
+        assertNotNull(response.getData());
+        assertEquals(buildLocation(), response.getData().getLinks().getLocation());
+        // documentType, document info response and render response are each serialised for logging
+        verify(failingMapper, times(3)).writeValueAsString(any());
     }
 
     /**
