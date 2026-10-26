@@ -1,8 +1,6 @@
 package uk.gov.companieshouse.document.generator.accounts.handler.accounts;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +19,9 @@ import uk.gov.companieshouse.document.generator.accounts.service.TransactionServ
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
+
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -170,8 +171,9 @@ public class AbridgedAccountsDataHandler {
 
     private String writeAccountsValues(AbridgedAccountsApiData abridgedAccountsApiData) throws IOException {
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        JsonMapper mapper = JsonMapper.builder()
+                .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(JsonInclude.Include.NON_NULL))
+                .build();
         String accountsJSON = mapper.writeValueAsString(abridgedAccountsApiData);
         JsonNode accounts = mapper.readTree(accountsJSON);
 

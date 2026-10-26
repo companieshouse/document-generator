@@ -2,9 +2,8 @@ package uk.gov.companieshouse.document.generator.company.report.handler;
 
 import static uk.gov.companieshouse.document.generator.company.report.CompanyReportDocumentInfoServiceImpl.MODULE_NAME_SPACE;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
@@ -122,11 +121,7 @@ public class CompanyReportDataHandler {
 
         ZonedDateTime timeStamp = ZonedDateTime.now();
 
-        DocumentInfoResponse docInfoResponse = createDocumentInfoResponse(companyNumber, requestId, timeStamp);
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-
-        return docInfoResponse;
+        return createDocumentInfoResponse(companyNumber, requestId, timeStamp);
     }
 
     private DocumentInfoResponse createDocumentInfoResponse(String companyNumber,
@@ -305,15 +300,14 @@ public class CompanyReportDataHandler {
         String requestId, ZonedDateTime timeStamp) throws HandlerException {
 
         String reportToJson;
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
+        JsonMapper mapper = JsonMapper.builder().build();
 
         companyReport.setTimeStampCreated(timeStamp.format(DateTimeFormatter.ofPattern("d MMMM uuuu HH:mm:ss")));
 
         try {
             LOG.infoContext(requestId, "Attempting to convert company report to JSON", getDebugMap(companyNumber));
             reportToJson = mapper.writeValueAsString(companyReport);
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             throw new HandlerException(
                 new StringBuilder("Could not serialise Document data for the generation of the company report for company: ")
                     .append(companyReport.getRegistrationInformation().getCompanyName())
@@ -373,19 +367,18 @@ public class CompanyReportDataHandler {
             .sorted(Comparator.comparing(FilingApi::getDate, Comparator.nullsLast(Comparator.reverseOrder())))
             .collect(Collectors.toList());
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
+        JsonMapper mapper = JsonMapper.builder().build();
 
         try {
             LOG.debug("sortFilingHistory(): filings -> "+mapper.writeValueAsString(filings));
-        } catch(JsonProcessingException ex){
+        } catch(JacksonException ex){
             LOG.debug("sortFilingHistory(): filings error -> "+ex.getMessage());
         }
 
         filingHistoryApi.setItems(filings);
         try {
             LOG.debug("sortFilingHistory(): filingHistoryApi -> "+mapper.writeValueAsString(filingHistoryApi.getItems()));
-        } catch(JsonProcessingException ex){
+        } catch(JacksonException ex){
             LOG.debug("sortFilingHistory(): filingHistoryApi error -> "+ex.getMessage());
         }
 

@@ -20,15 +20,12 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.version>21</jdk.version>
-        <maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
-        <sonar-maven-plugin.version>3.4.0.905</sonar-maven-plugin.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>uk.gov.companieshouse</groupId>
             <artifactId>private-api-sdk-java</artifactId>
-            <version>${private-api-sdk-java.version}</version>
         </dependency>
         <dependency>
             <groupId>uk.gov.companieshouse</groupId>
@@ -37,17 +34,11 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter-webmvc</artifactId>
         </dependency>
         <dependency>
             <groupId>uk.gov.companieshouse</groupId>
             <artifactId>api-sdk-manager-java-library</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.sonarsource.scanner.maven</groupId>
-            <artifactId>sonar-maven-plugin</artifactId>
-            <version>${sonar-maven-plugin.version}</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 

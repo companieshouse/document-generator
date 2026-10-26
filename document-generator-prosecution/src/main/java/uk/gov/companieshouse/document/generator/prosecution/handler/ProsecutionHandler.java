@@ -2,8 +2,8 @@ package uk.gov.companieshouse.document.generator.prosecution.handler;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 import uk.gov.companieshouse.api.model.prosecution.defendant.DefendantApi;
 import uk.gov.companieshouse.api.model.prosecution.offence.OffenceApi;
 import uk.gov.companieshouse.api.model.prosecution.prosecutioncase.ProsecutionCaseApi;
@@ -49,10 +49,10 @@ public class ProsecutionHandler {
      */
     private String convertToJson(Object document, String requestId)
             throws DocumentInfoCreationException {
-        ObjectMapper mapper = new ObjectMapper();
+        JsonMapper mapper = JsonMapper.builder().build();
         try {
             return mapper.writeValueAsString(document);
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             throw new DocumentInfoCreationException(
                     "Could not serialise document info for request id " + requestId);
         }

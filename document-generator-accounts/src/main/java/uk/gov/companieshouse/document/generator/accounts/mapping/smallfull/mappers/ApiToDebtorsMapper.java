@@ -4,8 +4,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.springframework.web.context.annotation.RequestScope;
-import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.CurrentPeriod;
-import uk.gov.companieshouse.api.model.accounts.smallfull.Debtors.PreviousPeriod;
+import uk.gov.companieshouse.api.model.accounts.smallfull.debtors.CurrentPeriod;
+import uk.gov.companieshouse.api.model.accounts.smallfull.debtors.PreviousPeriod;
 import uk.gov.companieshouse.document.generator.accounts.mapping.smallfull.model.ixbrl.debtors.Debtors;
 
 @RequestScope

@@ -2,8 +2,8 @@ package uk.gov.companieshouse.document.generator.company.report.handler;
 
 import static uk.gov.companieshouse.document.generator.company.report.CompanyReportDocumentInfoServiceImpl.MODULE_NAME_SPACE;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -120,14 +120,14 @@ public class DissolvedCompanyReportDataHandler {
 			throws HandlerException {
 
 		String reportToJson;
-		ObjectMapper mapper = new ObjectMapper();
+		JsonMapper mapper = JsonMapper.builder().build();
 
 		companyReport.setTimeStampCreated(timeStamp.format(DateTimeFormatter.ofPattern("d MMMM uuuu HH:mm:ss")));
 
 		try {
 			LOG.infoContext(requestId, "Attempting to convert company report to JSON", getDebugMap(companyNumber));
 			reportToJson = mapper.writeValueAsString(companyReport);
-		} catch (JsonProcessingException e) {
+		} catch (JacksonException e) {
 			throw new HandlerException(new StringBuilder(
 					"Could not serialise Document data for the generation of the company report for company: ")
 							.append(companyReport.getRegistrationInformation().getCompanyName()).append("-")
