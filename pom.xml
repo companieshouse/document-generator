@@ -47,7 +47,7 @@
     <!-- Maven dependencies -->
     <spring-boot-maven-plugin.version>4.1.2</spring-boot-maven-plugin.version>
     <maven-jar-plugin.version>3.5.1</maven-jar-plugin.version>
-    <jib-maven-plugin.version>3.16.0</jib-maven-plugin.version>
+    <jib-maven-plugin.version>3.5.2</jib-maven-plugin.version>
     <maven-install-plugin.version>3.1.4</maven-install-plugin.version>
 
     <!-- CVE-2026-13506 CVE-2026-8763 override while ch parent pom specifies version of sonar-maven-plugin with these vulnerabilities-->
