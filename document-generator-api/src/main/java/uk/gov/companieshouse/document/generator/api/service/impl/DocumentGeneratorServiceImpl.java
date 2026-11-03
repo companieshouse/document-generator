@@ -5,14 +5,13 @@ import static uk.gov.companieshouse.document.generator.api.DocumentGeneratorAppl
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.http.HttpStatus;
 import org.json.JSONException;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import uk.gov.companieshouse.document.generator.api.document.DocumentType;
 import uk.gov.companieshouse.document.generator.api.document.render.RenderDocumentRequestHandler;
@@ -71,7 +70,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
 
     private static final String REQUEST_ID = "request_id";
 
-    private ObjectMapper mapper = new ObjectMapper();
+    private JsonMapper mapper = JsonMapper.builder().build();
 
     public DocumentGeneratorServiceImpl(DocumentInfoServiceFactory documentInfoServiceFactory,
                                         EnvironmentReader environmentReader,
@@ -112,7 +111,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
         try {
             createAndLogInfoMessage("Document resource generated: documentType -> "
                             + mapper.writeValueAsString(documentType), requestParameters);
-        } catch(JsonProcessingException ex){
+        } catch(JacksonException ex){
             LOG.debug(ex.getMessage());
         }
 
@@ -139,7 +138,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
             } else {
                 createAndLogInfoMessage("Document info response null", requestParameters);            
             }
-        } catch(JsonProcessingException ex){
+        } catch(JacksonException ex){
             LOG.debug(ex.getMessage());
         }
 
@@ -153,7 +152,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
                 createAndLogInfoMessage("Document Render Service reponse received: renderResponse.getStatus() -> "
                             + renderResponse.getStatus(), requestParameters);
 
-                if (renderResponse.getStatus() >= HttpStatus.SC_BAD_REQUEST) {
+                if (renderResponse.getStatus() >= HttpStatus.BAD_REQUEST.value()) {
                     createAndLogErrorMessage("An error occurred in the render service, returning a status of: " +
                                     renderResponse.getStatus() + " for resource: " + requestParameters.get(RESOURCE_URI),
                             null, requestParameters);
@@ -227,7 +226,7 @@ public class DocumentGeneratorServiceImpl implements DocumentGeneratorService {
         try {
             createAndLogInfoMessage("Document Render Service response received: documentType -> "
                             + mapper.writeValueAsString(renderResponse), requestParameters);
-        } catch(JsonProcessingException ex){
+        } catch(JacksonException ex){
             LOG.debug(ex.getMessage());
         }
 

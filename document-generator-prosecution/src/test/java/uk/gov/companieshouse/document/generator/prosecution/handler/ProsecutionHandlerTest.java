@@ -8,20 +8,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 import uk.gov.companieshouse.api.model.prosecution.defendant.DefendantApi;
 import uk.gov.companieshouse.api.model.prosecution.offence.OffenceApi;
 import uk.gov.companieshouse.api.model.prosecution.prosecutioncase.ProsecutionCaseApi;
 import uk.gov.companieshouse.api.model.prosecution.prosecutioncase.ProsecutionCaseStatusApi;
 import uk.gov.companieshouse.document.generator.interfaces.model.DocumentInfoResponse;
 import uk.gov.companieshouse.document.generator.prosecution.ProsecutionType;
+import uk.gov.companieshouse.document.generator.prosecution.exception.DocumentInfoCreationException;
 import uk.gov.companieshouse.document.generator.prosecution.exception.HandlerException;
 import uk.gov.companieshouse.document.generator.prosecution.exception.ProsecutionServiceException;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.mappers.ApiToDefendantMapper;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.mappers.ApiToOffenceMapper;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.mappers.ApiToProsecutionCaseMapper;
-import uk.gov.companieshouse.document.generator.prosecution.mapping.model.ProsecutionDocument;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.model.defendant.Defendant;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.model.offence.Offence;
 import uk.gov.companieshouse.document.generator.prosecution.mapping.model.prosecutioncase.ProsecutionCase;
@@ -33,6 +31,8 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -164,6 +164,30 @@ public class ProsecutionHandlerTest {
         when(offenceMapper.apiToOffences(offenceApis)).thenReturn(offences);
 
         assertThrows(HandlerException.class, () -> prosecutionHandler.getDocumentResponse(REQUEST_ID, RESOURCE_URI));
+    }
+
+    @Test
+    @DisplayName("Tests unsuccessful get of prosecution document when the document cannot be serialised to JSON")
+    void testGetProsecutionDocumentUnsuccessfulJsonSerialisation() throws ProsecutionServiceException {
+        prosecutionCaseApi.setStatus(ProsecutionCaseStatusApi.ACCEPTED);
+
+        when(prosecutionService.getDefendant(RESOURCE_URI)).thenReturn(defendantApi);
+        when(prosecutionService.getProsecutionCase(PROSECUTION_LINK)).thenReturn(prosecutionCaseApi);
+        when(prosecutionService.getOffences(OFFENCES_LINK)).thenReturn(offenceApis);
+
+        when(prosecutionCaseMapper.apiToProsecutionCase(prosecutionCaseApi)).thenReturn(prosecutionCase);
+        Defendant unserialisableDefendant = spy(defendant);
+        // Jackson wraps exceptions thrown by getters in a DatabindException (a JacksonException)
+        doThrow(new IllegalStateException("Cannot read name")).when(unserialisableDefendant).getName();
+        when(defendantMapper.apiToDefendant(defendantApi)).thenReturn(unserialisableDefendant);
+        when(offenceMapper.apiToOffences(offenceApis)).thenReturn(offences);
+
+        HandlerException exception = assertThrows(HandlerException.class,
+                () -> prosecutionHandler.getDocumentResponse(REQUEST_ID, RESOURCE_URI));
+
+        assertInstanceOf(DocumentInfoCreationException.class, exception.getCause());
+        assertEquals("Could not serialise document info for request id " + REQUEST_ID,
+                exception.getCause().getMessage());
     }
 
 }
