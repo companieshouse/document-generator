@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -204,25 +206,16 @@ public abstract class ApiToCurrentOfficer {
             return;
         }
 
-        StringBuilder descriptions = new StringBuilder();
-
         // Build a comma-separated list of capital contribution sub-types, from values looked up in API enumerations
-        for (ContributionSubTypeApi subType : companyOfficerApi.getContributionSubTypes()) {
-            if (subType.getSubType() != null) {
-                String description = retrieveApiEnumerationDescription
+        String descriptions = companyOfficerApi.getContributionSubTypes().stream()
+                .map(ContributionSubTypeApi::getSubType)
+                .filter(Objects::nonNull)
+                .map(subType -> retrieveApiEnumerationDescription
                         .getApiEnumerationDescription(CONSTANTS, "capital_contribution_sub_type",
-                                subType.getSubType(),
-                                getDebugMap(subType.getSubType()));
+                                subType, getDebugMap(subType)))
+                .collect(Collectors.joining(", "));
 
-                if (descriptions.length() > 0) {
-                    descriptions.append(", ");
-                }
-
-                descriptions.append(description);
-            }
-        }
-
-        currentOfficer.setContributionSubTypeDescriptions(descriptions.toString());
+        currentOfficer.setContributionSubTypeDescriptions(descriptions);
     }
 
     private boolean hasOfficerRole(CompanyOfficerApi companyOfficerApi) {

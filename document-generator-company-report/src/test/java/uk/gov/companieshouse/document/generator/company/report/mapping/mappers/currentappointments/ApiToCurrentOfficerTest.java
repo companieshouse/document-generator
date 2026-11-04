@@ -9,11 +9,14 @@ import static org.mockito.Mockito.when;
 import static uk.gov.companieshouse.document.generator.company.report.utils.TestUtils.getFormatter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -193,7 +196,7 @@ class ApiToCurrentOfficerTest {
 
     @Test
     @DisplayName("capital contribution fields are mapped correctly to model for Limited Partnerships")
-    void testApiToModelMapsForCapitalContribution() {
+    void testApiToModelMappingForCapitalContribution() {
 
         final CompanyOfficerApi companyOfficerApi = createCompanyOfficerApi();
 
@@ -214,68 +217,67 @@ class ApiToCurrentOfficerTest {
                 currentOfficer.getContributionSubTypeDescriptions());
     }
 
+
     @Test
-    @DisplayName("capital contribution amount field is correctly formatted when mapped to model for Limited Partnerships")
-    void testApiToModelMapsForFormattedCapitalContributionAmount() {
+    @DisplayName("capital contribution currency amount formatting does not fail with null API")
+    void testFormattingCapitalContributionCurrencyAmountWithNullApiDoesNotError() {
+        apiToCurrentOfficer.formatContributionCurrencyValue(null, new CurrentOfficer());
+    }
 
-        // Ensure thousands separator is output
+    @Test
+    @DisplayName("capital contribution currency amount formatting does not fail with null value")
+    void testFormattingCapitalContributionCurrencyAmountWithNullValueDoesNotError() {
         final CompanyOfficerApi companyOfficerApi = createCompanyOfficerApi();
-        companyOfficerApi.setContributionCurrencyValue("1123.89");
+        companyOfficerApi.setContributionCurrencyValue(null);
 
-        when(mockRetrieveApiEnumerations.getApiEnumerationDescription(anyString(), anyString(), anyString(), any())).thenReturn(IDENTIFICATION_TYPE);
+        apiToCurrentOfficer.formatContributionCurrencyValue(companyOfficerApi, new CurrentOfficer());
+    }
 
-        CurrentOfficer currentOfficer = apiToCurrentOfficer.apiToCurrentOfficer(companyOfficerApi);
+    @Test
+    @DisplayName("capital contribution subtype conversion does not fail with null API")
+    void testConvertingCapitalContributionSubtypesWithNullApiDoesNotError() {
+        apiToCurrentOfficer.convertContributionSubTypes(null, new CurrentOfficer());
+    }
 
-        assertNotNull(currentOfficer);
-        assertEquals("1,123.89", currentOfficer.getContributionCurrencyValue());
+    @Test
+    @DisplayName("capital contribution subtype conversion does not fail with null value")
+    void testConvertingCapitalContributionSubtypesWithNullValueDoesNotError() {
+        final CompanyOfficerApi companyOfficerApi = createCompanyOfficerApi();
+        companyOfficerApi.setContributionSubTypes(null);
 
-        // Ensure two decimal places are output when only one present
-        companyOfficerApi.setContributionCurrencyValue("1123.8");
+        apiToCurrentOfficer.convertContributionSubTypes(companyOfficerApi, new CurrentOfficer());
+    }
 
-        currentOfficer = apiToCurrentOfficer.apiToCurrentOfficer(companyOfficerApi);
+    @Test
+    @DisplayName("capital contribution subtype conversion does not fail with empty list")
+    void testConvertingCapitalContributionSubtypesWithEmptyListDoesNotError() {
+        final CompanyOfficerApi companyOfficerApi = createCompanyOfficerApi();
+        companyOfficerApi.setContributionSubTypes(new ArrayList<>());
 
-        assertNotNull(currentOfficer);
-        assertEquals("1,123.80", currentOfficer.getContributionCurrencyValue());
+        apiToCurrentOfficer.convertContributionSubTypes(companyOfficerApi, new CurrentOfficer());
+    }
 
-        // Ensure two decimal places are output when none present
-        companyOfficerApi.setContributionCurrencyValue("1123");
+    @ParameterizedTest(name = "formats contribution amount {0} as {1}")
+    @CsvSource(delimiter = '|', value = {
+            "1123.89|1,123.89",
+            "1123.8|1,123.80",
+            "1123|1,123.00",
+            "1123123123.45|1,123,123,123.45",
+            "1,123,123,123.45|1,123,123,123.45",
+            "A LOT OF WONGA|A LOT OF WONGA"
+    })
+    @DisplayName("capital contribution amount field is correctly formatted when mapped to model for Limited Partnerships")
+    void testApiToModelMappingFormatsCapitalContributionAmountCorrectly(String amount, String expected) {
+        final CompanyOfficerApi companyOfficerApi = createCompanyOfficerApi();
+        companyOfficerApi.setContributionCurrencyValue(amount);
 
-        currentOfficer = apiToCurrentOfficer.apiToCurrentOfficer(companyOfficerApi);
+        when(mockRetrieveApiEnumerations.getApiEnumerationDescription(anyString(), anyString(), anyString(), any()))
+                .thenReturn(IDENTIFICATION_TYPE);
 
-        assertNotNull(currentOfficer);
-        assertEquals("1,123.00", currentOfficer.getContributionCurrencyValue());
-
-        // Ensure two decimal places are output when none present
-        companyOfficerApi.setContributionCurrencyValue("1123");
-
-        currentOfficer = apiToCurrentOfficer.apiToCurrentOfficer(companyOfficerApi);
-
-        assertNotNull(currentOfficer);
-        assertEquals("1,123.00", currentOfficer.getContributionCurrencyValue());
-
-        // Ensure multiple thousands separators are output
-        companyOfficerApi.setContributionCurrencyValue("1123123123.45");
-
-        currentOfficer = apiToCurrentOfficer.apiToCurrentOfficer(companyOfficerApi);
-
-        assertNotNull(currentOfficer);
-        assertEquals("1,123,123,123.45", currentOfficer.getContributionCurrencyValue());
-
-        // Ensure already formatted amount is left unchanged
-        companyOfficerApi.setContributionCurrencyValue("1,123,123,123.45");
-
-        currentOfficer = apiToCurrentOfficer.apiToCurrentOfficer(companyOfficerApi);
-
-        assertNotNull(currentOfficer);
-        assertEquals("1,123,123,123.45", currentOfficer.getContributionCurrencyValue());
-
-        // Ensure a non-numeric value is left unchanged
-        companyOfficerApi.setContributionCurrencyValue("A LOT OF WONGA");
-
-        currentOfficer = apiToCurrentOfficer.apiToCurrentOfficer(companyOfficerApi);
+        final CurrentOfficer currentOfficer = apiToCurrentOfficer.apiToCurrentOfficer(companyOfficerApi);
 
         assertNotNull(currentOfficer);
-        assertEquals("A LOT OF WONGA", currentOfficer.getContributionCurrencyValue());
+        assertEquals(expected, currentOfficer.getContributionCurrencyValue());
     }
 
     private CompanyOfficerApi createCompanyOfficerApi() {
