@@ -1,7 +1,6 @@
 package uk.gov.companieshouse.document.generator.company.report.mapping.mappers.currentappointments;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -221,7 +220,7 @@ class ApiToCurrentOfficerTest {
     @Test
     @DisplayName("capital contribution currency amount formatting does not fail with null API")
     void testFormattingCapitalContributionCurrencyAmountWithNullApiDoesNotError() {
-        apiToCurrentOfficer.formatContributionCurrencyValue(null, new CurrentOfficer());
+        assertDoesNotThrow(() -> apiToCurrentOfficer.formatContributionCurrencyValue(null, new CurrentOfficer()));
     }
 
     @Test
@@ -230,13 +229,13 @@ class ApiToCurrentOfficerTest {
         final CompanyOfficerApi companyOfficerApi = createCompanyOfficerApi();
         companyOfficerApi.setContributionCurrencyValue(null);
 
-        apiToCurrentOfficer.formatContributionCurrencyValue(companyOfficerApi, new CurrentOfficer());
+        assertDoesNotThrow(() -> apiToCurrentOfficer.formatContributionCurrencyValue(companyOfficerApi, new CurrentOfficer()));
     }
 
     @Test
     @DisplayName("capital contribution subtype conversion does not fail with null API")
     void testConvertingCapitalContributionSubtypesWithNullApiDoesNotError() {
-        apiToCurrentOfficer.convertContributionSubTypes(null, new CurrentOfficer());
+        assertDoesNotThrow(() -> apiToCurrentOfficer.convertContributionSubTypes(null, new CurrentOfficer()));
     }
 
     @Test
@@ -245,7 +244,7 @@ class ApiToCurrentOfficerTest {
         final CompanyOfficerApi companyOfficerApi = createCompanyOfficerApi();
         companyOfficerApi.setContributionSubTypes(null);
 
-        apiToCurrentOfficer.convertContributionSubTypes(companyOfficerApi, new CurrentOfficer());
+        assertDoesNotThrow(() -> apiToCurrentOfficer.convertContributionSubTypes(companyOfficerApi, new CurrentOfficer()));
     }
 
     @Test
