@@ -253,7 +253,7 @@ class ApiToCurrentOfficerTest {
         final CompanyOfficerApi companyOfficerApi = createCompanyOfficerApi();
         companyOfficerApi.setContributionSubTypes(new ArrayList<>());
 
-        apiToCurrentOfficer.convertContributionSubTypes(companyOfficerApi, new CurrentOfficer());
+        assertDoesNotThrow(() -> apiToCurrentOfficer.convertContributionSubTypes(companyOfficerApi, new CurrentOfficer()));
     }
 
     @ParameterizedTest(name = "formats contribution amount {0} as {1}")
