@@ -80,9 +80,6 @@ public class CurrentOfficer {
     @JsonProperty("contribution_currency_value")
     private String contributionCurrencyValue;
 
-    @JsonProperty("contribution_sub_types")
-    private List<ContributionSubType> contributionSubTypes;
-
     @JsonProperty("contribution_sub_type_descriptions")
     private String contributionSubTypeDescriptions;
 
