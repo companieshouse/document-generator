@@ -2,12 +2,10 @@ package uk.gov.companieshouse.document.generator.company.report.mapping.model.do
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
-import java.util.List;
 
 import uk.gov.companieshouse.api.model.common.Address;
 import uk.gov.companieshouse.api.model.common.ContactDetails;
 import uk.gov.companieshouse.document.generator.company.report.mapping.model.document.items.common.DateDayMonthYear;
-
 
 public class CurrentOfficer {
 
