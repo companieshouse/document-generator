@@ -834,6 +834,11 @@
                         {{end}}
                     {{end}}
 
+                    {{if .contribution_currency_value}}
+                        <li>Total contribution: {{.contribution_currency_value}} ({{.contribution_currency_type}})</li>
+                        <li>Types of contribution: {{.contribution_sub_type_descriptions}}</li>
+                    {{end}}
+
                     {{if .identity_verification_details}}
                         {{if (gt (timeParse "2 January 2006" (or .identity_verification_details.appointment_verification_end_on "7 April 1992")).Unix (timeNow.Unix))}}
                             <li>Identity verification status: Verification requirements complete</li>
